@@ -14,8 +14,8 @@ phpolars brings [Polars](https://pola.rs) to PHP as a native extension written i
 - `Series`, with the same expression methods.
 - CSV, Parquet, JSON, NDJSON, and Arrow IPC reading and writing, with lazy scans and streaming sinks.
 - A thread-pool cap for PHP-FPM (`php_polars.max_threads`).
-- A backend for [phibble](https://erikwestlund.github.io/phibble/), `Phibble\Polars\PolarsTable`, that runs [phplyr](https://erikwestlund.github.io/phplyr/) pipelines in Polars. It ships with phibble ^0.2; see phibble's [Backends](https://erikwestlund.github.io/phibble/backends.html) page.
+- A backend for [phibble](https://phpstats.github.io/phibble/), `Phibble\Polars\PolarsTable`, that runs [phplyr](https://phpstats.github.io/phplyr/) pipelines in Polars. It ships with phibble ^0.2; see phibble's [Backends](https://phpstats.github.io/phibble/backends.html) page.
 
 ## The family
 
-phpolars is one of a set of PHP 8.3+ packages for data work. phibble is a pure-PHP data frame and the shared table contract. phplyr adds dplyr verbs on top of it. [phit](https://github.com/erikwestlund/phit) fits regression and mixed models. phpolars is the optional fast backend: install it when the data is large or the pipeline is heavy, and keep using phplyr's verbs.
+phpolars is one of a set of PHP 8.3+ packages for data work. phibble is a pure-PHP data frame and the shared table contract. phplyr adds dplyr verbs on top of it. [phit](https://github.com/phpstats/phit) fits regression and mixed models. phpolars is the optional fast backend: install it when the data is large or the pipeline is heavy, and keep using phplyr's verbs.

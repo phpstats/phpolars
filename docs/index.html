@@ -297,12 +297,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><code>Series</code>, with the same expression methods.</li>
 <li>CSV, Parquet, JSON, NDJSON, and Arrow IPC reading and writing, with lazy scans and streaming sinks.</li>
 <li>A thread-pool cap for PHP-FPM (<code>php_polars.max_threads</code>).</li>
-<li>A backend for <a href="https://erikwestlund.github.io/phibble/">phibble</a>, <code>Phibble\Polars\PolarsTable</code>, that runs <a href="https://erikwestlund.github.io/phplyr/">phplyr</a> pipelines in Polars. It ships with phibble ^0.2; see phibble’s <a href="https://erikwestlund.github.io/phibble/backends.html">Backends</a> page.</li>
+<li>A backend for <a href="https://phpstats.github.io/phibble/">phibble</a>, <code>Phibble\Polars\PolarsTable</code>, that runs <a href="https://phpstats.github.io/phplyr/">phplyr</a> pipelines in Polars. It ships with phibble ^0.2; see phibble’s <a href="https://phpstats.github.io/phibble/backends.html">Backends</a> page.</li>
 </ul>
 </section>
 <section id="the-family" class="level2">
 <h2 class="anchored" data-anchor-id="the-family">The family</h2>
-<p>phpolars is one of a set of PHP 8.3+ packages for data work. phibble is a pure-PHP data frame and the shared table contract. phplyr adds dplyr verbs on top of it. <a href="https://github.com/erikwestlund/phit">phit</a> fits regression and mixed models. phpolars is the optional fast backend: install it when the data is large or the pipeline is heavy, and keep using phplyr’s verbs.</p>
+<p>phpolars is one of a set of PHP 8.3+ packages for data work. phibble is a pure-PHP data frame and the shared table contract. phplyr adds dplyr verbs on top of it. <a href="https://github.com/phpstats/phit">phit</a> fits regression and mixed models. phpolars is the optional fast backend: install it when the data is large or the pipeline is heavy, and keep using phplyr’s verbs.</p>
 
 
 </section>
@@ -381,7 +381,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     }
       var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
       var mailtoRegex = new RegExp(/^mailto:/);
-        var filterRegex = new RegExp("https:\/\/erikwestlund\.github\.io\/phpolars\/");
+        var filterRegex = new RegExp("https:\/\/phpstats\.github\.io\/phpolars\/");
       var isInternal = (href) => {
           return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
       }

@@ -208,7 +208,7 @@
     "href": "getting-started.html",
     "title": "Getting started",
     "section": "",
-    "text": "phpolars needs PHP 8.3, 8.4, or 8.5 (non-thread-safe) on Linux or macOS. Install it with PIE:\npie install erikwestlund/phpolars\nOn Linux with glibc (x86_64 or arm64), PIE installs the prebuilt binary for the PHP version from the GitHub release. Elsewhere it builds from source, which needs a stable Rust toolchain and libclang and takes several minutes. See Deployment.\nFrom a checkout:\nPHP=$(which php) PHP_CONFIG=$(which php-config) cargo build --profile dist\nphp -d extension=$PWD/target/dist/libphp_polars.so script.php   # .dylib on macOS\nOn macOS with Homebrew, also set LIBCLANG_PATH=$(brew --prefix llvm)/lib. When several PHP versions are installed, point PHP and PHP_CONFIG at the PHP you will load the extension into, because the build uses that PHP’s headers.",
+    "text": "phpolars needs PHP 8.3, 8.4, or 8.5 (non-thread-safe) on Linux or macOS. Install it with PIE:\npie install phpstats/phpolars\nOn Linux with glibc (x86_64 or arm64), PIE installs the prebuilt binary for the PHP version from the GitHub release. Elsewhere it builds from source, which needs a stable Rust toolchain and libclang and takes several minutes. See Deployment.\nFrom a checkout:\nPHP=$(which php) PHP_CONFIG=$(which php-config) cargo build --profile dist\nphp -d extension=$PWD/target/dist/libphp_polars.so script.php   # .dylib on macOS\nOn macOS with Homebrew, also set LIBCLANG_PATH=$(brew --prefix llvm)/lib. When several PHP versions are installed, point PHP and PHP_CONFIG at the PHP you will load the extension into, because the build uses that PHP’s headers.",
     "crumbs": [
       "Getting started"
     ]
@@ -218,7 +218,7 @@
     "href": "getting-started.html#installing",
     "title": "Getting started",
     "section": "",
-    "text": "phpolars needs PHP 8.3, 8.4, or 8.5 (non-thread-safe) on Linux or macOS. Install it with PIE:\npie install erikwestlund/phpolars\nOn Linux with glibc (x86_64 or arm64), PIE installs the prebuilt binary for the PHP version from the GitHub release. Elsewhere it builds from source, which needs a stable Rust toolchain and libclang and takes several minutes. See Deployment.\nFrom a checkout:\nPHP=$(which php) PHP_CONFIG=$(which php-config) cargo build --profile dist\nphp -d extension=$PWD/target/dist/libphp_polars.so script.php   # .dylib on macOS\nOn macOS with Homebrew, also set LIBCLANG_PATH=$(brew --prefix llvm)/lib. When several PHP versions are installed, point PHP and PHP_CONFIG at the PHP you will load the extension into, because the build uses that PHP’s headers.",
+    "text": "phpolars needs PHP 8.3, 8.4, or 8.5 (non-thread-safe) on Linux or macOS. Install it with PIE:\npie install phpstats/phpolars\nOn Linux with glibc (x86_64 or arm64), PIE installs the prebuilt binary for the PHP version from the GitHub release. Elsewhere it builds from source, which needs a stable Rust toolchain and libclang and takes several minutes. See Deployment.\nFrom a checkout:\nPHP=$(which php) PHP_CONFIG=$(which php-config) cargo build --profile dist\nphp -d extension=$PWD/target/dist/libphp_polars.so script.php   # .dylib on macOS\nOn macOS with Homebrew, also set LIBCLANG_PATH=$(brew --prefix llvm)/lib. When several PHP versions are installed, point PHP and PHP_CONFIG at the PHP you will load the extension into, because the build uses that PHP’s headers.",
     "crumbs": [
       "Getting started"
     ]
@@ -278,7 +278,7 @@
     "href": "deployment.html",
     "title": "Deployment",
     "section": "",
-    "text": "pie install erikwestlund/phpolars\nThe extension supports PHP 8.3, 8.4, and 8.5, non-thread-safe builds, on Linux and macOS. On Linux with glibc, x86_64 or arm64, PIE downloads the prebuilt binary for the PHP version from the GitHub release. Elsewhere, or when no binary matches, PIE builds the extension with Cargo’s dist profile (fat LTO, opt-level = \"s\", stripped) and enables it. A build needs a stable Rust toolchain and libclang, and takes several minutes.",
+    "text": "pie install phpstats/phpolars\nThe extension supports PHP 8.3, 8.4, and 8.5, non-thread-safe builds, on Linux and macOS. On Linux with glibc, x86_64 or arm64, PIE downloads the prebuilt binary for the PHP version from the GitHub release. Elsewhere, or when no binary matches, PIE builds the extension with Cargo’s dist profile (fat LTO, opt-level = \"s\", stripped) and enables it. A build needs a stable Rust toolchain and libclang, and takes several minutes.",
     "crumbs": [
       "Deployment"
     ]
@@ -288,7 +288,7 @@
     "href": "deployment.html#installing-with-pie",
     "title": "Deployment",
     "section": "",
-    "text": "pie install erikwestlund/phpolars\nThe extension supports PHP 8.3, 8.4, and 8.5, non-thread-safe builds, on Linux and macOS. On Linux with glibc, x86_64 or arm64, PIE downloads the prebuilt binary for the PHP version from the GitHub release. Elsewhere, or when no binary matches, PIE builds the extension with Cargo’s dist profile (fat LTO, opt-level = \"s\", stripped) and enables it. A build needs a stable Rust toolchain and libclang, and takes several minutes.",
+    "text": "pie install phpstats/phpolars\nThe extension supports PHP 8.3, 8.4, and 8.5, non-thread-safe builds, on Linux and macOS. On Linux with glibc, x86_64 or arm64, PIE downloads the prebuilt binary for the PHP version from the GitHub release. Elsewhere, or when no binary matches, PIE builds the extension with Cargo’s dist profile (fat LTO, opt-level = \"s\", stripped) and enables it. A build needs a stable Rust toolchain and libclang, and takes several minutes.",
     "crumbs": [
       "Deployment"
     ]
@@ -488,7 +488,7 @@
     "href": "phibble.html",
     "title": "phibble and phplyr",
     "section": "",
-    "text": "phibble defines a table contract with several backends: its in-memory DataFrame, SqlTable for PDO databases, and Phibble\\Polars\\PolarsTable, which runs on a Polars DataFrame when the php_polars extension is loaded. phplyr’s verbs work on any of them, so a phplyr pipeline runs in Polars when it starts from a PolarsTable. The backend ships with phibble ^0.2 (composer require erikwestlund/phibble:^0.2); install phpolars to enable it. phibble’s Backends page compares the backends.\nA phplyr pipeline on a PolarsTable runs in Polars:\n$out is a PolarsTable, and $out-&gt;collect() returns a Phibble\\DataFrame.",
+    "text": "phibble defines a table contract with several backends: its in-memory DataFrame, SqlTable for PDO databases, and Phibble\\Polars\\PolarsTable, which runs on a Polars DataFrame when the php_polars extension is loaded. phplyr’s verbs work on any of them, so a phplyr pipeline runs in Polars when it starts from a PolarsTable. The backend ships with phibble ^0.2 (composer require phpstats/phibble:^0.2); install phpolars to enable it. phibble’s Backends page compares the backends.\nA phplyr pipeline on a PolarsTable runs in Polars:\n$out is a PolarsTable, and $out-&gt;collect() returns a Phibble\\DataFrame.",
     "crumbs": [
       "phibble and phplyr"
     ]

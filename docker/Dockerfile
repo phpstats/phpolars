@@ -23,7 +23,7 @@ WORKDIR /src
 COPY . .
 # Exercise the real installer, not a hand-written make approximation.
 RUN php /usr/local/bin/pie repository:add path /src \
-    && php /usr/local/bin/pie install 'erikwestlund/phpolars:*@dev' --no-interaction \
+    && php /usr/local/bin/pie install 'phpstats/phpolars:*@dev' --no-interaction \
        --with-php-config=/usr/local/bin/php-config --with-phpize-path=/usr/local/bin/phpize \
     && php tests/deployment.php
 

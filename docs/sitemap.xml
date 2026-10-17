@@ -1,51 +1,51 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://erikwestlund.github.io/phpolars/reference/types.html</loc>
+    <loc>https://phpstats.github.io/phpolars/reference/types.html</loc>
     <lastmod>2026-10-16T14:33:26.667Z</lastmod>
   </url>
   <url>
-    <loc>https://erikwestlund.github.io/phpolars/reference/io.html</loc>
+    <loc>https://phpstats.github.io/phpolars/reference/io.html</loc>
     <lastmod>2026-10-16T14:38:07.010Z</lastmod>
   </url>
   <url>
-    <loc>https://erikwestlund.github.io/phpolars/reference/dataframe.html</loc>
+    <loc>https://phpstats.github.io/phpolars/reference/dataframe.html</loc>
     <lastmod>2026-10-16T14:21:14.936Z</lastmod>
   </url>
   <url>
-    <loc>https://erikwestlund.github.io/phpolars/performance.html</loc>
+    <loc>https://phpstats.github.io/phpolars/performance.html</loc>
     <lastmod>2026-10-17T11:08:50.747Z</lastmod>
   </url>
   <url>
-    <loc>https://erikwestlund.github.io/phpolars/getting-started.html</loc>
-    <lastmod>2026-10-17T18:07:15.584Z</lastmod>
+    <loc>https://phpstats.github.io/phpolars/getting-started.html</loc>
+    <lastmod>2026-10-17T20:33:46.686Z</lastmod>
   </url>
   <url>
-    <loc>https://erikwestlund.github.io/phpolars/deployment.html</loc>
-    <lastmod>2026-10-17T18:22:04.377Z</lastmod>
+    <loc>https://phpstats.github.io/phpolars/deployment.html</loc>
+    <lastmod>2026-10-17T20:33:46.685Z</lastmod>
   </url>
   <url>
-    <loc>https://erikwestlund.github.io/phpolars/coming-from-python.html</loc>
+    <loc>https://phpstats.github.io/phpolars/coming-from-python.html</loc>
     <lastmod>2026-10-16T14:33:58.071Z</lastmod>
   </url>
   <url>
-    <loc>https://erikwestlund.github.io/phpolars/development.html</loc>
+    <loc>https://phpstats.github.io/phpolars/development.html</loc>
     <lastmod>2026-10-17T18:07:15.584Z</lastmod>
   </url>
   <url>
-    <loc>https://erikwestlund.github.io/phpolars/index.html</loc>
-    <lastmod>2026-10-17T20:26:03.221Z</lastmod>
+    <loc>https://phpstats.github.io/phpolars/index.html</loc>
+    <lastmod>2026-10-17T20:33:46.686Z</lastmod>
   </url>
   <url>
-    <loc>https://erikwestlund.github.io/phpolars/phibble.html</loc>
-    <lastmod>2026-10-17T18:04:55.925Z</lastmod>
+    <loc>https://phpstats.github.io/phpolars/phibble.html</loc>
+    <lastmod>2026-10-17T20:33:46.686Z</lastmod>
   </url>
   <url>
-    <loc>https://erikwestlund.github.io/phpolars/reference/expressions.html</loc>
+    <loc>https://phpstats.github.io/phpolars/reference/expressions.html</loc>
     <lastmod>2026-10-16T14:08:44.828Z</lastmod>
   </url>
   <url>
-    <loc>https://erikwestlund.github.io/phpolars/reference/series.html</loc>
+    <loc>https://phpstats.github.io/phpolars/reference/series.html</loc>
     <lastmod>2026-10-16T08:05:01.655Z</lastmod>
   </url>
 </urlset>

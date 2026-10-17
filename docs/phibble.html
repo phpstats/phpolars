@@ -266,7 +266,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<p><a href="https://erikwestlund.github.io/phibble/">phibble</a> defines a table contract with several backends: its in-memory <code>DataFrame</code>, <code>SqlTable</code> for PDO databases, and <code>Phibble\Polars\PolarsTable</code>, which runs on a Polars <code>DataFrame</code> when the php_polars extension is loaded. <a href="https://erikwestlund.github.io/phplyr/">phplyr</a>’s verbs work on any of them, so a phplyr pipeline runs in Polars when it starts from a <code>PolarsTable</code>. The backend ships with phibble ^0.2 (<code>composer require erikwestlund/phibble:^0.2</code>); install phpolars to enable it. phibble’s <a href="https://erikwestlund.github.io/phibble/backends.html">Backends</a> page compares the backends.</p>
+<p><a href="https://phpstats.github.io/phibble/">phibble</a> defines a table contract with several backends: its in-memory <code>DataFrame</code>, <code>SqlTable</code> for PDO databases, and <code>Phibble\Polars\PolarsTable</code>, which runs on a Polars <code>DataFrame</code> when the php_polars extension is loaded. <a href="https://phpstats.github.io/phplyr/">phplyr</a>’s verbs work on any of them, so a phplyr pipeline runs in Polars when it starts from a <code>PolarsTable</code>. The backend ships with phibble ^0.2 (<code>composer require phpstats/phibble:^0.2</code>); install phpolars to enable it. phibble’s <a href="https://phpstats.github.io/phibble/backends.html">Backends</a> page compares the backends.</p>
 <p>A phplyr pipeline on a <code>PolarsTable</code> runs in Polars:</p>
 <div class="tabset-margin-container"></div><div class="panel-tabset" data-group="syntax">
 <ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true" href="">Method chain (PHP 8.3+)</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false" href="">Pipe (PHP 8.5)</a></li></ul>
@@ -384,7 +384,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     }
       var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
       var mailtoRegex = new RegExp(/^mailto:/);
-        var filterRegex = new RegExp("https:\/\/erikwestlund\.github\.io\/phpolars\/");
+        var filterRegex = new RegExp("https:\/\/phpstats\.github\.io\/phpolars\/");
       var isInternal = (href) => {
           return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
       }

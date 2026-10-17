@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- The project moved to the phpstats GitHub organization. The Composer and PIE package is `phpstats/phpolars`, and the documentation is at https://phpstats.github.io/phpolars/.
 - PHP 8.3 and 8.4 are supported, as well as 8.5. CI builds and tests the extension on all three, and releases attach a prebuilt Linux binary for each PHP version on x86_64 and arm64. The archives are named so that `pie install` picks the matching one; other platforms build from source.
 - `toPhibble()` returns a `Phibble\DataFrame`, the name phibble v0.2.0 gives its in-memory table. With phibble v0.1 it still returns a `Phibble\Frame`.
 - Time series: `joinAsof` (backward, forward, and nearest, with `by` groups and tolerances), `groupByDynamic`, `rolling` groups, `upsample`, the `rolling*By` expressions, `rollingQuantile`, `rollingSkew`, `rollingKurtosis`, and the `ewmMean`, `ewmStd`, `ewmVar`, and `ewmMeanBy` expressions.
@@ -37,4 +38,4 @@ First release of phpolars: Polars 0.55.2 data frames for PHP 8.5 as a native ext
 - 169 cases are compared against py-polars 1.43.2, and all match.
 - The Polars backend for phibble and phplyr, `Phibble\Polars\PolarsTable`, was developed here and ships in phibble v0.2.0. It runs phplyr pipelines in Polars with dplyr semantics and passes phibble's dplyr, tidyr, stringr, and lubridate reference fixtures.
 - PIE packaging, a Docker install-and-FPM check, and prebuilt Linux binaries (amd64 and arm64, PHP 8.5 NTS, Debian Bookworm) with dependency notices.
-- Documentation: https://erikwestlund.github.io/phpolars/
+- Documentation: https://phpstats.github.io/phpolars/

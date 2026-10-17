@@ -1,5 +1,5 @@
 {
-    "name": "erikwestlund/phpolars",
+    "name": "phpstats/phpolars",
     "description": "Polars data frames for PHP, as a native Rust extension",
     "type": "php-ext",
     "license": "MIT",

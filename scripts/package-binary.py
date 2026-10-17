@@ -94,7 +94,7 @@ with tempfile.TemporaryDirectory() as temporary:
     (payload/'INSTALL.txt').write_text(
         f'Built and tested for PHP {php_minor}, {arch}, NTS, non-debug, on Debian Bookworm.\n'
         f'Needs glibc {report["minimum_glibc"]} or later. manifest.json lists the full ABI.\n'
-        'pie install erikwestlund/phpolars picks this archive by its name.\n'
+        'pie install phpstats/phpolars picks this archive by its name.\n'
         'To install by hand, copy php_polars.so to php-config --extension-dir.\n'
         'Add extension=php_polars.so to the CLI and FPM configuration; restart FPM.\n'
         'Set php_polars.max_threads in php.ini (default 2) for FPM workers.\n'

@@ -8,9 +8,9 @@ project:
     - data/*.csv
 
 website:
-  site-url: "https://erikwestlund.github.io/phpolars/"
+  site-url: "https://phpstats.github.io/phpolars/"
   title: "phpolars"
-  repo-url: "https://github.com/erikwestlund/phpolars"
+  repo-url: "https://github.com/phpstats/phpolars"
   sidebar:
     style: docked
     search: true

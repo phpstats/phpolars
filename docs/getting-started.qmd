@@ -7,7 +7,7 @@ title: "Getting started"
 phpolars needs PHP 8.3, 8.4, or 8.5 (non-thread-safe) on Linux or macOS. Install it with [PIE](https://github.com/php/pie):
 
 ```sh
-pie install erikwestlund/phpolars
+pie install phpstats/phpolars
 ```
 
 On Linux with glibc (x86_64 or arm64), PIE installs the prebuilt binary for the PHP version from the GitHub release. Elsewhere it builds from source, which needs a stable Rust toolchain and libclang and takes several minutes. See [Deployment](deployment.qmd).

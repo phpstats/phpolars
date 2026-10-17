@@ -5,7 +5,7 @@ title: "Deployment"
 ## Installing with PIE
 
 ```sh
-pie install erikwestlund/phpolars
+pie install phpstats/phpolars
 ```
 
 The extension supports PHP 8.3, 8.4, and 8.5, non-thread-safe builds, on Linux and macOS. On Linux with glibc, x86_64 or arm64, PIE downloads the prebuilt binary for the PHP version from the GitHub release. Elsewhere, or when no binary matches, PIE builds the extension with Cargo's `dist` profile (fat LTO, `opt-level = "s"`, stripped) and enables it. A build needs a stable Rust toolchain and libclang, and takes several minutes.

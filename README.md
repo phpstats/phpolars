@@ -18,7 +18,7 @@ $summary = $df
 print_r($summary->toDicts());
 ```
 
-phpolars is part of a family of PHP 8.3+ packages for data work. [phibble](https://github.com/erikwestlund/phibble) is a pure-PHP data frame, [phplyr](https://github.com/erikwestlund/phplyr) provides dplyr verbs over phibble tables, and phpolars is the optional fast backend. With phibble ^0.2, `Phibble\Polars\PolarsTable` runs phplyr pipelines on phpolars (see phibble's [Backends](https://erikwestlund.github.io/phibble/backends.html) page), and `DataFrame::fromPhibble()` and `toPhibble()` move data between a phpolars `DataFrame` and a `Phibble\DataFrame`.
+phpolars is part of a family of PHP 8.3+ packages for data work. [phibble](https://github.com/phpstats/phibble) is a pure-PHP data frame, [phplyr](https://github.com/phpstats/phplyr) provides dplyr verbs over phibble tables, and phpolars is the optional fast backend. With phibble ^0.2, `Phibble\Polars\PolarsTable` runs phplyr pipelines on phpolars (see phibble's [Backends](https://phpstats.github.io/phibble/backends.html) page), and `DataFrame::fromPhibble()` and `toPhibble()` move data between a phpolars `DataFrame` and a `Phibble\DataFrame`.
 
 ## Requirements
 
@@ -30,7 +30,7 @@ phpolars is part of a family of PHP 8.3+ packages for data work. [phibble](https
 With [PIE](https://github.com/php/pie):
 
 ```sh
-pie install erikwestlund/phpolars
+pie install phpstats/phpolars
 ```
 
 On Linux with glibc (x86_64 or arm64), PIE installs the prebuilt binary for the PHP version from the GitHub release. Elsewhere it builds from source with Cargo.
