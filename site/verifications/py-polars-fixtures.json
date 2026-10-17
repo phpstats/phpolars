@@ -1,0 +1,2520 @@
+{
+    "title": "Agreement with py-polars",
+    "description": "Each case runs the same operation in phpolars and in py-polars 1.43.2 on the same input, from scripts/pyfixtures.py and tests/pyfixtures.php. A case passes when the column names, the data types, and every value agree. Integers, strings, booleans, dates, and nulls must be equal; floats may differ by the relative tolerance. Cases that expect an error pass when phpolars raises the same exception class. n_compared counts the values compared, and the errors are over numeric values.",
+    "reference": "py-polars 1.43.2",
+    "tolerance": 1.0e-9,
+    "cases": [
+        {
+            "name": "select_arith",
+            "quantity": "6 rows × 9 columns",
+            "n_compared": 54,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "select_float_specials",
+            "quantity": "6 rows × 4 columns",
+            "n_compared": 24,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "select_int_div_neg",
+            "quantity": "4 rows × 3 columns",
+            "n_compared": 12,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "select_literals",
+            "quantity": "1 rows × 5 columns",
+            "n_compared": 5,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "select_literal_broadcast",
+            "quantity": "6 rows × 3 columns",
+            "n_compared": 18,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "int32_plus_literal",
+            "quantity": "6 rows × 4 columns",
+            "n_compared": 24,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "with_columns_compare",
+            "quantity": "6 rows × 13 columns",
+            "n_compared": 78,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "with_columns_overwrite",
+            "quantity": "6 rows × 4 columns",
+            "n_compared": 24,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "bool_logic",
+            "quantity": "6 rows × 5 columns",
+            "n_compared": 30,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "horizontal_fns",
+            "quantity": "6 rows × 7 columns",
+            "n_compared": 42,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "filter_gt",
+            "quantity": "3 rows × 2 columns",
+            "n_compared": 6,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "filter_multi",
+            "quantity": "1 rows × 3 columns",
+            "n_compared": 3,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "filter_or_null",
+            "quantity": "2 rows × 3 columns",
+            "n_compared": 6,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "filter_bool_col",
+            "quantity": "3 rows × 2 columns",
+            "n_compared": 6,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "filter_date",
+            "quantity": "3 rows × 2 columns",
+            "n_compared": 6,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "filter_datetime",
+            "quantity": "3 rows × 2 columns",
+            "n_compared": 6,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "sort_single",
+            "quantity": "6 rows × 2 columns",
+            "n_compared": 12,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "sort_desc_nulls_last",
+            "quantity": "6 rows × 2 columns",
+            "n_compared": 12,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "sort_multi",
+            "quantity": "6 rows × 3 columns",
+            "n_compared": 18,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "sort_multi_nulls_last",
+            "quantity": "6 rows × 3 columns",
+            "n_compared": 18,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "sort_multi_mixed_nulls_last",
+            "quantity": "6 rows × 3 columns",
+            "n_compared": 18,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "sort_expr",
+            "quantity": "6 rows × 2 columns",
+            "n_compared": 12,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "sort_date_desc",
+            "quantity": "6 rows × 2 columns",
+            "n_compared": 12,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "sort_string",
+            "quantity": "6 rows × 2 columns",
+            "n_compared": 12,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "sort_bool",
+            "quantity": "6 rows × 2 columns",
+            "n_compared": 12,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "gb_sum_mean",
+            "quantity": "4 rows × 5 columns",
+            "n_compared": 20,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "gb_median_min_max",
+            "quantity": "4 rows × 7 columns",
+            "n_compared": 28,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "gb_std_var",
+            "quantity": "4 rows × 4 columns",
+            "n_compared": 16,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "gb_count_len",
+            "quantity": "4 rows × 4 columns",
+            "n_compared": 16,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "gb_n_unique_first_last",
+            "quantity": "3 rows × 4 columns",
+            "n_compared": 12,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "gb_quantile",
+            "quantity": "3 rows × 6 columns",
+            "n_compared": 18,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "gb_multi_key",
+            "quantity": "6 rows × 3 columns",
+            "n_compared": 18,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "gb_expr_key",
+            "quantity": "3 rows × 3 columns",
+            "n_compared": 12,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "gb_implicit_list",
+            "quantity": "4 rows × 3 columns",
+            "n_compared": 14,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "gb_filter_sortby",
+            "quantity": "4 rows × 3 columns",
+            "n_compared": 12,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "gb_len_method",
+            "quantity": "4 rows × 2 columns",
+            "n_compared": 8,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "gb_sum_method",
+            "quantity": "4 rows × 3 columns",
+            "n_compared": 12,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "gb_mean_method",
+            "quantity": "3 rows × 3 columns",
+            "n_compared": 9,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "gb_head",
+            "quantity": "4 rows × 2 columns",
+            "n_compared": 8,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "join_inner",
+            "quantity": "3 rows × 5 columns",
+            "n_compared": 15,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "join_left",
+            "quantity": "6 rows × 4 columns",
+            "n_compared": 24,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "join_full",
+            "quantity": "8 rows × 5 columns",
+            "n_compared": 40,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "join_full_coalesce",
+            "quantity": "8 rows × 4 columns",
+            "n_compared": 32,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "join_semi",
+            "quantity": "3 rows × 3 columns",
+            "n_compared": 9,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "join_anti",
+            "quantity": "3 rows × 3 columns",
+            "n_compared": 9,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "join_nulls_equal",
+            "quantity": "6 rows × 5 columns",
+            "n_compared": 30,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "join_cross",
+            "quantity": "6 rows × 4 columns",
+            "n_compared": 24,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "join_suffix",
+            "quantity": "3 rows × 5 columns",
+            "n_compared": 15,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "join_left_on_right_on",
+            "quantity": "6 rows × 5 columns",
+            "n_compared": 30,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "join_multi_key",
+            "quantity": "6 rows × 4 columns",
+            "n_compared": 24,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "unique_subset_first",
+            "quantity": "4 rows × 2 columns",
+            "n_compared": 8,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "unique_keep_last",
+            "quantity": "4 rows × 2 columns",
+            "n_compared": 8,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "unique_keep_none",
+            "quantity": "2 rows × 2 columns",
+            "n_compared": 4,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "unique_rows",
+            "quantity": "5 rows × 2 columns",
+            "n_compared": 10,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "fill_null_value_frame",
+            "quantity": "6 rows × 4 columns",
+            "n_compared": 24,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "fill_null_string",
+            "quantity": "6 rows × 2 columns",
+            "n_compared": 12,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "fill_null_strategies",
+            "quantity": "6 rows × 8 columns",
+            "n_compared": 48,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "fill_null_limit",
+            "quantity": "6 rows × 2 columns",
+            "n_compared": 12,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "fill_null_frame_forward",
+            "quantity": "6 rows × 3 columns",
+            "n_compared": 18,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "drop_nulls_all",
+            "quantity": "3 rows × 4 columns",
+            "n_compared": 12,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "drop_nulls_subset",
+            "quantity": "4 rows × 4 columns",
+            "n_compared": 16,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "null_count",
+            "quantity": "1 rows × 10 columns",
+            "n_compared": 10,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "interpolate",
+            "quantity": "5 rows × 2 columns",
+            "n_compared": 10,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "unpivot",
+            "quantity": "12 rows × 3 columns",
+            "n_compared": 36,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "unpivot_mixed_names",
+            "quantity": "12 rows × 3 columns",
+            "n_compared": 36,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "pivot_first",
+            "quantity": "3 rows × 3 columns",
+            "n_compared": 9,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "pivot_sum",
+            "quantity": "3 rows × 3 columns",
+            "n_compared": 9,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "pivot_mean",
+            "quantity": "3 rows × 3 columns",
+            "n_compared": 9,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "pivot_len",
+            "quantity": "3 rows × 3 columns",
+            "n_compared": 9,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "explode_single",
+            "quantity": "10 rows × 2 columns",
+            "n_compared": 20,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "explode_two",
+            "quantity": "3 rows × 3 columns",
+            "n_compared": 9,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "transpose",
+            "quantity": "2 rows × 4 columns",
+            "n_compared": 8,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "with_row_index",
+            "quantity": "6 rows × 2 columns",
+            "n_compared": 12,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "concat_vertical",
+            "quantity": "3 rows × 2 columns",
+            "n_compared": 6,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "concat_horizontal",
+            "quantity": "2 rows × 4 columns",
+            "n_compared": 8,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "concat_diagonal",
+            "quantity": "3 rows × 3 columns",
+            "n_compared": 9,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "concat_vertical_relaxed",
+            "quantity": "3 rows × 2 columns",
+            "n_compared": 6,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "concat_diagonal_relaxed",
+            "quantity": "3 rows × 3 columns",
+            "n_compared": 9,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "describe_numeric",
+            "quantity": "9 rows × 3 columns",
+            "n_compared": 27,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "describe_mixed",
+            "quantity": "9 rows × 5 columns",
+            "n_compared": 45,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "describe_percentiles",
+            "quantity": "8 rows × 2 columns",
+            "n_compared": 16,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "frame_sum",
+            "quantity": "1 rows × 4 columns",
+            "n_compared": 4,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "frame_mean",
+            "quantity": "1 rows × 3 columns",
+            "n_compared": 3,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "frame_min_max",
+            "quantity": "2 rows × 4 columns",
+            "n_compared": 8,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "frame_std_var",
+            "quantity": "2 rows × 2 columns",
+            "n_compared": 4,
+            "max_abs_error": 8.881784197001252e-16,
+            "max_rel_error": 1.914177628664063e-16,
+            "passed": true
+        },
+        {
+            "name": "frame_median",
+            "quantity": "1 rows × 2 columns",
+            "n_compared": 2,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "frame_n_unique",
+            "quantity": "1 rows × 3 columns",
+            "n_compared": 3,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "over_sum",
+            "quantity": "6 rows × 2 columns",
+            "n_compared": 12,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "over_multi",
+            "quantity": "6 rows × 3 columns",
+            "n_compared": 18,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "over_order_by",
+            "quantity": "6 rows × 2 columns",
+            "n_compared": 12,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "over_order_by_desc",
+            "quantity": "6 rows × 2 columns",
+            "n_compared": 12,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "over_rank",
+            "quantity": "6 rows × 2 columns",
+            "n_compared": 12,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "cum_fns",
+            "quantity": "6 rows × 6 columns",
+            "n_compared": 36,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "shift",
+            "quantity": "6 rows × 4 columns",
+            "n_compared": 24,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "diff",
+            "quantity": "6 rows × 3 columns",
+            "n_compared": 18,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "pct_change",
+            "quantity": "6 rows × 1 columns",
+            "n_compared": 6,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "rank_methods",
+            "quantity": "6 rows × 7 columns",
+            "n_compared": 42,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "rolling",
+            "quantity": "6 rows × 7 columns",
+            "n_compared": 42,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "when_basic",
+            "quantity": "6 rows × 2 columns",
+            "n_compared": 12,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "when_chain",
+            "quantity": "6 rows × 2 columns",
+            "n_compared": 12,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "when_no_otherwise",
+            "quantity": "6 rows × 2 columns",
+            "n_compared": 12,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "when_multi_cond",
+            "quantity": "6 rows × 2 columns",
+            "n_compared": 12,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "when_supertype",
+            "quantity": "6 rows × 2 columns",
+            "n_compared": 12,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "str_contains",
+            "quantity": "6 rows × 5 columns",
+            "n_compared": 30,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "str_replace",
+            "quantity": "6 rows × 5 columns",
+            "n_compared": 30,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "str_slice",
+            "quantity": "6 rows × 4 columns",
+            "n_compared": 24,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "str_split",
+            "quantity": "6 rows × 2 columns",
+            "n_compared": 19,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "str_strip",
+            "quantity": "6 rows × 4 columns",
+            "n_compared": 24,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "str_case",
+            "quantity": "6 rows × 2 columns",
+            "n_compared": 12,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "str_len",
+            "quantity": "6 rows × 2 columns",
+            "n_compared": 12,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "str_pad",
+            "quantity": "6 rows × 3 columns",
+            "n_compared": 18,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "str_extract",
+            "quantity": "6 rows × 3 columns",
+            "n_compared": 25,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "str_count_matches",
+            "quantity": "6 rows × 3 columns",
+            "n_compared": 18,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "str_starts_ends",
+            "quantity": "6 rows × 2 columns",
+            "n_compared": 12,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "str_to_integer",
+            "quantity": "6 rows × 1 columns",
+            "n_compared": 6,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "str_to_integer_base",
+            "quantity": "3 rows × 1 columns",
+            "n_compared": 3,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "str_find_reverse",
+            "quantity": "6 rows × 2 columns",
+            "n_compared": 12,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "str_join_agg",
+            "quantity": "1 rows × 2 columns",
+            "n_compared": 2,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "str_to_date_datetime",
+            "quantity": "2 rows × 2 columns",
+            "n_compared": 4,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "dt_parts",
+            "quantity": "6 rows × 10 columns",
+            "n_compared": 60,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "date_parts",
+            "quantity": "6 rows × 5 columns",
+            "n_compared": 30,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "dt_strftime",
+            "quantity": "6 rows × 3 columns",
+            "n_compared": 18,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "dt_truncate",
+            "quantity": "6 rows × 5 columns",
+            "n_compared": 30,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "dt_round",
+            "quantity": "6 rows × 1 columns",
+            "n_compared": 6,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "dt_epoch",
+            "quantity": "6 rows × 5 columns",
+            "n_compared": 30,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "dt_date_time",
+            "quantity": "6 rows × 4 columns",
+            "n_compared": 24,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "dt_offset_by",
+            "quantity": "6 rows × 3 columns",
+            "n_compared": 18,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "dt_duration",
+            "quantity": "6 rows × 3 columns",
+            "n_compared": 18,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "dt_cast_time_unit",
+            "quantity": "6 rows × 1 columns",
+            "n_compared": 6,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "dt_time_zone",
+            "quantity": "6 rows × 2 columns",
+            "n_compared": 12,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "list_aggs",
+            "quantity": "6 rows × 5 columns",
+            "n_compared": 30,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "list_get",
+            "quantity": "6 rows × 4 columns",
+            "n_compared": 24,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "list_contains",
+            "quantity": "6 rows × 2 columns",
+            "n_compared": 12,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "list_join",
+            "quantity": "6 rows × 1 columns",
+            "n_compared": 6,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "list_eval",
+            "quantity": "6 rows × 2 columns",
+            "n_compared": 18,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "list_sort_unique",
+            "quantity": "6 rows × 4 columns",
+            "n_compared": 28,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "list_unique",
+            "quantity": "2 rows × 2 columns",
+            "n_compared": 6,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "list_concat_list",
+            "quantity": "6 rows × 1 columns",
+            "n_compared": 12,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "cast_numeric",
+            "quantity": "6 rows × 5 columns",
+            "n_compared": 30,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "cast_to_string",
+            "quantity": "6 rows × 5 columns",
+            "n_compared": 30,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "cast_temporal",
+            "quantity": "6 rows × 3 columns",
+            "n_compared": 18,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "cast_strict_fails",
+            "quantity": "raises InvalidOperationError",
+            "n_compared": 1,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "cast_non_strict",
+            "quantity": "6 rows × 2 columns",
+            "n_compared": 12,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "cast_overflow_strict_fails",
+            "quantity": "raises InvalidOperationError",
+            "n_compared": 1,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "cast_string_to_float",
+            "quantity": "5 rows × 1 columns",
+            "n_compared": 5,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "cast_frame_map",
+            "quantity": "6 rows × 3 columns",
+            "n_compared": 18,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "is_in",
+            "quantity": "6 rows × 4 columns",
+            "n_compared": 24,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "is_between",
+            "quantity": "6 rows × 5 columns",
+            "n_compared": 30,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "is_between_dates",
+            "quantity": "6 rows × 1 columns",
+            "n_compared": 6,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "clip",
+            "quantity": "6 rows × 4 columns",
+            "n_compared": 24,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "round",
+            "quantity": "8 rows × 6 columns",
+            "n_compared": 48,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "math",
+            "quantity": "6 rows × 6 columns",
+            "n_compared": 36,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "value_counts_expr",
+            "quantity": "4 rows × 2 columns",
+            "n_compared": 8,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "value_counts_series",
+            "quantity": "4 rows × 2 columns",
+            "n_compared": 8,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "value_counts_normalize",
+            "quantity": "3 rows × 2 columns",
+            "n_compared": 6,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "series_int_aggs",
+            "quantity": "16 scalar values",
+            "n_compared": 16,
+            "max_abs_error": 8.881784197001252e-16,
+            "max_rel_error": 1.5313421029312503e-16,
+            "passed": true
+        },
+        {
+            "name": "series_float_aggs",
+            "quantity": "14 scalar values",
+            "n_compared": 14,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "series_quantile_int_arg",
+            "quantity": "2 scalar values",
+            "n_compared": 2,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "series_str_aggs",
+            "quantity": "6 scalar values",
+            "n_compared": 6,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "series_bool_aggs",
+            "quantity": "5 scalar values",
+            "n_compared": 5,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "series_ops",
+            "quantity": "6 rows × 8 columns",
+            "n_compared": 48,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "series_sort",
+            "quantity": "6 rows × 1 columns",
+            "n_compared": 6,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "series_unique",
+            "quantity": "4 rows × 1 columns",
+            "n_compared": 4,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "series_empty_aggs",
+            "quantity": "5 scalar values",
+            "n_compared": 5,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "head_tail_slice",
+            "quantity": "5 rows × 1 columns",
+            "n_compared": 5,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "rename_drop_reverse",
+            "quantity": "6 rows × 2 columns",
+            "n_compared": 12,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "struct_pack_field",
+            "quantity": "6 rows × 2 columns",
+            "n_compared": 18,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "unique_counts_mode",
+            "quantity": "2 rows × 1 columns",
+            "n_compared": 2,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "top_bottom_k",
+            "quantity": "2 rows × 2 columns",
+            "n_compared": 4,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "join_asof_backward",
+            "quantity": "6 rows × 6 columns",
+            "n_compared": 36,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "join_asof_forward_by",
+            "quantity": "6 rows × 5 columns",
+            "n_compared": 30,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "join_asof_nearest_tolerance",
+            "quantity": "6 rows × 6 columns",
+            "n_compared": 36,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "join_asof_int_tolerance",
+            "quantity": "3 rows × 2 columns",
+            "n_compared": 6,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "group_by_dynamic_day",
+            "quantity": "3 rows × 3 columns",
+            "n_compared": 9,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "group_by_dynamic_by_bounds",
+            "quantity": "9 rows × 5 columns",
+            "n_compared": 45,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "group_by_dynamic_label_offset",
+            "quantity": "3 rows × 2 columns",
+            "n_compared": 6,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "rolling_frame",
+            "quantity": "6 rows × 3 columns",
+            "n_compared": 18,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "rolling_frame_by",
+            "quantity": "6 rows × 3 columns",
+            "n_compared": 18,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "rolling_by_exprs",
+            "quantity": "6 rows × 9 columns",
+            "n_compared": 54,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "rolling_quantile_skew",
+            "quantity": "6 rows × 4 columns",
+            "n_compared": 24,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "ewm",
+            "quantity": "6 rows × 4 columns",
+            "n_compared": 24,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "ewm_mean_by",
+            "quantity": "6 rows × 1 columns",
+            "n_compared": 6,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "ewm_no_alpha",
+            "quantity": "raises ValueError",
+            "n_compared": 1,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "cut_qcut",
+            "quantity": "6 rows × 5 columns",
+            "n_compared": 30,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "cut_include_breaks",
+            "quantity": "6 rows × 2 columns",
+            "n_compared": 12,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "rle",
+            "quantity": "4 rows × 2 columns",
+            "n_compared": 8,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "rle_id",
+            "quantity": "8 rows × 1 columns",
+            "n_compared": 8,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "search_sorted",
+            "quantity": "1 rows × 4 columns",
+            "n_compared": 4,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "search_sorted_many",
+            "quantity": "3 rows × 1 columns",
+            "n_compared": 3,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "peaks_entropy",
+            "quantity": "6 rows × 4 columns",
+            "n_compared": 24,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "hist_bins",
+            "quantity": "3 rows × 1 columns",
+            "n_compared": 3,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "hist_count_breaks",
+            "quantity": "2 rows × 3 columns",
+            "n_compared": 6,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "interpolate_by",
+            "quantity": "7 rows × 1 columns",
+            "n_compared": 7,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "is_close_index_of",
+            "quantity": "4 rows × 5 columns",
+            "n_compared": 20,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "arg_unique_bounds",
+            "quantity": "1 rows × 3 columns",
+            "n_compared": 5,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "trig_extra",
+            "quantity": "8 rows × 9 columns",
+            "n_compared": 72,
+            "max_abs_error": 2.220446049250313e-16,
+            "max_rel_error": 1.4171860675276878e-16,
+            "passed": true
+        },
+        {
+            "name": "frame_shift",
+            "quantity": "6 rows × 2 columns",
+            "n_compared": 12,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "frame_shift_fill",
+            "quantity": "6 rows × 2 columns",
+            "n_compared": 12,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "frame_interpolate",
+            "quantity": "6 rows × 2 columns",
+            "n_compared": 12,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "frame_quantile_product",
+            "quantity": "2 rows × 3 columns",
+            "n_compared": 6,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "frame_top_bottom_k",
+            "quantity": "7 rows × 4 columns",
+            "n_compared": 28,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "frame_gather_every",
+            "quantity": "3 rows × 2 columns",
+            "n_compared": 6,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "frame_drop_nans",
+            "quantity": "5 rows × 4 columns",
+            "n_compared": 20,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "frame_drop_nans_subset",
+            "quantity": "5 rows × 5 columns",
+            "n_compared": 25,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "frame_is_duplicated",
+            "quantity": "6 rows × 2 columns",
+            "n_compared": 12,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "frame_upsample",
+            "quantity": "6 rows × 3 columns",
+            "n_compared": 18,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "frame_corr",
+            "quantity": "3 rows × 3 columns",
+            "n_compared": 9,
+            "max_abs_error": 4.996003610813204e-16,
+            "max_rel_error": 2.3931036924107328e-15,
+            "passed": true
+        },
+        {
+            "name": "frame_insert_to_struct",
+            "quantity": "3 rows × 3 columns",
+            "n_compared": 9,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "frame_approx_n_unique",
+            "quantity": "1 rows × 2 columns",
+            "n_compared": 2,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "fn_date_range",
+            "quantity": "4 rows × 1 columns",
+            "n_compared": 4,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "fn_date_range_closed",
+            "quantity": "3 rows × 1 columns",
+            "n_compared": 3,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "fn_datetime_range",
+            "quantity": "5 rows × 1 columns",
+            "n_compared": 5,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "fn_date_ranges",
+            "quantity": "2 rows × 1 columns",
+            "n_compared": 6,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "fn_int_ranges",
+            "quantity": "5 rows × 2 columns",
+            "n_compared": 17,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "fn_date_datetime",
+            "quantity": "5 rows × 2 columns",
+            "n_compared": 10,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "fn_duration",
+            "quantity": "5 rows × 2 columns",
+            "n_compared": 10,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "fn_from_epoch",
+            "quantity": "2 rows × 3 columns",
+            "n_compared": 6,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "fn_arg_where",
+            "quantity": "3 rows × 1 columns",
+            "n_compared": 3,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "fn_corr_cov",
+            "quantity": "1 rows × 4 columns",
+            "n_compared": 4,
+            "max_abs_error": 2.220446049250313e-16,
+            "max_rel_error": 1.982541115402065e-16,
+            "passed": true
+        },
+        {
+            "name": "fn_nth",
+            "quantity": "6 rows × 2 columns",
+            "n_compared": 12,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "fn_repeat_linear_space",
+            "quantity": "3 rows × 2 columns",
+            "n_compared": 6,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "fn_select",
+            "quantity": "1 rows × 2 columns",
+            "n_compared": 2,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "fn_stat_shorthands",
+            "quantity": "1 rows × 5 columns",
+            "n_compared": 10,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "str_many",
+            "quantity": "6 rows × 6 columns",
+            "n_compared": 36,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "str_extract_groups",
+            "quantity": "3 rows × 2 columns",
+            "n_compared": 6,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "str_split_exact",
+            "quantity": "3 rows × 4 columns",
+            "n_compared": 12,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "str_encode_decode",
+            "quantity": "3 rows × 3 columns",
+            "n_compared": 9,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "str_to_decimal",
+            "quantity": "3 rows × 1 columns",
+            "n_compared": 3,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "str_normalize_escape",
+            "quantity": "6 rows × 2 columns",
+            "n_compared": 12,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "str_json",
+            "quantity": "3 rows × 3 columns",
+            "n_compared": 9,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "dt_parts_extra",
+            "quantity": "4 rows × 3 columns",
+            "n_compared": 12,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "dt_business",
+            "quantity": "4 rows × 5 columns",
+            "n_compared": 20,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "dt_combine_replace",
+            "quantity": "4 rows × 3 columns",
+            "n_compared": 12,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "dt_time_unit",
+            "quantity": "6 rows × 2 columns",
+            "n_compared": 12,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "list_more",
+            "quantity": "6 rows × 5 columns",
+            "n_compared": 30,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "list_to_array",
+            "quantity": "2 rows × 3 columns",
+            "n_compared": 8,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "arr_aggs",
+            "quantity": "3 rows × 9 columns",
+            "n_compared": 27,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "arr_ops",
+            "quantity": "3 rows × 13 columns",
+            "n_compared": 62,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "arr_explode_struct",
+            "quantity": "2 rows × 3 columns",
+            "n_compared": 6,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "cat_ns",
+            "quantity": "4 rows × 5 columns",
+            "n_compared": 20,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "cat_categories",
+            "quantity": "9 rows × 1 columns",
+            "n_compared": 9,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "bin_ns",
+            "quantity": "3 rows × 8 columns",
+            "n_compared": 24,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "series_mirrors_expr",
+            "quantity": "6 rows × 5 columns",
+            "n_compared": 30,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "series_scalar_reductions",
+            "quantity": "7 scalar values",
+            "n_compared": 7,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "selectors",
+            "quantity": "40 scalar values",
+            "n_compared": 40,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "multi_col_logic_is_boolean",
+            "quantity": "8 rows × 2 columns",
+            "n_compared": 16,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "selectors_in_ops",
+            "quantity": "6 rows × 4 columns",
+            "n_compared": 24,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "sql_frame",
+            "quantity": "4 rows × 3 columns",
+            "n_compared": 12,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "sql_context_join",
+            "quantity": "6 rows × 3 columns",
+            "n_compared": 18,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "sql_expressions",
+            "quantity": "6 rows × 6 columns",
+            "n_compared": 36,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "sql_window_cte",
+            "quantity": "5 rows × 4 columns",
+            "n_compared": 20,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "sql_table_name",
+            "quantity": "1 rows × 1 columns",
+            "n_compared": 1,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "sql_function",
+            "quantity": "2 rows × 2 columns",
+            "n_compared": 4,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "sql_error",
+            "quantity": "raises ColumnNotFoundError",
+            "n_compared": 1,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "frame_to_dummies",
+            "quantity": "6 rows × 9 columns",
+            "n_compared": 54,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "frame_to_dummies_opts",
+            "quantity": "6 rows × 2 columns",
+            "n_compared": 12,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "series_to_dummies",
+            "quantity": "6 rows × 4 columns",
+            "n_compared": 24,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "frame_horizontal",
+            "quantity": "6 rows × 4 columns",
+            "n_compared": 24,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "frame_clear",
+            "quantity": "2 rows × 2 columns",
+            "n_compared": 4,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "frame_replace_column",
+            "quantity": "2 rows × 2 columns",
+            "n_compared": 4,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "frame_column_index",
+            "quantity": "1 scalar values",
+            "n_compared": 1,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "group_by_quantile",
+            "quantity": "4 rows × 3 columns",
+            "n_compared": 12,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "min_max_by",
+            "quantity": "1 rows × 2 columns",
+            "n_compared": 2,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "first_last_non_null",
+            "quantity": "1 rows × 2 columns",
+            "n_compared": 2,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "expr_item",
+            "quantity": "1 rows × 1 columns",
+            "n_compared": 1,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "cumulative_eval",
+            "quantity": "6 rows × 1 columns",
+            "n_compared": 6,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "bitwise",
+            "quantity": "3 rows × 6 columns",
+            "n_compared": 18,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "struct_with_fields",
+            "quantity": "6 rows × 4 columns",
+            "n_compared": 24,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "fn_business_day_count",
+            "quantity": "4 rows × 1 columns",
+            "n_compared": 4,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "fn_format",
+            "quantity": "6 rows × 1 columns",
+            "n_compared": 6,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "fn_arg_sort_by",
+            "quantity": "6 rows × 1 columns",
+            "n_compared": 6,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "fn_concat_arr",
+            "quantity": "6 rows × 1 columns",
+            "n_compared": 6,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "group_by_iter",
+            "quantity": "6 rows × 4 columns",
+            "n_compared": 24,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "top_k_by",
+            "quantity": "3 rows × 2 columns",
+            "n_compared": 6,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "ewm_sum",
+            "quantity": "6 rows × 2 columns",
+            "n_compared": 12,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "ewm_sum_by",
+            "quantity": "6 rows × 1 columns",
+            "n_compared": 6,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "extend_constant",
+            "quantity": "8 rows × 1 columns",
+            "n_compared": 8,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "reshape",
+            "quantity": "2 rows × 1 columns",
+            "n_compared": 2,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "rolling_rank",
+            "quantity": "6 rows × 2 columns",
+            "n_compared": 12,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "rolling_rank_by",
+            "quantity": "6 rows × 1 columns",
+            "n_compared": 6,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "expr_rolling",
+            "quantity": "6 rows × 3 columns",
+            "n_compared": 18,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "reinterpret",
+            "quantity": "2 rows × 1 columns",
+            "n_compared": 2,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "is_empty_arg_true",
+            "quantity": "1 rows × 4 columns",
+            "n_compared": 15,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "meta",
+            "quantity": "8 scalar values",
+            "n_compared": 8,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "ns_extras",
+            "quantity": "6 rows × 3 columns",
+            "n_compared": 18,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "list_item",
+            "quantity": "3 rows × 1 columns",
+            "n_compared": 3,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "struct_unnest",
+            "quantity": "6 rows × 2 columns",
+            "n_compared": 12,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "bin_reinterpret",
+            "quantity": "2 rows × 2 columns",
+            "n_compared": 4,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "frame_remove",
+            "quantity": "3 rows × 2 columns",
+            "n_compared": 6,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "frame_gather",
+            "quantity": "3 rows × 2 columns",
+            "n_compared": 6,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "frame_merge_sorted",
+            "quantity": "6 rows × 2 columns",
+            "n_compared": 12,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "frame_update",
+            "quantity": "6 rows × 3 columns",
+            "n_compared": 18,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "frame_update_nulls_full",
+            "quantity": "7 rows × 3 columns",
+            "n_compared": 21,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "frame_update_by_row",
+            "quantity": "6 rows × 2 columns",
+            "n_compared": 12,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "frame_iter_slices",
+            "quantity": "6 rows × 2 columns",
+            "n_compared": 12,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "frame_map_rows",
+            "quantity": "6 rows × 2 columns",
+            "n_compared": 12,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "frame_map_rows_scalar",
+            "quantity": "6 rows × 1 columns",
+            "n_compared": 6,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "group_by_having",
+            "quantity": "2 rows × 2 columns",
+            "n_compared": 4,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "series_describe",
+            "quantity": "9 rows × 2 columns",
+            "n_compared": 18,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "series_scatter",
+            "quantity": "6 rows × 2 columns",
+            "n_compared": 12,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "series_set",
+            "quantity": "6 rows × 1 columns",
+            "n_compared": 6,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "fn_more",
+            "quantity": "6 rows × 7 columns",
+            "n_compared": 42,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "fn_cum_sum_horizontal",
+            "quantity": "6 rows × 3 columns",
+            "n_compared": 18,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "fn_head_tail",
+            "quantity": "2 rows × 2 columns",
+            "n_compared": 4,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "fn_linear_spaces",
+            "quantity": "2 rows × 2 columns",
+            "n_compared": 10,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "fn_time",
+            "quantity": "6 rows × 1 columns",
+            "n_compared": 6,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "fn_time_range",
+            "quantity": "3 rows × 1 columns",
+            "n_compared": 3,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "fn_rolling_corr_cov",
+            "quantity": "6 rows × 2 columns",
+            "n_compared": 12,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "fn_escape_regex",
+            "quantity": "1 scalar values",
+            "n_compared": 1,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "json_normalize",
+            "quantity": "3 rows × 6 columns",
+            "n_compared": 19,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "json_normalize_level",
+            "quantity": "3 rows × 5 columns",
+            "n_compared": 16,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "sql_expr",
+            "quantity": "6 rows × 2 columns",
+            "n_compared": 12,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "melt",
+            "quantity": "6 rows × 3 columns",
+            "n_compared": 18,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        },
+        {
+            "name": "arange",
+            "quantity": "3 rows × 1 columns",
+            "n_compared": 3,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "passed": true
+        }
+    ]
+}

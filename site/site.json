@@ -1,0 +1,111 @@
+{
+  "package": "phpolars",
+  "title": "phpolars",
+  "tagline": "Polars data frames for PHP",
+  "summary": "phpolars is a PHP extension, written in Rust, that brings the Polars data frame engine to PHP. It follows the py-polars API: DataFrame, LazyFrame, Series, and expressions, with lazy queries, time series windows, joins, SQL, and readers for CSV, Parquet, JSON, and Arrow IPC. Queries run on Polars' multithreaded engine. It is also the engine behind phibble's PolarsTable, so phplyr pipelines can run in Polars.",
+  "install": [
+    "pie install phpstats/phpolars"
+  ],
+  "requires": [
+    "PHP 8.3, 8.4, or 8.5 (NTS) on Linux or macOS",
+    "Prebuilt binaries for Linux with glibc 2.34+ on x86_64 and arm64; elsewhere PIE builds from source with Rust and libclang"
+  ],
+  "repository": "https://github.com/phpstats/phpolars",
+  "example": {
+    "chain": "use function Phpolars\\{col, len, read_csv};\n\n$sales = read_csv('sales.csv', tryParseDates: true);\n\n$top = $sales\n    ->filter(col('units')->gt(0))\n    ->withColumns(col('units')->mul(col('price'))->alias('revenue'))\n    ->groupBy('product', maintainOrder: true)\n    ->agg(col('revenue')->sum()->round(2), ['orders' => len()], col('price')->mean()->round(2)->alias('avg_price'))\n    ->sort('revenue', descending: true);\n\necho $top;\n",
+    "pipe": null,
+    "output": "shape: (4, 4)\n┌─────────┬─────────┬────────┬───────────┐\n│ product ┆ revenue ┆ orders ┆ avg_price │\n│ ---     ┆ ---     ┆ ---    ┆ ---       │\n│ str     ┆ f64     ┆ u32    ┆ f64       │\n╞═════════╪═════════╪════════╪═══════════╡\n│ cherry  ┆ 1307.38 ┆ 44     ┆ 4.09      │\n│ banana  ┆ 1285.76 ┆ 48     ┆ 4.35      │\n│ apple   ┆ 1227.68 ┆ 42     ┆ 4.38      │\n│ date    ┆ 1153.58 ┆ 41     ┆ 4.46      │\n└─────────┴─────────┴────────┴───────────┘\n"
+  },
+  "docs": {
+    "root": "docs",
+    "format": "quarto",
+    "nav": [
+      {
+        "title": "Overview",
+        "path": "index.qmd"
+      },
+      {
+        "title": "Getting started",
+        "path": "getting-started.qmd"
+      },
+      {
+        "title": "Coming from py-polars",
+        "path": "coming-from-python.qmd"
+      },
+      {
+        "title": "DataFrame and LazyFrame",
+        "path": "reference/dataframe.qmd"
+      },
+      {
+        "title": "Expressions",
+        "path": "reference/expressions.qmd"
+      },
+      {
+        "title": "Series",
+        "path": "reference/series.qmd"
+      },
+      {
+        "title": "Input and output",
+        "path": "reference/io.qmd"
+      },
+      {
+        "title": "Data types",
+        "path": "reference/types.qmd"
+      },
+      {
+        "title": "phibble and phplyr",
+        "path": "phibble.qmd"
+      },
+      {
+        "title": "Deployment",
+        "path": "deployment.qmd"
+      },
+      {
+        "title": "Performance",
+        "path": "performance.qmd"
+      },
+      {
+        "title": "Development",
+        "path": "development.qmd"
+      }
+    ]
+  },
+  "benchmarks": [
+    "site/benchmarks/py-polars.json",
+    "site/benchmarks/php-arrays.json"
+  ],
+  "verifications": [
+    "site/verifications/py-polars-fixtures.json"
+  ],
+  "vignettes": [
+    {
+      "slug": "lazy-queries",
+      "title": "Lazy queries over a large file",
+      "summary": "Scan a Parquet or CSV file with up to 5 million rows, let Polars push the filter and column selection into the scan, and compare the time with reading the whole file first.",
+      "uses": [
+        "php_polars"
+      ],
+      "script": "site/vignettes/lazy-queries.php"
+    },
+    {
+      "slug": "phplyr-on-polars",
+      "title": "phplyr pipelines on Polars",
+      "summary": "Run one phplyr pipeline on phibble's in-memory DataFrame and on a PolarsTable, check that the results agree, and compare the times.",
+      "uses": [
+        "php_polars",
+        "phibble",
+        "phplyr"
+      ],
+      "script": "site/vignettes/phplyr-on-polars.php"
+    },
+    {
+      "slug": "time-series",
+      "title": "Rolling windows and asof joins",
+      "summary": "Price a year of daily sales with an asof join, smooth it with a time-based rolling mean, and summarize it by month or quarter.",
+      "uses": [
+        "php_polars"
+      ],
+      "script": "site/vignettes/time-series.php"
+    }
+  ]
+}

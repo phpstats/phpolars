@@ -867,6 +867,36 @@ function matches(mixed $expected, mixed $actual): bool {
     return $expected === $actual;
 }
 
+/** Per-case numbers for the site: values compared and the largest numeric errors. */
+function verification(array $expected, array $actual, bool $ok): array {
+    $stats = ['n' => 0, 'abs' => 0.0, 'rel' => 0.0];
+    $walk = function (mixed $e, mixed $a) use (&$walk, &$stats): void {
+        if (is_array($e) && !isset($e['$float'])) {
+            foreach ($e as $k => $v) {
+                $walk($v, is_array($a) ? ($a[$k] ?? null) : null);
+            }
+            return;
+        }
+        $stats['n']++;
+        if ((is_int($e) || is_float($e)) && (is_int($a) || is_float($a))) {
+            $d = abs((float) $e - (float) $a);
+            $stats['abs'] = max($stats['abs'], $d);
+            $scale = max(abs((float) $e), abs((float) $a));
+            $stats['rel'] = max($stats['rel'], $scale > 0 ? $d / $scale : 0.0);
+        }
+    };
+    if (isset($expected['error'])) {
+        $quantity = 'raises ' . $expected['error'];
+        $stats['n'] = 1;
+    } else {
+        $walk($expected['rows'], $actual['rows'] ?? null);
+        $quantity = isset($expected['scalar'])
+            ? sprintf('%d scalar values', count($expected['columns']))
+            : sprintf('%d rows × %d columns', count($expected['rows']), count($expected['columns']));
+    }
+    return ['quantity' => $quantity, 'n_compared' => $stats['n'], 'max_abs_error' => $stats['abs'], 'max_rel_error' => $stats['rel'], 'passed' => $ok];
+}
+
 function shape_of(mixed $out): array {
     if ($out instanceof Series) {
         $out = $out->toFrame();
@@ -890,6 +920,7 @@ function shape_of(mixed $out): array {
 
 $enc = fn ($v) => json_encode($v, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRESERVE_ZERO_FRACTION | JSON_PARTIAL_OUTPUT_ON_ERROR);
 $failures = [];
+$report = [];
 foreach ($fixture['cases'] as $name => $expected) {
     if (!isset($cases[$name])) {
         $failures[$name] = "no PHP case defined";
@@ -905,6 +936,7 @@ foreach ($fixture['cases'] as $name => $expected) {
     } else {
         $ok = $expected['columns'] === $actual['columns'] && $expected['dtypes'] === $actual['dtypes'] && matches($expected['rows'], $actual['rows']);
     }
+    $report[$name] = ['ok' => $ok, 'expected' => $expected, 'actual' => $actual];
     if ($ok) {
         $GLOBALS['passed'] = ($GLOBALS['passed'] ?? 0) + 1;
         continue;
@@ -933,6 +965,10 @@ foreach (array_diff_key($cases, $fixture['cases']) as $name => $_) {
 
 foreach ($failures as $name => $msg) {
     fwrite(STDERR, "MISMATCH $name\n$msg\n");
+}
+if ($path = getenv('PYFIXTURES_REPORT')) {
+    file_put_contents($path, json_encode(['polars_version' => $fixture['polars_version'], 'cases' => array_map(fn ($r) => verification($r['expected'], $r['actual'], $r['ok']), $report)],
+        JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRESERVE_ZERO_FRACTION) . "\n");
 }
 printf("pyfixtures.php: %d of %d cases match py-polars %s\n", $GLOBALS['passed'] ?? 0, count($fixture['cases']), $fixture['polars_version']);
 if ($failures) {

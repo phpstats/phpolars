@@ -1,0 +1,86 @@
+{
+    "title": "phpolars and plain PHP arrays",
+    "description": "Plain PHP arrays are the baseline that a PHP data frame library starts from. The data are a 1M-row CSV (k: 100,000 keys, g: 50 groups, x: integers with 2% missing, y: floats; 22 MB) and a 100,000-row lookup table on k. Each case runs once to warm up and then five times; the value is the median. The plain PHP code reads rows with fgetcsv, groups with one loop over an associative array, and joins with a hash index of the lookup table. phpolars uses 2 Polars threads. Results stay in Polars; converting them to PHP arrays is not timed.",
+    "measure": "Wall time",
+    "unit": "ms",
+    "environment": {
+        "cpu": "Apple M5 Ultra",
+        "php": "8.5.10",
+        "date": "2026-10-17",
+        "commit": "d73bba4"
+    },
+    "rows": [
+        {
+            "case": "Read a 1M-row CSV",
+            "implementation": "phpolars",
+            "value": 36.047,
+            "reps": [
+                37.325,
+                36.047,
+                32.947,
+                32.849,
+                36.065
+            ]
+        },
+        {
+            "case": "Read a 1M-row CSV",
+            "implementation": "plain PHP arrays",
+            "value": 439.925,
+            "reps": [
+                439.925,
+                435.896,
+                440.324,
+                430.703,
+                443.192
+            ]
+        },
+        {
+            "case": "Group 1M rows by 50 keys: mean, sum, count",
+            "implementation": "phpolars",
+            "value": 9.615,
+            "reps": [
+                9.615,
+                9.41,
+                9.849,
+                9.582,
+                9.881
+            ]
+        },
+        {
+            "case": "Group 1M rows by 50 keys: mean, sum, count",
+            "implementation": "plain PHP arrays",
+            "value": 52.824,
+            "reps": [
+                52.169,
+                53.163,
+                52.824,
+                52.711,
+                53.832
+            ]
+        },
+        {
+            "case": "Inner join 1M rows with a 100k-row table",
+            "implementation": "phpolars",
+            "value": 13.88,
+            "reps": [
+                14.313,
+                13.658,
+                14.336,
+                13.608,
+                13.88
+            ]
+        },
+        {
+            "case": "Inner join 1M rows with a 100k-row table",
+            "implementation": "plain PHP arrays",
+            "value": 310.351,
+            "reps": [
+                322.847,
+                300.895,
+                320.819,
+                310.351,
+                299.379
+            ]
+        }
+    ]
+}

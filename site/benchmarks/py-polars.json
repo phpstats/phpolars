@@ -1,0 +1,86 @@
+{
+    "title": "phpolars and py-polars",
+    "description": "phpolars and py-polars both run Polars' Rust engine. phpolars embeds the Rust crate at version 0.55.2, built with Cargo's release profile; py-polars ships its own build of the engine. The data are a 1M-row CSV (k: 100,000 keys, g: 50 groups, x: integers with 2% missing, y: floats; 22 MB) and a 100,000-row lookup table on k. Each case runs once to warm up and then five times; the value is the median. Both use 2 Polars threads (phpolars' default php_polars.max_threads), py-polars 1.43.2 on Python 3.14.7. Results stay in Polars; converting them to PHP arrays is not timed.",
+    "measure": "Wall time",
+    "unit": "ms",
+    "environment": {
+        "cpu": "Apple M5 Ultra",
+        "php": "8.5.10",
+        "date": "2026-10-17",
+        "commit": "d73bba4"
+    },
+    "rows": [
+        {
+            "case": "Read a 1M-row CSV",
+            "implementation": "phpolars",
+            "value": 36.047,
+            "reps": [
+                37.325,
+                36.047,
+                32.947,
+                32.849,
+                36.065
+            ]
+        },
+        {
+            "case": "Read a 1M-row CSV",
+            "implementation": "py-polars",
+            "value": 23.092,
+            "reps": [
+                23.794,
+                22.532,
+                22.934,
+                23.152,
+                23.092
+            ]
+        },
+        {
+            "case": "Group 1M rows by 50 keys: mean, sum, count",
+            "implementation": "phpolars",
+            "value": 9.615,
+            "reps": [
+                9.615,
+                9.41,
+                9.849,
+                9.582,
+                9.881
+            ]
+        },
+        {
+            "case": "Group 1M rows by 50 keys: mean, sum, count",
+            "implementation": "py-polars",
+            "value": 12.303,
+            "reps": [
+                12.885,
+                12.301,
+                12.375,
+                12.303,
+                11.926
+            ]
+        },
+        {
+            "case": "Inner join 1M rows with a 100k-row table",
+            "implementation": "phpolars",
+            "value": 13.88,
+            "reps": [
+                14.313,
+                13.658,
+                14.336,
+                13.608,
+                13.88
+            ]
+        },
+        {
+            "case": "Inner join 1M rows with a 100k-row table",
+            "implementation": "py-polars",
+            "value": 16.386,
+            "reps": [
+                15.984,
+                16.484,
+                16.742,
+                16.386,
+                16.082
+            ]
+        }
+    ]
+}

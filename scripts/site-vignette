@@ -1,0 +1,48 @@
+#!/usr/bin/env php
+<?php
+
+/*
+ * Run a site vignette the way phpstats.org does: load the script, validate the
+ * default inputs (or KEY=VALUE overrides), call run(), and print the blocks.
+ *
+ * Usage: php -d extension=... scripts/site-vignette site/vignettes/<slug>.php [AUTOLOAD] [key=value ...]
+ * AUTOLOAD is a Composer autoloader with phibble and phplyr, for vignettes that use them.
+ */
+
+declare(strict_types=1);
+
+$args = array_slice($argv, 1);
+$file = array_shift($args) ?? exit("usage: scripts/site-vignette FILE [AUTOLOAD] [key=value ...]\n");
+if (isset($args[0]) && ! str_contains($args[0], '=')) {
+    require array_shift($args);
+}
+$vignette = require $file;
+$input = [];
+foreach ($vignette['inputs'] as $key => $spec) {
+    $input[$key] = $spec['default'];
+}
+foreach ($args as $arg) {
+    [$key, $value] = explode('=', $arg, 2);
+    $spec = $vignette['inputs'][$key] ?? exit("unknown input $key\n");
+    $input[$key] = match ($spec['type']) {
+        'number' => max($spec['min'], min($spec['max'], (float) $value)),
+        'checkbox' => $value === '1' || $value === 'true',
+        default => array_key_exists($value, $spec['options']) ? $value : exit("$key must be one of ".implode(', ', array_keys($spec['options']))."\n"),
+    };
+}
+$started = hrtime(true);
+$blocks = $vignette['run']($input, dirname($file, 2).'/data');
+$ms = (hrtime(true) - $started) / 1e6;
+foreach ($blocks as $block) {
+    echo '--- ', $block['type'], isset($block['title']) ? ': '.$block['title'] : '', "\n";
+    foreach ($block as $key => $value) {
+        if ($key === 'type' || $key === 'title') {
+            continue;
+        }
+        if (is_object($value)) {
+            $value = method_exists($value, '__toString') ? (string) $value : get_debug_type($value);
+        }
+        echo is_string($value) ? "$key: $value\n" : "$key: ".json_encode($value, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE)."\n";
+    }
+}
+fprintf(STDERR, "run() took %.0f ms\n", $ms);

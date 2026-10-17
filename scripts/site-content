@@ -1,0 +1,132 @@
+#!/usr/bin/env php
+<?php
+
+/*
+ * Write phpolars' content for phpolars.phpstats.org into site/:
+ *   site/verifications/py-polars-fixtures.json  from tests/pyfixtures.php
+ *   site/benchmarks/py-polars.json and php-arrays.json  from bench/site.php and bench/site.py
+ * The benchmarks need uv (for py-polars) and take a few minutes.
+ *
+ * Usage: scripts/site-content [verifications|benchmarks ...]
+ * PHP and PHPOLARS_EXT select the PHP binary and the extension (the release build by default).
+ */
+
+declare(strict_types=1);
+
+$root = dirname(__DIR__);
+$php = getenv('PHP') ?: PHP_BINARY;
+$ext = getenv('PHPOLARS_EXT') ?: $root.'/target/release/libphp_polars.'.(PHP_OS_FAMILY === 'Darwin' ? 'dylib' : 'so');
+$parts = array_slice($argv, 1) ?: ['verifications', 'benchmarks'];
+$commit = trim((string) shell_exec('git -C '.escapeshellarg($root).' rev-parse --short HEAD'));
+$date = date('Y-m-d');
+$cpu = trim((string) (PHP_OS_FAMILY === 'Darwin'
+    ? shell_exec('sysctl -n machdep.cpu.brand_string')
+    : shell_exec("sed -n 's/^model name\\s*: //p' /proc/cpuinfo | head -1")));
+$pyPolars = '1.43.2';
+
+function run(array $cmd, array $env = []): string
+{
+    $proc = proc_open($cmd, [1 => ['pipe', 'w'], 2 => STDERR], $pipes, null, $env + getenv());
+    $out = stream_get_contents($pipes[1]);
+    if (proc_close($proc) !== 0) {
+        fwrite(STDERR, 'failed: '.implode(' ', $cmd)."\n");
+        exit(1);
+    }
+    return $out;
+}
+
+function write(string $path, array $data): void
+{
+    file_put_contents($path, json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRESERVE_ZERO_FRACTION)."\n");
+    echo "wrote $path\n";
+}
+
+if (in_array('verifications', $parts, true)) {
+    $tmp = tempnam(sys_get_temp_dir(), 'phpolars-verify');
+    run([$php, '-n', '-d', 'extension='.$ext, $root.'/tests/pyfixtures.php'], ['PYFIXTURES_REPORT' => $tmp]);
+    $report = json_decode((string) file_get_contents($tmp), true, flags: JSON_THROW_ON_ERROR);
+    unlink($tmp);
+    $cases = [];
+    foreach ($report['cases'] as $name => $case) {
+        $cases[] = ['name' => $name] + $case;
+    }
+    write($root.'/site/verifications/py-polars-fixtures.json', [
+        'title' => 'Agreement with py-polars',
+        'description' => sprintf('Each case runs the same operation in phpolars and in py-polars %s on the same input, from scripts/pyfixtures.py and tests/pyfixtures.php. '
+            .'A case passes when the column names, the data types, and every value agree. Integers, strings, booleans, dates, and nulls must be equal; '
+            .'floats may differ by the relative tolerance. Cases that expect an error pass when phpolars raises the same exception class. '
+            .'n_compared counts the values compared, and the errors are over numeric values.', $report['polars_version']),
+        'reference' => 'py-polars '.$report['polars_version'],
+        'tolerance' => 1e-9,
+        'cases' => $cases,
+    ]);
+}
+
+if (in_array('benchmarks', $parts, true)) {
+    $data = sys_get_temp_dir().'/phpolars-site-bench';
+    @mkdir($data);
+    mt_srand(42);
+    $labels = array_map(fn ($i) => sprintf('label%03d', $i), range(0, 499));
+    $out = fopen("$data/dim.csv", 'w');
+    fwrite($out, "k,label,w\n");
+    for ($k = 0; $k < 100_000; $k++) {
+        fprintf($out, "%d,%s,%.4f\n", $k, $labels[mt_rand(0, 499)], mt_rand() / mt_getrandmax());
+    }
+    fclose($out);
+    $out = fopen("$data/facts.csv", 'w');
+    fwrite($out, "k,g,x,y\n");
+    for ($i = 0; $i < 1_000_000; $i++) {
+        $x = mt_rand(1, 50) === 1 ? '' : (string) mt_rand(0, 1000);
+        fprintf($out, "%d,g%02d,%s,%.4f\n", mt_rand(0, 99_999), mt_rand(0, 49), $x, mt_rand() / mt_getrandmax() * 100);
+    }
+    fclose($out);
+
+    $phpRun = json_decode(run([$php, '-n', '-d', 'memory_limit=-1', '-d', 'extension='.$ext, $root.'/bench/site.php', $data, '5']), true, flags: JSON_THROW_ON_ERROR);
+    $threads = (string) $phpRun['threads'];
+    $pyRun = json_decode(run(['uv', 'run', '--quiet', '--no-project', '--with', 'polars=='.$pyPolars, 'python', $root.'/bench/site.py', $data, '5'],
+        ['POLARS_MAX_THREADS' => $threads]), true, flags: JSON_THROW_ON_ERROR);
+    $checks = $phpRun['check'] + $pyRun['check'];
+    if (count(array_unique(array_map('json_encode', $checks))) !== 1) {
+        fwrite(STDERR, 'implementations disagree: '.json_encode($checks)."\n");
+        exit(1);
+    }
+    $caseNames = [
+        'read' => 'Read a 1M-row CSV',
+        'group_by' => 'Group 1M rows by 50 keys: mean, sum, count',
+        'join' => 'Inner join 1M rows with a 100k-row table',
+    ];
+    $rows = function (array $impls) use ($caseNames): array {
+        $out = [];
+        foreach ($caseNames as $key => $case) {
+            foreach ($impls as $impl => $results) {
+                $reps = $results[$key];
+                sort($reps);
+                $out[] = ['case' => $case, 'implementation' => $impl, 'value' => $reps[intdiv(count($reps), 2)], 'reps' => $results[$key]];
+            }
+        }
+        return $out;
+    };
+    $env = ['cpu' => $cpu, 'php' => $phpRun['php'], 'date' => $date, 'commit' => $commit];
+    $data = 'The data are a 1M-row CSV (k: 100,000 keys, g: 50 groups, x: integers with 2% missing, y: floats; 22 MB) and a 100,000-row lookup table on k. '
+        .'Each case runs once to warm up and then five times; the value is the median.';
+    write($root.'/site/benchmarks/py-polars.json', [
+        'title' => 'phpolars and py-polars',
+        'description' => "phpolars and py-polars both run Polars' Rust engine. phpolars embeds the Rust crate at version 0.55.2, built with Cargo's release profile; py-polars ships its own build of the engine. $data "
+            .sprintf('Both use %s Polars threads (phpolars\' default php_polars.max_threads), py-polars %s on Python %s. ', $threads, $pyRun['polars'], $pyRun['python'])
+            .'Results stay in Polars; converting them to PHP arrays is not timed.',
+        'measure' => 'Wall time',
+        'unit' => 'ms',
+        'environment' => $env,
+        'rows' => $rows(['phpolars' => $phpRun['results']['phpolars'], 'py-polars' => $pyRun['results']['py-polars']]),
+    ]);
+    write($root.'/site/benchmarks/php-arrays.json', [
+        'title' => 'phpolars and plain PHP arrays',
+        'description' => "Plain PHP arrays are the baseline that a PHP data frame library starts from. $data "
+            ."The plain PHP code reads rows with fgetcsv, groups with one loop over an associative array, and joins with a hash index of the lookup table. phpolars uses $threads Polars threads. "
+            .'Results stay in Polars; converting them to PHP arrays is not timed.',
+        'measure' => 'Wall time',
+        'unit' => 'ms',
+        'environment' => $env,
+        'rows' => $rows(['phpolars' => $phpRun['results']['phpolars'], 'plain PHP arrays' => $phpRun['results']['plain PHP arrays']]),
+    ]);
+}

@@ -33,4 +33,8 @@ fi
 for suite in dataframe expr io regressions pyfixtures; do
     "$PHP" -n -d "extension=$extension" "tests/$suite.php"
 done
+# The site vignettes that need only phpolars must run.
+for vignette in lazy-queries time-series; do
+    "$PHP" -n -d "extension=$extension" scripts/site-vignette "site/vignettes/$vignette.php" >/dev/null
+done
 echo 'Release checks passed'
