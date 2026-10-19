@@ -27,22 +27,19 @@ phpolars is part of a family of PHP 8.3+ packages for data work. [phibble](https
 
 ## Installing
 
-With [PIE](https://github.com/php/pie):
+phpolars is not on Packagist yet, so build it from a checkout and load the library directly:
 
 ```sh
-pie install phpstats/phpolars
-```
-
-On Linux with glibc (x86_64 or arm64), PIE installs the prebuilt binary for the PHP version from the GitHub release. Elsewhere it builds from source with Cargo.
-
-From a checkout, build with Cargo and load the library directly:
-
-```sh
+git clone https://github.com/phpstats/phpolars && cd phpolars
 PHP=$(which php) PHP_CONFIG=$(which php-config) cargo build --release
 php -d extension=$PWD/target/release/libphp_polars.so script.php   # .dylib on macOS
 ```
 
+The `-d` flag loads the extension for one run. To load it on every run, add `extension=$PWD/target/release/libphp_polars.so`, with the path written out in full, to the php.ini that `php --ini` reports.
+
 On macOS with Homebrew, set `LIBCLANG_PATH=$(brew --prefix llvm)/lib`. If several PHP versions are installed, point `PHP` and `PHP_CONFIG` at the PHP you will load the extension into, because ext-php-rs builds against that PHP's headers. A build for one PHP version does not load in another.
+
+The v0.1.0 release attaches prebuilt PHP 8.5 binaries for Linux on x86_64 and arm64, built on Debian Bookworm. Copy `php_polars.so` into `php-config --extension-dir` and add `extension=php_polars.so` to php.ini. Once the package is on Packagist, `pie install phpstats/phpolars` will install a prebuilt binary or a source build with [PIE](https://github.com/php/pie).
 
 ## API conventions
 

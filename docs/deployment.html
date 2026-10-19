@@ -239,7 +239,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#installing-with-pie" id="toc-installing-with-pie" class="nav-link active" data-scroll-target="#installing-with-pie">Installing with PIE</a></li>
+  <li><a href="#installing" id="toc-installing" class="nav-link active" data-scroll-target="#installing">Installing</a></li>
   <li><a href="#prebuilt-binaries" id="toc-prebuilt-binaries" class="nav-link" data-scroll-target="#prebuilt-binaries">Prebuilt binaries</a></li>
   <li><a href="#threads-under-php-fpm" id="toc-threads-under-php-fpm" class="nav-link" data-scroll-target="#threads-under-php-fpm">Threads under PHP-FPM</a></li>
   <li><a href="#memory" id="toc-memory" class="nav-link" data-scroll-target="#memory">Memory</a></li>
@@ -269,10 +269,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<section id="installing-with-pie" class="level2">
-<h2 class="anchored" data-anchor-id="installing-with-pie">Installing with PIE</h2>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pie</span> install phpstats/phpolars</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>The extension supports PHP 8.3, 8.4, and 8.5, non-thread-safe builds, on Linux and macOS. On Linux with glibc, x86_64 or arm64, PIE downloads the prebuilt binary for the PHP version from the GitHub release. Elsewhere, or when no binary matches, PIE builds the extension with Cargo’s <code>dist</code> profile (fat LTO, <code>opt-level = "s"</code>, stripped) and enables it. A build needs a stable Rust toolchain and libclang, and takes several minutes.</p>
+<section id="installing" class="level2">
+<h2 class="anchored" data-anchor-id="installing">Installing</h2>
+<p><strong>The package has not been submitted to Packagist yet</strong>, so install it from a checkout or from a prebuilt binary:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> clone https://github.com/phpstats/phpolars <span class="kw">&amp;&amp;</span> <span class="bu">cd</span> phpolars</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="va">PHP</span><span class="op">=</span><span class="va">$(</span><span class="fu">which</span> php<span class="va">)</span> <span class="va">PHP_CONFIG</span><span class="op">=</span><span class="va">$(</span><span class="fu">which</span> php-config<span class="va">)</span> <span class="ex">cargo</span> build <span class="at">--profile</span> dist</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Copy <code>target/dist/libphp_polars.so</code>, or <code>libphp_polars.dylib</code> on macOS, into <code>php-config --extension-dir</code> as <code>php_polars.so</code> and add <code>extension=php_polars.so</code> to the php.ini that <code>php --ini</code> reports. The extension supports PHP 8.3, 8.4, and 8.5, non-thread-safe builds, on Linux and macOS. The release archives are built with the <code>dist</code> profile (fat LTO, <code>opt-level = "s"</code>, stripped). A build needs a stable Rust toolchain and libclang, and takes several minutes. The v0.1.0 release attaches prebuilt PHP 8.5 binaries for Linux on x86_64 and arm64, which save the build on those platforms.</p>
+<p>Once the package is on Packagist, <code>pie install phpstats/phpolars</code> will install it with <a href="https://github.com/php/pie">PIE</a>, which downloads the prebuilt binary where one matches, builds the <code>dist</code> profile from source where none does, and enables the extension.</p>
 </section>
 <section id="prebuilt-binaries" class="level2">
 <h2 class="anchored" data-anchor-id="prebuilt-binaries">Prebuilt binaries</h2>

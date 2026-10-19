@@ -2,13 +2,18 @@
 title: "Deployment"
 ---
 
-## Installing with PIE
+## Installing
+
+**The package has not been submitted to Packagist yet**, so install it from a checkout or from a prebuilt binary:
 
 ```sh
-pie install phpstats/phpolars
+git clone https://github.com/phpstats/phpolars && cd phpolars
+PHP=$(which php) PHP_CONFIG=$(which php-config) cargo build --profile dist
 ```
 
-The extension supports PHP 8.3, 8.4, and 8.5, non-thread-safe builds, on Linux and macOS. On Linux with glibc, x86_64 or arm64, PIE downloads the prebuilt binary for the PHP version from the GitHub release. Elsewhere, or when no binary matches, PIE builds the extension with Cargo's `dist` profile (fat LTO, `opt-level = "s"`, stripped) and enables it. A build needs a stable Rust toolchain and libclang, and takes several minutes.
+Copy `target/dist/libphp_polars.so`, or `libphp_polars.dylib` on macOS, into `php-config --extension-dir` as `php_polars.so` and add `extension=php_polars.so` to the php.ini that `php --ini` reports. The extension supports PHP 8.3, 8.4, and 8.5, non-thread-safe builds, on Linux and macOS. The release archives are built with the `dist` profile (fat LTO, `opt-level = "s"`, stripped). A build needs a stable Rust toolchain and libclang, and takes several minutes. The v0.1.0 release attaches prebuilt PHP 8.5 binaries for Linux on x86_64 and arm64, which save the build on those platforms.
+
+Once the package is on Packagist, `pie install phpstats/phpolars` will install it with [PIE](https://github.com/php/pie), which downloads the prebuilt binary where one matches, builds the `dist` profile from source where none does, and enables the extension.
 
 ## Prebuilt binaries
 
