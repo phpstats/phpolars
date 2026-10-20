@@ -49,4 +49,4 @@ PHP closures cannot run on Polars threads. A verb given a closure converts the t
 
 ## Moving data directly
 
-Without the backend, `DataFrame::fromPhibble($table)` reads any phibble table through `toColumns()`, and `$df->toPhibble()` returns a `Phibble\DataFrame` (a `Phibble\Frame` with phibble v0.1).
+Without the backend, `DataFrame::fromPhibble($table)` reads any phibble table through `toColumns()`, and `$df->toPhibble()` returns a `Phibble\DataFrame`, which needs phibble v0.2 or later.
