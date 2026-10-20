@@ -44,8 +44,8 @@ for ($i = 0; $i < $rows; $i++) {
 }
 $stores = ['store' => range(1, 100), 'region' => array_map(fn ($s) => 'region-'.(($s - 1) % 5 + 1), range(1, 100))];
 
-$frameSales = DataFrame::fromColumns($sales);
-$frameStores = DataFrame::fromColumns($stores);
+$salesDf = DataFrame::fromColumns($sales);
+$storesDf = DataFrame::fromColumns($stores);
 
 $pdo = new PDO('sqlite::memory:');
 $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -63,8 +63,8 @@ foreach ($stores['store'] as $i => $s) {
 $pdo->commit();
 
 $backends = [
-    'DataFrame' => [fn () => $frameSales, fn () => $frameStores],
-    'PolarsTable' => [fn () => PolarsTable::fromTable($frameSales), fn () => PolarsTable::fromTable($frameStores)],
+    'DataFrame' => [fn () => $salesDf, fn () => $storesDf],
+    'PolarsTable' => [fn () => PolarsTable::fromTable($salesDf), fn () => PolarsTable::fromTable($storesDf)],
     'SqlTable' => [fn () => SqlTable::table($pdo, 'sales'), fn () => SqlTable::table($pdo, 'stores')],
 ];
 // Wrap once outside the timing, so only the pipeline is measured.
