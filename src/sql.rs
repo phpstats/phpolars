@@ -80,24 +80,24 @@ pub struct PhpSqlContext {
 
 #[php_impl]
 impl PhpSqlContext {
-    pub fn __construct(frames: Option<&ZendHashTable>, eager: Option<bool>) -> PhpResult<Self> {
+    pub fn __construct(dataFrames: Option<&ZendHashTable>, eager: Option<bool>) -> PhpResult<Self> {
         Ok(Self {
-            frames: named_frames(frames)?,
+            frames: named_frames(dataFrames)?,
             eager: eager.unwrap_or(false),
         })
     }
 
     /// Register a frame under a table name, replacing any with that name.
-    pub fn register(&mut self, name: String, frame: &Zval) -> PhpResult<()> {
-        let lf = lazy(frame)?;
+    pub fn register(&mut self, name: String, dataFrame: &Zval) -> PhpResult<()> {
+        let lf = lazy(dataFrame)?;
         self.frames.retain(|(n, _)| n != &name);
         self.frames.push((name, lf));
         Ok(())
     }
 
     /// Register several frames: registerMany(['a' => $df, 'b' => $lf]).
-    pub fn registerMany(&mut self, frames: &ZendHashTable) -> PhpResult<()> {
-        for (name, lf) in named_frames(Some(frames))? {
+    pub fn registerMany(&mut self, dataFrames: &ZendHashTable) -> PhpResult<()> {
+        for (name, lf) in named_frames(Some(dataFrames))? {
             self.frames.retain(|(n, _)| n != &name);
             self.frames.push((name, lf));
         }
@@ -126,8 +126,15 @@ impl PhpSqlContext {
 /// Returns a LazyFrame unless eager: true.
 #[php_function]
 #[php(name = "Phpolars\\sql")]
-pub fn sql(query: String, frames: Option<&ZendHashTable>, eager: Option<bool>) -> PhpResult<Zval> {
-    result(run(&query, &named_frames(frames)?)?, eager.unwrap_or(false))
+pub fn sql(
+    query: String,
+    dataFrames: Option<&ZendHashTable>,
+    eager: Option<bool>,
+) -> PhpResult<Zval> {
+    result(
+        run(&query, &named_frames(dataFrames)?)?,
+        eager.unwrap_or(false),
+    )
 }
 
 pub fn register(module: ModuleBuilder) -> ModuleBuilder {

@@ -67,7 +67,7 @@ rolling_cov(mixed $a, mixed $b, int $windowSize, ?int $minPeriods = null, ?int $
 row_index(?string $name = null): Phpolars\Expr
 select(mixed ...$exprs): Phpolars\DataFrame
 set_random_seed(int $seed): void
-sql(string $query, ?array $frames = null, ?bool $eager = null): mixed
+sql(string $query, ?array $dataFrames = null, ?bool $eager = null): mixed
 sql_expr(string $sql): Phpolars\Expr
 std(mixed $column, ?int $ddof = null): Phpolars\Expr
 struct_(mixed ...$exprs): Phpolars\Expr

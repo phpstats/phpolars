@@ -11,12 +11,12 @@ namespace Phpolars {
 
     class SQLContext
     {
-        public function register(string $name, mixed $frame): void {}
-        public function registerMany(array $frames): void {}
+        public function register(string $name, mixed $dataFrame): void {}
+        public function registerMany(array $dataFrames): void {}
         public function unregister(mixed $names): void {}
         public function tables(): array {}
         public function execute(string $query, ?bool $eager = null): mixed {}
-        public function __construct(?array $frames = null, ?bool $eager = null) {}
+        public function __construct(?array $dataFrames = null, ?bool $eager = null) {}
     }
 
     class DataType
@@ -940,7 +940,7 @@ namespace Phpolars {
 
     function read_ipc_stream(string $source, mixed $columns = null, ?int $nRows = null): Phpolars\DataFrame {}
 
-    function sql(string $query, ?array $frames = null, ?bool $eager = null): mixed {}
+    function sql(string $query, ?array $dataFrames = null, ?bool $eager = null): mixed {}
 
     function col(mixed ...$names): Phpolars\Expr {}
 
