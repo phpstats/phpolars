@@ -13,7 +13,7 @@ A phplyr pipeline on a `PolarsTable` runs in Polars:
 use Phibble\Polars\PolarsTable;
 use function Phplyr\{col, mean, n, phplyr};
 
-$table = PolarsTable::fromPolars(Phpolars\read_csv('sales.csv'));   // or PolarsTable::fromTable($frame)
+$table = PolarsTable::fromPolars(Phpolars\read_csv('sales.csv'));   // or PolarsTable::fromTable($dataFrame)
 
 $out = phplyr($table)
     ->group_by('store')
@@ -28,7 +28,7 @@ $out = phplyr($table)
 use Phibble\Polars\PolarsTable;
 use function Phplyr\{col, filter, group_by, mean, n, summarise};
 
-$table = PolarsTable::fromPolars(Phpolars\read_csv('sales.csv'));   // or PolarsTable::fromTable($frame)
+$table = PolarsTable::fromPolars(Phpolars\read_csv('sales.csv'));   // or PolarsTable::fromTable($dataFrame)
 
 $out = $table
     |> group_by('store')
