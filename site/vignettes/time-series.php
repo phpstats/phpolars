@@ -57,7 +57,7 @@ return [
         );
 
         return [
-            ['type' => 'text', 'content' => 'The frame holds a year of daily unit sales and a table of list price changes. Three steps turn it into a report: `joinAsof()` gives each day the price in force on that date, `rollingMeanBy()` smooths the units over a time window, and `groupByDynamic()` sums them by calendar period.'],
+            ['type' => 'text', 'content' => 'The data frame holds a year of daily unit sales and a table of list price changes. Three steps turn it into a report: `joinAsof()` gives each day the price in force on that date, `rollingMeanBy()` smooths the units over a time window, and `groupByDynamic()` sums them by calendar period.'],
             ['type' => 'code', 'chain' => <<<PHP
                 use function Phpolars\\col;
 
