@@ -275,7 +275,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode php code-with-copy"><code class="sourceCode php"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">use</span> Phibble\Polars\PolarsTable<span class="ot">;</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="kw">use</span> <span class="kw">function</span> Phplyr\{col<span class="ot">,</span> mean<span class="ot">,</span> n<span class="ot">,</span> phplyr}<span class="ot">;</span></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="va">$table</span> <span class="op">=</span> PolarsTable::fromPolars(Phpolars\read_csv(<span class="st">'sales.csv'</span>))<span class="ot">;</span>   <span class="co">// or PolarsTable::fromTable($frame)</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="va">$table</span> <span class="op">=</span> PolarsTable::fromPolars(Phpolars\read_csv(<span class="st">'sales.csv'</span>))<span class="ot">;</span>   <span class="co">// or PolarsTable::fromTable($dataFrame)</span></span>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="va">$out</span> <span class="op">=</span> phplyr(<span class="va">$table</span>)</span>
 <span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    -&gt;group_by(<span class="st">'store'</span>)</span>
@@ -287,7 +287,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode php code-with-copy"><code class="sourceCode php"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">use</span> Phibble\Polars\PolarsTable<span class="ot">;</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="kw">use</span> <span class="kw">function</span> Phplyr\{col<span class="ot">,</span> filter<span class="ot">,</span> group_by<span class="ot">,</span> mean<span class="ot">,</span> n<span class="ot">,</span> summarise}<span class="ot">;</span></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="va">$table</span> <span class="op">=</span> PolarsTable::fromPolars(Phpolars\read_csv(<span class="st">'sales.csv'</span>))<span class="ot">;</span>   <span class="co">// or PolarsTable::fromTable($frame)</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="va">$table</span> <span class="op">=</span> PolarsTable::fromPolars(Phpolars\read_csv(<span class="st">'sales.csv'</span>))<span class="ot">;</span>   <span class="co">// or PolarsTable::fromTable($dataFrame)</span></span>
 <span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="va">$out</span> <span class="op">=</span> <span class="va">$table</span></span>
 <span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    <span class="op">|&gt;</span> group_by(<span class="st">'store'</span>)</span>
@@ -305,7 +305,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="moving-data-directly" class="level2">
 <h2 class="anchored" data-anchor-id="moving-data-directly">Moving data directly</h2>
-<p>Without the backend, <code>DataFrame::fromPhibble($table)</code> reads any phibble table through <code>toColumns()</code>, and <code>$df-&gt;toPhibble()</code> returns a <code>Phibble\DataFrame</code> (a <code>Phibble\Frame</code> with phibble v0.1).</p>
+<p>Without the backend, <code>DataFrame::fromPhibble($table)</code> reads any phibble table through <code>toColumns()</code>, and <code>$df-&gt;toPhibble()</code> returns a <code>Phibble\DataFrame</code>, which needs phibble v0.2 or later.</p>
 
 
 </section>
