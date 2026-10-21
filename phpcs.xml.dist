@@ -1,0 +1,64 @@
+<?xml version="1.0"?>
+<ruleset name="phpolars">
+    <description>The phpstats naming conventions. Nothing else is enforced here: this is not a formatting standard.</description>
+
+    <file>bench</file>
+    <file>docs</file>
+    <file>scripts</file>
+    <file>site</file>
+    <file>stubs</file>
+    <file>tests</file>
+    <file>tools/phpcs/Phpstats</file>
+    <arg name="extensions" value="php"/>
+    <arg name="colors"/>
+    <arg value="sp"/>
+
+    <!-- Methods are camelCase, classes are PascalCase, and class constants
+         are UPPER_SNAKE. PHPCS ships a sniff for each of the three. -->
+    <rule ref="PSR1.Methods.CamelCapsMethodName"/>
+    <rule ref="Squiz.Classes.ValidClassName"/>
+    <rule ref="Generic.NamingConventions.UpperCaseConstantName">
+        <!-- The DataType constants in the generated stub carry Polars own
+             spelling of each dtype, such as Int8 and Datetime. -->
+        <exclude-pattern>stubs/*</exclude-pattern>
+    </rule>
+
+    <!-- Standalone functions are snake_case in this family, so the sniff that
+         demands camelCase for them is switched off rather than left out.
+         Leaving it out would let any later ruleset turn it back on. -->
+    <rule ref="Generic.NamingConventions.CamelCapsFunctionName">
+        <severity>0</severity>
+    </rule>
+
+    <!-- The two rules PHPCS has no sniff for. The sniffs live in this
+         repository because a package may not reference the family checkout or
+         a sibling package in anything it runs in CI. -->
+    <rule ref="./tools/phpcs/Phpstats/Sniffs/NamingConventions/SnakeCaseFunctionNameSniff.php">
+        <!-- A test or benchmark file names its local helpers in the idiom of
+             the suite it belongs to, and the conventions do not reach internal
+             code. Everything the package ships is still checked. -->
+        <exclude-pattern>tests/*</exclude-pattern>
+        <exclude-pattern>bench/*</exclude-pattern>
+        <exclude-pattern>benchmarks/*</exclude-pattern>
+        <!-- Polars names these list(), array(), struct(), enum(), empty() and var(); each is a reserved word in PHP, so the extension appends an underscore. -->
+        <properties>
+            <property name="allowed" type="array">
+                <element value="array_"/>
+                <element value="empty_"/>
+                <element value="enum_"/>
+                <element value="list_"/>
+                <element value="struct_"/>
+                <element value="var_"/>
+            </property>
+        </properties>
+    </rule>
+    <rule ref="./tools/phpcs/Phpstats/Sniffs/NamingConventions/CamelCapsParameterAndPropertySniff.php">
+        <!-- The generated stub appends an underscore where the Rust parameter name would otherwise collide with an earlier one. -->
+        <properties>
+            <property name="allowed" type="array">
+                <element value="dtypes_"/>
+                <element value="names_"/>
+            </property>
+        </properties>
+    </rule>
+</ruleset>
