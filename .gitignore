@@ -7,3 +7,7 @@
 /bench/*.csv
 /docs/_site/
 /docs/.quarto/
+
+# Composer is used only for the dev-time naming linter; nothing is published from it.
+/vendor/
+/composer.lock
