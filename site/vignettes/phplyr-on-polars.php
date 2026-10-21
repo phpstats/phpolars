@@ -35,8 +35,8 @@ return [
 
         $pipeline = fn (Table $sales, Table $stores): Table => phplyr($sales)
             ->filter(col('units')->gt($minUnits))
-            ->left_join($stores, by: 'store')
-            ->group_by('region')
+            ->leftJoin($stores, by: 'store')
+            ->groupBy('region')
             ->summarise(sales: n(), revenue: sum(col('units')->mul(col('price'))), avg_price: mean('price'))
             ->arrange(desc('revenue'))
             ->get();
@@ -61,7 +61,7 @@ return [
 
         return [
             ['type' => 'text', 'content' => sprintf(
-                'phplyr verbs work on any phibble table. `PolarsTable` keeps its data in a Polars frame from phpolars, and phplyr verbs given column names and `col()` expressions run there as Polars expressions. '
+                'phplyr verbs work on any phibble table. `PolarsTable` keeps its data in a Polars data frame from phpolars, and phplyr verbs given column names and `col()` expressions run there as Polars expressions. '
                 .'This page runs the same pipeline on phibble\'s in-memory `DataFrame` and on a `PolarsTable`, over %s sales rows and a 100-row store table.',
                 number_format($rows))],
             ['type' => 'code',
@@ -74,8 +74,8 @@ return [
 
                     \$revenue = phplyr(\$sales)
                         ->filter(col('units')->gt($minUnits))
-                        ->left_join(\$stores, by: 'store')
-                        ->group_by('region')
+                        ->leftJoin(\$stores, by: 'store')
+                        ->groupBy('region')
                         ->summarise(sales: n(), revenue: sum(col('units')->mul(col('price'))), avg_price: mean('price'))
                         ->arrange(desc('revenue'))
                         ->get();
