@@ -36,7 +36,7 @@ These runs used phibble at dbd8b1e. SqlTable's pipeline B results differed from 
 
 ## Where the time goes
 
-Polars runs the verbs themselves 10 to 100 times faster than the in-memory frame. Returning rows to PHP is the cost that remains. Collecting 1M rows into PHP takes about 0.2 s for plain columns, plus about 0.5 s per datetime column, because each `DateTimeImmutable` is a PHP object.
+Polars runs the verbs themselves 10 to 100 times faster than the in-memory data frame. Returning rows to PHP is the cost that remains. Collecting 1M rows into PHP takes about 0.2 s for plain columns, plus about 0.5 s per datetime column, because each `DateTimeImmutable` is a PHP object.
 
 PolarsTable is the faster backend when a pipeline reduces the data (summaries, filters, joins followed by summaries) or chains several verbs before collecting. Reading files with `Phpolars\read_csv()` or `read_parquet()` and wrapping the result with `PolarsTable::fromPolars()` also avoids parsing the file in PHP.
 

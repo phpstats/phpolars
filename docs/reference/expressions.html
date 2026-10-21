@@ -284,7 +284,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<p>An <code>Expr</code> describes a computation on columns. Expressions are built with <code>col()</code>, <code>lit()</code>, <code>when()</code>, and the other functions below, and are evaluated by frame verbs such as <code>select()</code>, <code>withColumns()</code>, <code>filter()</code>, and <code>agg()</code>. They never hold PHP closures, so Polars runs them on its own threads.</p>
+<p>An <code>Expr</code> describes a computation on columns. Expressions are built with <code>col()</code>, <code>lit()</code>, <code>when()</code>, and the other functions below, and are evaluated by verbs such as <code>select()</code>, <code>withColumns()</code>, <code>filter()</code>, and <code>agg()</code>. They never hold PHP closures, so Polars runs them on its own threads.</p>
 <p>Operands of comparison and arithmetic methods may be an <code>Expr</code> or a PHP value. PHP strings there are string literals.</p>
 <section id="windows-and-order" class="level2">
 <h2 class="anchored" data-anchor-id="windows-and-order">Windows and order</h2>

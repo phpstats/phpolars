@@ -331,7 +331,7 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="where-the-time-goes" class="level2">
 <h2 class="anchored" data-anchor-id="where-the-time-goes">Where the time goes</h2>
-<p>Polars runs the verbs themselves 10 to 100 times faster than the in-memory frame. Returning rows to PHP is the cost that remains. Collecting 1M rows into PHP takes about 0.2 s for plain columns, plus about 0.5 s per datetime column, because each <code>DateTimeImmutable</code> is a PHP object.</p>
+<p>Polars runs the verbs themselves 10 to 100 times faster than the in-memory data frame. Returning rows to PHP is the cost that remains. Collecting 1M rows into PHP takes about 0.2 s for plain columns, plus about 0.5 s per datetime column, because each <code>DateTimeImmutable</code> is a PHP object.</p>
 <p>PolarsTable is the faster backend when a pipeline reduces the data (summaries, filters, joins followed by summaries) or chains several verbs before collecting. Reading files with <code>Phpolars\read_csv()</code> or <code>read_parquet()</code> and wrapping the result with <code>PolarsTable::fromPolars()</code> also avoids parsing the file in PHP.</p>
 <p>A verb given a PHP closure converts the table to a phibble <code>DataFrame</code> and back, about 1 s per million rows with a datetime column. On large data, use expressions, or use phibble’s in-memory <code>DataFrame</code> for closure-heavy pipelines.</p>
 </section>

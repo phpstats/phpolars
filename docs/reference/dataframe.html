@@ -239,7 +239,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#creating-frames" id="toc-creating-frames" class="nav-link active" data-scroll-target="#creating-frames">Creating frames</a></li>
+  <li><a href="#creating-data-frames" id="toc-creating-data-frames" class="nav-link active" data-scroll-target="#creating-data-frames">Creating data frames</a></li>
   <li><a href="#joins" id="toc-joins" class="nav-link" data-scroll-target="#joins">Joins</a></li>
   <li><a href="#iterating-over-groups" id="toc-iterating-over-groups" class="nav-link" data-scroll-target="#iterating-over-groups">Iterating over groups</a></li>
   <li><a href="#time-series" id="toc-time-series" class="nav-link" data-scroll-target="#time-series">Time series</a></li>
@@ -278,8 +278,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 <p><code>DataFrame</code> holds data in memory and runs each operation immediately. <code>LazyFrame</code> records operations and runs them, optimized, on <code>collect()</code>. Both have the same verbs; a <code>DataFrame</code> builds each verb on a lazy query and collects it, as py-polars does.</p>
-<section id="creating-frames" class="level2">
-<h2 class="anchored" data-anchor-id="creating-frames">Creating frames</h2>
+<section id="creating-data-frames" class="level2">
+<h2 class="anchored" data-anchor-id="creating-data-frames">Creating data frames</h2>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode php code-with-copy"><code class="sourceCode php"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="va">$df</span> <span class="op">=</span> <span class="kw">new</span> DataFrame([<span class="st">'a'</span> =&gt; [<span class="dv">1</span><span class="ot">,</span> <span class="dv">2</span>]<span class="ot">,</span> <span class="st">'b'</span> =&gt; [<span class="st">'x'</span><span class="ot">,</span> <span class="st">'y'</span>]])<span class="ot">;</span>          <span class="co">// columns</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="va">$df</span> <span class="op">=</span> <span class="kw">new</span> DataFrame([[<span class="st">'a'</span> =&gt; <span class="dv">1</span><span class="ot">,</span> <span class="st">'b'</span> =&gt; <span class="st">'x'</span>]<span class="ot">,</span> [<span class="st">'a'</span> =&gt; <span class="dv">2</span><span class="ot">,</span> <span class="st">'b'</span> =&gt; <span class="st">'y'</span>]])<span class="ot">;</span>  <span class="co">// rows</span></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="va">$df</span> <span class="op">=</span> DataFrame::fromRows([[<span class="dv">1</span><span class="ot">,</span> <span class="st">'x'</span>]<span class="ot">,</span> [<span class="dv">2</span><span class="ot">,</span> <span class="st">'y'</span>]]<span class="ot">,</span> schema<span class="ot">:</span> [<span class="st">'a'</span> =&gt; <span class="st">'Int32'</span><span class="ot">,</span> <span class="st">'b'</span> =&gt; <span class="st">'String'</span>])<span class="ot">;</span></span>
@@ -330,7 +330,7 @@ shape: (2, 3)
 </section>
 <section id="time-series" class="level2">
 <h2 class="anchored" data-anchor-id="time-series">Time series</h2>
-<p><code>groupByDynamic()</code> groups rows into fixed time windows, and <code>rolling()</code> gives each row a window that ends at it. <code>joinAsof()</code> matches each row to the nearest earlier (or later, or nearest) row of another frame, optionally within <code>by</code> groups and a <code>tolerance</code>. Durations are py-polars strings such as <code>'1d'</code>, <code>'2h30m'</code>, <code>'1w'</code>, and <code>'1mo'</code>. Expressions add the <code>rolling*By()</code> family and <code>ewmMean()</code>. The functions <code>date_range()</code> and <code>datetime_range()</code> build calendars.</p>
+<p><code>groupByDynamic()</code> groups rows into fixed time windows, and <code>rolling()</code> gives each row a window that ends at it. <code>joinAsof()</code> matches each row to the nearest earlier (or later, or nearest) row of another data frame, optionally within <code>by</code> groups and a <code>tolerance</code>. Durations are py-polars strings such as <code>'1d'</code>, <code>'2h30m'</code>, <code>'1w'</code>, and <code>'1mo'</code>. Expressions add the <code>rolling*By()</code> family and <code>ewmMean()</code>. The functions <code>date_range()</code> and <code>datetime_range()</code> build calendars.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode php code-with-copy"><code class="sourceCode php"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="va">$daily</span> <span class="op">=</span> read_csv(<span class="st">'sales.csv'</span><span class="ot">,</span> tryParseDates<span class="ot">:</span> <span class="kw">true</span>)</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    -&gt;groupBy(<span class="st">'date'</span>)-&gt;agg(col(<span class="st">'units'</span>)-&gt;sum())</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    -&gt;<span class="fu">sort</span>(<span class="st">'date'</span>)<span class="ot">;</span></span>

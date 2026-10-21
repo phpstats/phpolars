@@ -2,7 +2,7 @@
 title: "Expressions"
 ---
 
-An `Expr` describes a computation on columns. Expressions are built with `col()`, `lit()`, `when()`, and the other functions below, and are evaluated by frame verbs such as `select()`, `withColumns()`, `filter()`, and `agg()`. They never hold PHP closures, so Polars runs them on its own threads.
+An `Expr` describes a computation on columns. Expressions are built with `col()`, `lit()`, `when()`, and the other functions below, and are evaluated by verbs such as `select()`, `withColumns()`, `filter()`, and `agg()`. They never hold PHP closures, so Polars runs them on its own threads.
 
 Operands of comparison and arithmetic methods may be an `Expr` or a PHP value. PHP strings there are string literals.
 
