@@ -40,7 +40,9 @@
         <exclude-pattern>tests/*</exclude-pattern>
         <exclude-pattern>bench/*</exclude-pattern>
         <exclude-pattern>benchmarks/*</exclude-pattern>
-        <!-- Polars names these list(), array(), struct(), enum(), empty() and var(); each is a reserved word in PHP, so the extension appends an underscore. -->
+        <!-- A name that collides with a PHP reserved word takes a trailing
+             underscore. These are Polars' list(), array(), struct(),
+             enum(), empty() and var(). -->
         <properties>
             <property name="allowed" type="array">
                 <element value="array_"/>
