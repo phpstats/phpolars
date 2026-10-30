@@ -37,7 +37,7 @@ php -d extension=$PWD/target/release/libphp_polars.so script.php   # .dylib on m
 
 The `-d` flag loads the extension for one run. To load it on every run, add `extension=$PWD/target/release/libphp_polars.so`, with the path written out in full, to the php.ini that `php --ini` reports.
 
-On macOS with Homebrew, set `LIBCLANG_PATH=$(brew --prefix llvm)/lib`. If several PHP versions are installed, point `PHP` and `PHP_CONFIG` at the PHP you will load the extension into, because ext-php-rs builds against that PHP's headers. A build for one PHP version does not load in another.
+On macOS with Homebrew, set `LIBCLANG_PATH=$(brew --prefix llvm)/lib`. If several PHP versions are installed, point `PHP` and `PHP_CONFIG` at the PHP you will load the extension into, because ext-php-rs builds against that PHP's headers. A build for one PHP version does not load in another. For deployment, build with `--profile dist` (fat LTO, stripped), which on macOS gives a 65 MB library instead of the 207 MB `release` build. [Deployment](https://phpstats.github.io/phpolars/deployment.html) covers Ubuntu and Laravel Forge, and Laravel Herd.
 
 The v0.1.0 release attaches prebuilt PHP 8.5 binaries for Linux on x86_64 and arm64, built on Debian Bookworm. Copy `php_polars.so` into `php-config --extension-dir` and add `extension=php_polars.so` to php.ini. Once the package is on Packagist, `pie install phpstats/phpolars` will install a prebuilt binary or a source build with [PIE](https://github.com/php/pie).
 
@@ -71,6 +71,10 @@ Null is PHP `null`. Values convert as follows.
 | Struct | associative array |
 
 From PHP, each column gets one inferred type. Integers widen to floats, nulls fit any type, `DateTimeInterface` values become naive `Datetime(us)` on their wall-clock time (the zone is not kept; use `dt()->replaceTimeZone()` to attach one), lists become `List`, and associative arrays become `Struct`. Any other mix of types raises `SchemaError`. Pass a `schema` to set types explicitly.
+
+## Missing values
+
+phpolars follows Polars' null semantics, which differ from R's `NA` and therefore from phibble and phplyr. Aggregates such as `sum()` and `mean()` skip nulls, `count()` counts non-null values, `null` sorts first, and null join keys match nothing unless `nullsEqual: true`. A phplyr pipeline on `Phibble\Polars\PolarsTable` keeps dplyr's semantics. The [phibble and phplyr](https://phpstats.github.io/phpolars/phibble.html#missing-values) page compares the two in a table.
 
 ## Errors
 

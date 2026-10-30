@@ -239,7 +239,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#installing" id="toc-installing" class="nav-link active" data-scroll-target="#installing">Installing</a></li>
+  <li><a href="#installing" id="toc-installing" class="nav-link active" data-scroll-target="#installing">Installing</a>
+  <ul class="collapse">
+  <li><a href="#ubuntu-and-laravel-forge" id="toc-ubuntu-and-laravel-forge" class="nav-link" data-scroll-target="#ubuntu-and-laravel-forge">Ubuntu and Laravel Forge</a></li>
+  <li><a href="#laravel-herd" id="toc-laravel-herd" class="nav-link" data-scroll-target="#laravel-herd">Laravel Herd</a></li>
+  </ul></li>
   <li><a href="#prebuilt-binaries" id="toc-prebuilt-binaries" class="nav-link" data-scroll-target="#prebuilt-binaries">Prebuilt binaries</a></li>
   <li><a href="#threads-under-php-fpm" id="toc-threads-under-php-fpm" class="nav-link" data-scroll-target="#threads-under-php-fpm">Threads under PHP-FPM</a></li>
   <li><a href="#memory" id="toc-memory" class="nav-link" data-scroll-target="#memory">Memory</a></li>
@@ -275,7 +279,25 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> clone https://github.com/phpstats/phpolars <span class="kw">&amp;&amp;</span> <span class="bu">cd</span> phpolars</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="va">PHP</span><span class="op">=</span><span class="va">$(</span><span class="fu">which</span> php<span class="va">)</span> <span class="va">PHP_CONFIG</span><span class="op">=</span><span class="va">$(</span><span class="fu">which</span> php-config<span class="va">)</span> <span class="ex">cargo</span> build <span class="at">--profile</span> dist</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Copy <code>target/dist/libphp_polars.so</code>, or <code>libphp_polars.dylib</code> on macOS, into <code>php-config --extension-dir</code> as <code>php_polars.so</code> and add <code>extension=php_polars.so</code> to the php.ini that <code>php --ini</code> reports. The extension supports PHP 8.3, 8.4, and 8.5, non-thread-safe builds, on Linux and macOS. The release archives are built with the <code>dist</code> profile (fat LTO, <code>opt-level = "s"</code>, stripped). A build needs a stable Rust toolchain and libclang, and takes several minutes. The v0.1.0 release attaches prebuilt PHP 8.5 binaries for Linux on x86_64 and arm64, which save the build on those platforms.</p>
+<p>Build with <code>--profile dist</code> for anything you deploy. On macOS the <code>dist</code> library is 65 MB and the <code>release</code> library is 207 MB, because <code>release</code> skips LTO and keeps the symbol table. The v0.1.0 Linux binaries are 47 MB on x86_64 and 43 MB on arm64, and 15 MB compressed.</p>
+<section id="ubuntu-and-laravel-forge" class="level3">
+<h3 class="anchored" data-anchor-id="ubuntu-and-laravel-forge">Ubuntu and Laravel Forge</h3>
+<p>Forge installs PHP from the ondrej/php PPA. The prebuilt Linux binaries load there: the v0.1.0 PHP 8.5 binaries pass <code>tests/deployment.php</code> under the CLI and under PHP-FPM on Ubuntu 24.04 with the PPA’s PHP 8.5.12, on x86_64 and arm64. To install one:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> cp php_polars.so <span class="st">"</span><span class="va">$(</span><span class="ex">php</span> <span class="at">-r</span> <span class="st">'echo ini_get("extension_dir");'</span><span class="va">)</span><span class="st">/"</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">'extension=php_polars.so'</span> <span class="kw">|</span> <span class="fu">sudo</span> tee /etc/php/8.5/mods-available/php_polars.ini</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> phpenmod <span class="at">-v</span> 8.5 php_polars</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> systemctl reload php8.5-fpm</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="laravel-herd" class="level3">
+<h3 class="anchored" data-anchor-id="laravel-herd">Laravel Herd</h3>
+<p>Herd’s PHP binaries have no <code>php-config</code>, so build against Homebrew’s PHP of the same minor version, which has the same module API. For Herd’s PHP 8.5:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="va">P</span><span class="op">=</span><span class="va">$(</span><span class="ex">brew</span> <span class="at">--prefix</span> php@8.5<span class="va">)</span>/bin</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="va">PHP</span><span class="op">=</span><span class="va">$P</span>/php <span class="va">PHP_CONFIG</span><span class="op">=</span><span class="va">$P</span>/php-config <span class="va">LIBCLANG_PATH</span><span class="op">=</span><span class="va">$(</span><span class="ex">brew</span> <span class="at">--prefix</span> llvm<span class="va">)</span>/lib <span class="ex">cargo</span> build <span class="at">--profile</span> dist</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Then add the library to the php.ini that Herd opens from its PHP settings, <code>~/Library/Application Support/Herd/config/php/85/php.ini</code>, with the path written out in full, and restart Herd:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode ini code-with-copy"><code class="sourceCode ini"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="dt">extension</span><span class="ot">=</span><span class="st">/path/to/phpolars/target/dist/libphp_polars.dylib</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>For PHP 8.4, use <code>php@8.4</code> and <code>config/php/84/php.ini</code>.</p>
 <p>Once the package is on Packagist, <code>pie install phpstats/phpolars</code> will install it with <a href="https://github.com/php/pie">PIE</a>, which downloads the prebuilt binary where one matches, builds the <code>dist</code> profile from source where none does, and enables the extension.</p>
+</section>
 </section>
 <section id="prebuilt-binaries" class="level2">
 <h2 class="anchored" data-anchor-id="prebuilt-binaries">Prebuilt binaries</h2>
@@ -290,9 +312,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="threads-under-php-fpm" class="level2">
 <h2 class="anchored" data-anchor-id="threads-under-php-fpm">Threads under PHP-FPM</h2>
 <p>Polars runs queries on a thread pool. FPM workers are separate processes, so each worker that uses phpolars starts its own pool. The INI setting caps the pool per process:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode ini code-with-copy"><code class="sourceCode ini"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">; php.ini</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="dt">extension</span><span class="ot">=</span><span class="st">php_polars.so</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="dt">php_polars.max_threads </span><span class="ot">=</span><span class="st"> </span><span class="dv">2</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode ini code-with-copy"><code class="sourceCode ini"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co">; php.ini</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="dt">extension</span><span class="ot">=</span><span class="st">php_polars.so</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="dt">php_polars.max_threads </span><span class="ot">=</span><span class="st"> </span><span class="dv">2</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>The setting defaults to 2 and is <code>PHP_INI_SYSTEM</code>, because the pool starts once per process and cannot be resized. An explicit <code>POLARS_MAX_THREADS</code> environment variable takes precedence. <code>Phpolars\thread_pool_size()</code> reports the size in effect. Size it so that <code>pm.max_children × max_threads</code> fits the machine’s cores.</p>
 <p>PHP closures never run on Polars threads. Every phpolars operation is built from expressions that Polars evaluates natively.</p>
 </section>
@@ -303,10 +325,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="checking-an-installation" class="level2">
 <h2 class="anchored" data-anchor-id="checking-an-installation">Checking an installation</h2>
 <p><code>tests/deployment.php</code> runs the same assertions through the CLI and, in <code>scripts/check-fpm</code> and <code>scripts/check-container</code>, through a real FastCGI request:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">php</span> tests/deployment.php</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> build <span class="at">--target</span> checks <span class="at">-f</span> docker/Dockerfile <span class="at">-t</span> php-polars-checks .</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> build <span class="at">-f</span> docker/Dockerfile <span class="at">-t</span> php-polars-runtime .</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="ex">scripts/check-container</span> php-polars-runtime php-polars-checks</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="ex">php</span> tests/deployment.php</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> build <span class="at">--target</span> checks <span class="at">-f</span> docker/Dockerfile <span class="at">-t</span> php-polars-checks .</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> build <span class="at">-f</span> docker/Dockerfile <span class="at">-t</span> php-polars-runtime .</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="ex">scripts/check-container</span> php-polars-runtime php-polars-checks</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 
 
 </section>

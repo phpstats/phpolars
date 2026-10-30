@@ -240,6 +240,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
    
   <ul>
   <li><a href="#what-runs-in-polars" id="toc-what-runs-in-polars" class="nav-link active" data-scroll-target="#what-runs-in-polars">What runs in Polars</a></li>
+  <li><a href="#missing-values" id="toc-missing-values" class="nav-link" data-scroll-target="#missing-values">Missing values</a></li>
   <li><a href="#moving-data-directly" id="toc-moving-data-directly" class="nav-link" data-scroll-target="#moving-data-directly">Moving data directly</a></li>
   </ul>
 </nav>
@@ -302,6 +303,67 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Verbs given column names or phibble expressions (<code>Phibble\Expr</code>, which phplyr’s helpers such as <code>col()</code>, <code>mean()</code>, and <code>n()</code> build) run in Polars with dplyr’s semantics: NA propagates, aggregates default to <code>na_rm = FALSE</code>, grouped <code>mutate()</code> and <code>filter()</code> evaluate aggregates and windows per group, groups follow sorted key order, and joins follow dplyr 1.2, including <code>join_by()</code> inequality and rolling joins. Pivots, stringr and lubridate functions, and phibble’s reference fixtures all run natively.</p>
 <p>PHP closures cannot run on Polars threads. A verb given a closure converts the table to a phibble <code>DataFrame</code>, runs there, and converts the result back; <code>PolarsTable::$fallbacks</code> counts these conversions. See <a href="./performance.html">Performance</a> for their cost.</p>
 <p><code>PolarsTable::fromTable()</code> throws when a list column would not round-trip exactly, for example when named arrays with different keys would become structs.</p>
+</section>
+<section id="missing-values" class="level2">
+<h2 class="anchored" data-anchor-id="missing-values">Missing values</h2>
+<p>phibble and phplyr treat PHP <code>null</code> as R’s <code>NA</code>, and a pipeline on a <code>PolarsTable</code> keeps those semantics. The phpolars API itself (<code>DataFrame</code>, <code>LazyFrame</code>, <code>Expr</code>, and <code>Series</code>) follows Polars, which treats <code>null</code> differently. Code moved from a phplyr pipeline to direct phpolars calls can return different results on the same data.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Operation</th>
+<th>phplyr, as in dplyr</th>
+<th>phpolars, as in Polars</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>sum</code>, <code>mean</code>, <code>min</code>, <code>max</code>, <code>std</code></td>
+<td><code>NA</code> if any value is <code>NA</code>, unless <code>na_rm: true</code></td>
+<td>Nulls are skipped. <code>col('x')-&gt;sum()</code> over <code>[1, null, 3]</code> is <code>4</code>.</td>
+</tr>
+<tr class="even">
+<td>Counting</td>
+<td><code>n()</code> counts rows</td>
+<td><code>count()</code> counts non-null values; <code>len()</code> counts rows</td>
+</tr>
+<tr class="odd">
+<td>Comparison with <code>null</code></td>
+<td><code>NA</code></td>
+<td><code>null</code>. <code>eqMissing()</code> and <code>neMissing()</code> treat <code>null</code> as a value.</td>
+</tr>
+<tr class="even">
+<td>Arithmetic with <code>null</code></td>
+<td><code>NA</code></td>
+<td><code>null</code></td>
+</tr>
+<tr class="odd">
+<td><code>filter</code></td>
+<td>A row whose condition is <code>NA</code> is dropped</td>
+<td>A row whose condition is <code>null</code> is dropped</td>
+</tr>
+<tr class="even">
+<td>Sorting</td>
+<td><code>NA</code> sorts last</td>
+<td><code>null</code> sorts first; pass <code>nullsLast: true</code></td>
+</tr>
+<tr class="odd">
+<td>Join keys</td>
+<td><code>NA</code> matches <code>NA</code> unless <code>naMatches: false</code></td>
+<td><code>null</code> matches nothing unless <code>nullsEqual: true</code></td>
+</tr>
+<tr class="even">
+<td><code>NaN</code></td>
+<td><code>is.na()</code> is true for <code>NaN</code></td>
+<td><code>NaN</code> is a float value. <code>isNull()</code> is false for it; use <code>isNan()</code>.</td>
+</tr>
+</tbody>
+</table>
+<p>To get dplyr’s results from phpolars, compare <code>nullCount()</code> with zero before aggregating, sort with <code>nullsLast: true</code>, and join with <code>nullsEqual: true</code>.</p>
 </section>
 <section id="moving-data-directly" class="level2">
 <h2 class="anchored" data-anchor-id="moving-data-directly">Moving data directly</h2>
