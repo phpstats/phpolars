@@ -162,7 +162,7 @@ same('series dtype arg', (new Series('f', [1, 2], 'Float64'))->toList(), [1.0, 2
 same('series str', (new Series('s', ['ab', 'c']))->str()->lenChars()->toList(), [2, 1]);
 same('series valueCounts', (new Series('s', ['a', 'b', 'a']))->valueCounts(sort: true)->toDicts(), [['s' => 'a', 'count' => 2], ['s' => 'b', 'count' => 1]]);
 same('series toFrame', $ser->toFrame()->columns(), ['n']);
-same('series in frame', (new DataFrame(['n' => $ser]))->height(), 4);
+same('series in DataFrame', (new DataFrame(['n' => $ser]))->height(), 4);
 same('series unique', $ser->unique(maintainOrder: true)->toList(), [3, 1, null, 2]);
 same('series cast', $ser->cast('String')->toList(), ['3', '1', null, '2']);
 same('series isIn', $ser->isIn([1, 2])->toList(), [false, true, null, true]);

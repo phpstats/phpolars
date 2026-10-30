@@ -28,7 +28,7 @@ OUT = ROOT / "tests" / "fixtures" / "py" / "expected.json"
 col, lit, when = pl.col, pl.lit, pl.when
 
 # ---------------------------------------------------------------------------
-# Inputs. tests/pyfixtures.php builds the same frames.
+# Inputs. tests/pyfixtures.php builds the same DataFrames.
 
 base = (
     pl.DataFrame(
@@ -241,7 +241,7 @@ simple("unique_keep_none", lambda: base.select("id", "g").unique(subset="g", kee
 simple("unique_rows", lambda: long.select("id", "k").unique(maintain_order=True))
 
 # nulls
-simple("fill_null_value_frame", lambda: base.select("g", "x", "y", "b").fill_null(0))
+simple("fill_null_value_dataframe", lambda: base.select("g", "x", "y", "b").fill_null(0))
 simple("fill_null_string", lambda: base.select(col("g").fill_null("?"), col("s").fill_null(lit("none"))))
 simple("fill_null_strategies", lambda: base.select(
     col("x").fill_null(strategy="forward").alias("fwd"),
@@ -257,7 +257,7 @@ simple("fill_null_limit", lambda: pl.DataFrame({"a": [1, None, None, None, 5, No
     col("a").fill_null(strategy="forward", limit=1).alias("f1"),
     col("a").fill_null(strategy="backward", limit=2).alias("b2"),
 ))
-simple("fill_null_frame_forward", lambda: base.select("g", "x", "d").fill_null(strategy="forward"))
+simple("fill_null_dataframe_forward", lambda: base.select("g", "x", "d").fill_null(strategy="forward"))
 simple("drop_nulls_all", lambda: base.select("id", "g", "x", "y").drop_nulls())
 simple("drop_nulls_subset", lambda: base.select("id", "g", "x", "y").drop_nulls(["x", "g"]))
 simple("null_count", lambda: base.null_count())
@@ -293,13 +293,13 @@ simple("describe_numeric", lambda: base.select("x", "y").describe())
 simple("describe_mixed", lambda: base.select("x", "g", "b", "d").describe())
 simple("describe_percentiles", lambda: base.select("y").describe(percentiles=[0.1, 0.9]))
 
-# frame aggregates
-simple("frame_sum", lambda: base.select("g", "x", "y", "b").sum())
-simple("frame_mean", lambda: base.select("x", "y", "b").mean())
-simple("frame_min_max", lambda: pl.concat([base.select("g", "x", "y", "d").min(), base.select("g", "x", "y", "d").max()]))
-simple("frame_std_var", lambda: pl.concat([base.select("x", "y").std(), base.select("x", "y").var(ddof=0)]))
-simple("frame_median", lambda: base.select("x", "y").median())
-simple("frame_n_unique", lambda: base.select(col("g", "x", "b").n_unique()))
+# DataFrame aggregates
+simple("dataframe_sum", lambda: base.select("g", "x", "y", "b").sum())
+simple("dataframe_mean", lambda: base.select("x", "y", "b").mean())
+simple("dataframe_min_max", lambda: pl.concat([base.select("g", "x", "y", "d").min(), base.select("g", "x", "y", "d").max()]))
+simple("dataframe_std_var", lambda: pl.concat([base.select("x", "y").std(), base.select("x", "y").var(ddof=0)]))
+simple("dataframe_median", lambda: base.select("x", "y").median())
+simple("dataframe_n_unique", lambda: base.select(col("g", "x", "b").n_unique()))
 
 # windows
 simple("over_sum", lambda: base.select("id", col("x").sum().over("g").alias("sx")))
@@ -439,7 +439,7 @@ simple("cast_strict_fails", lambda: S(col("s").cast(pl.Int64)))
 simple("cast_non_strict", lambda: S(col("s").cast(pl.Int64, strict=False).alias("si"), (col("x") * 50).cast(pl.UInt8, strict=False).alias("u8")))
 simple("cast_overflow_strict_fails", lambda: S((col("x") * 50).cast(pl.UInt8)))
 simple("cast_string_to_float", lambda: pl.DataFrame({"a": ["1.5", "-2", "1e3", "x", None]}).select(col("a").cast(pl.Float64, strict=False)))
-simple("cast_frame_map", lambda: base.select("x", "y", "k").cast({"x": pl.Float32, "k": pl.String}))
+simple("cast_dataframe_map", lambda: base.select("x", "y", "k").cast({"x": pl.Float32, "k": pl.String}))
 
 # is_in / is_between / clip / round
 simple("is_in", lambda: S(
@@ -502,7 +502,7 @@ simple("series_sort", lambda: xs.sort(descending=True, nulls_last=True))
 simple("series_unique", lambda: gs.unique(maintain_order=True))
 simple("series_empty_aggs", lambda: (lambda e: {"sum": e.sum(), "mean": e.mean(), "min": e.min(), "max": e.max(), "std": e.std()})(pl.Series("e", [], pl.Int64)))
 
-# misc frame ops
+# misc DataFrame ops
 simple("head_tail_slice", lambda: pl.concat([base.select("id").head(2), base.select("id").tail(1), base.select("id").slice(-3, 2)]))
 simple("rename_drop_reverse", lambda: base.select("id", "g", "x").rename({"g": "group"}).drop("x").reverse())
 simple("struct_pack_field", lambda: base.select(pl.struct("g", "x").alias("st")).with_columns(col("st").struct.field("x").alias("sx")))
@@ -520,8 +520,8 @@ simple("group_by_dynamic_by_bounds", lambda: tsf.group_by_dynamic(
     "t", every="12h", period="1d", closed="both", group_by="g", include_boundaries=True).agg(col("v").max()))
 simple("group_by_dynamic_label_offset", lambda: tsf.group_by_dynamic(
     "t", every="1d", offset="6h", label="right", start_by="datapoint").agg(col("v").first()))
-simple("rolling_frame", lambda: tsf.rolling("t", period="1d").agg(col("v").sum().alias("s"), col("v").count().alias("n")))
-simple("rolling_frame_by", lambda: tsf.rolling("t", period="2h", offset="-1h", closed="both", group_by="g").agg(col("v").sum()))
+simple("rolling_dataframe", lambda: tsf.rolling("t", period="1d").agg(col("v").sum().alias("s"), col("v").count().alias("n")))
+simple("rolling_dataframe_by", lambda: tsf.rolling("t", period="2h", offset="-1h", closed="both", group_by="g").agg(col("v").sum()))
 simple("rolling_by_exprs", lambda: tsf.select(
     "t",
     col("v").rolling_mean_by("t", "1d").alias("mean"),
@@ -588,31 +588,31 @@ simple("trig_extra", lambda: rnd.select(
     col("f").abs().add(1).arccosh().alias("acosh"), (col("f") / 10).arctanh().alias("atanh"), col("f").cot().alias("cot"),
 ))
 
-# frame verbs
-simple("frame_shift", lambda: base.select("id", "x").shift(2))
-simple("frame_shift_fill", lambda: base.select("id", "x").shift(-1, fill_value=0))
-simple("frame_interpolate", lambda: base.select("x", "y").interpolate())
-simple("frame_quantile_product", lambda: pl.concat([
+# DataFrame verbs
+simple("dataframe_shift", lambda: base.select("id", "x").shift(2))
+simple("dataframe_shift_fill", lambda: base.select("id", "x").shift(-1, fill_value=0))
+simple("dataframe_interpolate", lambda: base.select("x", "y").interpolate())
+simple("dataframe_quantile_product", lambda: pl.concat([
     base.select("x", "y", "k").quantile(0.5, "linear"),
     base.select("x", "y", "k").cast(pl.Float64).product(),
 ]))
-simple("frame_top_bottom_k", lambda: pl.concat([
+simple("dataframe_top_bottom_k", lambda: pl.concat([
     base.select("id", "y").top_k(2, by="y"),
     base.select("id", "k").bottom_k(3, by=["k", "id"]),
     base.select("id", "x").top_k(2, by="x", reverse=True),
 ], how="diagonal"))
-simple("frame_gather_every", lambda: base.select("id", "g").gather_every(2, offset=1))
-simple("frame_drop_nans", lambda: tsf.drop_nans())
-simple("frame_drop_nans_subset", lambda: tsf.with_columns(col("f").alias("f2")).drop_nans(subset="f2"))
-simple("frame_is_duplicated", lambda: long.select("id", "k").select(
+simple("dataframe_gather_every", lambda: base.select("id", "g").gather_every(2, offset=1))
+simple("dataframe_drop_nans", lambda: tsf.drop_nans())
+simple("dataframe_drop_nans_subset", lambda: tsf.with_columns(col("f").alias("f2")).drop_nans(subset="f2"))
+simple("dataframe_is_duplicated", lambda: long.select("id", "k").select(
     long.select("id", "k").is_duplicated().alias("dup"), long.select("id", "k").is_unique().alias("uniq")))
-simple("frame_upsample", lambda: pl.DataFrame({
+simple("dataframe_upsample", lambda: pl.DataFrame({
     "t": [dt.date(2024, 1, 1), dt.date(2024, 1, 4), dt.date(2024, 1, 2), dt.date(2024, 1, 3)],
     "g": ["a", "a", "b", "b"], "v": [1, 4, 2, 3],
 }).sort("t").upsample("t", every="1d", group_by="g", maintain_order=True))
-simple("frame_corr", lambda: base.select("id", "x", "y").drop_nulls().corr())
-simple("frame_insert_to_struct", lambda: base.select("id", "g").head(3).insert_column(1, pl.Series("n", [7, 8, 9])).to_struct("st").to_frame().unnest("st"))
-simple("frame_approx_n_unique", lambda: base.select("g", "k").approx_n_unique())
+simple("dataframe_corr", lambda: base.select("id", "x", "y").drop_nulls().corr())
+simple("dataframe_insert_to_struct", lambda: base.select("id", "g").head(3).insert_column(1, pl.Series("n", [7, 8, 9])).to_struct("st").to_frame().unnest("st"))
+simple("dataframe_approx_n_unique", lambda: base.select("g", "k").approx_n_unique())
 
 # functions
 simple("fn_date_range", lambda: pl.select(pl.date_range(dt.date(2024, 1, 1), dt.date(2024, 1, 10), "3d").alias("d")))
@@ -770,7 +770,7 @@ simple("selectors_in_ops", lambda: base.select(cs.numeric() - cs.by_name("id")).
 
 
 # SQL
-simple("sql_frame", lambda: base.sql("SELECT g, SUM(x) AS sx, COUNT(*) AS n FROM self WHERE x IS NOT NULL GROUP BY g ORDER BY g NULLS LAST"))
+simple("sql_dataframe", lambda: base.sql("SELECT g, SUM(x) AS sx, COUNT(*) AS n FROM self WHERE x IS NOT NULL GROUP BY g ORDER BY g NULLS LAST"))
 simple("sql_context_join", lambda: pl.SQLContext({"b": base, "r": right}).execute(
     "SELECT b.id, b.g, r.z FROM b LEFT JOIN r ON b.g = r.g ORDER BY b.id", eager=True))
 simple("sql_expressions", lambda: base.sql(
@@ -784,17 +784,17 @@ simple("sql_function", lambda: pl.sql("SELECT k, COUNT(*) AS n FROM long GROUP B
 simple("sql_error", lambda: base.sql("SELECT nope FROM self"))
 
 
-# more frame and expression methods
-simple("frame_to_dummies", lambda: base.select("id", "g", "k").to_dummies(["g", "k"]))
-simple("frame_to_dummies_opts", lambda: base.select("g").to_dummies(separator=":", drop_first=True, drop_nulls=True))
+# more DataFrame and expression methods
+simple("dataframe_to_dummies", lambda: base.select("id", "g", "k").to_dummies(["g", "k"]))
+simple("dataframe_to_dummies_opts", lambda: base.select("g").to_dummies(separator=":", drop_first=True, drop_nulls=True))
 simple("series_to_dummies", lambda: gs.to_dummies())
-simple("frame_horizontal", lambda: pl.DataFrame([
+simple("dataframe_horizontal", lambda: pl.DataFrame([
     base.select("x", "y", "k").sum_horizontal(), base.select("x", "y", "k").mean_horizontal(ignore_nulls=False),
     base.select("x", "y", "k").min_horizontal(), base.select("x", "y", "k").max_horizontal(),
 ]))
-simple("frame_clear", lambda: pl.concat([base.select("id", "g").clear(), base.select("id", "g").clear(2)]))
-simple("frame_replace_column", lambda: base.select("id", "g").head(2).replace_column(1, pl.Series("z", [9, 8])))
-simple("frame_column_index", lambda: {"k": base.get_column_index("k")})
+simple("dataframe_clear", lambda: pl.concat([base.select("id", "g").clear(), base.select("id", "g").clear(2)]))
+simple("dataframe_replace_column", lambda: base.select("id", "g").head(2).replace_column(1, pl.Series("z", [9, 8])))
+simple("dataframe_column_index", lambda: {"k": base.get_column_index("k")})
 simple("group_by_quantile", lambda: base.group_by("g", maintain_order=True).quantile(0.5, "linear").select("g", "x", "y"))
 simple("min_max_by", lambda: base.select(col("g").min_by("x").alias("min"), col("g").max_by("y").alias("max")))
 simple("first_last_non_null", lambda: base.select(col("x").shift(1).first(ignore_nulls=True).alias("f"), col("g").last(ignore_nulls=True).alias("l")))
@@ -844,17 +844,17 @@ simple("struct_unnest", lambda: base.select(pl.struct("id", "g").alias("s")).sel
 simple("bin_reinterpret", lambda: pl.DataFrame({"b": [b"\x01\x00\x00\x00", b"\x00\x00\x00\x02"]}).select(
     col("b").bin.reinterpret(dtype=pl.Int32).alias("le"), col("b").bin.reinterpret(dtype=pl.Int32, endianness="big").alias("be")))
 
-# remaining py API: frames, groups, and series
-simple("frame_remove", lambda: base.select("id", "x").remove(col("x") > 2))
-simple("frame_gather", lambda: base.select("id", "g").gather([0, 5, 2]))
-simple("frame_merge_sorted", lambda: pl.DataFrame({"k": [1, 3, 5], "s": ["a", "c", "e"]}).merge_sorted(pl.DataFrame({"k": [2, 3, 6], "s": ["b", "c2", "f"]}), "k"))
+# remaining py API: DataFrames, groups, and series
+simple("dataframe_remove", lambda: base.select("id", "x").remove(col("x") > 2))
+simple("dataframe_gather", lambda: base.select("id", "g").gather([0, 5, 2]))
+simple("dataframe_merge_sorted", lambda: pl.DataFrame({"k": [1, 3, 5], "s": ["a", "c", "e"]}).merge_sorted(pl.DataFrame({"k": [2, 3, 6], "s": ["b", "c2", "f"]}), "k"))
 upd = pl.DataFrame({"id": [2, 4, 9], "x": [20, None, 90], "g": ["B", None, "Z"]})
-simple("frame_update", lambda: base.select("id", "x", "g").update(upd, on="id"))
-simple("frame_update_nulls_full", lambda: base.select("id", "x", "g").update(upd, on="id", how="full", include_nulls=True))
-simple("frame_update_by_row", lambda: base.select("x", "g").update(pl.DataFrame({"x": [None, 50]})))
-simple("frame_iter_slices", lambda: pl.concat([sl.with_columns(lit(i, dtype=pl.Int64).alias("slice")) for i, sl in enumerate(base.select("id").iter_slices(4))]))
-simple("frame_map_rows", lambda: base.select("id", "x").map_rows(lambda r: (r[0] * 2, r[1])))
-simple("frame_map_rows_scalar", lambda: base.select("id").map_rows(lambda r: r[0] + 1))
+simple("dataframe_update", lambda: base.select("id", "x", "g").update(upd, on="id"))
+simple("dataframe_update_nulls_full", lambda: base.select("id", "x", "g").update(upd, on="id", how="full", include_nulls=True))
+simple("dataframe_update_by_row", lambda: base.select("x", "g").update(pl.DataFrame({"x": [None, 50]})))
+simple("dataframe_iter_slices", lambda: pl.concat([sl.with_columns(lit(i, dtype=pl.Int64).alias("slice")) for i, sl in enumerate(base.select("id").iter_slices(4))]))
+simple("dataframe_map_rows", lambda: base.select("id", "x").map_rows(lambda r: (r[0] * 2, r[1])))
+simple("dataframe_map_rows_scalar", lambda: base.select("id").map_rows(lambda r: r[0] + 1))
 simple("group_by_having", lambda: base.group_by("g", maintain_order=True).having(pl.len() > 1).agg(col("id").sum()))
 simple("series_describe", lambda: ys.describe())
 simple("series_scatter", lambda: pl.DataFrame([xs.clone().scatter([0, -1], [100, 200]).alias("a"), xs.clone().scatter(1, None).alias("b")]))

@@ -14,10 +14,10 @@ use std::{
 
 mod config;
 mod convert;
+mod dataframe;
 mod dtype;
 mod error;
 mod expr;
-mod frame;
 mod input;
 mod io;
 mod namespace;
@@ -557,10 +557,10 @@ pub fn linear_space(
     )))
 }
 
-/// Evaluate expressions without a frame: select(lit(1), date_range(...)).
+/// Evaluate expressions without a DataFrame: select(lit(1), date_range(...)).
 #[php_function]
 #[php(name = "Phpolars\\select")]
-pub fn select(exprs: &[&Zval]) -> PhpResult<frame::PhpDataFrame> {
+pub fn select(exprs: &[&Zval]) -> PhpResult<dataframe::PhpDataFrame> {
     use error::OrPhp;
     init_threads();
     use polars::prelude::IntoLazy;
@@ -569,7 +569,7 @@ pub fn select(exprs: &[&Zval]) -> PhpResult<frame::PhpDataFrame> {
         .select(input::exprs(exprs)?)
         .collect()
         .php()
-        .map(frame::PhpDataFrame::wrap)
+        .map(dataframe::PhpDataFrame::wrap)
 }
 
 /// Each column's values as one list.
@@ -688,12 +688,12 @@ pub fn field(name: &Zval) -> PhpResult<PhpExpr> {
 /// Collect several LazyFrames at once, sharing work between their plans.
 #[php_function]
 #[php(name = "Phpolars\\collect_all")]
-pub fn collect_all(lazyFrames: &ZendHashTable) -> PhpResult<Vec<frame::PhpDataFrame>> {
+pub fn collect_all(lazyFrames: &ZendHashTable) -> PhpResult<Vec<dataframe::PhpDataFrame>> {
     use error::OrPhp;
     let mut plans = Vec::new();
     for v in lazyFrames.values() {
         let lf = v
-            .extract::<&frame::PhpLazyFrame>()
+            .extract::<&dataframe::PhpLazyFrame>()
             .ok_or_else(|| error::value_error("collect_all() takes a list of LazyFrames"))?;
         plans.push(lf.inner.clone().logical_plan);
     }
@@ -704,7 +704,7 @@ pub fn collect_all(lazyFrames: &ZendHashTable) -> PhpResult<Vec<frame::PhpDataFr
         polars::prelude::OptFlags::default(),
     )
     .php()
-    .map(|dfs| dfs.into_iter().map(frame::PhpDataFrame::wrap).collect())
+    .map(|dfs| dfs.into_iter().map(dataframe::PhpDataFrame::wrap).collect())
 }
 
 /// py's from_dict, from_dicts, and from_records; the same as the DataFrame constructors.
@@ -713,8 +713,8 @@ pub fn collect_all(lazyFrames: &ZendHashTable) -> PhpResult<Vec<frame::PhpDataFr
 pub fn from_dict(
     data: &ZendHashTable,
     schema: Option<&ZendHashTable>,
-) -> PhpResult<frame::PhpDataFrame> {
-    convert::from_columns(data, schema).map(frame::PhpDataFrame::wrap)
+) -> PhpResult<dataframe::PhpDataFrame> {
+    convert::from_columns(data, schema).map(dataframe::PhpDataFrame::wrap)
 }
 
 #[php_function]
@@ -722,8 +722,8 @@ pub fn from_dict(
 pub fn from_dicts(
     data: &ZendHashTable,
     schema: Option<&ZendHashTable>,
-) -> PhpResult<frame::PhpDataFrame> {
-    convert::from_rows(data, schema).map(frame::PhpDataFrame::wrap)
+) -> PhpResult<dataframe::PhpDataFrame> {
+    convert::from_rows(data, schema).map(dataframe::PhpDataFrame::wrap)
 }
 
 #[php_function]
@@ -731,8 +731,8 @@ pub fn from_dicts(
 pub fn from_records(
     data: &ZendHashTable,
     schema: Option<&ZendHashTable>,
-) -> PhpResult<frame::PhpDataFrame> {
-    convert::from_rows(data, schema).map(frame::PhpDataFrame::wrap)
+) -> PhpResult<dataframe::PhpDataFrame> {
+    convert::from_rows(data, schema).map(dataframe::PhpDataFrame::wrap)
 }
 
 /// Run a query on a PDO connection and read the result: read_database('SELECT ...', $pdo).
@@ -745,7 +745,7 @@ pub fn read_database(
     connection: &Zval,
     params: Option<&ZendHashTable>,
     schemaOverrides: Option<&ZendHashTable>,
-) -> PhpResult<frame::PhpDataFrame> {
+) -> PhpResult<dataframe::PhpDataFrame> {
     use error::OrPhp;
     use ext_php_rs::convert::IntoZval;
     let statement = match params {
@@ -817,7 +817,7 @@ pub fn read_database(
         init_threads();
         df = df.lazy().with_columns(exprs).collect().php()?;
     }
-    Ok(frame::PhpDataFrame::wrap(df))
+    Ok(dataframe::PhpDataFrame::wrap(df))
 }
 
 /// any('a') == col('a')->any(): true if any value is true.
@@ -972,13 +972,6 @@ pub fn set_random_seed(seed: i64) {
     polars_core::random::set_global_random_seed(seed as u64);
 }
 
-/// py's threadpool_size(); the same as thread_pool_size().
-#[php_function]
-#[php(name = "Phpolars\\threadpool_size")]
-pub fn threadpool_size() -> i64 {
-    thread_pool_size()
-}
-
 /// A Time from parts: time(12, 30), time(col('h'), col('m')).
 #[php_function]
 #[php(name = "Phpolars\\time")]
@@ -1100,7 +1093,7 @@ pub fn rolling_cov(
 #[php_function]
 #[php(name = "Phpolars\\union")]
 pub fn union(items: &ZendHashTable, how: Option<String>) -> PhpResult<Zval> {
-    frame::concat(items, how)
+    dataframe::concat(items, how)
 }
 
 /// py's arange(); the same as int_range().
@@ -1137,7 +1130,7 @@ pub fn json_normalize(
     data: &ZendHashTable,
     separator: Option<String>,
     maxLevel: Option<i64>,
-) -> PhpResult<frame::PhpDataFrame> {
+) -> PhpResult<dataframe::PhpDataFrame> {
     let sep = separator.unwrap_or_else(|| ".".into());
     let records: Vec<&ZendHashTable> = if convert::is_list(data) {
         data.values()
@@ -1182,7 +1175,7 @@ pub fn json_normalize(
         }
         columns.insert(name.as_str(), values)?;
     }
-    convert::from_columns(&columns, None).map(frame::PhpDataFrame::wrap)
+    convert::from_columns(&columns, None).map(dataframe::PhpDataFrame::wrap)
 }
 
 fn is_dict(v: &Zval) -> bool {
@@ -1276,7 +1269,7 @@ pub fn count(names: &[&Zval]) -> PhpResult<PhpExpr> {
 #[php_function]
 #[php(name = "Phpolars\\concat")]
 pub fn concat(items: &ZendHashTable, how: Option<String>) -> PhpResult<Zval> {
-    frame::concat(items, how)
+    dataframe::concat(items, how)
 }
 
 /// The size of the Polars thread pool in this process.
@@ -1337,11 +1330,11 @@ pub fn get_module(module: ModuleBuilder) -> ModuleBuilder {
     .class::<namespace::PhpBinNameSpace>()
     .class::<namespace::PhpMetaNameSpace>()
     .class::<series::PhpSeries>()
-    .class::<frame::PhpDataFrame>()
-    .class::<frame::PhpLazyFrame>()
-    .class::<frame::GroupIterator>()
-    .class::<frame::PhpGroupBy>()
-    .class::<frame::PhpLazyGroupBy>();
+    .class::<dataframe::PhpDataFrame>()
+    .class::<dataframe::PhpLazyFrame>()
+    .class::<dataframe::GroupIterator>()
+    .class::<dataframe::PhpGroupBy>()
+    .class::<dataframe::PhpLazyGroupBy>();
     module
         .request_startup_function(request_startup)
         .function(wrap_function!(col))
@@ -1394,7 +1387,6 @@ pub fn get_module(module: ModuleBuilder) -> ModuleBuilder {
         .function(wrap_function!(zeros))
         .function(wrap_function!(row_index))
         .function(wrap_function!(set_random_seed))
-        .function(wrap_function!(threadpool_size))
         .function(wrap_function!(time))
         .function(wrap_function!(time_range))
         .function(wrap_function!(time_ranges))

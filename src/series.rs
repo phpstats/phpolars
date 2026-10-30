@@ -1,6 +1,6 @@
 #![allow(non_snake_case)]
 //! Phpolars\Series. Most methods evaluate the matching Expr on a one-column
-//! frame, so Series and Expr share Polars' semantics exactly.
+//! DataFrame, so Series and Expr share Polars' semantics exactly.
 use ext_php_rs::{
     boxed::ZBox,
     prelude::*,
@@ -9,10 +9,11 @@ use ext_php_rs::{
 use polars::prelude::*;
 
 use crate::{
-    convert, dtype,
+    convert,
+    dataframe::PhpDataFrame,
+    dtype,
     error::{OrPhp, value_error},
     expr::{fill_null, rank_method},
-    frame::PhpDataFrame,
     input::operand,
     namespace::{PhpDtNameSpace, PhpListNameSpace, PhpStrNameSpace, PhpStructNameSpace},
 };
@@ -543,7 +544,7 @@ impl PhpSeries {
         wrap(self.inner.clone())
     }
 
-    /// Summary statistics as a statistic/value frame, as py's Series.describe().
+    /// Summary statistics as a statistic/value DataFrame, as py's Series.describe().
     pub fn describe(&self, percentiles: Option<Vec<crate::input::Num>>) -> PhpResult<PhpDataFrame> {
         let df = DataFrame::new_infer_height(vec![self.inner.clone().into_column()]).php()?;
         let d = PhpDataFrame::wrap(df).describe(percentiles)?;

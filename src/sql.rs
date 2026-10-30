@@ -1,5 +1,5 @@
 #![allow(non_snake_case)]
-//! SQL over frames, as py-polars' SQLContext, DataFrame.sql(), and pl.sql().
+//! SQL over DataFrames and LazyFrames, as py-polars' SQLContext, DataFrame.sql(), and pl.sql().
 //! Built only with the `sql` Cargo feature; without it these raise a ComputeError.
 use ext_php_rs::{prelude::*, types::ZendHashTable, types::Zval};
 #[allow(unused_imports)]
@@ -7,8 +7,8 @@ use polars::prelude::DataType;
 use polars::prelude::*;
 
 use crate::{
+    dataframe::{PhpDataFrame, PhpLazyFrame},
     error::OrPhp,
-    frame::{PhpDataFrame, PhpLazyFrame},
 };
 
 #[cfg(not(feature = "sql"))]
@@ -42,26 +42,26 @@ fn result(lf: LazyFrame, eager: bool) -> PhpResult<Zval> {
     }
 }
 
-/// Run one query over named frames.
-pub fn run(query: &str, frames: &[(String, LazyFrame)]) -> PhpResult<LazyFrame> {
+/// Run one query over named tables.
+pub fn run(query: &str, tables: &[(String, LazyFrame)]) -> PhpResult<LazyFrame> {
     #[cfg(feature = "sql")]
     {
         let mut ctx = polars::sql::SQLContext::new();
-        for (name, lf) in frames {
+        for (name, lf) in tables {
             ctx.register(name, lf.clone());
         }
         ctx.execute(query).php()
     }
     #[cfg(not(feature = "sql"))]
     {
-        let _ = (query, frames);
+        let _ = (query, tables);
         Err(missing())
     }
 }
 
-fn named_frames(frames: Option<&ZendHashTable>) -> PhpResult<Vec<(String, LazyFrame)>> {
+fn named_tables(tables: Option<&ZendHashTable>) -> PhpResult<Vec<(String, LazyFrame)>> {
     let mut out = Vec::new();
-    if let Some(f) = frames {
+    if let Some(f) = tables {
         for (k, v) in f.iter() {
             out.push((k.to_string(), lazy(v)?));
         }
@@ -74,7 +74,7 @@ fn named_frames(frames: Option<&ZendHashTable>) -> PhpResult<Vec<(String, LazyFr
 #[php_class]
 #[php(name = "Phpolars\\SQLContext")]
 pub struct PhpSqlContext {
-    frames: Vec<(String, LazyFrame)>,
+    tables: Vec<(String, LazyFrame)>,
     eager: bool,
 }
 
@@ -82,47 +82,47 @@ pub struct PhpSqlContext {
 impl PhpSqlContext {
     pub fn __construct(dataFrames: Option<&ZendHashTable>, eager: Option<bool>) -> PhpResult<Self> {
         Ok(Self {
-            frames: named_frames(dataFrames)?,
+            tables: named_tables(dataFrames)?,
             eager: eager.unwrap_or(false),
         })
     }
 
-    /// Register a frame under a table name, replacing any with that name.
+    /// Register a DataFrame or LazyFrame under a table name, replacing any with that name.
     pub fn register(&mut self, name: String, dataFrame: &Zval) -> PhpResult<()> {
         let lf = lazy(dataFrame)?;
-        self.frames.retain(|(n, _)| n != &name);
-        self.frames.push((name, lf));
+        self.tables.retain(|(n, _)| n != &name);
+        self.tables.push((name, lf));
         Ok(())
     }
 
-    /// Register several frames: registerMany(['a' => $df, 'b' => $lf]).
+    /// Register several tables: registerMany(['a' => $df, 'b' => $lf]).
     pub fn registerMany(&mut self, dataFrames: &ZendHashTable) -> PhpResult<()> {
-        for (name, lf) in named_frames(Some(dataFrames))? {
-            self.frames.retain(|(n, _)| n != &name);
-            self.frames.push((name, lf));
+        for (name, lf) in named_tables(Some(dataFrames))? {
+            self.tables.retain(|(n, _)| n != &name);
+            self.tables.push((name, lf));
         }
         Ok(())
     }
 
     pub fn unregister(&mut self, names: &Zval) -> PhpResult<()> {
         let names = crate::input::names(&[names])?;
-        self.frames.retain(|(n, _)| !names.contains(n));
+        self.tables.retain(|(n, _)| !names.contains(n));
         Ok(())
     }
 
     /// The registered table names, sorted.
     pub fn tables(&self) -> Vec<String> {
-        let mut t: Vec<String> = self.frames.iter().map(|(n, _)| n.clone()).collect();
+        let mut t: Vec<String> = self.tables.iter().map(|(n, _)| n.clone()).collect();
         t.sort();
         t
     }
 
     pub fn execute(&self, query: String, eager: Option<bool>) -> PhpResult<Zval> {
-        result(run(&query, &self.frames)?, eager.unwrap_or(self.eager))
+        result(run(&query, &self.tables)?, eager.unwrap_or(self.eager))
     }
 }
 
-/// sql('SELECT * FROM t', ['t' => $df]): one query over named frames.
+/// sql('SELECT * FROM t', ['t' => $df]): one query over named tables.
 /// Returns a LazyFrame unless eager: true.
 #[php_function]
 #[php(name = "Phpolars\\sql")]
@@ -132,7 +132,7 @@ pub fn sql(
     eager: Option<bool>,
 ) -> PhpResult<Zval> {
     result(
-        run(&query, &named_frames(dataFrames)?)?,
+        run(&query, &named_tables(dataFrames)?)?,
         eager.unwrap_or(false),
     )
 }

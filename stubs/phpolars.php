@@ -1042,8 +1042,6 @@ namespace Phpolars {
 
     function set_random_seed(int $seed): void {}
 
-    function threadpool_size(): int {}
-
     function time(mixed $hour = null, mixed $minute = null, mixed $second = null, mixed $microsecond = null): Phpolars\Expr {}
 
     function time_range(mixed $start = null, mixed $end = null, ?string $interval = null, ?string $closed = null): Phpolars\Expr {}

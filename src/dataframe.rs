@@ -1,7 +1,7 @@
 #![allow(non_snake_case)]
 //! Phpolars\DataFrame, Phpolars\LazyFrame and their GroupBy classes.
 //!
-//! The verbs both frames share are written once in `frame_verbs!`: each one
+//! The verbs DataFrame and LazyFrame share are written once in `dataframe_verbs!`: each one
 //! builds on a LazyFrame, and DataFrame collects the result while LazyFrame
 //! keeps it lazy, exactly as py-polars does.
 use ext_php_rs::{
@@ -130,8 +130,8 @@ fn all_of(args: &[&Zval]) -> PhpResult<Expr> {
     all.ok_or_else(|| value_error("filter() needs at least one predicate"))
 }
 
-/// Strategy-free frame aggregates such as sum() and mean().
-fn frame_agg(lf: LazyFrame, f: impl Fn(Expr) -> Expr) -> LazyFrame {
+/// Strategy-free DataFrame aggregates such as sum() and mean().
+fn dataframe_agg(lf: LazyFrame, f: impl Fn(Expr) -> Expr) -> LazyFrame {
     lf.select([f(all().as_expr())])
 }
 
@@ -140,7 +140,7 @@ fn selector(cols: Vec<String>) -> Selector {
     by_name(cols, true, false)
 }
 
-macro_rules! frame_verbs {
+macro_rules! dataframe_verbs {
     ($ty:ident, $group:ident, { $($extra:tt)* }) => {
         #[php_impl]
         impl $ty {
@@ -312,7 +312,7 @@ macro_rules! frame_verbs {
             /// join($other, on: 'id', how: 'left') or leftOn/rightOn; how is
             /// inner, left, right, full, semi, anti or cross.
             pub fn join(&self, other: &Zval, on: Option<&Zval>, how: Option<String>, leftOn: Option<&Zval>, rightOn: Option<&Zval>, suffix: Option<String>, coalesce: Option<bool>, maintainOrder: Option<String>, nullsEqual: Option<bool>) -> PhpResult<Self> {
-                let other = other_frame(other)?;
+                let other = other_dataframe(other)?;
                 let how = join_type(how)?;
                 let (left, right) = match (given(on), given(leftOn), given(rightOn)) {
                     (Some(on), None, None) => {
@@ -348,7 +348,7 @@ macro_rules! frame_verbs {
             /// joinWhere($other, col('start')->le(col('t')), col('t')->lt(col('end'))).
             /// Right-hand columns that clash with left ones are named <name>_right.
             pub fn joinWhere(&self, other: &Zval, predicates: &[&Zval]) -> PhpResult<Self> {
-                let other = other_frame(other)?;
+                let other = other_dataframe(other)?;
                 let predicates = crate::input::exprs(predicates)?;
                 if predicates.is_empty() {
                     return Err(value_error("joinWhere() needs at least one predicate"));
@@ -400,11 +400,11 @@ macro_rules! frame_verbs {
             }
 
             pub fn count(&self) -> PhpResult<Self> {
-                Self::out(frame_agg(self.lf(), |e| e.count()))
+                Self::out(dataframe_agg(self.lf(), |e| e.count()))
             }
 
             pub fn nUnique(&self) -> PhpResult<Self> {
-                Self::out(frame_agg(self.lf(), |e| e.n_unique()))
+                Self::out(dataframe_agg(self.lf(), |e| e.n_unique()))
             }
 
             /// unpivot(on: ['x', 'y'], index: 'id', variableName:, valueName:)
@@ -431,7 +431,7 @@ macro_rules! frame_verbs {
             /// joinAsof($other, on: 't', by: 'g', strategy: 'backward', tolerance: '1h'):
             /// each left row takes the nearest right row by the sorted 'on' key.
             pub fn joinAsof(&self, other: &Zval, on: Option<&Zval>, leftOn: Option<&Zval>, rightOn: Option<&Zval>, by: Option<&Zval>, byLeft: Option<&Zval>, byRight: Option<&Zval>, strategy: Option<String>, suffix: Option<String>, tolerance: Option<&Zval>, allowExactMatches: Option<bool>, checkSortedness: Option<bool>, coalesce: Option<bool>) -> PhpResult<Self> {
-                let other = other_frame(other)?;
+                let other = other_dataframe(other)?;
                 let (left, right) = match (given(on), given(leftOn), given(rightOn)) {
                     (Some(on), None, None) => (into_expr(on)?, into_expr(on)?),
                     (None, Some(l), Some(r)) => (into_expr(l)?, into_expr(r)?),
@@ -552,11 +552,11 @@ macro_rules! frame_verbs {
             }
 
             pub fn product(&self) -> PhpResult<Self> {
-                Self::out(frame_agg(self.lf(), |e| e.product()))
+                Self::out(dataframe_agg(self.lf(), |e| e.product()))
             }
 
             pub fn approxNUnique(&self) -> PhpResult<Self> {
-                Self::out(frame_agg(self.lf(), |e| e.approx_n_unique()))
+                Self::out(dataframe_agg(self.lf(), |e| e.approx_n_unique()))
             }
 
             /// The k rows with the largest values of by; reverse: true for the smallest.
@@ -605,7 +605,7 @@ macro_rules! frame_verbs {
                 Self::out(self.lf().with_columns_seq(crate::input::exprs(exprs)?))
             }
 
-            /// An empty frame with the same schema, or n rows of nulls.
+            /// An empty table with the same schema, or n rows of nulls.
             pub fn clear(&self, n: Option<i64>) -> PhpResult<Self> {
                 let n = crate::input::count(n.unwrap_or(0), "n")?;
                 let schema = self.schema_ref()?;
@@ -622,7 +622,7 @@ macro_rules! frame_verbs {
                 Self::out(lf)
             }
 
-            /// Run SQL against this frame, named tableName (default 'self'):
+            /// Run SQL against this table, named tableName (default 'self'):
             /// $df->sql('SELECT a, SUM(b) FROM self GROUP BY a').
             pub fn sql(&self, query: String, tableName: Option<String>) -> PhpResult<Self> {
                 let name = tableName.unwrap_or_else(|| "self".into());
@@ -644,10 +644,10 @@ macro_rules! frame_verbs {
                 Self::out(self.lf().select([all().as_expr().gather(idx, false)]))
             }
 
-            /// Merge two frames already sorted by key into one sorted frame.
+            /// Merge two tables already sorted by key into one sorted table.
             pub fn mergeSorted(&self, other: &Zval, key: &Zval, maintainOrder: Option<bool>) -> PhpResult<Self> {
                 let key: Vec<PlSmallStr> = names(&[key])?.into_iter().map(Into::into).collect();
-                Self::out(self.lf().merge_sorted(other_frame(other)?, key, maintainOrder.unwrap_or(false)).php()?)
+                Self::out(self.lf().merge_sorted(other_dataframe(other)?, key, maintainOrder.unwrap_or(false)).php()?)
             }
 
             /// Update values from other, matched on `on` (or row position when on
@@ -660,7 +660,7 @@ macro_rules! frame_verbs {
                     h => return Err(value_error(format!("how must be left, inner, or full, not '{h}'"))),
                 };
                 let mut left = self.lf();
-                let mut right = other_frame(other)?;
+                let mut right = other_dataframe(other)?;
                 let (left_on, right_on) = match (opt_names(on)?, opt_names(leftOn)?, opt_names(rightOn)?) {
                     (Some(o), None, None) => (o.clone(), o),
                     (None, Some(l), Some(r)) => (l, r),
@@ -730,7 +730,7 @@ macro_rules! frame_verbs {
 }
 
 /// A DataFrame or LazyFrame argument as a LazyFrame.
-fn other_frame(other: &Zval) -> PhpResult<LazyFrame> {
+fn other_dataframe(other: &Zval) -> PhpResult<LazyFrame> {
     if let Some(df) = other.extract::<&PhpDataFrame>() {
         return Ok(df.inner.clone().lazy());
     }
@@ -742,7 +742,7 @@ fn other_frame(other: &Zval) -> PhpResult<LazyFrame> {
     ))
 }
 
-frame_verbs!(PhpDataFrame, PhpGroupBy, {
+dataframe_verbs!(PhpDataFrame, PhpGroupBy, {
     /// new DataFrame(['a' => [1, 2], 'b' => ['x', 'y']]), a list of rows, or a list of Series.
     pub fn __construct(
         data: Option<&ZendHashTable>,
@@ -922,13 +922,13 @@ frame_verbs!(PhpDataFrame, PhpGroupBy, {
             .unwrap_or_default())
     }
 
-    /// The single value of a 1x1 frame, or the value at (row, column).
+    /// The single value of a 1x1 DataFrame, or the value at (row, column).
     pub fn item(&self, row: Option<i64>, column: Option<&Zval>) -> PhpResult<Zval> {
         let (r, c) = match (row, given(column)) {
             (None, None) => {
                 if self.inner.shape() != (1, 1) {
                     return Err(value_error(format!(
-                        "item() without arguments needs a 1x1 frame, not {:?}",
+                        "item() without arguments needs a 1x1 DataFrame, not {:?}",
                         self.inner.shape()
                     )));
                 }
@@ -1210,7 +1210,7 @@ frame_verbs!(PhpDataFrame, PhpGroupBy, {
         Self::wrap(self.inner.clone())
     }
 
-    /// Add Series or columns from another frame: hstack([$s1, $s2]).
+    /// Add Series or columns from another DataFrame: hstack([$s1, $s2]).
     pub fn hstack(&self, columns: &Zval) -> PhpResult<Self> {
         let mut add: Vec<Column> = Vec::new();
         if let Some(df) = columns.extract::<&PhpDataFrame>() {
@@ -1230,7 +1230,7 @@ frame_verbs!(PhpDataFrame, PhpGroupBy, {
         self.inner.hstack(&add).php().map(Self::wrap)
     }
 
-    /// Append the rows of another frame with the same schema.
+    /// Append the rows of another DataFrame with the same schema.
     pub fn vstack(&self, other: &PhpDataFrame) -> PhpResult<Self> {
         self.inner.vstack(&other.inner).php().map(Self::wrap)
     }
@@ -1248,7 +1248,7 @@ frame_verbs!(PhpDataFrame, PhpGroupBy, {
         })
     }
 
-    /// One frame per group of by. asDict: true keys them by the group value
+    /// One DataFrame per group of by. asDict: true keys them by the group value
     /// (one key column only, since PHP array keys can't be tuples).
     pub fn partitionBy(
         &self,
@@ -1496,7 +1496,7 @@ frame_verbs!(PhpDataFrame, PhpGroupBy, {
         crate::io::write_ipc_stream(&self.inner, &file)
     }
 
-    /// The frame in slices of nRows rows.
+    /// The DataFrame in slices of nRows rows.
     pub fn iterSlices(&self, nRows: Option<i64>) -> PhpResult<Vec<PhpDataFrame>> {
         let n = crate::input::count(nRows.unwrap_or(10_000), "nRows")?.max(1);
         let h = self.inner.height();
@@ -1644,7 +1644,7 @@ frame_verbs!(PhpDataFrame, PhpGroupBy, {
     }
 });
 
-frame_verbs!(PhpLazyFrame, PhpLazyGroupBy, {
+dataframe_verbs!(PhpLazyFrame, PhpLazyGroupBy, {
     pub fn collect(&self) -> PhpResult<PhpDataFrame> {
         init_threads();
         self.inner.clone().collect().php().map(PhpDataFrame::wrap)
@@ -1789,7 +1789,7 @@ enum Window {
 }
 
 macro_rules! group_by {
-    ($ty:ident, $php:literal, $frame:ident) => {
+    ($ty:ident, $php:literal, $dataframe:ident) => {
         #[php_class]
         #[php(name = $php)]
         #[php(implements(ce = ext_php_rs::zend::ce::aggregate, stub = "\\IteratorAggregate"))]
@@ -1818,7 +1818,7 @@ macro_rules! group_by {
                 g
             }
 
-            fn all_other(&self, f: impl Fn(Expr) -> Expr) -> PhpResult<$frame> {
+            fn all_other(&self, f: impl Fn(Expr) -> Expr) -> PhpResult<$dataframe> {
                 let index = match &self.window {
                     Window::Dynamic(i, _) | Window::Rolling(i, _) => Some(i),
                     Window::None => None,
@@ -1830,57 +1830,57 @@ macro_rules! group_by {
                     .filter_map(|k| k.clone().meta().output_name().ok())
                     .collect();
                 let rest = all().exclude_cols(keys).as_expr();
-                $frame::out(self.grouped().agg([f(rest)]))
+                $dataframe::out(self.grouped().agg([f(rest)]))
             }
         }
 
         #[php_impl]
         impl $ty {
             /// agg(col('x')->sum(), ['n' => col('y')->count()])
-            pub fn agg(&self, aggs: &[&Zval]) -> PhpResult<$frame> {
-                $frame::out(self.grouped().agg(exprs(aggs)?))
+            pub fn agg(&self, aggs: &[&Zval]) -> PhpResult<$dataframe> {
+                $dataframe::out(self.grouped().agg(exprs(aggs)?))
             }
 
-            pub fn len(&self, name: Option<String>) -> PhpResult<$frame> {
-                $frame::out(
+            pub fn len(&self, name: Option<String>) -> PhpResult<$dataframe> {
+                $dataframe::out(
                     self.grouped()
                         .agg([pl_len().alias(name.unwrap_or_else(|| "len".into()))]),
                 )
             }
 
-            pub fn sum(&self) -> PhpResult<$frame> {
+            pub fn sum(&self) -> PhpResult<$dataframe> {
                 self.all_other(|e| e.sum())
             }
 
-            pub fn mean(&self) -> PhpResult<$frame> {
+            pub fn mean(&self) -> PhpResult<$dataframe> {
                 self.all_other(|e| e.mean())
             }
 
-            pub fn median(&self) -> PhpResult<$frame> {
+            pub fn median(&self) -> PhpResult<$dataframe> {
                 self.all_other(|e| e.median())
             }
 
-            pub fn min(&self) -> PhpResult<$frame> {
+            pub fn min(&self) -> PhpResult<$dataframe> {
                 self.all_other(|e| e.min())
             }
 
-            pub fn max(&self) -> PhpResult<$frame> {
+            pub fn max(&self) -> PhpResult<$dataframe> {
                 self.all_other(|e| e.max())
             }
 
-            pub fn first(&self) -> PhpResult<$frame> {
+            pub fn first(&self) -> PhpResult<$dataframe> {
                 self.all_other(|e| e.first())
             }
 
-            pub fn last(&self) -> PhpResult<$frame> {
+            pub fn last(&self) -> PhpResult<$dataframe> {
                 self.all_other(|e| e.last())
             }
 
-            pub fn count(&self) -> PhpResult<$frame> {
+            pub fn count(&self) -> PhpResult<$dataframe> {
                 self.all_other(|e| e.count())
             }
 
-            pub fn nUnique(&self) -> PhpResult<$frame> {
+            pub fn nUnique(&self) -> PhpResult<$dataframe> {
                 self.all_other(|e| e.n_unique())
             }
 
@@ -1888,18 +1888,18 @@ macro_rules! group_by {
                 &self,
                 quantile: crate::input::Num,
                 interpolation: Option<String>,
-            ) -> PhpResult<$frame> {
+            ) -> PhpResult<$dataframe> {
                 let method = crate::expr::quantile_method(interpolation)?;
                 self.all_other(|e| e.quantile(lit(quantile.0), method))
             }
 
             /// Each group's values as lists.
-            pub fn all(&self) -> PhpResult<$frame> {
+            pub fn all(&self) -> PhpResult<$dataframe> {
                 self.all_other(|e| e)
             }
 
-            pub fn head(&self, n: Option<i64>) -> PhpResult<$frame> {
-                $frame::out(
+            pub fn head(&self, n: Option<i64>) -> PhpResult<$dataframe> {
+                $dataframe::out(
                     self.grouped()
                         .head(Some(crate::input::count(n.unwrap_or(5), "n")?)),
                 )
@@ -1928,8 +1928,8 @@ macro_rules! group_by {
                 group_iterator(&self.lf, &self.keys, self.maintain_order, &self.window)
             }
 
-            pub fn tail(&self, n: Option<i64>) -> PhpResult<$frame> {
-                $frame::out(
+            pub fn tail(&self, n: Option<i64>) -> PhpResult<$dataframe> {
+                $dataframe::out(
                     self.grouped()
                         .tail(Some(crate::input::count(n.unwrap_or(5), "n")?)),
                 )
@@ -2061,7 +2061,7 @@ pub fn concat(items: &ZendHashTable, how: Option<String>) -> PhpResult<Zval> {
     let eager = first.extract::<&PhpDataFrame>().is_some();
     let lfs = values
         .iter()
-        .map(|v| other_frame(v))
+        .map(|v| other_dataframe(v))
         .collect::<PhpResult<Vec<_>>>()?;
     let args = UnionArgs {
         rechunk: true,

@@ -57,7 +57,7 @@ pub struct PhpConfig;
 
 #[php_impl]
 impl PhpConfig {
-    /// Rows shown when printing a frame; null restores the default, -1 shows all.
+    /// Rows shown when printing a DataFrame; null restores the default, -1 shows all.
     pub fn setTblRows(n: Option<i64>) {
         set("POLARS_FMT_MAX_ROWS", n.map(|n| n.to_string()));
     }

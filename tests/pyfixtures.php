@@ -217,7 +217,7 @@ $cases = [
     'unique_rows' => fn () => $long->select('id', 'k')->unique(maintainOrder: true),
 
     // nulls
-    'fill_null_value_frame' => fn () => $base->select('g', 'x', 'y', 'b')->fillNull(0),
+    'fill_null_value_dataframe' => fn () => $base->select('g', 'x', 'y', 'b')->fillNull(0),
     'fill_null_string' => fn () => $S(col('g')->fillNull('?'), col('s')->fillNull(lit('none'))),
     'fill_null_strategies' => fn () => $S(
         col('x')->fillNull(strategy: 'forward')->alias('fwd'),
@@ -233,7 +233,7 @@ $cases = [
         col('a')->fillNull(strategy: 'forward', limit: 1)->alias('f1'),
         col('a')->fillNull(strategy: 'backward', limit: 2)->alias('b2'),
     ),
-    'fill_null_frame_forward' => fn () => $base->select('g', 'x', 'd')->fillNull(strategy: 'forward'),
+    'fill_null_dataframe_forward' => fn () => $base->select('g', 'x', 'd')->fillNull(strategy: 'forward'),
     'drop_nulls_all' => fn () => $base->select('id', 'g', 'x', 'y')->dropNulls(),
     'drop_nulls_subset' => fn () => $base->select('id', 'g', 'x', 'y')->dropNulls(['x', 'g']),
     'null_count' => fn () => $base->nullCount(),
@@ -265,13 +265,13 @@ $cases = [
     'describe_mixed' => fn () => $base->select('x', 'g', 'b', 'd')->describe(),
     'describe_percentiles' => fn () => $base->select('y')->describe(percentiles: [0.1, 0.9]),
 
-    // frame aggregates
-    'frame_sum' => fn () => $base->select('g', 'x', 'y', 'b')->sum(),
-    'frame_mean' => fn () => $base->select('x', 'y', 'b')->mean(),
-    'frame_min_max' => fn () => concat([$base->select('g', 'x', 'y', 'd')->min(), $base->select('g', 'x', 'y', 'd')->max()]),
-    'frame_std_var' => fn () => concat([$base->select('x', 'y')->std(), $base->select('x', 'y')->var(ddof: 0)]),
-    'frame_median' => fn () => $base->select('x', 'y')->median(),
-    'frame_n_unique' => fn () => $S(col('g', 'x', 'b')->nUnique()),
+    // DataFrame aggregates
+    'dataframe_sum' => fn () => $base->select('g', 'x', 'y', 'b')->sum(),
+    'dataframe_mean' => fn () => $base->select('x', 'y', 'b')->mean(),
+    'dataframe_min_max' => fn () => concat([$base->select('g', 'x', 'y', 'd')->min(), $base->select('g', 'x', 'y', 'd')->max()]),
+    'dataframe_std_var' => fn () => concat([$base->select('x', 'y')->std(), $base->select('x', 'y')->var(ddof: 0)]),
+    'dataframe_median' => fn () => $base->select('x', 'y')->median(),
+    'dataframe_n_unique' => fn () => $S(col('g', 'x', 'b')->nUnique()),
 
     // windows
     'over_sum' => fn () => $S('id', col('x')->sum()->over('g')->alias('sx')),
@@ -408,7 +408,7 @@ $cases = [
     'cast_non_strict' => fn () => $S(col('s')->cast('Int64', strict: false)->alias('si'), col('x')->mul(50)->cast('UInt8', strict: false)->alias('u8')),
     'cast_overflow_strict_fails' => fn () => $S(col('x')->mul(50)->cast('UInt8')),
     'cast_string_to_float' => fn () => (new DataFrame(['a' => ['1.5', '-2', '1e3', 'x', null]]))->select(col('a')->cast('Float64', strict: false)),
-    'cast_frame_map' => fn () => $base->select('x', 'y', 'k')->cast(['x' => 'Float32', 'k' => 'String']),
+    'cast_dataframe_map' => fn () => $base->select('x', 'y', 'k')->cast(['x' => 'Float32', 'k' => 'String']),
 
     // isIn / isBetween / clip / round
     'is_in' => fn () => $S(
@@ -470,7 +470,7 @@ $cases = [
     'series_unique' => fn () => $gs->unique(maintainOrder: true),
     'series_empty_aggs' => fn () => (fn (Series $e) => ['sum' => $e->sum(), 'mean' => $e->mean(), 'min' => $e->min(), 'max' => $e->max(), 'std' => $e->std()])(new Series('e', [], 'Int64')),
 
-    // misc frame ops
+    // misc DataFrame ops
     'head_tail_slice' => fn () => concat([$base->select('id')->head(2), $base->select('id')->tail(1), $base->select('id')->slice(-3, 2)]),
     'rename_drop_reverse' => fn () => $base->select('id', 'g', 'x')->rename(['g' => 'group'])->drop('x')->reverse(),
     'struct_pack_field' => fn () => $S(struct_('g', 'x')->alias('st'))->withColumns(col('st')->struct()->field('x')->alias('sx')),
@@ -486,8 +486,8 @@ $cases = [
     'group_by_dynamic_day' => fn () => $tsf->groupByDynamic('t', every: '1d')->agg(col('v')->sum(), len()),
     'group_by_dynamic_by_bounds' => fn () => $tsf->groupByDynamic('t', every: '12h', period: '1d', closed: 'both', groupBy: 'g', includeBoundaries: true)->agg(col('v')->max()),
     'group_by_dynamic_label_offset' => fn () => $tsf->groupByDynamic('t', every: '1d', offset: '6h', label: 'right', startBy: 'datapoint')->agg(col('v')->first()),
-    'rolling_frame' => fn () => $tsf->rolling('t', period: '1d')->agg(col('v')->sum()->alias('s'), col('v')->count()->alias('n')),
-    'rolling_frame_by' => fn () => $tsf->rolling('t', period: '2h', offset: '-1h', closed: 'both', groupBy: 'g')->agg(col('v')->sum()),
+    'rolling_dataframe' => fn () => $tsf->rolling('t', period: '1d')->agg(col('v')->sum()->alias('s'), col('v')->count()->alias('n')),
+    'rolling_dataframe_by' => fn () => $tsf->rolling('t', period: '2h', offset: '-1h', closed: 'both', groupBy: 'g')->agg(col('v')->sum()),
     'rolling_by_exprs' => fn () => $tsf->select(
         't',
         col('v')->rollingMeanBy('t', '1d')->alias('mean'),
@@ -554,32 +554,32 @@ $cases = [
         col('f')->abs()->add(1)->arccosh()->alias('acosh'), col('f')->truediv(10)->arctanh()->alias('atanh'), col('f')->cot()->alias('cot'),
     ),
 
-    // frame verbs
-    'frame_shift' => fn () => $base->select('id', 'x')->shift(2),
-    'frame_shift_fill' => fn () => $base->select('id', 'x')->shift(-1, fillValue: 0),
-    'frame_interpolate' => fn () => $base->select('x', 'y')->interpolate(),
-    'frame_quantile_product' => fn () => concat([
+    // DataFrame verbs
+    'dataframe_shift' => fn () => $base->select('id', 'x')->shift(2),
+    'dataframe_shift_fill' => fn () => $base->select('id', 'x')->shift(-1, fillValue: 0),
+    'dataframe_interpolate' => fn () => $base->select('x', 'y')->interpolate(),
+    'dataframe_quantile_product' => fn () => concat([
         $base->select('x', 'y', 'k')->quantile(0.5, 'linear'),
         $base->select('x', 'y', 'k')->cast('Float64')->product(),
     ]),
-    'frame_top_bottom_k' => fn () => concat([
+    'dataframe_top_bottom_k' => fn () => concat([
         $base->select('id', 'y')->topK(2, by: 'y'),
         $base->select('id', 'k')->bottomK(3, by: ['k', 'id']),
         $base->select('id', 'x')->topK(2, by: 'x', reverse: true),
     ], how: 'diagonal'),
-    'frame_gather_every' => fn () => $base->select('id', 'g')->gatherEvery(2, offset: 1),
-    'frame_drop_nans' => fn () => $tsf->dropNans(),
-    'frame_drop_nans_subset' => fn () => $tsf->withColumns(col('f')->alias('f2'))->dropNans(subset: 'f2'),
-    'frame_is_duplicated' => fn () => new DataFrame([
+    'dataframe_gather_every' => fn () => $base->select('id', 'g')->gatherEvery(2, offset: 1),
+    'dataframe_drop_nans' => fn () => $tsf->dropNans(),
+    'dataframe_drop_nans_subset' => fn () => $tsf->withColumns(col('f')->alias('f2'))->dropNans(subset: 'f2'),
+    'dataframe_is_duplicated' => fn () => new DataFrame([
         'dup' => $long->select('id', 'k')->isDuplicated(), 'uniq' => $long->select('id', 'k')->isUnique(),
     ]),
-    'frame_upsample' => fn () => (new DataFrame([
+    'dataframe_upsample' => fn () => (new DataFrame([
         't' => [$dt('2024-01-01'), $dt('2024-01-04'), $dt('2024-01-02'), $dt('2024-01-03')],
         'g' => ['a', 'a', 'b', 'b'], 'v' => [1, 4, 2, 3],
     ]))->cast(['t' => 'Date'])->sort('t')->upsample('t', every: '1d', groupBy: 'g', maintainOrder: true),
-    'frame_corr' => fn () => $base->select('id', 'x', 'y')->dropNulls()->corr(),
-    'frame_insert_to_struct' => fn () => $base->select('id', 'g')->head(3)->insertColumn(1, new Series('n', [7, 8, 9]))->toStruct('st')->toFrame()->unnest('st'),
-    'frame_approx_n_unique' => fn () => $base->select('g', 'k')->approxNUnique(),
+    'dataframe_corr' => fn () => $base->select('id', 'x', 'y')->dropNulls()->corr(),
+    'dataframe_insert_to_struct' => fn () => $base->select('id', 'g')->head(3)->insertColumn(1, new Series('n', [7, 8, 9]))->toStruct('st')->toFrame()->unnest('st'),
+    'dataframe_approx_n_unique' => fn () => $base->select('g', 'k')->approxNUnique(),
 
     // functions
     'fn_date_range' => fn () => select(date_range($dt('2024-01-01'), $dt('2024-01-10'), '3d')->alias('d')),
@@ -717,7 +717,7 @@ $cases = [
     ]),
     'selectors_in_ops' => fn () => $S(cs\numeric()->sub(cs\by_name('id')))->withColumns(cs\float()->mul(2)->name()->suffix('_x2')),
     // SQL
-    'sql_frame' => fn () => $base->sql('SELECT g, SUM(x) AS sx, COUNT(*) AS n FROM self WHERE x IS NOT NULL GROUP BY g ORDER BY g NULLS LAST'),
+    'sql_dataframe' => fn () => $base->sql('SELECT g, SUM(x) AS sx, COUNT(*) AS n FROM self WHERE x IS NOT NULL GROUP BY g ORDER BY g NULLS LAST'),
     'sql_context_join' => fn () => (new Phpolars\SQLContext(['b' => $base, 'r' => $right]))->execute(
         'SELECT b.id, b.g, r.z FROM b LEFT JOIN r ON b.g = r.g ORDER BY b.id', eager: true),
     'sql_expressions' => fn () => $base->sql(
@@ -729,17 +729,17 @@ $cases = [
     'sql_table_name' => fn () => $base->select('id', 'x')->sql('SELECT MAX(x) AS mx FROM df', tableName: 'df'),
     'sql_function' => fn () => Phpolars\sql('SELECT k, COUNT(*) AS n FROM long GROUP BY k ORDER BY k', ['long' => $long], eager: true),
     'sql_error' => fn () => $base->sql('SELECT nope FROM self'),
-    // more frame and expression methods
-    'frame_to_dummies' => fn () => $base->select('id', 'g', 'k')->toDummies(['g', 'k']),
-    'frame_to_dummies_opts' => fn () => $base->select('g')->toDummies(separator: ':', dropFirst: true, dropNulls: true),
+    // more DataFrame and expression methods
+    'dataframe_to_dummies' => fn () => $base->select('id', 'g', 'k')->toDummies(['g', 'k']),
+    'dataframe_to_dummies_opts' => fn () => $base->select('g')->toDummies(separator: ':', dropFirst: true, dropNulls: true),
     'series_to_dummies' => fn () => $gs->toDummies(),
-    'frame_horizontal' => fn () => new DataFrame([
+    'dataframe_horizontal' => fn () => new DataFrame([
         $base->select('x', 'y', 'k')->sumHorizontal(), $base->select('x', 'y', 'k')->meanHorizontal(ignoreNulls: false),
         $base->select('x', 'y', 'k')->minHorizontal(), $base->select('x', 'y', 'k')->maxHorizontal(),
     ]),
-    'frame_clear' => fn () => concat([$base->select('id', 'g')->clear(), $base->select('id', 'g')->clear(2)]),
-    'frame_replace_column' => fn () => $base->select('id', 'g')->head(2)->replaceColumn(1, new Series('z', [9, 8])),
-    'frame_column_index' => fn () => ['k' => $base->getColumnIndex('k')],
+    'dataframe_clear' => fn () => concat([$base->select('id', 'g')->clear(), $base->select('id', 'g')->clear(2)]),
+    'dataframe_replace_column' => fn () => $base->select('id', 'g')->head(2)->replaceColumn(1, new Series('z', [9, 8])),
+    'dataframe_column_index' => fn () => ['k' => $base->getColumnIndex('k')],
     'group_by_quantile' => fn () => $base->groupBy('g', maintainOrder: true)->quantile(0.5, 'linear')->select('g', 'x', 'y'),
     'min_max_by' => fn () => $S(col('g')->minBy('x')->alias('min'), col('g')->maxBy('y')->alias('max')),
     'first_last_non_null' => fn () => $S(col('x')->shift(1)->first(ignoreNulls: true)->alias('f'), col('g')->last(ignoreNulls: true)->alias('l')),
@@ -784,16 +784,16 @@ $cases = [
     'bin_reinterpret' => fn () => (new DataFrame(['b' => ["\x01\x00\x00\x00", "\x00\x00\x00\x02"]], schema: ['b' => 'Binary']))->select(
         col('b')->bin()->reinterpret('Int32')->alias('le'), col('b')->bin()->reinterpret('Int32', 'big')->alias('be')),
 
-    // remaining py API: frames, groups, and series
-    'frame_remove' => fn () => $base->select('id', 'x')->remove(col('x')->gt(2)),
-    'frame_gather' => fn () => $base->select('id', 'g')->gather([0, 5, 2]),
-    'frame_merge_sorted' => fn () => (new DataFrame(['k' => [1, 3, 5], 's' => ['a', 'c', 'e']]))->mergeSorted(new DataFrame(['k' => [2, 3, 6], 's' => ['b', 'c2', 'f']]), 'k'),
-    'frame_update' => fn () => $base->select('id', 'x', 'g')->update($upd, on: 'id'),
-    'frame_update_nulls_full' => fn () => $base->select('id', 'x', 'g')->update($upd, on: 'id', how: 'full', includeNulls: true),
-    'frame_update_by_row' => fn () => $base->select('x', 'g')->update(new DataFrame(['x' => [null, 50]], schema: ['x' => 'Int64'])),
-    'frame_iter_slices' => fn () => concat(array_map(fn ($sl, $i) => $sl->withColumns(lit($i, 'Int64')->alias('slice')), $base->select('id')->iterSlices(4), [0, 1])),
-    'frame_map_rows' => fn () => $base->select('id', 'x')->mapRows(fn ($r) => [$r[0] * 2, $r[1]]),
-    'frame_map_rows_scalar' => fn () => $base->select('id')->mapRows(fn ($r) => $r[0] + 1),
+    // remaining py API: DataFrames, groups, and series
+    'dataframe_remove' => fn () => $base->select('id', 'x')->remove(col('x')->gt(2)),
+    'dataframe_gather' => fn () => $base->select('id', 'g')->gather([0, 5, 2]),
+    'dataframe_merge_sorted' => fn () => (new DataFrame(['k' => [1, 3, 5], 's' => ['a', 'c', 'e']]))->mergeSorted(new DataFrame(['k' => [2, 3, 6], 's' => ['b', 'c2', 'f']]), 'k'),
+    'dataframe_update' => fn () => $base->select('id', 'x', 'g')->update($upd, on: 'id'),
+    'dataframe_update_nulls_full' => fn () => $base->select('id', 'x', 'g')->update($upd, on: 'id', how: 'full', includeNulls: true),
+    'dataframe_update_by_row' => fn () => $base->select('x', 'g')->update(new DataFrame(['x' => [null, 50]], schema: ['x' => 'Int64'])),
+    'dataframe_iter_slices' => fn () => concat(array_map(fn ($sl, $i) => $sl->withColumns(lit($i, 'Int64')->alias('slice')), $base->select('id')->iterSlices(4), [0, 1])),
+    'dataframe_map_rows' => fn () => $base->select('id', 'x')->mapRows(fn ($r) => [$r[0] * 2, $r[1]]),
+    'dataframe_map_rows_scalar' => fn () => $base->select('id')->mapRows(fn ($r) => $r[0] + 1),
     'group_by_having' => fn () => $base->groupBy('g', maintainOrder: true)->having(len()->gt(1))->agg(col('id')->sum()),
     'series_describe' => fn () => $ys->describe(),
     'series_scatter' => fn () => new DataFrame(['a' => $xs->scatter([0, -1], [100, 200]), 'b' => $xs->scatter(1, null)]),

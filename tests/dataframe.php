@@ -53,8 +53,8 @@ same('nullCount', $df->nullCount()->toDicts(), [['g' => 0, 'x' => 1, 'y' => 1]])
 same('withRowIndex', $df->withRowIndex()->getColumn('index')->toList(), [0, 1, 2, 3]);
 same('cast map', $df->cast(['x' => 'Float64'])->dtypes(), ['String', 'Float64', 'Float64']);
 same('reverse', $df->reverse()->getColumn('g')->toList(), ['c', 'a', 'b', 'a']);
-same('frame sum', $df->select('x', 'y')->sum()->toDicts(), [['x' => 6, 'y' => 8.0]]);
-same('frame mean', $df->select('x')->mean()->item(), 2.0);
+same('DataFrame sum', $df->select('x', 'y')->sum()->toDicts(), [['x' => 6, 'y' => 8.0]]);
+same('DataFrame mean', $df->select('x')->mean()->item(), 2.0);
 
 // Group by
 $agg = $df->groupBy('g', maintainOrder: true)->agg(col('x')->sum()->alias('sx'), ['n' => len(), 'my' => col('y')->mean()]);

@@ -9,8 +9,8 @@ use std::fs::File;
 
 use crate::{
     convert::schema_overrides,
+    dataframe::{PhpDataFrame, PhpLazyFrame},
     error::{OrPhp, value_error},
-    frame::{PhpDataFrame, PhpLazyFrame},
     init_threads,
     input::names,
 };

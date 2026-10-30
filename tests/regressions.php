@@ -54,3 +54,7 @@ throws('list mixing strings and numbers', fn () => new DataFrame(['l' => [['x'],
 throws('struct field mixing kinds', fn () => new DataFrame(['l' => [[['a' => 1]], [['a' => 'z']]]]), SchemaError::class, 'at [].a');
 same('lists still widen int to float', (new DataFrame(['l' => [[1, 2.5], [3]]]))->dtypes(), ['List(Float64)']);
 same('struct fields keep their own types', (new DataFrame(['p' => [['a' => 1, 'b' => 'x'], ['a' => 2.5, 'b' => null]]]))->dtypes(), ['Struct(a: Float64, b: String)']);
+
+// Messages and names say DataFrame, never the bare noun (phpstats API convention 1).
+throws('item() on a 2x2 DataFrame', fn () => (new DataFrame(['a' => [1, 2], 'b' => [3, 4]]))->item(), ValueError::class, 'needs a 1x1 DataFrame, not (2, 2)');
+same('one thread pool function, as py-polars names it', [function_exists('Phpolars\thread_pool_size'), function_exists('Phpolars\threadpool_size')], [true, false]);

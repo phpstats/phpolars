@@ -2328,7 +2328,7 @@
     ]
    ]
   },
-  "fill_null_value_frame": {
+  "fill_null_value_dataframe": {
    "columns": [
     "g",
     "x",
@@ -2536,7 +2536,7 @@
     ]
    ]
   },
-  "fill_null_frame_forward": {
+  "fill_null_dataframe_forward": {
    "columns": [
     "g",
     "x",
@@ -3453,7 +3453,7 @@
     ]
    ]
   },
-  "frame_sum": {
+  "dataframe_sum": {
    "columns": [
     "g",
     "x",
@@ -3475,7 +3475,7 @@
     ]
    ]
   },
-  "frame_mean": {
+  "dataframe_mean": {
    "columns": [
     "x",
     "y",
@@ -3494,7 +3494,7 @@
     ]
    ]
   },
-  "frame_min_max": {
+  "dataframe_min_max": {
    "columns": [
     "g",
     "x",
@@ -3522,7 +3522,7 @@
     ]
    ]
   },
-  "frame_std_var": {
+  "dataframe_std_var": {
    "columns": [
     "x",
     "y"
@@ -3542,7 +3542,7 @@
     ]
    ]
   },
-  "frame_median": {
+  "dataframe_median": {
    "columns": [
     "x",
     "y"
@@ -3558,7 +3558,7 @@
     ]
    ]
   },
-  "frame_n_unique": {
+  "dataframe_n_unique": {
    "columns": [
     "g",
     "x",
@@ -6140,7 +6140,7 @@
     ]
    ]
   },
-  "cast_frame_map": {
+  "cast_dataframe_map": {
    "columns": [
     "x",
     "y",
@@ -7463,7 +7463,7 @@
     ]
    ]
   },
-  "rolling_frame": {
+  "rolling_dataframe": {
    "columns": [
     "t",
     "s",
@@ -7507,7 +7507,7 @@
     ]
    ]
   },
-  "rolling_frame_by": {
+  "rolling_dataframe_by": {
    "columns": [
     "g",
     "t",
@@ -8293,7 +8293,7 @@
     ]
    ]
   },
-  "frame_shift": {
+  "dataframe_shift": {
    "columns": [
     "id",
     "x"
@@ -8329,7 +8329,7 @@
     ]
    ]
   },
-  "frame_shift_fill": {
+  "dataframe_shift_fill": {
    "columns": [
     "id",
     "x"
@@ -8365,7 +8365,7 @@
     ]
    ]
   },
-  "frame_interpolate": {
+  "dataframe_interpolate": {
    "columns": [
     "x",
     "y"
@@ -8401,7 +8401,7 @@
     ]
    ]
   },
-  "frame_quantile_product": {
+  "dataframe_quantile_product": {
    "columns": [
     "x",
     "y",
@@ -8425,7 +8425,7 @@
     ]
    ]
   },
-  "frame_top_bottom_k": {
+  "dataframe_top_bottom_k": {
    "columns": [
     "id",
     "y",
@@ -8483,7 +8483,7 @@
     ]
    ]
   },
-  "frame_gather_every": {
+  "dataframe_gather_every": {
    "columns": [
     "id",
     "g"
@@ -8507,7 +8507,7 @@
     ]
    ]
   },
-  "frame_drop_nans": {
+  "dataframe_drop_nans": {
    "columns": [
     "t",
     "g",
@@ -8553,7 +8553,7 @@
     ]
    ]
   },
-  "frame_drop_nans_subset": {
+  "dataframe_drop_nans_subset": {
    "columns": [
     "t",
     "g",
@@ -8606,7 +8606,7 @@
     ]
    ]
   },
-  "frame_is_duplicated": {
+  "dataframe_is_duplicated": {
    "columns": [
     "dup",
     "uniq"
@@ -8642,7 +8642,7 @@
     ]
    ]
   },
-  "frame_upsample": {
+  "dataframe_upsample": {
    "columns": [
     "t",
     "g",
@@ -8686,7 +8686,7 @@
     ]
    ]
   },
-  "frame_corr": {
+  "dataframe_corr": {
    "columns": [
     "id",
     "x",
@@ -8715,7 +8715,7 @@
     ]
    ]
   },
-  "frame_insert_to_struct": {
+  "dataframe_insert_to_struct": {
    "columns": [
     "id",
     "n",
@@ -8744,7 +8744,7 @@
     ]
    ]
   },
-  "frame_approx_n_unique": {
+  "dataframe_approx_n_unique": {
    "columns": [
     "g",
     "k"
@@ -10332,7 +10332,7 @@
     ]
    ]
   },
-  "sql_frame": {
+  "sql_dataframe": {
    "columns": [
     "g",
     "sx",
@@ -10561,7 +10561,7 @@
    "error": "ColumnNotFoundError",
    "message": "unable to find column \"nope\"; valid columns: [\"id\", \"g\", \"x\", \"y\", \"k\", \"b\", \"s\", \"d\", \"t\", \"l\"]"
   },
-  "frame_to_dummies": {
+  "dataframe_to_dummies": {
    "columns": [
     "id",
     "g_a",
@@ -10653,7 +10653,7 @@
     ]
    ]
   },
-  "frame_to_dummies_opts": {
+  "dataframe_to_dummies_opts": {
    "columns": [
     "g:b",
     "g:c"
@@ -10741,7 +10741,7 @@
     ]
    ]
   },
-  "frame_horizontal": {
+  "dataframe_horizontal": {
    "columns": [
     "sum",
     "mean",
@@ -10793,7 +10793,7 @@
     ]
    ]
   },
-  "frame_clear": {
+  "dataframe_clear": {
    "columns": [
     "id",
     "g"
@@ -10813,7 +10813,7 @@
     ]
    ]
   },
-  "frame_replace_column": {
+  "dataframe_replace_column": {
    "columns": [
     "id",
     "z"
@@ -10833,7 +10833,7 @@
     ]
    ]
   },
-  "frame_column_index": {
+  "dataframe_column_index": {
    "columns": [
     "k"
    ],
@@ -11673,7 +11673,7 @@
     ]
    ]
   },
-  "frame_remove": {
+  "dataframe_remove": {
    "columns": [
     "id",
     "x"
@@ -11697,7 +11697,7 @@
     ]
    ]
   },
-  "frame_gather": {
+  "dataframe_gather": {
    "columns": [
     "id",
     "g"
@@ -11721,7 +11721,7 @@
     ]
    ]
   },
-  "frame_merge_sorted": {
+  "dataframe_merge_sorted": {
    "columns": [
     "k",
     "s"
@@ -11757,7 +11757,7 @@
     ]
    ]
   },
-  "frame_update": {
+  "dataframe_update": {
    "columns": [
     "id",
     "x",
@@ -11801,7 +11801,7 @@
     ]
    ]
   },
-  "frame_update_nulls_full": {
+  "dataframe_update_nulls_full": {
    "columns": [
     "id",
     "x",
@@ -11850,7 +11850,7 @@
     ]
    ]
   },
-  "frame_update_by_row": {
+  "dataframe_update_by_row": {
    "columns": [
     "x",
     "g"
@@ -11886,7 +11886,7 @@
     ]
    ]
   },
-  "frame_iter_slices": {
+  "dataframe_iter_slices": {
    "columns": [
     "id",
     "slice"
@@ -11922,7 +11922,7 @@
     ]
    ]
   },
-  "frame_map_rows": {
+  "dataframe_map_rows": {
    "columns": [
     "column_0",
     "column_1"
@@ -11958,7 +11958,7 @@
     ]
    ]
   },
-  "frame_map_rows_scalar": {
+  "dataframe_map_rows_scalar": {
    "columns": [
     "map"
    ],

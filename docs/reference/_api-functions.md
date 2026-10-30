@@ -75,7 +75,6 @@ sum(mixed ...$names): Phpolars\Expr
 sum_horizontal(mixed ...$exprs): Phpolars\Expr
 tail(mixed $names, ?int $n = null): Phpolars\Expr
 thread_pool_size(): int
-threadpool_size(): int
 time(mixed $hour = null, mixed $minute = null, mixed $second = null, mixed $microsecond = null): Phpolars\Expr
 time_range(mixed $start = null, mixed $end = null, ?string $interval = null, ?string $closed = null): Phpolars\Expr
 time_ranges(mixed $start = null, mixed $end = null, ?string $interval = null, ?string $closed = null): Phpolars\Expr
