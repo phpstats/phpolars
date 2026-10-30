@@ -287,6 +287,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">'extension=php_polars.so'</span> <span class="kw">|</span> <span class="fu">sudo</span> tee /etc/php/8.5/mods-available/php_polars.ini</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> phpenmod <span class="at">-v</span> 8.5 php_polars</span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> systemctl reload php8.5-fpm</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>When only queue workers, scheduled commands, or Artisan commands use phpolars, enable it for the CLI alone with <code>sudo phpenmod -v 8.5 -s cli php_polars</code>. PHP-FPM workers then never load it, and no FPM reload is needed.</p>
 </section>
 <section id="laravel-herd" class="level3">
 <h3 class="anchored" data-anchor-id="laravel-herd">Laravel Herd</h3>

@@ -26,6 +26,8 @@ sudo phpenmod -v 8.5 php_polars
 sudo systemctl reload php8.5-fpm
 ```
 
+When only queue workers, scheduled commands, or Artisan commands use phpolars, enable it for the CLI alone with `sudo phpenmod -v 8.5 -s cli php_polars`. PHP-FPM workers then never load it, and no FPM reload is needed.
+
 ### Laravel Herd
 
 Herd's PHP binaries have no `php-config`, so build against Homebrew's PHP of the same minor version, which has the same module API. For Herd's PHP 8.5:
