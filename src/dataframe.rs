@@ -10,6 +10,8 @@ use ext_php_rs::{
     types::{ZendCallable, ZendHashTable, Zval},
 };
 use polars::prelude::*;
+use polars_arrow::array::{Array, Utf8ViewArray};
+use polars_buffer::Buffer;
 
 use crate::{
     convert, dtype,
@@ -1645,9 +1647,21 @@ dataframe_verbs!(PhpDataFrame, PhpGroupBy, {
 });
 
 dataframe_verbs!(PhpLazyFrame, PhpLazyGroupBy, {
-    pub fn collect(&self) -> PhpResult<PhpDataFrame> {
+    /// Run the query. engine: 'auto' (in-memory), 'in-memory', or 'streaming',
+    /// which processes the input in batches so memory follows the output.
+    pub fn collect(&self, engine: Option<String>) -> PhpResult<PhpDataFrame> {
+        let engine = parse_engine(engine)?;
         init_threads();
-        self.inner.clone().collect().php().map(PhpDataFrame::wrap)
+        let lf = match engine {
+            Engine::Streaming => with_compacted_strings(self.inner.clone()),
+            _ => self.inner.clone(),
+        };
+        match lf.collect_with_engine(engine).php()? {
+            polars_core::query_result::QueryResult::Single(df) => Ok(PhpDataFrame::wrap(df)),
+            polars_core::query_result::QueryResult::Multiple(_) => {
+                Err(value_error("collect() produced several results"))
+            }
+        }
     }
 
     /// The query plan, optimized unless optimized: false.
@@ -1772,7 +1786,7 @@ dataframe_verbs!(PhpLazyFrame, PhpLazyGroupBy, {
 
     /// Summary statistics, collected eagerly as DataFrame::describe() does.
     pub fn describe(&self, percentiles: Option<Vec<crate::input::Num>>) -> PhpResult<PhpDataFrame> {
-        self.collect()?.describe(percentiles)
+        self.collect(None)?.describe(percentiles)
     }
 
     pub fn __to_string(&self) -> String {
@@ -2039,6 +2053,54 @@ fn pl_len() -> Expr {
 
 group_by!(PhpGroupBy, "Phpolars\\GroupBy", PhpDataFrame);
 group_by!(PhpLazyGroupBy, "Phpolars\\LazyGroupBy", PhpLazyFrame);
+
+/// Copy the strings a column still uses out of the buffers it shares with its
+/// input. Polars' filter keeps every input buffer alive, so without this a
+/// streaming query that keeps a few rows still holds all of the input's text.
+fn compact_strings(c: Column) -> PolarsResult<Column> {
+    let ca = c.str()?;
+    let wasteful = ca
+        .downcast_iter()
+        .any(|a| a.total_buffer_len() > 2 * a.total_bytes_len() + 4096);
+    if !wasteful {
+        return Ok(c);
+    }
+    let chunks = ca.downcast_iter().map(|a| {
+        // gc() copies into blocks of at least 8 KiB, which for a small batch
+        // can exceed what it saved, so copy each block to its exact length.
+        let a = a.clone().gc();
+        let buffers: Buffer<Buffer<u8>> = a
+            .data_buffers()
+            .iter()
+            .map(|b| Buffer::from(b.as_slice().to_vec()))
+            .collect();
+        // SAFETY: the views and the bytes they point at are unchanged.
+        unsafe {
+            Utf8ViewArray::new_unchecked_unknown_md(
+                a.dtype().clone(),
+                a.views().clone(),
+                buffers,
+                a.validity().cloned(),
+                None,
+            )
+        }
+    });
+    Ok(StringChunked::from_chunk_iter(ca.name().clone(), chunks).into_column())
+}
+
+/// The query, ending in a per-batch compaction of its String columns.
+pub(crate) fn with_compacted_strings(lf: LazyFrame) -> LazyFrame {
+    let strings = Selector::ByDType(DataTypeSelector::AnyOf([DataType::String].into())).as_expr();
+    lf.with_columns([strings.map(compact_strings, |_, f| Ok(f.clone()))])
+}
+
+/// py's collect(engine=...). The GPU engine is not built into phpolars.
+pub fn parse_engine(engine: Option<String>) -> PhpResult<Engine> {
+    match engine.as_deref().unwrap_or("auto") {
+        "gpu" => Err(value_error("the 'gpu' engine is not available in phpolars")),
+        name => name.parse::<Engine>().map_err(value_error),
+    }
+}
 
 /// concat([$a, $b], how: 'vertical'|'vertical_relaxed'|'horizontal'|'diagonal'|'diagonal_relaxed')
 pub fn concat(items: &ZendHashTable, how: Option<String>) -> PhpResult<Zval> {

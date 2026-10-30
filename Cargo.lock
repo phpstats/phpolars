@@ -1961,6 +1961,8 @@ dependencies = [
  "either",
  "ext-php-rs",
  "polars",
+ "polars-arrow",
+ "polars-buffer",
  "polars-core",
 ]
 

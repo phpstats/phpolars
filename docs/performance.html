@@ -207,6 +207,7 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#a-csv-pipeline" id="toc-a-csv-pipeline" class="nav-link active" data-scroll-target="#a-csv-pipeline">A CSV pipeline</a></li>
   <li><a href="#phplyr-pipelines-on-three-backends" id="toc-phplyr-pipelines-on-three-backends" class="nav-link" data-scroll-target="#phplyr-pipelines-on-three-backends">phplyr pipelines on three backends</a></li>
   <li><a href="#where-the-time-goes" id="toc-where-the-time-goes" class="nav-link" data-scroll-target="#where-the-time-goes">Where the time goes</a></li>
+  <li><a href="#memory-on-large-files" id="toc-memory-on-large-files" class="nav-link" data-scroll-target="#memory-on-large-files">Memory on large files</a></li>
   <li><a href="#binary-size" id="toc-binary-size" class="nav-link" data-scroll-target="#binary-size">Binary size</a></li>
   </ul>
 </nav>
@@ -334,6 +335,12 @@ ul.task-list li input[type="checkbox"] {
 <p>Polars runs the verbs themselves 10 to 100 times faster than the in-memory data frame. Returning rows to PHP is the cost that remains. Collecting 1M rows into PHP takes about 0.2 s for plain columns, plus about 0.5 s per datetime column, because each <code>DateTimeImmutable</code> is a PHP object.</p>
 <p>PolarsTable is the faster backend when a pipeline reduces the data (summaries, filters, joins followed by summaries) or chains several verbs before collecting. Reading files with <code>Phpolars\read_csv()</code> or <code>read_parquet()</code> and wrapping the result with <code>PolarsTable::fromPolars()</code> also avoids parsing the file in PHP.</p>
 <p>A verb given a PHP closure converts the table to a phibble <code>DataFrame</code> and back, about 1 s per million rows with a datetime column. On large data, use expressions, or use phibble’s in-memory <code>DataFrame</code> for closure-heavy pipelines.</p>
+</section>
+<section id="memory-on-large-files" class="level2">
+<h2 class="anchored" data-anchor-id="memory-on-large-files">Memory on large files</h2>
+<p><code>scan_csv()</code> pushes filters into the reader with either engine, so a filter that keeps no rows reads a 500 MB CSV in 45 to 100 MB of process memory. Rows that a filter keeps cost more than their own size. Polars’ filter keeps references into the buffers that the reader parsed, so a String column that keeps a few of the strings from a batch holds the batch’s whole buffer. With the default in-memory engine, a filter that keeps 4% of a 500 MB, 22-column CSV peaks at about 550 MB, although the result is 17 MB.</p>
+<p><code>collect(engine: 'streaming')</code> runs the query in batches, and phpolars then copies the strings that each batch keeps into buffers of their own. The same query peaks at about 100 MB with one thread and 130 MB with four. These measurements are from macOS, where the reported footprint leaves out the file’s own pages. On Linux, the query ends holding 485 MB of anonymous memory with the in-memory engine, and 80 MB with one thread or 115 MB with four with the streaming engine. <code>tests/memory.php</code> checks the bound on both. Polars maps the CSV file into memory, so a process’s resident set size also includes up to the size of the file in pages that the operating system can reclaim. The <code>sink*()</code> methods stream a result to a file without collecting it.</p>
+<p>Memory used by Polars does not count against PHP’s <code>memory_limit</code>, but the PHP arrays built from a result do. <code>rows()</code> on 200,000 rows of 22 strings uses about 340 MB of PHP memory, and so does <code>iterRows()</code>, which builds the same arrays. Iterating <code>iterSlices(10000)</code> and calling <code>rows()</code> on each slice keeps PHP’s peak near 20 MB.</p>
 </section>
 <section id="binary-size" class="level2">
 <h2 class="anchored" data-anchor-id="binary-size">Binary size</h2>

@@ -790,7 +790,7 @@ namespace Phpolars {
 
     class LazyFrame
     {
-        public function collect(): Phpolars\DataFrame {}
+        public function collect(?string $engine = null): Phpolars\DataFrame {}
         public function explain(?bool $optimized = null): string {}
         public function columns(): array {}
         public function sinkCsv(string $file, ?bool $includeHeader = null, ?string $separator = null, ?string $nullValue = null, ?string $quoteChar = null, ?string $dateFormat = null, ?string $datetimeFormat = null, ?string $timeFormat = null, ?bool $floatScientific = null, ?int $floatPrecision = null, ?bool $decimalComma = null, ?string $lineTerminator = null, ?string $quoteStyle = null, ?bool $includeBom = null): void {}
@@ -1006,7 +1006,7 @@ namespace Phpolars {
 
     function field(mixed $name): Phpolars\Expr {}
 
-    function collect_all(array $lazyFrames): array {}
+    function collect_all(array $lazyFrames, ?string $engine = null): array {}
 
     function from_dict(array $data, ?array $schema = null): Phpolars\DataFrame {}
 

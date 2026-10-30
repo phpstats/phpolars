@@ -11,7 +11,7 @@ arg_where(mixed $condition): Phpolars\Expr
 business_day_count(mixed $start, mixed $end, ?array $weekMask = null, mixed $holidays = null): Phpolars\Expr
 coalesce(mixed ...$exprs): Phpolars\Expr
 col(mixed ...$names): Phpolars\Expr
-collect_all(array $lazyFrames): array
+collect_all(array $lazyFrames, ?string $engine = null): array
 concat(array $items, ?string $how = null): mixed
 concat_arr(mixed ...$exprs): Phpolars\Expr
 concat_list(mixed ...$exprs): Phpolars\Expr

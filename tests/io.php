@@ -18,6 +18,23 @@ same('read_csv nRows', read_csv("$dir/in.csv", separator: ';', nRows: 2)->height
 same('scan_csv lazy', scan_csv("$dir/in.csv", separator: ';')->filter(col('id')->gt(1))->collect()->height(), 2);
 $df->writeCsv("$dir/out.csv");
 same('writeCsv round-trip', read_csv("$dir/out.csv")->equals($df), true);
+
+// collect(engine:): the streaming engine returns what the in-memory engine does,
+// including the String columns it compacts after a filter.
+$fh = fopen("$dir/wide.csv", 'w');
+fwrite($fh, "id,kind,note\n");
+for ($i = 0; $i < 20000; $i++) {
+    fwrite($fh, $i . ',' . ['running shoe', 'sandal', 'trail running shoe'][$i % 3] . ',' . ($i % 7 ? "a note longer than twelve bytes $i" : '') . "\n");
+}
+fclose($fh);
+$wide = scan_csv("$dir/wide.csv", missingUtf8IsEmptyString: false)->filter(col('kind')->str()->contains('running'))->sort('id');
+$inMemory = $wide->collect(engine: 'in-memory');
+same('streaming engine matches in-memory', $wide->collect(engine: 'streaming')->equals($inMemory), true);
+same('auto engine matches in-memory', $wide->collect()->equals($inMemory), true);
+same('streaming keeps nulls', $wide->collect(engine: 'streaming')->getColumn('note')->nullCount(), $inMemory->getColumn('note')->nullCount());
+same('collect_all takes an engine', Phpolars\collect_all([$wide], engine: 'streaming')[0]->equals($inMemory), true);
+throws('gpu engine', fn () => $wide->collect(engine: 'gpu'), ValueError::class, "'gpu' engine is not available");
+throws('unknown engine', fn () => $wide->collect(engine: 'fast'), ValueError::class, "must be one of");
 $df->writeCsv("$dir/out2.csv", separator: "\t", nullValue: 'NULL');
 same('writeCsv options', explode("\n", file_get_contents("$dir/out2.csv"))[2], "2\tNULL\t2.5\tfalse");
 throws('read_csv missing file', fn () => read_csv("$dir/nope.csv"), Phpolars\PolarsError::class);

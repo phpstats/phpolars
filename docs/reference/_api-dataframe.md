@@ -133,7 +133,7 @@ cache(): Phpolars\LazyFrame
 cast(mixed $dtypes, ?bool $strict = null): Phpolars\LazyFrame
 clear(?int $n = null): Phpolars\LazyFrame
 clone(): Phpolars\LazyFrame
-collect(): Phpolars\DataFrame
+collect(?string $engine = null): Phpolars\DataFrame
 collectSchema(): array
 columns(): array
 count(): Phpolars\LazyFrame

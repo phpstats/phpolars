@@ -685,11 +685,15 @@ pub fn field(name: &Zval) -> PhpResult<PhpExpr> {
     Ok(wrap(polars::prelude::Expr::Field(names.into())))
 }
 
-/// Collect several LazyFrames at once, sharing work between their plans.
+/// Collect several LazyFrames at once, sharing work between their plans; engine as in collect().
 #[php_function]
 #[php(name = "Phpolars\\collect_all")]
-pub fn collect_all(lazyFrames: &ZendHashTable) -> PhpResult<Vec<dataframe::PhpDataFrame>> {
+pub fn collect_all(
+    lazyFrames: &ZendHashTable,
+    engine: Option<String>,
+) -> PhpResult<Vec<dataframe::PhpDataFrame>> {
     use error::OrPhp;
+    let engine = dataframe::parse_engine(engine)?;
     let mut plans = Vec::new();
     for v in lazyFrames.values() {
         let lf = v
@@ -700,7 +704,7 @@ pub fn collect_all(lazyFrames: &ZendHashTable) -> PhpResult<Vec<dataframe::PhpDa
     init_threads();
     polars::prelude::LazyFrame::collect_all_with_engine(
         plans,
-        polars::prelude::Engine::Auto,
+        engine,
         polars::prelude::OptFlags::default(),
     )
     .php()
