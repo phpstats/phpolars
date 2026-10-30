@@ -39,7 +39,7 @@ The `-d` flag loads the extension for one run. To load it on every run, add `ext
 
 On macOS with Homebrew, set `LIBCLANG_PATH=$(brew --prefix llvm)/lib`. If several PHP versions are installed, point `PHP` and `PHP_CONFIG` at the PHP you will load the extension into, because ext-php-rs builds against that PHP's headers. A build for one PHP version does not load in another. For deployment, build with `--profile dist` (fat LTO, stripped), which on macOS gives a 65 MB library instead of the 207 MB `release` build. [Deployment](https://phpstats.github.io/phpolars/deployment.html) covers Ubuntu and Laravel Forge, and Laravel Herd.
 
-The v0.1.0 release attaches prebuilt PHP 8.5 binaries for Linux on x86_64 and arm64, built on Debian Bookworm. Copy `php_polars.so` into `php-config --extension-dir` and add `extension=php_polars.so` to php.ini. Once the package is on Packagist, `pie install phpstats/phpolars` will install a prebuilt binary or a source build with [PIE](https://github.com/php/pie).
+Releases attach prebuilt PHP 8.3, 8.4, and 8.5 binaries for Linux on x86_64 and arm64, built on Debian Bookworm. Copy `php_polars.so` into `php-config --extension-dir` and add `extension=php_polars.so` to php.ini. Once the package is on Packagist, `pie install phpstats/phpolars` will install a prebuilt binary or a source build with [PIE](https://github.com/php/pie).
 
 ## API conventions
 

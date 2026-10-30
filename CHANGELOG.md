@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 0.2.0
 
 - The project moved to the phpstats GitHub organization. The Composer and PIE package is `phpstats/phpolars`, and the documentation is at https://phpstats.github.io/phpolars/.
 - PHP 8.3 and 8.4 are supported, as well as 8.5. CI builds and tests the extension on all three, and releases attach a prebuilt Linux binary for each PHP version on x86_64 and arm64. The archives are named so that `pie install` picks the matching one; other platforms build from source.

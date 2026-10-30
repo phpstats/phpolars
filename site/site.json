@@ -14,7 +14,7 @@
   "requires": [
     "PHP 8.3, 8.4, or 8.5 (NTS) on Linux or macOS",
     "A stable Rust toolchain and libclang to build the extension",
-    "The v0.1.0 release attaches prebuilt PHP 8.5 binaries for Linux on x86_64 and arm64, built on Debian Bookworm"
+    "Releases attach prebuilt PHP 8.3, 8.4, and 8.5 binaries for Linux on x86_64 and arm64, built on Debian Bookworm"
   ],
   "repository": "https://github.com/phpstats/phpolars",
   "example": {

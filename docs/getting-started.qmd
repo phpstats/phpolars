@@ -14,7 +14,7 @@ php -d extension=$PWD/target/release/libphp_polars.so script.php   # .dylib on m
 
 The `-d` flag loads the extension for one run. To load it on every run, add `extension=$PWD/target/release/libphp_polars.so`, with the path written out in full, to the php.ini that `php --ini` reports.
 
-The build needs a stable Rust toolchain and libclang and takes several minutes. `cargo build --profile dist` produces a smaller library in `target/dist`. The v0.1.0 release also attaches prebuilt PHP 8.5 binaries for Linux on x86_64 and arm64. See [Deployment](deployment.qmd).
+The build needs a stable Rust toolchain and libclang and takes several minutes. `cargo build --profile dist` produces a smaller library in `target/dist`. Releases also attach prebuilt PHP 8.3, 8.4, and 8.5 binaries for Linux on x86_64 and arm64. See [Deployment](deployment.qmd).
 
 On macOS with Homebrew, also set `LIBCLANG_PATH=$(brew --prefix llvm)/lib`. When several PHP versions are installed, point `PHP` and `PHP_CONFIG` at the PHP you will load the extension into, because the build uses that PHP's headers.
 

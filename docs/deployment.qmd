@@ -11,7 +11,7 @@ git clone https://github.com/phpstats/phpolars && cd phpolars
 PHP=$(which php) PHP_CONFIG=$(which php-config) cargo build --profile dist
 ```
 
-Copy `target/dist/libphp_polars.so`, or `libphp_polars.dylib` on macOS, into `php-config --extension-dir` as `php_polars.so` and add `extension=php_polars.so` to the php.ini that `php --ini` reports. The extension supports PHP 8.3, 8.4, and 8.5, non-thread-safe builds, on Linux and macOS. The release archives are built with the `dist` profile (fat LTO, `opt-level = "s"`, stripped). A build needs a stable Rust toolchain and libclang, and takes several minutes. The v0.1.0 release attaches prebuilt PHP 8.5 binaries for Linux on x86_64 and arm64, which save the build on those platforms.
+Copy `target/dist/libphp_polars.so`, or `libphp_polars.dylib` on macOS, into `php-config --extension-dir` as `php_polars.so` and add `extension=php_polars.so` to the php.ini that `php --ini` reports. The extension supports PHP 8.3, 8.4, and 8.5, non-thread-safe builds, on Linux and macOS. The release archives are built with the `dist` profile (fat LTO, `opt-level = "s"`, stripped). A build needs a stable Rust toolchain and libclang, and takes several minutes. Releases attach prebuilt PHP 8.3, 8.4, and 8.5 binaries for Linux on x86_64 and arm64, which save the build on those platforms.
 
 Build with `--profile dist` for anything you deploy. On macOS the `dist` library is 65 MB and the `release` library is 207 MB, because `release` skips LTO and keeps the symbol table. The v0.1.0 Linux binaries are 47 MB on x86_64 and 43 MB on arm64, and 15 MB compressed.
 
