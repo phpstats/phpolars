@@ -13,11 +13,11 @@ PHP=$(which php) PHP_CONFIG=$(which php-config) cargo build --profile dist
 
 Copy `target/dist/libphp_polars.so`, or `libphp_polars.dylib` on macOS, into `php-config --extension-dir` as `php_polars.so` and add `extension=php_polars.so` to the php.ini that `php --ini` reports. The extension supports PHP 8.3, 8.4, and 8.5, non-thread-safe builds, on Linux and macOS. The release archives are built with the `dist` profile (fat LTO, `opt-level = "s"`, stripped). A build needs a stable Rust toolchain and libclang, and takes several minutes. Releases attach prebuilt PHP 8.3, 8.4, and 8.5 binaries for Linux on x86_64 and arm64, which save the build on those platforms.
 
-Build with `--profile dist` for anything you deploy. On macOS the `dist` library is 65 MB and the `release` library is 207 MB, because `release` skips LTO and keeps the symbol table. The v0.1.0 Linux binaries are 47 MB on x86_64 and 43 MB on arm64, and 15 MB compressed.
+Build with `--profile dist` for anything you deploy. On macOS the `dist` library is 65 MB and the `release` library is 207 MB, because `release` skips LTO and keeps the symbol table. The v0.2.0 Linux binaries are 71 MB on x86_64 and 64 MB on arm64, and 21 MB and 19 MB zipped.
 
 ### Ubuntu and Laravel Forge
 
-Forge installs PHP from the ondrej/php PPA. The prebuilt Linux binaries load there: the v0.1.0 PHP 8.5 binaries pass `tests/deployment.php` under the CLI and under PHP-FPM on Ubuntu 24.04 with the PPA's PHP 8.5.12, on x86_64 and arm64. To install one:
+Forge installs PHP from the ondrej/php PPA. The prebuilt Linux binaries load there: the v0.2.0 PHP 8.5 binaries pass `tests/deployment.php` under the CLI and under PHP-FPM on Ubuntu 24.04 with the PPA's PHP 8.5.12, on x86_64 and arm64. To install one:
 
 ```sh
 sudo cp php_polars.so "$(php -r 'echo ini_get("extension_dir");')/"
