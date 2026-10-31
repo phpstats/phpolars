@@ -4,17 +4,13 @@
   "tagline": "Polars data frames for PHP",
   "summary": "phpolars is a PHP extension, written in Rust, that brings the Polars data frame engine to PHP. It follows the py-polars API: DataFrame, LazyFrame, Series, and expressions, with lazy queries, time series windows, joins, SQL, and readers for CSV, Parquet, JSON, and Arrow IPC. Queries run on Polars' multithreaded engine. It is also the engine behind phibble's PolarsTable, so phplyr pipelines can run in Polars.",
   "install": [
-    "git clone https://github.com/phpstats/phpolars && cd phpolars",
-    "PHP=$(which php) PHP_CONFIG=$(which php-config) cargo build --release",
-    "# One run (libphp_polars.dylib on macOS):",
-    "php -d extension=$PWD/target/release/libphp_polars.so script.php",
-    "# Every run: add the same extension= line to the php.ini that php --ini reports.",
-    "php --ini"
+    "pie install phpstats/phpolars"
   ],
   "requires": [
-    "PHP 8.3, 8.4, or 8.5 (NTS) on Linux or macOS",
-    "A stable Rust toolchain and libclang to build the extension",
-    "Releases attach prebuilt PHP 8.3, 8.4, and 8.5 binaries for Linux on x86_64 and arm64, built on Debian Bookworm"
+    "PHP 8.3+, NTS build",
+    "macOS or Linux",
+    "PIE",
+    "Rust toolchain and libclang on macOS"
   ],
   "repository": "https://github.com/phpstats/phpolars",
   "example": {
@@ -113,5 +109,6 @@
       ],
       "script": "site/vignettes/time-series.php"
     }
-  ]
+  ],
+  "optional": []
 }
