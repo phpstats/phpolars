@@ -25,9 +25,3 @@ The cases cover data frame methods, functions, joins, grouping, windows, sorting
 - The GPU engine. `collect(engine: 'gpu')` throws a `ValueError`.
 - Conversion to pandas, NumPy, or PyArrow objects. Data leaves phpolars as PHP values, as files, or through PDO.
 - Formats left out of a build. Parquet, IPC, JSON, SQL, and table formatting are Cargo features, and an extension built without one raises a `ComputeError` from that format's functions. The release binaries include all of them.
-
-## Changes on main since v0.2.0
-
-The documentation is built from the main branch. These features are on main and are not in the v0.2.0 release:
-
-- `LazyFrame::collect(engine:)` and `collect_all(..., engine:)`, which select the `'auto'`, `'in-memory'`, or `'streaming'` engine.

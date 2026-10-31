@@ -26,7 +26,7 @@
   ],
   "verify": {
     "command": "php -r 'echo phpversion(\"php_polars\"), PHP_EOL;'",
-    "output": "0.2.0",
+    "output": "0.2.1",
     "note": "This checks the CLI. PHP-FPM reads its own php.ini and loads extensions when it starts, so restart FPM after installing and check it with a web request."
   },
   "quickstart": "getting-started",

@@ -1,8 +1,9 @@
 # Changelog
 
-## Unreleased
+## 0.2.1
 
 - `LazyFrame::collect()` and `collect_all()` take `engine`, as in py-polars: `'auto'` (the default, in-memory), `'in-memory'`, or `'streaming'`. After a filter, the streaming engine copies the strings that each batch keeps, because Polars' filter keeps the whole input buffer alive. A streaming filter that keeps 4% of a 500 MB CSV peaks at about 100 MB, against 550 MB in memory. `tests/memory.php` checks the bound and runs in `scripts/check`.
+- The documentation is at https://phpolars.phpstats.org/docs. GitHub Pages redirects there.
 
 ## 0.2.0
 

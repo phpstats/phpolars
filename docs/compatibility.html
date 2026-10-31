@@ -246,7 +246,6 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#php-versions-and-platforms" id="toc-php-versions-and-platforms" class="nav-link active" data-scroll-target="#php-versions-and-platforms">PHP versions and platforms</a></li>
   <li><a href="#agreement-with-py-polars" id="toc-agreement-with-py-polars" class="nav-link" data-scroll-target="#agreement-with-py-polars">Agreement with py-polars</a></li>
   <li><a href="#not-available" id="toc-not-available" class="nav-link" data-scroll-target="#not-available">Not available</a></li>
-  <li><a href="#changes-on-main-since-v0.2.0" id="toc-changes-on-main-since-v0.2.0" class="nav-link" data-scroll-target="#changes-on-main-since-v0.2.0">Changes on main since v0.2.0</a></li>
   </ul>
 </nav>
     </div>
@@ -295,13 +294,6 @@ ul.task-list li input[type="checkbox"] {
 <li>The GPU engine. <code>collect(engine: 'gpu')</code> throws a <code>ValueError</code>.</li>
 <li>Conversion to pandas, NumPy, or PyArrow objects. Data leaves phpolars as PHP values, as files, or through PDO.</li>
 <li>Formats left out of a build. Parquet, IPC, JSON, SQL, and table formatting are Cargo features, and an extension built without one raises a <code>ComputeError</code> from that format’s functions. The release binaries include all of them.</li>
-</ul>
-</section>
-<section id="changes-on-main-since-v0.2.0" class="level2">
-<h2 class="anchored" data-anchor-id="changes-on-main-since-v0.2.0">Changes on main since v0.2.0</h2>
-<p>The documentation is built from the main branch. These features are on main and are not in the v0.2.0 release:</p>
-<ul>
-<li><code>LazyFrame::collect(engine:)</code> and <code>collect_all(..., engine:)</code>, which select the <code>'auto'</code>, <code>'in-memory'</code>, or <code>'streaming'</code> engine.</li>
 </ul>
 
 

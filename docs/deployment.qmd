@@ -27,7 +27,7 @@ The v0.2.0 Linux binaries are 71 MB on x86_64 and 64 MB on arm64, and 21 MB and 
 
 ### What a release archive contains
 
-The packaging workflow builds the extension inside the official `php:8.3-fpm-bookworm`, `php:8.4-fpm-bookworm`, and `php:8.5-fpm-bookworm` images, installs it with PIE, runs the release checks, and sends real requests through PHP-FPM. It then packages each tested `php_polars.so` for x86_64 and arm64 in a zip named as PIE expects, such as `php_php_polars-v0.2.0_php8.4-x86_64-linux-glibc-nts.zip`, with:
+The packaging workflow builds the extension inside the official `php:8.3-fpm-bookworm`, `php:8.4-fpm-bookworm`, and `php:8.5-fpm-bookworm` images, installs it with PIE, runs the release checks, and sends real requests through PHP-FPM. It then packages each tested `php_polars.so` for x86_64 and arm64 in a zip named as PIE expects, such as `php_php_polars-v0.2.1_php8.4-x86_64-linux-glibc-nts.zip`, with:
 
 - `manifest.json`: PHP version and API number, architecture, glibc, the Rust version, the Cargo.lock hash, and the extension's SHA-256.
 - `THIRD_PARTY_NOTICES.txt`: the licenses of every Rust dependency compiled into the binary.
@@ -56,7 +56,7 @@ A source build, with PIE or by hand, needs `phpize` and `php-config`, which Herd
 
 ```sh
 git clone https://github.com/phpstats/phpolars && cd phpolars
-git checkout v0.2.0
+git checkout v0.2.1
 P=$(brew --prefix php@8.5)/bin
 PHP=$P/php PHP_CONFIG=$P/php-config LIBCLANG_PATH=$(brew --prefix llvm)/lib cargo build --profile dist
 ```
@@ -73,7 +73,7 @@ For PHP 8.4, use `php@8.4` and `config/php/84/php.ini`.
 
 ```sh
 git clone https://github.com/phpstats/phpolars && cd phpolars
-git checkout v0.2.0
+git checkout v0.2.1
 PHP=$(which php) PHP_CONFIG=$(which php-config) cargo build --profile dist
 ```
 
