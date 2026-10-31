@@ -50,6 +50,18 @@
         "path": "getting-started.qmd"
       },
       {
+        "title": "Aggregate with expressions",
+        "path": "examples/expressions.qmd"
+      },
+      {
+        "title": "Query a large CSV file lazily",
+        "path": "examples/lazy-csv.qmd"
+      },
+      {
+        "title": "Rolling windows and as-of joins",
+        "path": "examples/time-series.qmd"
+      },
+      {
         "title": "Coming from py-polars",
         "path": "coming-from-python.qmd"
       },
@@ -102,35 +114,21 @@
   "verifications": [
     "site/verifications/py-polars-fixtures.json"
   ],
-  "vignettes": [
+  "examples": [
     {
-      "slug": "lazy-queries",
-      "title": "Lazy queries over a large file",
-      "summary": "Scan a Parquet or CSV file with up to 5 million rows, let Polars push the filter and column selection into the scan, and compare the time with reading the whole file first.",
-      "uses": [
-        "php_polars"
-      ],
-      "script": "site/vignettes/lazy-queries.php"
+      "path": "examples/expressions",
+      "title": "Aggregate with expressions",
+      "description": "Summarizes each region of a small orders table with several expressions in one groupBy()->agg() call."
     },
     {
-      "slug": "phplyr-on-polars",
-      "title": "phplyr pipelines on Polars",
-      "summary": "Run one phplyr pipeline on phibble's in-memory DataFrame and on a PolarsTable, check that the results agree, and compare the times.",
-      "uses": [
-        "php_polars",
-        "phibble",
-        "phplyr"
-      ],
-      "script": "site/vignettes/phplyr-on-polars.php"
+      "path": "examples/lazy-csv",
+      "title": "Query a large CSV file lazily",
+      "description": "Scans a CSV file of one million orders, filters and aggregates it, and shows that Polars reads only the columns and rows the query needs."
     },
     {
-      "slug": "time-series",
-      "title": "Rolling windows and asof joins",
-      "summary": "Price a year of daily sales with an asof join, smooth it with a time-based rolling mean, and summarize it by month or quarter.",
-      "uses": [
-        "php_polars"
-      ],
-      "script": "site/vignettes/time-series.php"
+      "path": "examples/time-series",
+      "title": "Rolling windows and as-of joins",
+      "description": "Gives each day of sales the price in force on that date and a rolling mean over three calendar days."
     }
   ]
 }

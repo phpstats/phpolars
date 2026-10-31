@@ -1,4 +1,5 @@
 ```php
+<?php
 use function Phpolars\{col, len, read_csv};
 
 $sales = read_csv('sales.csv', tryParseDates: true);

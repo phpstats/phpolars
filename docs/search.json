@@ -265,7 +265,7 @@
     "href": "getting-started.html#a-starter-script",
     "title": "Getting started",
     "section": "A starter script",
-    "text": "A starter script\nphpolars needs no Composer packages, so an empty directory is enough. Download the example data, sales.csv (200 rows of sales by store and product), into it:\nmkdir phpolars-start && cd phpolars-start\ncurl -fsSLO https://raw.githubusercontent.com/phpstats/phpolars/v0.2.1/docs/data/sales.csv\nSave this as start.php and run it with php start.php:\nuse function Phpolars\\{col, len, read_csv};\n\n$sales = read_csv('sales.csv', tryParseDates: true);\n\n$byProduct = $sales\n    -&gt;filter(col('units')-&gt;gt(0))\n    -&gt;withColumns(col('units')-&gt;mul(col('price'))-&gt;alias('revenue'))\n    -&gt;groupBy('product', maintainOrder: true)\n    -&gt;agg(col('revenue')-&gt;sum()-&gt;round(2), ['orders' =&gt; len()])\n    -&gt;sort('revenue', descending: true);\n\necho $byProduct, \"\\n\";\nprint_r($byProduct-&gt;row(0, named: true));\nshape: (4, 3)\n┌─────────┬─────────┬────────┐\n│ product ┆ revenue ┆ orders │\n│ ---     ┆ ---     ┆ ---    │\n│ str     ┆ f64     ┆ u32    │\n╞═════════╪═════════╪════════╡\n│ cherry  ┆ 1307.38 ┆ 44     │\n│ banana  ┆ 1285.76 ┆ 48     │\n│ apple   ┆ 1227.68 ┆ 42     │\n│ date    ┆ 1153.58 ┆ 41     │\n└─────────┴─────────┴────────┘\nArray\n(\n    [product] =&gt; cherry\n    [revenue] =&gt; 1307.38\n    [orders] =&gt; 44\n)",
+    "text": "A starter script\nphpolars needs no Composer packages, so an empty directory is enough. Download the example data, sales.csv (200 rows of sales by store and product), into it:\nmkdir phpolars-start && cd phpolars-start\ncurl -fsSLO https://raw.githubusercontent.com/phpstats/phpolars/v0.2.1/docs/data/sales.csv\nSave this as start.php and run it with php start.php:\n&lt;?php\nuse function Phpolars\\{col, len, read_csv};\n\n$sales = read_csv('sales.csv', tryParseDates: true);\n\n$byProduct = $sales\n    -&gt;filter(col('units')-&gt;gt(0))\n    -&gt;withColumns(col('units')-&gt;mul(col('price'))-&gt;alias('revenue'))\n    -&gt;groupBy('product', maintainOrder: true)\n    -&gt;agg(col('revenue')-&gt;sum()-&gt;round(2), ['orders' =&gt; len()])\n    -&gt;sort('revenue', descending: true);\n\necho $byProduct, \"\\n\";\nprint_r($byProduct-&gt;row(0, named: true));\nshape: (4, 3)\n┌─────────┬─────────┬────────┐\n│ product ┆ revenue ┆ orders │\n│ ---     ┆ ---     ┆ ---    │\n│ str     ┆ f64     ┆ u32    │\n╞═════════╪═════════╪════════╡\n│ cherry  ┆ 1307.38 ┆ 44     │\n│ banana  ┆ 1285.76 ┆ 48     │\n│ apple   ┆ 1227.68 ┆ 42     │\n│ date    ┆ 1153.58 ┆ 41     │\n└─────────┴─────────┴────────┘\nArray\n(\n    [product] =&gt; cherry\n    [revenue] =&gt; 1307.38\n    [orders] =&gt; 44\n)",
     "crumbs": [
       "Getting started"
     ]
@@ -328,6 +328,200 @@
     "text": "Missing values\nphpolars follows Polars: a missing value is null, aggregates such as sum() and mean() skip it, and null sorts first. phibble and phplyr follow R and dplyr instead. phibble and phplyr compares the two.",
     "crumbs": [
       "Getting started"
+    ]
+  },
+  {
+    "objectID": "examples/lazy-csv.html",
+    "href": "examples/lazy-csv.html",
+    "title": "Query a large CSV file lazily",
+    "section": "",
+    "text": "This example scans a CSV file with a lazy query, so Polars reads only the rows and columns the query needs.\nPrerequisites: the phpolars extension, which needs no Composer packages. Getting started covers installing it.\nThe script first writes orders.csv, a file of one million orders with six columns, to the current directory, and deletes it at the end. Save the script as lazy-csv.php and run it with php lazy-csv.php:\n&lt;?php\nuse Phpolars\\DataFrame;\nuse function Phpolars\\{col, int_range, len, scan_csv};\n\n// Write a CSV file of one million orders to query.\n(new DataFrame(['i' =&gt; [0]]))\n    -&gt;select(int_range(0, 1_000_000)-&gt;alias('order_id'))\n    -&gt;withColumns(\n        col('order_id')-&gt;mod(4)-&gt;replaceStrict([0, 1, 2, 3], ['north', 'south', 'east', 'west'], returnDtype: 'String')-&gt;alias('region'),\n        col('order_id')-&gt;mul(7919)-&gt;mod(5000)-&gt;alias('customer_id'),\n        col('order_id')-&gt;mul(104729)-&gt;mod(100_000)-&gt;truediv(100)-&gt;alias('amount'),\n        col('order_id')-&gt;mul(31)-&gt;mod(7)-&gt;eq(0)-&gt;alias('returned'),\n        col('order_id')-&gt;cast('String')-&gt;str()-&gt;replace('^', 'note for order ')-&gt;alias('note'),\n    )\n    -&gt;writeCsv('orders.csv');\n\n$query = scan_csv('orders.csv')\n    -&gt;filter(col('amount')-&gt;gt(500)-&gt;and(col('returned')-&gt;not()))\n    -&gt;groupBy('region')\n    -&gt;agg(\n        len()-&gt;alias('orders'),\n        col('amount')-&gt;mean()-&gt;round(2)-&gt;alias('avg_amount'),\n    )\n    -&gt;sort('region');\n\necho $query-&gt;explain(), \"\\n\\n\";\necho $query-&gt;collect();\n\nunlink('orders.csv');\nSORT BY [col(\"region\")]\n  AGGREGATE[maintain_order: false]\n    [len().alias(\"orders\"), col(\"amount\").mean().round().alias(\"avg_amount\")] BY [col(\"region\")]\n    FROM\n    simple π 2/2 [\"region\", \"amount\"]\n      Csv SCAN [orders.csv]\n      PROJECT 3/6 COLUMNS\n      SELECTION: (col(\"amount\") &gt; 500.0) & col(\"returned\").not()\n      ESTIMATED ROWS: 1481549\n\nshape: (4, 3)\n┌────────┬────────┬────────────┐\n│ region ┆ orders ┆ avg_amount │\n│ ---    ┆ ---    ┆ ---        │\n│ str    ┆ u32    ┆ f64        │\n╞════════╪════════╪════════════╡\n│ east   ┆ 107143 ┆ 750.0      │\n│ north  ┆ 107133 ┆ 750.0      │\n│ south  ┆ 107142 ┆ 749.99     │\n│ west   ┆ 107141 ┆ 750.01     │\n└────────┴────────┴────────────┘\nscan_csv() returns a LazyFrame without reading the file. filter(), groupBy(), agg(), and sort() add steps to a query plan, and collect() optimizes the plan, runs it, and returns a DataFrame. read_csv() would instead load all six columns of every row into memory before the filter runs.\nexplain() prints the optimized plan. PROJECT 3/6 COLUMNS means that the scan reads only region, amount, and returned. SELECTION means that the filter runs during the scan, so rows that fail it are dropped as the file is read. ESTIMATED ROWS is the planner’s estimate of the file’s size, made before reading it.\ncollect(engine: 'streaming') runs the query in batches, which uses less memory on large files. Performance has measurements.\nReference: scan_csv(), explain(), collect(), and input and output.",
+    "crumbs": [
+      "Examples",
+      "Query a large CSV file lazily"
+    ]
+  },
+  {
+    "objectID": "development.html",
+    "href": "development.html",
+    "title": "Development",
+    "section": "",
+    "text": "git clone https://github.com/phpstats/phpolars && cd phpolars\nPHP=$(which php) PHP_CONFIG=$(which php-config) cargo build --release\nphp -d extension=$PWD/target/release/libphp_polars.so script.php   # .dylib on macOS\nThe build needs a stable Rust toolchain and libclang. Set PHP and PHP_CONFIG to a PHP 8.3, 8.4, or 8.5 installation, because ext-php-rs builds against that PHP’s headers, and a build for one PHP version does not load in another. On macOS with Homebrew, also set LIBCLANG_PATH=$(brew --prefix llvm)/lib. cargo build --profile dist builds the smaller library that releases ship.",
+    "crumbs": [
+      "Contributing",
+      "Development"
+    ]
+  },
+  {
+    "objectID": "development.html#building",
+    "href": "development.html#building",
+    "title": "Development",
+    "section": "",
+    "text": "git clone https://github.com/phpstats/phpolars && cd phpolars\nPHP=$(which php) PHP_CONFIG=$(which php-config) cargo build --release\nphp -d extension=$PWD/target/release/libphp_polars.so script.php   # .dylib on macOS\nThe build needs a stable Rust toolchain and libclang. Set PHP and PHP_CONFIG to a PHP 8.3, 8.4, or 8.5 installation, because ext-php-rs builds against that PHP’s headers, and a build for one PHP version does not load in another. On macOS with Homebrew, also set LIBCLANG_PATH=$(brew --prefix llvm)/lib. cargo build --profile dist builds the smaller library that releases ship.",
+    "crumbs": [
+      "Contributing",
+      "Development"
+    ]
+  },
+  {
+    "objectID": "development.html#testing",
+    "href": "development.html#testing",
+    "title": "Development",
+    "section": "Testing",
+    "text": "Testing\nscripts/test        # build and run tests/dataframe.php, expr.php, io.php, regressions.php, and pyfixtures.php\nscripts/check       # release gate: rustfmt, clippy, the suites, tests/memory.php, stub freshness, and API compatibility with the latest tag\nPHIBBLE=path/to/phibble/vendor/autoload.php scripts/test   # also the phibble round-trip\nCI runs scripts/check with PHP 8.3, 8.4, and 8.5 on Ubuntu 24.04 and macOS 15.",
+    "crumbs": [
+      "Contributing",
+      "Development"
+    ]
+  },
+  {
+    "objectID": "development.html#comparing-with-py-polars",
+    "href": "development.html#comparing-with-py-polars",
+    "title": "Development",
+    "section": "Comparing with py-polars",
+    "text": "Comparing with py-polars\nscripts/pyfixtures.py builds 314 cases with py-polars and writes tests/fixtures/py/expected.json. tests/pyfixtures.php builds the same cases with phpolars and compares column names, data types, and values. Regenerate the fixtures with:\nuv run --with 'polars==1.43.2' --with numpy python scripts/pyfixtures.py\npy-polars 1.43.2 is the release whose Rust core is closest to the pinned Polars 0.55.2.",
+    "crumbs": [
+      "Contributing",
+      "Development"
+    ]
+  },
+  {
+    "objectID": "development.html#documentation",
+    "href": "development.html#documentation",
+    "title": "Development",
+    "section": "Documentation",
+    "text": "Documentation\nscripts/render-docs\nThis runs every docs/examples/*.php against the release build and embeds its output, regenerates the reference signatures from the extension (scripts/docs-reference.php), renders the site with Quarto, and copies it into docs/. phpolars.phpstats.org imports the rendered HTML from main:/docs, so commit it. GitHub Pages serves only redirects to phpolars.phpstats.org, from .github/workflows/pages.yml.",
+    "crumbs": [
+      "Contributing",
+      "Development"
+    ]
+  },
+  {
+    "objectID": "development.html#stubs",
+    "href": "development.html#stubs",
+    "title": "Development",
+    "section": "Stubs",
+    "text": "Stubs\nstubs/phpolars.php holds signatures for IDEs and static analysis. Regenerate it after changing the API:\nphp -d extension=target/release/libphp_polars.so scripts/stubs.php &gt; stubs/phpolars.php",
+    "crumbs": [
+      "Contributing",
+      "Development"
+    ]
+  },
+  {
+    "objectID": "compatibility.html",
+    "href": "compatibility.html",
+    "title": "Compatibility and limitations",
+    "section": "",
+    "text": "Supported PHP versions: 8.3, 8.4, and 8.5, as composer.json allows (&gt;=8.3 &lt;8.6).\nPHP build: non-thread-safe (NTS). ZTS builds are not supported.\nOperating systems: Linux and macOS. Windows is not supported.\nPrebuilt binaries: Linux with glibc 2.34 or later on x86_64 and arm64. Other systems build from source.\n\nCI runs the Rust and PHP checks with PHP 8.3, 8.4, and 8.5 on Ubuntu 24.04 and macOS 15. The installer checks build each PHP version on Debian Bookworm for x86_64 and arm64, install it with PIE, and send requests through PHP-FPM.\nThe pipe operator |&gt; in some examples is PHP 8.5 syntax. phpolars itself does not need it, and every example that uses it has a method-chain version for PHP 8.3 and 8.4.",
+    "crumbs": [
+      "Compatibility and limitations"
+    ]
+  },
+  {
+    "objectID": "compatibility.html#php-versions-and-platforms",
+    "href": "compatibility.html#php-versions-and-platforms",
+    "title": "Compatibility and limitations",
+    "section": "",
+    "text": "Supported PHP versions: 8.3, 8.4, and 8.5, as composer.json allows (&gt;=8.3 &lt;8.6).\nPHP build: non-thread-safe (NTS). ZTS builds are not supported.\nOperating systems: Linux and macOS. Windows is not supported.\nPrebuilt binaries: Linux with glibc 2.34 or later on x86_64 and arm64. Other systems build from source.\n\nCI runs the Rust and PHP checks with PHP 8.3, 8.4, and 8.5 on Ubuntu 24.04 and macOS 15. The installer checks build each PHP version on Debian Bookworm for x86_64 and arm64, install it with PIE, and send requests through PHP-FPM.\nThe pipe operator |&gt; in some examples is PHP 8.5 syntax. phpolars itself does not need it, and every example that uses it has a method-chain version for PHP 8.3 and 8.4.",
+    "crumbs": [
+      "Compatibility and limitations"
+    ]
+  },
+  {
+    "objectID": "compatibility.html#agreement-with-py-polars",
+    "href": "compatibility.html#agreement-with-py-polars",
+    "title": "Compatibility and limitations",
+    "section": "Agreement with py-polars",
+    "text": "Agreement with py-polars\nphpolars uses the Polars 0.55.2 Rust crates. The test suite compares phpolars with py-polars 1.43.2, the release whose Rust core is closest to 0.55.2. scripts/pyfixtures.py builds 314 cases with py-polars, and tests/pyfixtures.php builds the same cases with phpolars. A case passes when the column names, the data types, and every value agree. Floats may differ by a relative tolerance of 1e-9. Cases that expect an error pass when phpolars raises the same exception class. All 314 cases pass.\nThe cases cover data frame methods, functions, joins, grouping, windows, sorting, casts, SQL, and the str, dt, list, struct, and arr namespaces. A method or argument outside those cases follows py-polars’ names, but its agreement with py-polars has not been tested. The verification page lists every case.",
+    "crumbs": [
+      "Compatibility and limitations"
+    ]
+  },
+  {
+    "objectID": "compatibility.html#not-available",
+    "href": "compatibility.html#not-available",
+    "title": "Compatibility and limitations",
+    "section": "Not available",
+    "text": "Not available\n\nPython callables. py-polars methods that run a Python function per value or per batch, such as map_elements, map_batches, fold, and map_groups, have no equivalent, because PHP code cannot run on Polars threads. DataFrame::mapRows() runs a PHP callable per row on the PHP thread, after collecting.\nThe GPU engine. collect(engine: 'gpu') throws a ValueError.\nConversion to pandas, NumPy, or PyArrow objects. Data leaves phpolars as PHP values, as files, or through PDO.\nFormats left out of a build. Parquet, IPC, JSON, SQL, and table formatting are Cargo features, and an extension built without one raises a ComputeError from that format’s functions. The release binaries include all of them.",
+    "crumbs": [
+      "Compatibility and limitations"
+    ]
+  },
+  {
+    "objectID": "coming-from-python.html",
+    "href": "coming-from-python.html",
+    "title": "Coming from py-polars",
+    "section": "",
+    "text": "phpolars keeps py-polars’ names and semantics, and most differences come from PHP’s syntax. The test suite checks 314 operations against py-polars 1.43.2; Compatibility and limitations describes what those cases cover.",
+    "crumbs": [
+      "Guides",
+      "Coming from py-polars"
+    ]
+  },
+  {
+    "objectID": "coming-from-python.html#naming",
+    "href": "coming-from-python.html#naming",
+    "title": "Coming from py-polars",
+    "section": "Naming",
+    "text": "Naming\n\n\n\n\n\n\n\npy-polars\nphpolars\n\n\n\n\npl.col(\"x\")\ncol('x')\n\n\npl.lit(1)\nlit(1)\n\n\npl.when(c).then(a).otherwise(b)\nwhen($c)-&gt;then($a)-&gt;otherwise($b)\n\n\ndf.with_columns(...)\n$df-&gt;withColumns(...)\n\n\ndf.group_by(\"g\").agg(...)\n$df-&gt;groupBy('g')-&gt;agg(...)\n\n\ndf.to_dicts()\n$df-&gt;toDicts()\n\n\npl.read_csv(path)\nread_csv($path)\n\n\ndf.join(o, left_on=\"a\", right_on=\"b\")\n$df-&gt;join($o, leftOn: 'a', rightOn: 'b')\n\n\npl.col(\"s\").str.contains(\"x\")\ncol('s')-&gt;str()-&gt;contains('x')\n\n\npl.col(\"t\").dt.year()\ncol('t')-&gt;dt()-&gt;year()\n\n\nexpr.mod(2), expr % 2\n$expr-&gt;mod(2)\n\n\na + b, a &gt; b\n$a-&gt;add($b), $a-&gt;gt($b)\n\n\npl.Int64\n'Int64' or DataType::Int64\n\n\nimport polars.selectors as cs, cs.numeric()\nuse Phpolars\\cs;, cs\\numeric()\n\n\ncs.numeric() - cs.by_name(\"id\")\ncs\\numeric()-&gt;sub(cs\\by_name('id'))\n\n\nfor key, group in df.group_by(\"g\")\nforeach ($df-&gt;groupBy('g') as $key =&gt; $group)\n\n\ndf.sql(\"SELECT ...\"), pl.SQLContext\n$df-&gt;sql('SELECT ...'), new SQLContext([...])\n\n\n\nMethods are camelCase. Functions are snake_case in the Phpolars namespace. Named parameters are camelCase. PHP has no operator overloading, so arithmetic and comparison are methods: add, sub, mul, truediv, floordiv, mod, pow, eq, ne, gt, ge, lt, le, and, or, not.",
+    "crumbs": [
+      "Guides",
+      "Coming from py-polars"
+    ]
+  },
+  {
+    "objectID": "coming-from-python.html#variadic-arguments-and-named",
+    "href": "coming-from-python.html#variadic-arguments-and-named",
+    "title": "Coming from py-polars",
+    "section": "Variadic arguments and **named",
+    "text": "Variadic arguments and **named\nWhere py-polars takes *exprs, the method is variadic. An associative array stands in for **named_exprs:\n$df-&gt;select('a', col('b')-&gt;mul(2), ['c' =&gt; col('x')-&gt;sum()]);\n$df-&gt;groupBy('g')-&gt;agg(col('x')-&gt;mean(), ['n' =&gt; len()]);\nPHP does not allow parameters after a variadic one. Methods that need both take a single argument that accepts a name, an Expr, or a list:\n$df-&gt;groupBy(['store', 'product'], maintainOrder: true);\ncol('x')-&gt;sum()-&gt;over(['g', 'h'], orderBy: 'day');\n$df-&gt;drop('a', 'b');",
+    "crumbs": [
+      "Guides",
+      "Coming from py-polars"
+    ]
+  },
+  {
+    "objectID": "coming-from-python.html#values",
+    "href": "coming-from-python.html#values",
+    "title": "Coming from py-polars",
+    "section": "Values",
+    "text": "Values\nResults come back as PHP values: int, float, bool, string, null, DateTimeImmutable for dates and datetimes, lists for List columns, and associative arrays for Struct columns. See Types and values.",
+    "crumbs": [
+      "Guides",
+      "Coming from py-polars"
+    ]
+  },
+  {
+    "objectID": "coming-from-python.html#names-php-reserves",
+    "href": "coming-from-python.html#names-php-reserves",
+    "title": "Coming from py-polars",
+    "section": "Names PHP reserves",
+    "text": "Names PHP reserves\nPHP keywords cannot be function names, so a few functions take a trailing underscore, as struct_() does: var_(), and the selectors cs\\list_(), cs\\array_(), cs\\empty_(), and cs\\enum_(). Methods keep their py names, because PHP allows keywords there: $expr-&gt;struct(), $expr-&gt;list().",
+    "crumbs": [
+      "Guides",
+      "Coming from py-polars"
+    ]
+  },
+  {
+    "objectID": "coming-from-python.html#python-callables",
+    "href": "coming-from-python.html#python-callables",
+    "title": "Coming from py-polars",
+    "section": "Python callables",
+    "text": "Python callables\npy-polars methods that run a Python function per value or per batch, such as map_elements, map_batches, fold, and map_groups, have no phpolars equivalent. Polars runs expressions on its own threads, and PHP code cannot run there. Use expressions instead. DataFrame::mapRows() is the exception: it runs on the PHP thread, after collecting, and calls a PHP callable per row.",
+    "crumbs": [
+      "Guides",
+      "Coming from py-polars"
+    ]
+  },
+  {
+    "objectID": "coming-from-python.html#small-differences",
+    "href": "coming-from-python.html#small-differences",
+    "title": "Coming from py-polars",
+    "section": "Small differences",
+    "text": "Small differences\n\nSeries::count() keeps py’s meaning (non-null values). Series does not implement Countable; use len().\n__toString() gives Polars’ table layout, so echo $df prints like print(df).\nDataFrame::toColumns() is a phpolars addition: toDict(asSeries: false).\nStrings in arithmetic are literals in phpolars, as they are in comparisons. py treats a string as a column name in some operators (col(\"a\") - \"b\") but not others (col(\"a\") + \"b\"); use col('b') for a column.\nSeries and DataFrame methods never change the object in place. py’s in-place methods (scatter, set, extend, insert_column, replace_column) return a new object.\nread_database() takes a PDO connection.",
+    "crumbs": [
+      "Guides",
+      "Coming from py-polars"
     ]
   },
   {
@@ -430,186 +624,25 @@
     ]
   },
   {
-    "objectID": "coming-from-python.html",
-    "href": "coming-from-python.html",
-    "title": "Coming from py-polars",
+    "objectID": "examples/expressions.html",
+    "href": "examples/expressions.html",
+    "title": "Aggregate with expressions",
     "section": "",
-    "text": "phpolars keeps py-polars’ names and semantics, and most differences come from PHP’s syntax. The test suite checks 314 operations against py-polars 1.43.2; Compatibility and limitations describes what those cases cover.",
+    "text": "This example summarizes each group of a data frame with several expressions in one agg() call.\nPrerequisites: the phpolars extension, which needs no Composer packages. Getting started covers installing it.\nThe input is a small data frame of six orders across three regions. Save the script as expressions.php and run it with php expressions.php:\n&lt;?php\nuse Phpolars\\DataFrame;\nuse function Phpolars\\{col, len};\n\n$orders = new DataFrame([\n    'region' =&gt; ['north', 'north', 'south', 'south', 'south', 'west'],\n    'customer' =&gt; ['ana', 'ben', 'ana', 'cy', 'cy', 'di'],\n    'amount' =&gt; [120.0, 80.0, 45.5, 300.0, 60.0, 95.0],\n    'returned' =&gt; [false, true, false, false, true, false],\n]);\n\n$byRegion = $orders\n    -&gt;groupBy('region', maintainOrder: true)\n    -&gt;agg(\n        len()-&gt;alias('orders'),\n        col('amount')-&gt;sum()-&gt;alias('total'),\n        col('amount')-&gt;filter(col('returned')-&gt;not())-&gt;sum()-&gt;alias('kept'),\n        col('customer')-&gt;nUnique()-&gt;alias('customers'),\n        col('customer')-&gt;sortBy('amount', descending: true)-&gt;first()-&gt;alias('top_customer'),\n    );\n\necho $byRegion;\nshape: (3, 6)\n┌────────┬────────┬───────┬───────┬───────────┬──────────────┐\n│ region ┆ orders ┆ total ┆ kept  ┆ customers ┆ top_customer │\n│ ---    ┆ ---    ┆ ---   ┆ ---   ┆ ---       ┆ ---          │\n│ str    ┆ u32    ┆ f64   ┆ f64   ┆ u32       ┆ str          │\n╞════════╪════════╪═══════╪═══════╪═══════════╪══════════════╡\n│ north  ┆ 2      ┆ 200.0 ┆ 120.0 ┆ 2         ┆ ana          │\n│ south  ┆ 3      ┆ 405.5 ┆ 345.5 ┆ 2         ┆ cy           │\n│ west   ┆ 1      ┆ 95.0  ┆ 95.0  ┆ 1         ┆ di           │\n└────────┴────────┴───────┴───────┴───────────┴──────────────┘\ngroupBy() splits the rows by region, and agg() evaluates each expression once per group. An expression describes a computation on columns. It holds no data of its own, and Polars evaluates the expressions on its own threads.\n\nlen() counts the rows in the group.\ncol('amount')-&gt;sum() adds up a column.\nfilter() inside an expression keeps only some of the group’s rows, here the orders that were not returned, before sum() runs.\nnUnique() counts distinct values.\nsortBy('amount', descending: true)-&gt;first() takes the customer of the largest order.\n\nalias() names each result column. maintainOrder: true keeps the groups in the order they first appear. Without it, the group order can change between runs.\nReference: groupBy(), agg(), len(), and expressions.",
     "crumbs": [
-      "Guides",
-      "Coming from py-polars"
+      "Examples",
+      "Aggregate with expressions"
     ]
   },
   {
-    "objectID": "coming-from-python.html#naming",
-    "href": "coming-from-python.html#naming",
-    "title": "Coming from py-polars",
-    "section": "Naming",
-    "text": "Naming\n\n\n\n\n\n\n\npy-polars\nphpolars\n\n\n\n\npl.col(\"x\")\ncol('x')\n\n\npl.lit(1)\nlit(1)\n\n\npl.when(c).then(a).otherwise(b)\nwhen($c)-&gt;then($a)-&gt;otherwise($b)\n\n\ndf.with_columns(...)\n$df-&gt;withColumns(...)\n\n\ndf.group_by(\"g\").agg(...)\n$df-&gt;groupBy('g')-&gt;agg(...)\n\n\ndf.to_dicts()\n$df-&gt;toDicts()\n\n\npl.read_csv(path)\nread_csv($path)\n\n\ndf.join(o, left_on=\"a\", right_on=\"b\")\n$df-&gt;join($o, leftOn: 'a', rightOn: 'b')\n\n\npl.col(\"s\").str.contains(\"x\")\ncol('s')-&gt;str()-&gt;contains('x')\n\n\npl.col(\"t\").dt.year()\ncol('t')-&gt;dt()-&gt;year()\n\n\nexpr.mod(2), expr % 2\n$expr-&gt;mod(2)\n\n\na + b, a &gt; b\n$a-&gt;add($b), $a-&gt;gt($b)\n\n\npl.Int64\n'Int64' or DataType::Int64\n\n\nimport polars.selectors as cs, cs.numeric()\nuse Phpolars\\cs;, cs\\numeric()\n\n\ncs.numeric() - cs.by_name(\"id\")\ncs\\numeric()-&gt;sub(cs\\by_name('id'))\n\n\nfor key, group in df.group_by(\"g\")\nforeach ($df-&gt;groupBy('g') as $key =&gt; $group)\n\n\ndf.sql(\"SELECT ...\"), pl.SQLContext\n$df-&gt;sql('SELECT ...'), new SQLContext([...])\n\n\n\nMethods are camelCase. Functions are snake_case in the Phpolars namespace. Named parameters are camelCase. PHP has no operator overloading, so arithmetic and comparison are methods: add, sub, mul, truediv, floordiv, mod, pow, eq, ne, gt, ge, lt, le, and, or, not.",
-    "crumbs": [
-      "Guides",
-      "Coming from py-polars"
-    ]
-  },
-  {
-    "objectID": "coming-from-python.html#variadic-arguments-and-named",
-    "href": "coming-from-python.html#variadic-arguments-and-named",
-    "title": "Coming from py-polars",
-    "section": "Variadic arguments and **named",
-    "text": "Variadic arguments and **named\nWhere py-polars takes *exprs, the method is variadic. An associative array stands in for **named_exprs:\n$df-&gt;select('a', col('b')-&gt;mul(2), ['c' =&gt; col('x')-&gt;sum()]);\n$df-&gt;groupBy('g')-&gt;agg(col('x')-&gt;mean(), ['n' =&gt; len()]);\nPHP does not allow parameters after a variadic one. Methods that need both take a single argument that accepts a name, an Expr, or a list:\n$df-&gt;groupBy(['store', 'product'], maintainOrder: true);\ncol('x')-&gt;sum()-&gt;over(['g', 'h'], orderBy: 'day');\n$df-&gt;drop('a', 'b');",
-    "crumbs": [
-      "Guides",
-      "Coming from py-polars"
-    ]
-  },
-  {
-    "objectID": "coming-from-python.html#values",
-    "href": "coming-from-python.html#values",
-    "title": "Coming from py-polars",
-    "section": "Values",
-    "text": "Values\nResults come back as PHP values: int, float, bool, string, null, DateTimeImmutable for dates and datetimes, lists for List columns, and associative arrays for Struct columns. See Types and values.",
-    "crumbs": [
-      "Guides",
-      "Coming from py-polars"
-    ]
-  },
-  {
-    "objectID": "coming-from-python.html#names-php-reserves",
-    "href": "coming-from-python.html#names-php-reserves",
-    "title": "Coming from py-polars",
-    "section": "Names PHP reserves",
-    "text": "Names PHP reserves\nPHP keywords cannot be function names, so a few functions take a trailing underscore, as struct_() does: var_(), and the selectors cs\\list_(), cs\\array_(), cs\\empty_(), and cs\\enum_(). Methods keep their py names, because PHP allows keywords there: $expr-&gt;struct(), $expr-&gt;list().",
-    "crumbs": [
-      "Guides",
-      "Coming from py-polars"
-    ]
-  },
-  {
-    "objectID": "coming-from-python.html#python-callables",
-    "href": "coming-from-python.html#python-callables",
-    "title": "Coming from py-polars",
-    "section": "Python callables",
-    "text": "Python callables\npy-polars methods that run a Python function per value or per batch, such as map_elements, map_batches, fold, and map_groups, have no phpolars equivalent. Polars runs expressions on its own threads, and PHP code cannot run there. Use expressions instead. DataFrame::mapRows() is the exception: it runs on the PHP thread, after collecting, and calls a PHP callable per row.",
-    "crumbs": [
-      "Guides",
-      "Coming from py-polars"
-    ]
-  },
-  {
-    "objectID": "coming-from-python.html#small-differences",
-    "href": "coming-from-python.html#small-differences",
-    "title": "Coming from py-polars",
-    "section": "Small differences",
-    "text": "Small differences\n\nSeries::count() keeps py’s meaning (non-null values). Series does not implement Countable; use len().\n__toString() gives Polars’ table layout, so echo $df prints like print(df).\nDataFrame::toColumns() is a phpolars addition: toDict(asSeries: false).\nStrings in arithmetic are literals in phpolars, as they are in comparisons. py treats a string as a column name in some operators (col(\"a\") - \"b\") but not others (col(\"a\") + \"b\"); use col('b') for a column.\nSeries and DataFrame methods never change the object in place. py’s in-place methods (scatter, set, extend, insert_column, replace_column) return a new object.\nread_database() takes a PDO connection.",
-    "crumbs": [
-      "Guides",
-      "Coming from py-polars"
-    ]
-  },
-  {
-    "objectID": "compatibility.html",
-    "href": "compatibility.html",
-    "title": "Compatibility and limitations",
+    "objectID": "examples/time-series.html",
+    "href": "examples/time-series.html",
+    "title": "Rolling windows and as-of joins",
     "section": "",
-    "text": "Supported PHP versions: 8.3, 8.4, and 8.5, as composer.json allows (&gt;=8.3 &lt;8.6).\nPHP build: non-thread-safe (NTS). ZTS builds are not supported.\nOperating systems: Linux and macOS. Windows is not supported.\nPrebuilt binaries: Linux with glibc 2.34 or later on x86_64 and arm64. Other systems build from source.\n\nCI runs the Rust and PHP checks with PHP 8.3, 8.4, and 8.5 on Ubuntu 24.04 and macOS 15. The installer checks build each PHP version on Debian Bookworm for x86_64 and arm64, install it with PIE, and send requests through PHP-FPM.\nThe pipe operator |&gt; in some examples is PHP 8.5 syntax. phpolars itself does not need it, and every example that uses it has a method-chain version for PHP 8.3 and 8.4.",
+    "text": "This example gives each day of sales the price in force on that day and a rolling mean over the last three calendar days.\nPrerequisites: the phpolars extension, which needs no Composer packages. Getting started covers installing it.\nThe input is two small data frames: unit sales for six days in March 2024, with no sales recorded on March 3 and March 7, and a list of two price changes. Save the script as time-series.php and run it with php time-series.php:\n&lt;?php\nuse Phpolars\\DataFrame;\nuse function Phpolars\\col;\n\n// Daily unit sales, with no rows for March 3 and March 7.\n$sales = (new DataFrame([\n    'date' =&gt; ['2024-03-01', '2024-03-02', '2024-03-04', '2024-03-05', '2024-03-06', '2024-03-08'],\n    'units' =&gt; [12, 15, 9, 20, 14, 18],\n]))-&gt;withColumns(col('date')-&gt;str()-&gt;toDate());\n\n// List prices, each in force from its date until the next change.\n$prices = (new DataFrame([\n    'from' =&gt; ['2024-03-01', '2024-03-05'],\n    'price' =&gt; [4.50, 4.95],\n]))-&gt;withColumns(col('from')-&gt;str()-&gt;toDate());\n\n$priced = $sales\n    -&gt;joinAsof($prices, leftOn: 'date', rightOn: 'from')\n    -&gt;withColumns(\n        col('units')-&gt;mul(col('price'))-&gt;alias('revenue'),\n        col('units')-&gt;rollingMeanBy('date', '3d')-&gt;round(2)-&gt;alias('units_3d'),\n    );\n\necho $priced;\nshape: (6, 6)\n┌────────────┬───────┬────────────┬───────┬─────────┬──────────┐\n│ date       ┆ units ┆ from       ┆ price ┆ revenue ┆ units_3d │\n│ ---        ┆ ---   ┆ ---        ┆ ---   ┆ ---     ┆ ---      │\n│ date       ┆ i64   ┆ date       ┆ f64   ┆ f64     ┆ f64      │\n╞════════════╪═══════╪════════════╪═══════╪═════════╪══════════╡\n│ 2024-03-01 ┆ 12    ┆ 2024-03-01 ┆ 4.5   ┆ 54.0    ┆ 12.0     │\n│ 2024-03-02 ┆ 15    ┆ 2024-03-01 ┆ 4.5   ┆ 67.5    ┆ 13.5     │\n│ 2024-03-04 ┆ 9     ┆ 2024-03-01 ┆ 4.5   ┆ 40.5    ┆ 12.0     │\n│ 2024-03-05 ┆ 20    ┆ 2024-03-05 ┆ 4.95  ┆ 99.0    ┆ 14.5     │\n│ 2024-03-06 ┆ 14    ┆ 2024-03-05 ┆ 4.95  ┆ 69.3    ┆ 14.33    │\n│ 2024-03-08 ┆ 18    ┆ 2024-03-05 ┆ 4.95  ┆ 89.1    ┆ 16.0     │\n└────────────┴───────┴────────────┴───────┴─────────┴──────────┘\njoinAsof() matches each row of $sales to the last row of $prices whose from date is on or before its date. Sales from March 5 onward get the new price. Both data frames must be sorted by their join columns. The strategy argument can match the next row or the nearest row instead, and tolerance limits how far apart the dates may be.\nrollingMeanBy('date', '3d') averages the units over a window of three calendar days ending at each row. The window counts time, so a missing day shortens it: the window for March 4 holds March 2 and March 4, and its mean is 12.0. rollingMean(3) would average the last three rows instead. Durations are strings such as '3d', '2h30m', '1w', and '1mo'.\nReference: joinAsof(), rollingMeanBy(), time series, and dates and times.",
     "crumbs": [
-      "Compatibility and limitations"
-    ]
-  },
-  {
-    "objectID": "compatibility.html#php-versions-and-platforms",
-    "href": "compatibility.html#php-versions-and-platforms",
-    "title": "Compatibility and limitations",
-    "section": "",
-    "text": "Supported PHP versions: 8.3, 8.4, and 8.5, as composer.json allows (&gt;=8.3 &lt;8.6).\nPHP build: non-thread-safe (NTS). ZTS builds are not supported.\nOperating systems: Linux and macOS. Windows is not supported.\nPrebuilt binaries: Linux with glibc 2.34 or later on x86_64 and arm64. Other systems build from source.\n\nCI runs the Rust and PHP checks with PHP 8.3, 8.4, and 8.5 on Ubuntu 24.04 and macOS 15. The installer checks build each PHP version on Debian Bookworm for x86_64 and arm64, install it with PIE, and send requests through PHP-FPM.\nThe pipe operator |&gt; in some examples is PHP 8.5 syntax. phpolars itself does not need it, and every example that uses it has a method-chain version for PHP 8.3 and 8.4.",
-    "crumbs": [
-      "Compatibility and limitations"
-    ]
-  },
-  {
-    "objectID": "compatibility.html#agreement-with-py-polars",
-    "href": "compatibility.html#agreement-with-py-polars",
-    "title": "Compatibility and limitations",
-    "section": "Agreement with py-polars",
-    "text": "Agreement with py-polars\nphpolars uses the Polars 0.55.2 Rust crates. The test suite compares phpolars with py-polars 1.43.2, the release whose Rust core is closest to 0.55.2. scripts/pyfixtures.py builds 314 cases with py-polars, and tests/pyfixtures.php builds the same cases with phpolars. A case passes when the column names, the data types, and every value agree. Floats may differ by a relative tolerance of 1e-9. Cases that expect an error pass when phpolars raises the same exception class. All 314 cases pass.\nThe cases cover data frame methods, functions, joins, grouping, windows, sorting, casts, SQL, and the str, dt, list, struct, and arr namespaces. A method or argument outside those cases follows py-polars’ names, but its agreement with py-polars has not been tested. The verification page lists every case.",
-    "crumbs": [
-      "Compatibility and limitations"
-    ]
-  },
-  {
-    "objectID": "compatibility.html#not-available",
-    "href": "compatibility.html#not-available",
-    "title": "Compatibility and limitations",
-    "section": "Not available",
-    "text": "Not available\n\nPython callables. py-polars methods that run a Python function per value or per batch, such as map_elements, map_batches, fold, and map_groups, have no equivalent, because PHP code cannot run on Polars threads. DataFrame::mapRows() runs a PHP callable per row on the PHP thread, after collecting.\nThe GPU engine. collect(engine: 'gpu') throws a ValueError.\nConversion to pandas, NumPy, or PyArrow objects. Data leaves phpolars as PHP values, as files, or through PDO.\nFormats left out of a build. Parquet, IPC, JSON, SQL, and table formatting are Cargo features, and an extension built without one raises a ComputeError from that format’s functions. The release binaries include all of them.",
-    "crumbs": [
-      "Compatibility and limitations"
-    ]
-  },
-  {
-    "objectID": "development.html",
-    "href": "development.html",
-    "title": "Development",
-    "section": "",
-    "text": "git clone https://github.com/phpstats/phpolars && cd phpolars\nPHP=$(which php) PHP_CONFIG=$(which php-config) cargo build --release\nphp -d extension=$PWD/target/release/libphp_polars.so script.php   # .dylib on macOS\nThe build needs a stable Rust toolchain and libclang. Set PHP and PHP_CONFIG to a PHP 8.3, 8.4, or 8.5 installation, because ext-php-rs builds against that PHP’s headers, and a build for one PHP version does not load in another. On macOS with Homebrew, also set LIBCLANG_PATH=$(brew --prefix llvm)/lib. cargo build --profile dist builds the smaller library that releases ship.",
-    "crumbs": [
-      "Contributing",
-      "Development"
-    ]
-  },
-  {
-    "objectID": "development.html#building",
-    "href": "development.html#building",
-    "title": "Development",
-    "section": "",
-    "text": "git clone https://github.com/phpstats/phpolars && cd phpolars\nPHP=$(which php) PHP_CONFIG=$(which php-config) cargo build --release\nphp -d extension=$PWD/target/release/libphp_polars.so script.php   # .dylib on macOS\nThe build needs a stable Rust toolchain and libclang. Set PHP and PHP_CONFIG to a PHP 8.3, 8.4, or 8.5 installation, because ext-php-rs builds against that PHP’s headers, and a build for one PHP version does not load in another. On macOS with Homebrew, also set LIBCLANG_PATH=$(brew --prefix llvm)/lib. cargo build --profile dist builds the smaller library that releases ship.",
-    "crumbs": [
-      "Contributing",
-      "Development"
-    ]
-  },
-  {
-    "objectID": "development.html#testing",
-    "href": "development.html#testing",
-    "title": "Development",
-    "section": "Testing",
-    "text": "Testing\nscripts/test        # build and run tests/dataframe.php, expr.php, io.php, regressions.php, and pyfixtures.php\nscripts/check       # release gate: rustfmt, clippy, the suites, tests/memory.php, stub freshness, and API compatibility with the latest tag\nPHIBBLE=path/to/phibble/vendor/autoload.php scripts/test   # also the phibble round-trip\nCI runs scripts/check with PHP 8.3, 8.4, and 8.5 on Ubuntu 24.04 and macOS 15.",
-    "crumbs": [
-      "Contributing",
-      "Development"
-    ]
-  },
-  {
-    "objectID": "development.html#comparing-with-py-polars",
-    "href": "development.html#comparing-with-py-polars",
-    "title": "Development",
-    "section": "Comparing with py-polars",
-    "text": "Comparing with py-polars\nscripts/pyfixtures.py builds 314 cases with py-polars and writes tests/fixtures/py/expected.json. tests/pyfixtures.php builds the same cases with phpolars and compares column names, data types, and values. Regenerate the fixtures with:\nuv run --with 'polars==1.43.2' --with numpy python scripts/pyfixtures.py\npy-polars 1.43.2 is the release whose Rust core is closest to the pinned Polars 0.55.2.",
-    "crumbs": [
-      "Contributing",
-      "Development"
-    ]
-  },
-  {
-    "objectID": "development.html#documentation",
-    "href": "development.html#documentation",
-    "title": "Development",
-    "section": "Documentation",
-    "text": "Documentation\nscripts/render-docs\nThis runs every docs/examples/*.php against the release build and embeds its output, regenerates the reference signatures from the extension (scripts/docs-reference.php), renders the site with Quarto, and copies it into docs/. phpolars.phpstats.org imports the rendered HTML from main:/docs, so commit it. GitHub Pages serves only redirects to phpolars.phpstats.org, from .github/workflows/pages.yml.",
-    "crumbs": [
-      "Contributing",
-      "Development"
-    ]
-  },
-  {
-    "objectID": "development.html#stubs",
-    "href": "development.html#stubs",
-    "title": "Development",
-    "section": "Stubs",
-    "text": "Stubs\nstubs/phpolars.php holds signatures for IDEs and static analysis. Regenerate it after changing the API:\nphp -d extension=target/release/libphp_polars.so scripts/stubs.php &gt; stubs/phpolars.php",
-    "crumbs": [
-      "Contributing",
-      "Development"
+      "Examples",
+      "Rolling windows and as-of joins"
     ]
   },
   {

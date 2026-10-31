@@ -1,0 +1,23 @@
+---
+title: "Aggregate with expressions"
+---
+
+This example summarizes each group of a data frame with several expressions in one `agg()` call.
+
+Prerequisites: the phpolars extension, which needs no Composer packages. [Getting started](../getting-started.qmd) covers installing it.
+
+The input is a small data frame of six orders across three regions. Save the script as `expressions.php` and run it with `php expressions.php`:
+
+{{< include _expressions.md >}}
+
+`groupBy()` splits the rows by region, and `agg()` evaluates each expression once per group. An expression describes a computation on columns. It holds no data of its own, and Polars evaluates the expressions on its own threads.
+
+- `len()` counts the rows in the group.
+- `col('amount')->sum()` adds up a column.
+- `filter()` inside an expression keeps only some of the group's rows, here the orders that were not returned, before `sum()` runs.
+- `nUnique()` counts distinct values.
+- `sortBy('amount', descending: true)->first()` takes the customer of the largest order.
+
+`alias()` names each result column. `maintainOrder: true` keeps the groups in the order they first appear. Without it, the group order can change between runs.
+
+Reference: [`groupBy()`](../reference/dataframe.qmd#dataframe-groupBy), [`agg()`](../reference/dataframe.qmd#groupby-agg), [`len()`](../reference/expressions.qmd#fn-len), and [expressions](../reference/expressions.qmd).

@@ -10,7 +10,7 @@
   </url>
   <url>
     <loc>https://phpolars.phpstats.org/docs/reference/dataframe.html</loc>
-    <lastmod>2026-10-31T19:54:05.353Z</lastmod>
+    <lastmod>2026-10-31T21:56:25.132Z</lastmod>
   </url>
   <url>
     <loc>https://phpolars.phpstats.org/docs/performance.html</loc>
@@ -21,20 +21,32 @@
     <lastmod>2026-10-31T19:51:10.452Z</lastmod>
   </url>
   <url>
-    <loc>https://phpolars.phpstats.org/docs/deployment.html</loc>
-    <lastmod>2026-10-31T19:54:32.726Z</lastmod>
+    <loc>https://phpolars.phpstats.org/docs/examples/lazy-csv.html</loc>
+    <lastmod>2026-10-31T21:57:39.987Z</lastmod>
   </url>
   <url>
-    <loc>https://phpolars.phpstats.org/docs/coming-from-python.html</loc>
-    <lastmod>2026-10-31T14:48:27.875Z</lastmod>
+    <loc>https://phpolars.phpstats.org/docs/development.html</loc>
+    <lastmod>2026-10-31T17:18:33.945Z</lastmod>
   </url>
   <url>
     <loc>https://phpolars.phpstats.org/docs/compatibility.html</loc>
     <lastmod>2026-10-31T17:19:14.409Z</lastmod>
   </url>
   <url>
-    <loc>https://phpolars.phpstats.org/docs/development.html</loc>
-    <lastmod>2026-10-31T17:18:33.945Z</lastmod>
+    <loc>https://phpolars.phpstats.org/docs/coming-from-python.html</loc>
+    <lastmod>2026-10-31T14:48:27.875Z</lastmod>
+  </url>
+  <url>
+    <loc>https://phpolars.phpstats.org/docs/deployment.html</loc>
+    <lastmod>2026-10-31T19:54:32.726Z</lastmod>
+  </url>
+  <url>
+    <loc>https://phpolars.phpstats.org/docs/examples/expressions.html</loc>
+    <lastmod>2026-10-31T21:57:39.986Z</lastmod>
+  </url>
+  <url>
+    <loc>https://phpolars.phpstats.org/docs/examples/time-series.html</loc>
+    <lastmod>2026-10-31T21:57:39.987Z</lastmod>
   </url>
   <url>
     <loc>https://phpolars.phpstats.org/docs/index.html</loc>

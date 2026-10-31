@@ -1,0 +1,19 @@
+---
+title: "Query a large CSV file lazily"
+---
+
+This example scans a CSV file with a lazy query, so Polars reads only the rows and columns the query needs.
+
+Prerequisites: the phpolars extension, which needs no Composer packages. [Getting started](../getting-started.qmd) covers installing it.
+
+The script first writes `orders.csv`, a file of one million orders with six columns, to the current directory, and deletes it at the end. Save the script as `lazy-csv.php` and run it with `php lazy-csv.php`:
+
+{{< include _lazy-csv.md >}}
+
+`scan_csv()` returns a `LazyFrame` without reading the file. `filter()`, `groupBy()`, `agg()`, and `sort()` add steps to a query plan, and `collect()` optimizes the plan, runs it, and returns a `DataFrame`. `read_csv()` would instead load all six columns of every row into memory before the filter runs.
+
+`explain()` prints the optimized plan. `PROJECT 3/6 COLUMNS` means that the scan reads only `region`, `amount`, and `returned`. `SELECTION` means that the filter runs during the scan, so rows that fail it are dropped as the file is read. `ESTIMATED ROWS` is the planner's estimate of the file's size, made before reading it.
+
+`collect(engine: 'streaming')` runs the query in batches, which uses less memory on large files. [Performance](../performance.qmd#memory-on-large-files) has measurements.
+
+Reference: [`scan_csv()`](../reference/io.qmd#fn-scan_csv), [`explain()`](../reference/dataframe.qmd#lazyframe-explain), [`collect()`](../reference/dataframe.qmd#lazyframe-collect), and [input and output](../reference/io.qmd).

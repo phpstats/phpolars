@@ -5,8 +5,9 @@
  * Run every docs/examples/*.php and write docs/examples/_<name>.md holding the
  * example's code and its actual output, for Quarto to include. Examples run
  * in docs/data, after a hidden prelude that imports the phpolars classes and
- * functions, unless the example imports phpolars functions itself. The
- * extension is the release build unless PHPOLARS_EXT is set.
+ * functions, unless the example imports phpolars functions itself. Such a
+ * complete script is shown whole, with its opening <?php tag. The extension is
+ * the release build unless PHPOLARS_EXT is set.
  *
  * Usage: scripts/docs-examples [name ...]
  */
@@ -38,7 +39,8 @@ foreach (glob($root.'/docs/examples/*.php') as $file) {
     $code = trim((string) preg_replace('/^<\?php\s*(declare\(strict_types=1\);\s*)?/', '', file_get_contents($file)));
     $script = tempnam(sys_get_temp_dir(), 'phpolars-doc').'.php';
     // An example that imports phpolars functions itself is a complete script and runs without the prelude.
-    $imports = preg_match('/^use function Phpolars/m', $code) === 1 ? '' : $prelude."\n";
+    $complete = preg_match('/^use function Phpolars/m', $code) === 1;
+    $imports = $complete ? '' : $prelude."\n";
     file_put_contents($script, "<?php\n\ndeclare(strict_types=1);\n\n".$imports.$code."\n");
     $proc = proc_open([$php, '-n', '-d', 'extension='.$ext, $script], [1 => ['pipe', 'w'], 2 => ['pipe', 'w']], $pipes, $root.'/docs/data');
     $out = stream_get_contents($pipes[1]);
@@ -51,7 +53,8 @@ foreach (glob($root.'/docs/examples/*.php') as $file) {
 
         continue;
     }
-    $md = "```php\n{$code}\n```\n";
+    $shown = $complete ? trim(file_get_contents($file)) : $code;
+    $md = "```php\n{$shown}\n```\n";
     if (trim($out) !== '') {
         $md .= "\n```{.text .output}\n".rtrim($out)."\n```\n";
     }

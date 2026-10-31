@@ -4,6 +4,7 @@ project:
   render:
     - "*.qmd"
     - "reference/*.qmd"
+    - "examples/*.qmd"
   resources:
     - data/*.csv
 
@@ -17,6 +18,11 @@ website:
     contents:
       - index.qmd
       - getting-started.qmd
+      - section: "Examples"
+        contents:
+          - examples/expressions.qmd
+          - examples/lazy-csv.qmd
+          - examples/time-series.qmd
       - section: "Guides"
         contents:
           - coming-from-python.qmd
