@@ -1,0 +1,33 @@
+---
+title: "Compatibility and limitations"
+---
+
+## PHP versions and platforms
+
+- Supported PHP versions: 8.3, 8.4, and 8.5, as `composer.json` allows (`>=8.3 <8.6`).
+- PHP build: non-thread-safe (NTS). ZTS builds are not supported.
+- Operating systems: Linux and macOS. Windows is not supported.
+- Prebuilt binaries: Linux with glibc 2.34 or later on x86_64 and arm64. Other systems build from source.
+
+CI runs the Rust and PHP checks with PHP 8.3, 8.4, and 8.5 on Ubuntu 24.04 and macOS 15. The installer checks build each PHP version on Debian Bookworm for x86_64 and arm64, install it with PIE, and send requests through PHP-FPM.
+
+The pipe operator `|>` in some examples is PHP 8.5 syntax. phpolars itself does not need it, and every example that uses it has a method-chain version for PHP 8.3 and 8.4.
+
+## Agreement with py-polars
+
+phpolars uses the Polars 0.55.2 Rust crates. The test suite compares phpolars with py-polars 1.43.2, the release whose Rust core is closest to 0.55.2. `scripts/pyfixtures.py` builds 314 cases with py-polars, and `tests/pyfixtures.php` builds the same cases with phpolars. A case passes when the column names, the data types, and every value agree. Floats may differ by a relative tolerance of 1e-9. Cases that expect an error pass when phpolars raises the same exception class. All 314 cases pass.
+
+The cases cover data frame methods, functions, joins, grouping, windows, sorting, casts, SQL, and the `str`, `dt`, `list`, `struct`, and `arr` namespaces. A method or argument outside those cases follows py-polars' names, but its agreement with py-polars has not been tested. The [verification page](https://phpolars.phpstats.org/verification) lists every case.
+
+## Not available
+
+- Python callables. py-polars methods that run a Python function per value or per batch, such as `map_elements`, `map_batches`, `fold`, and `map_groups`, have no equivalent, because PHP code cannot run on Polars threads. `DataFrame::mapRows()` runs a PHP callable per row on the PHP thread, after collecting.
+- The GPU engine. `collect(engine: 'gpu')` throws a `ValueError`.
+- Conversion to pandas, NumPy, or PyArrow objects. Data leaves phpolars as PHP values, as files, or through PDO.
+- Formats left out of a build. Parquet, IPC, JSON, SQL, and table formatting are Cargo features, and an extension built without one raises a `ComputeError` from that format's functions. The release binaries include all of them.
+
+## Changes on main since v0.2.0
+
+The documentation is built from the main branch. These features are on main and are not in the v0.2.0 release:
+
+- `LazyFrame::collect(engine:)` and `collect_all(..., engine:)`, which select the `'auto'`, `'in-memory'`, or `'streaming'` engine.

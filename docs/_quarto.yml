@@ -17,7 +17,11 @@ website:
     contents:
       - index.qmd
       - getting-started.qmd
-      - coming-from-python.qmd
+      - section: "Guides"
+        contents:
+          - coming-from-python.qmd
+          - phibble.qmd
+          - deployment.qmd
       - section: "Reference"
         contents:
           - reference/dataframe.qmd
@@ -25,11 +29,13 @@ website:
           - reference/series.qmd
           - reference/io.qmd
           - reference/types.qmd
-      - phibble.qmd
-      - deployment.qmd
-      - performance.qmd
-      - development.qmd
-
+      - compatibility.qmd
+      - section: "Benchmarks and verification"
+        contents:
+          - performance.qmd
+      - section: "Contributing"
+        contents:
+          - development.qmd
 format:
   html:
     theme: cosmo

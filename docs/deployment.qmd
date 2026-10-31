@@ -2,22 +2,44 @@
 title: "Deployment"
 ---
 
-## Installing
-
-**The package has not been submitted to Packagist yet**, so install it from a checkout or from a prebuilt binary:
+## Installing with PIE
 
 ```sh
-git clone https://github.com/phpstats/phpolars && cd phpolars
-PHP=$(which php) PHP_CONFIG=$(which php-config) cargo build --profile dist
+pie install phpstats/phpolars
 ```
 
-Copy `target/dist/libphp_polars.so`, or `libphp_polars.dylib` on macOS, into `php-config --extension-dir` as `php_polars.so` and add `extension=php_polars.so` to the php.ini that `php --ini` reports. The extension supports PHP 8.3, 8.4, and 8.5, non-thread-safe builds, on Linux and macOS. The release archives are built with the `dist` profile (fat LTO, `opt-level = "s"`, stripped). A build needs a stable Rust toolchain and libclang, and takes several minutes. Releases attach prebuilt PHP 8.3, 8.4, and 8.5 binaries for Linux on x86_64 and arm64, which save the build on those platforms.
+PIE resolves the release from Packagist and downloads a prebuilt binary when one matches the PHP version, architecture, and C library. Otherwise it builds the extension from source with the `dist` profile. It then enables the extension and checks that it loads. A PHP-FPM service, queue workers, and other long-running PHP processes load extensions only when they start, so restart them after installing or upgrading.
 
-Build with `--profile dist` for anything you deploy. On macOS the `dist` library is 65 MB and the `release` library is 207 MB, because `release` skips LTO and keeps the symbol table. The v0.2.0 Linux binaries are 71 MB on x86_64 and 64 MB on arm64, and 21 MB and 19 MB zipped.
+The v0.2.0 release installs with `pie install phpstats/phpolars` from its prebuilt binary, and `phpversion("php_polars")` reports `0.2.0`, in the official `php:8.5-cli-bookworm` image and on Ubuntu 24.04 with the ondrej/php PPA's PHP 8.5, both on arm64. On Ubuntu, PIE enables the extension for the CLI and for PHP-FPM.
 
-### Ubuntu and Laravel Forge
+## Prebuilt binaries and source builds
 
-Forge installs PHP from the ondrej/php PPA. The prebuilt Linux binaries load there: the v0.2.0 PHP 8.5 binaries pass `tests/deployment.php` under the CLI and under PHP-FPM on Ubuntu 24.04 with the PPA's PHP 8.5.12, on x86_64 and arm64. To install one:
+Each release attaches prebuilt binaries for:
+
+- PHP 8.3, 8.4, and 8.5
+- NTS builds
+- Linux on x86_64 and arm64
+- glibc 2.34 or later (Debian 12, Ubuntu 22.04, RHEL 9, or newer)
+
+The binaries are built on Debian Bookworm and do not run on Alpine or other musl systems. macOS, musl Linux, and other platforms build from source. A source build needs a stable Rust toolchain and libclang, and takes several minutes. ZTS (thread-safe) PHP builds are not supported. A build for one PHP minor version loads only in that version, because PHP 8.3, 8.4, and 8.5 have different module APIs.
+
+The v0.2.0 Linux binaries are 71 MB on x86_64 and 64 MB on arm64, and 21 MB and 19 MB zipped.
+
+### What a release archive contains
+
+The packaging workflow builds the extension inside the official `php:8.3-fpm-bookworm`, `php:8.4-fpm-bookworm`, and `php:8.5-fpm-bookworm` images, installs it with PIE, runs the release checks, and sends real requests through PHP-FPM. It then packages each tested `php_polars.so` for x86_64 and arm64 in a zip named as PIE expects, such as `php_php_polars-v0.2.0_php8.4-x86_64-linux-glibc-nts.zip`, with:
+
+- `manifest.json`: PHP version and API number, architecture, glibc, the Rust version, the Cargo.lock hash, and the extension's SHA-256.
+- `THIRD_PARTY_NOTICES.txt`: the licenses of every Rust dependency compiled into the binary.
+- `INSTALL.txt`: copy the file to `php-config --extension-dir`, add `extension=php_polars.so`, and set `php_polars.max_threads`.
+
+After a release is published, the release workflow installs each archive into a clean PHP image by hand, and again with `pie install`, which must pick the prebuilt archive without a Rust toolchain.
+
+## Ubuntu and Laravel Forge
+
+Forge installs PHP from the ondrej/php PPA, and `pie install phpstats/phpolars` works there as above. The v0.2.0 PHP 8.5 binaries also pass `tests/deployment.php` under the CLI and under PHP-FPM on Ubuntu 24.04 with the PPA's PHP 8.5.12, on x86_64 and arm64.
+
+To install a binary from the release by hand instead:
 
 ```sh
 sudo cp php_polars.so "$(php -r 'echo ini_get("extension_dir");')/"
@@ -26,13 +48,15 @@ sudo phpenmod -v 8.5 php_polars
 sudo systemctl reload php8.5-fpm
 ```
 
-When only queue workers, scheduled commands, or Artisan commands use phpolars, enable it for the CLI alone with `sudo phpenmod -v 8.5 -s cli php_polars`. PHP-FPM workers then never load it, and no FPM reload is needed.
+When only queue workers, scheduled commands, or Artisan commands use phpolars, enable it for the CLI alone with `sudo phpenmod -v 8.5 -s cli php_polars`. PHP-FPM workers then never load it, and no FPM reload is needed. After installing or upgrading, restart queue workers, for example with `php artisan queue:restart` or `php artisan horizon:terminate`.
 
-### Laravel Herd
+## Laravel Herd
 
-Herd's PHP binaries have no `php-config`, so build against Homebrew's PHP of the same minor version, which has the same module API. For Herd's PHP 8.5:
+A source build, with PIE or by hand, needs `phpize` and `php-config`, which Herd's PHP binaries do not have. Build against Homebrew's PHP of the same minor version, which has the same module API. For Herd's PHP 8.5:
 
 ```sh
+git clone https://github.com/phpstats/phpolars && cd phpolars
+git checkout v0.2.0
 P=$(brew --prefix php@8.5)/bin
 PHP=$P/php PHP_CONFIG=$P/php-config LIBCLANG_PATH=$(brew --prefix llvm)/lib cargo build --profile dist
 ```
@@ -45,17 +69,17 @@ extension=/path/to/phpolars/target/dist/libphp_polars.dylib
 
 For PHP 8.4, use `php@8.4` and `config/php/84/php.ini`.
 
-Once the package is on Packagist, `pie install phpstats/phpolars` will install it with [PIE](https://github.com/php/pie), which downloads the prebuilt binary where one matches, builds the `dist` profile from source where none does, and enables the extension.
+## Building from source by hand
 
-## Prebuilt binaries
+```sh
+git clone https://github.com/phpstats/phpolars && cd phpolars
+git checkout v0.2.0
+PHP=$(which php) PHP_CONFIG=$(which php-config) cargo build --profile dist
+```
 
-The packaging workflow builds the extension inside the official `php:8.3-fpm-bookworm`, `php:8.4-fpm-bookworm`, and `php:8.5-fpm-bookworm` images, installs it with PIE, runs the release checks, and sends real requests through PHP-FPM. It then packages each tested `php_polars.so` for x86_64 and arm64 in a zip named as PIE expects, such as `php_php_polars-v0.2.0_php8.4-x86_64-linux-glibc-nts.zip`, with:
+Copy `target/dist/libphp_polars.so`, or `libphp_polars.dylib` on macOS, into `php-config --extension-dir` as `php_polars.so`, and add `extension=php_polars.so` to the php.ini that `php --ini` reports. On macOS with Homebrew, also set `LIBCLANG_PATH=$(brew --prefix llvm)/lib`. When several PHP versions are installed, point `PHP` and `PHP_CONFIG` at the PHP that will load the extension, because the build uses that PHP's headers.
 
-- `manifest.json`: PHP version and API number, architecture, glibc, the Rust version, the Cargo.lock hash, and the extension's SHA-256.
-- `THIRD_PARTY_NOTICES.txt`: the licenses of every Rust dependency compiled into the binary.
-- `INSTALL.txt`: copy the file to `php-config --extension-dir`, add `extension=php_polars.so`, and set `php_polars.max_threads`.
-
-Release builds attach the six archives to the GitHub release. After publishing, the release workflow installs each one into a clean PHP image by hand and again with `pie install`, which must pick the prebuilt archive without a Rust toolchain. The binaries are built on Debian Bookworm, need glibc 2.34 or later (Debian 12, Ubuntu 22.04, RHEL 9, or newer), and do not run on Alpine (musl). Other platforms build from source with PIE.
+Build with `--profile dist` for anything you deploy. The `dist` profile applies fat LTO, `opt-level = "s"`, and symbol stripping. On macOS the `dist` library is 65 MB and the `release` library is 207 MB, because `release` skips LTO and keeps the symbol table.
 
 ## Threads under PHP-FPM
 
@@ -67,17 +91,23 @@ extension=php_polars.so
 php_polars.max_threads = 2
 ```
 
-The setting defaults to 2 and is `PHP_INI_SYSTEM`, because the pool starts once per process and cannot be resized. An explicit `POLARS_MAX_THREADS` environment variable takes precedence. `Phpolars\thread_pool_size()` reports the size in effect. Size it so that `pm.max_children × max_threads` fits the machine's cores.
+The setting defaults to 2 and is `PHP_INI_SYSTEM`, because the pool starts once per process and cannot be resized. A change takes effect when the process restarts. An explicit `POLARS_MAX_THREADS` environment variable takes precedence. `Phpolars\thread_pool_size()` reports the size in effect. Size it so that `pm.max_children × max_threads` fits the machine's cores.
 
 PHP closures never run on Polars threads. Every phpolars operation is built from expressions that Polars evaluates natively.
 
 ## Memory
 
-Polars allocates with its own allocator, outside PHP's memory manager, so its memory does not count against `memory_limit`. Reading a 1M-row CSV raises a process's resident memory to about 83 MB while `memory_get_peak_usage()` reports 2 MB. Size FPM pools by process memory, and limit request data with the application's own checks.
+Polars allocates with its own allocator, outside PHP's memory manager. `memory_get_usage()` and `memory_limit` do not see that memory. Reading a 1M-row CSV raises a process's resident memory to about 83 MB while `memory_get_peak_usage()` reports 2 MB. Size FPM pools and queue workers by process memory, and limit request data with the application's own checks. PHP arrays built from a result, for example with `rows()` or `toDicts()`, do count against `memory_limit`. [Performance](performance.qmd#memory-on-large-files) measures memory on large files.
 
 ## Checking an installation
 
-`tests/deployment.php` runs the same assertions through the CLI and, in `scripts/check-fpm` and `scripts/check-container`, through a real FastCGI request:
+The command below checks the CLI:
+
+```sh
+php -r 'echo phpversion("php_polars"), PHP_EOL;'
+```
+
+PHP-FPM can load a different php.ini, so check it through a web request. `tests/deployment.php` in the repository runs the same assertions through the CLI and, in `scripts/check-fpm` and `scripts/check-container`, through a real FastCGI request:
 
 ```sh
 php tests/deployment.php

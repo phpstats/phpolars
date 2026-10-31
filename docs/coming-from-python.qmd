@@ -2,7 +2,7 @@
 title: "Coming from py-polars"
 ---
 
-phpolars keeps py-polars' names and semantics. The differences come from PHP's syntax.
+phpolars keeps py-polars' names and semantics, and most differences come from PHP's syntax. The test suite checks 314 operations against py-polars 1.43.2; [Compatibility and limitations](compatibility.qmd) describes what those cases cover.
 
 ## Naming
 

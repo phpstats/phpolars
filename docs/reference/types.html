@@ -158,21 +158,44 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
  <span class="menu-text">Getting started</span></a>
   </div>
 </li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../coming-from-python.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Coming from py-polars</span></a>
-  </div>
-</li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
- <span class="menu-text">Reference</span></a>
+ <span class="menu-text">Guides</span></a>
           <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
       <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../coming-from-python.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Coming from py-polars</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../phibble.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">phibble and phplyr</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../deployment.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Deployment</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">Reference</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../reference/dataframe.html" class="sidebar-item-text sidebar-link">
@@ -207,28 +230,44 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../phibble.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">phibble and phplyr</span></a>
+  <a href="../compatibility.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Compatibility and limitations</span></a>
   </div>
 </li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../deployment.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Deployment</span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
+ <span class="menu-text">Benchmarks and verification</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../performance.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Performance</span></a>
   </div>
 </li>
-        <li class="sidebar-item">
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
+ <span class="menu-text">Contributing</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../development.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Development</span></a>
   </div>
 </li>
+      </ul>
+  </li>
     </ul>
     </div>
 </nav>
@@ -369,6 +408,15 @@ array(5) {
 </tr>
 </tbody>
 </table>
+<p>Details of the conversion:</p>
+<ul>
+<li>Integer precision: Int8 through Int64 and UInt8 through UInt32 fit PHP’s 64-bit <code>int</code>. UInt64, Int128, and UInt128 values beyond <code>PHP_INT_MAX</code> become <code>float</code>, as PHP’s own integer overflow does, so they lose precision above 2^53.</li>
+<li>Decimal: values come back as strings, such as <code>"1.25"</code> for <code>Decimal(10, 2)</code>, so no precision is lost.</li>
+<li>Time units: <code>Datetime</code> defaults to microseconds. <code>Datetime(ms)</code> and <code>Datetime(ns)</code> keep their unit inside Polars, and PHP’s <code>DateTimeImmutable</code> holds microseconds. A <code>Duration</code> comes back as an integer count of its unit: 1.5 seconds in <code>Duration(ms)</code> is <code>1500</code>.</li>
+<li>Time zones: a naive <code>Datetime</code> comes back in UTC. A zoned <code>Datetime</code>, such as <code>Datetime(us, America/New_York)</code>, comes back in its zone.</li>
+<li>Null and NaN: <code>null</code> is a missing value of any type. <code>NaN</code> is a float value, and <code>isNull()</code> is false for it.</li>
+<li>Lists and structs: a <code>List</code> or <code>Array</code> value is a PHP list, and a <code>Struct</code> value is an associative array keyed by field name.</li>
+</ul>
 <p>From PHP, each column gets one inferred type. Integers widen to floats, nulls fit any type, <code>DateTimeInterface</code> values become naive <code>Datetime(us)</code> on their wall-clock time (the zone is not kept; use <code>dt()-&gt;replaceTimeZone()</code> to attach one), lists become <code>List</code>, and associative arrays become <code>Struct</code>. Any other mix raises <code>SchemaError</code>; pass a <code>schema</code> to set types.</p>
 </section>
 <section id="errors" class="level2">

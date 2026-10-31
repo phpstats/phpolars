@@ -4,23 +4,25 @@ title: "Getting started"
 
 ## Installing
 
-phpolars needs PHP 8.3, 8.4, or 8.5 (non-thread-safe) on Linux or macOS. It is not on Packagist yet, so build it from a checkout:
+phpolars runs on PHP 8.3, 8.4, and 8.5, non-thread-safe (NTS) builds, on Linux and macOS. Install it with [PIE](https://github.com/php/pie), PHP's extension installer:
 
 ```sh
-git clone https://github.com/phpstats/phpolars && cd phpolars
-PHP=$(which php) PHP_CONFIG=$(which php-config) cargo build --release
-php -d extension=$PWD/target/release/libphp_polars.so script.php   # .dylib on macOS
+pie install phpstats/phpolars
 ```
 
-The `-d` flag loads the extension for one run. To load it on every run, add `extension=$PWD/target/release/libphp_polars.so`, with the path written out in full, to the php.ini that `php --ini` reports.
+On Linux on x86_64 and arm64 with glibc 2.34 or later, PIE downloads a prebuilt binary. On other platforms, including macOS, it builds the extension from source, which needs a stable Rust toolchain and libclang and takes several minutes. PIE then enables the extension in php.ini. Under PHP-FPM, restart FPM afterwards so that its workers load the extension. [Deployment](deployment.qmd) covers servers, Laravel Forge, Laravel Herd, and manual installs.
 
-The build needs a stable Rust toolchain and libclang and takes several minutes. `cargo build --profile dist` produces a smaller library in `target/dist`. Releases also attach prebuilt PHP 8.3, 8.4, and 8.5 binaries for Linux on x86_64 and arm64. See [Deployment](deployment.qmd).
+## Checking the installation
 
-On macOS with Homebrew, also set `LIBCLANG_PATH=$(brew --prefix llvm)/lib`. When several PHP versions are installed, point `PHP` and `PHP_CONFIG` at the PHP you will load the extension into, because the build uses that PHP's headers.
+```sh
+php -r 'echo phpversion("php_polars"), PHP_EOL;'
+```
+
+The command prints the installed version, such as `0.2.0`. It checks the CLI. PHP-FPM reads its own php.ini, so check a web request separately, for example with `extension_loaded('php_polars')` in a page.
 
 ## Imports
 
-Classes live in `Phpolars` and functions are namespaced, so import them:
+Classes live in `Phpolars`, and functions are namespaced, so import them:
 
 ```php
 use Phpolars\{DataFrame, Series};
@@ -45,6 +47,10 @@ Strings passed where py-polars expects an expression input, such as `select()`, 
 
 ## Lazy queries
 
-A `LazyFrame` records operations and optimizes them before running. `scan_csv()` starts one from a file, and `collect()` runs it:
+A `DataFrame` runs each method immediately. A `LazyFrame` records operations and runs them, optimized, when `collect()` is called. `scan_csv()` starts a lazy query from a file, so Polars reads only the columns and rows that the query needs:
 
 {{< include examples/_lazy.md >}}
+
+## Missing values
+
+phpolars follows Polars: a missing value is `null`, aggregates such as `sum()` and `mean()` skip it, and `null` sorts first. phibble and phplyr follow R and dplyr instead. [phibble and phplyr](phibble.qmd#missing-values) compares the two.

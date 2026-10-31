@@ -2,50 +2,81 @@
 title: "phibble and phplyr"
 ---
 
-[phibble](https://phpstats.github.io/phibble/) defines a table contract with several backends: its in-memory `DataFrame`, `SqlTable` for PDO databases, and `Phibble\Polars\PolarsTable`, which runs on a Polars `DataFrame` when the php_polars extension is loaded. [phplyr](https://phpstats.github.io/phplyr/)'s verbs work on any of them, so a phplyr pipeline runs in Polars when it starts from a `PolarsTable`. The backend ships with phibble ^0.2; install phpolars to enable it. phibble's [Backends](https://phpstats.github.io/phibble/backends.html) page compares the backends.
+[phibble](https://phibble.phpstats.org) defines a table contract with several backends: its in-memory `DataFrame`, `SqlTable` for PDO databases, and `Phibble\Polars\PolarsTable`, which keeps its data in a Polars `DataFrame`. `PolarsTable` is part of phibble (since phibble v0.2.0) and needs the php_polars extension that phpolars supplies. phibble lists the extension as a Composer suggestion, so installing phibble does not install phpolars. [phplyr](https://phplyr.phpstats.org)'s verbs work on any phibble table, so a phplyr pipeline runs in Polars when it starts from a `PolarsTable`. phibble's [Backends](https://phibble.phpstats.org/docs/backends) page compares the backends.
 
-A phplyr pipeline on a `PolarsTable` runs in Polars:
+## Choosing an API
+
+- Use phplyr or phibble on a `PolarsTable` to keep dplyr's semantics, or to run the same pipeline on phibble's other backends.
+- Use the phpolars API to get Polars' semantics and the parts of Polars that phibble does not expose, such as lazy scans, sinks, and SQL.
+
+## A pipeline on a PolarsTable
 
 ::: {.panel-tabset group="syntax"}
-## Method chain (PHP 8.3+)
+## PHP 8.5+
+
+```php
+use Phibble\Polars\PolarsTable;
+use function Phplyr\{col, filter, group_by, mean, n, summarize};
+
+$table = PolarsTable::fromPolars(Phpolars\read_csv('sales.csv'));
+
+$out = $table |>
+    group_by('store') |>
+    filter(col('units')->gt(mean('units', naRm: true))) |>
+    summarize(orders: n(), avg_units: mean('units'));
+```
+
+## PHP 8.3–8.4
 
 ```php
 use Phibble\Polars\PolarsTable;
 use function Phplyr\{col, mean, n, phplyr};
 
-$table = PolarsTable::fromPolars(Phpolars\read_csv('sales.csv'));   // or PolarsTable::fromTable($dataFrame)
+$table = PolarsTable::fromPolars(Phpolars\read_csv('sales.csv'));
 
 $out = phplyr($table)
-    ->group_by('store')
-    ->filter(col('units')->gt(mean('units', na_rm: true)))
-    ->summarise(orders: n(), avg_units: mean('units'))
+    ->groupBy('store')
+    ->filter(col('units')->gt(mean('units', naRm: true)))
+    ->summarize(orders: n(), avg_units: mean('units'))
     ->get();
-```
-
-## Pipe (PHP 8.5)
-
-```php
-use Phibble\Polars\PolarsTable;
-use function Phplyr\{col, filter, group_by, mean, n, summarise};
-
-$table = PolarsTable::fromPolars(Phpolars\read_csv('sales.csv'));   // or PolarsTable::fromTable($dataFrame)
-
-$out = $table
-    |> group_by('store')
-    |> filter(col('units')->gt(mean('units', na_rm: true)))
-    |> summarise(orders: n(), avg_units: mean('units'));
 ```
 :::
 
-`$out` is a `PolarsTable`, and `$out->collect()` returns a `Phibble\DataFrame`.
+`$out` is a `PolarsTable`. `$out->collect()` copies it into a `Phibble\DataFrame`:
+
+```text
+# A tibble: 4 × 3
+  store orders avg_units
+  <chr>  <int>     <dbl>
+1 S1        32      9.72
+2 S2        23      8.65
+3 S3        22      9.36
+4 S4        17      8.88
+```
+
+These examples were run with phibble v0.5.0 and phplyr at f7edd6e on `docs/data/sales.csv`.
+
+## Moving data in and out
+
+- `PolarsTable::fromPolars($df)` wraps a phpolars `DataFrame` without copying it. A `LazyFrame` is collected first.
+- `PolarsTable::fromTable($table)` copies any phibble table into Polars and keeps types, groups, and factor levels. It throws when a list column would not round-trip exactly, for example when named arrays with different keys would become structs.
+- `$table->polars()` returns the underlying phpolars `DataFrame`.
+- `$table->collect()` copies the data into a `Phibble\DataFrame`.
+
+Without the adapter, `Phpolars\DataFrame::fromPhibble($table)` reads any phibble table through `toColumns()`, and `$df->toPhibble()` returns a `Phibble\DataFrame`. `toPhibble()` needs phibble v0.2 or later.
 
 ## What runs in Polars
 
-Verbs given column names or phibble expressions (`Phibble\Expr`, which phplyr's helpers such as `col()`, `mean()`, and `n()` build) run in Polars with dplyr's semantics: NA propagates, aggregates default to `na_rm = FALSE`, grouped `mutate()` and `filter()` evaluate aggregates and windows per group, groups follow sorted key order, and joins follow dplyr 1.2, including `join_by()` inequality and rolling joins. Pivots, stringr and lubridate functions, and phibble's reference fixtures all run natively.
+Verbs given column names or phibble expressions (`Phibble\Expr`, which phplyr's helpers such as `col()`, `mean()`, and `n()` build) run in Polars with dplyr's semantics. NA propagates, aggregates default to `naRm: false`, grouped `mutate()` and `filter()` evaluate aggregates and windows per group, groups follow sorted key order, and joins follow dplyr 1.2, including `join_by()` inequality and rolling joins. Pivots and most stringr and lubridate functions also run in Polars.
 
-PHP closures cannot run on Polars threads. A verb given a closure converts the table to a phibble `DataFrame`, runs there, and converts the result back; `PolarsTable::$fallbacks` counts these conversions. See [Performance](performance.qmd) for their cost.
+Some steps cannot run in Polars, and the adapter runs them on a phibble `DataFrame` and converts the result back:
 
-`PolarsTable::fromTable()` throws when a list column would not round-trip exactly, for example when named arrays with different keys would become structs.
+- a verb given a PHP closure, because PHP code cannot run on Polars threads
+- any verb on a rowwise table
+- grouped verbs on factor keys that keep empty groups (phibble's `groupBy(drop: false)` or phplyr's `group_by(_drop: false)`), because Polars does not see empty groups
+- functions that the translator does not support, such as `str_to_title()`
+
+`PolarsTable::$fallbacks` counts these conversions. Set `PolarsTable::$strict = true` to throw `Phibble\Polars\PolarsFallback` instead; its message names the verb and the reason. [Performance](performance.qmd#where-the-time-goes) measures the cost of a fallback.
 
 ## Missing values
 
@@ -53,17 +84,13 @@ phibble and phplyr treat PHP `null` as R's `NA`, and a pipeline on a `PolarsTabl
 
 | Operation | phplyr, as in dplyr | phpolars, as in Polars |
 | --- | --- | --- |
-| `sum`, `mean`, `min`, `max`, `std` | `NA` if any value is `NA`, unless `na_rm: true` | Nulls are skipped. `col('x')->sum()` over `[1, null, 3]` is `4`. |
+| `sum`, `mean`, `min`, `max`, `std` | `NA` if any value is `NA`, unless `naRm: true` | Nulls are skipped. `col('x')->sum()` over `[1, null, 3]` is `4`. |
 | Counting | `n()` counts rows | `count()` counts non-null values; `len()` counts rows |
 | Comparison with `null` | `NA` | `null`. `eqMissing()` and `neMissing()` treat `null` as a value. |
 | Arithmetic with `null` | `NA` | `null` |
 | `filter` | A row whose condition is `NA` is dropped | A row whose condition is `null` is dropped |
 | Sorting | `NA` sorts last | `null` sorts first; pass `nullsLast: true` |
-| Join keys | `NA` matches `NA` unless `naMatches: false` | `null` matches nothing unless `nullsEqual: true` |
+| Join keys | `NA` matches `NA` unless `naMatches: 'never'` | `null` matches nothing unless `nullsEqual: true` |
 | `NaN` | `is.na()` is true for `NaN` | `NaN` is a float value. `isNull()` is false for it; use `isNan()`. |
 
 To get dplyr's results from phpolars, compare `nullCount()` with zero before aggregating, sort with `nullsLast: true`, and join with `nullsEqual: true`.
-
-## Moving data directly
-
-Without the backend, `DataFrame::fromPhibble($table)` reads any phibble table through `toColumns()`, and `$df->toPhibble()` returns a `Phibble\DataFrame`, which needs phibble v0.2 or later.

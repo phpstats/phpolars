@@ -18,93 +18,34 @@ $summary = $df
 print_r($summary->toDicts());
 ```
 
-phpolars is part of a family of PHP 8.3+ packages for data work. [phibble](https://github.com/phpstats/phibble) is a pure-PHP data frame, [phplyr](https://github.com/phpstats/phplyr) provides dplyr verbs over phibble tables, and phpolars is the optional fast backend. With phibble ^0.2, `Phibble\Polars\PolarsTable` runs phplyr pipelines on phpolars (see phibble's [Backends](https://phpstats.github.io/phibble/backends.html) page), and `DataFrame::fromPhibble()` and `toPhibble()` move data between a phpolars `DataFrame` and a `Phibble\DataFrame`.
+phpolars works on its own or through [phibble](https://phibble.phpstats.org) and [phplyr](https://phplyr.phpstats.org). phibble's `Phibble\Polars\PolarsTable` adapter, part of phibble, runs phibble tables and phplyr pipelines on this extension with dplyr's semantics.
 
 ## Requirements
 
-- PHP 8.3, 8.4, or 8.5, non-thread-safe (NTS) build, on Linux or macOS
-- To build from source: a stable Rust toolchain and libclang
+- PHP 8.3, 8.4, or 8.5
+- A non-thread-safe (NTS) PHP build
+- Linux or macOS
+- [PIE](https://github.com/php/pie)
+
+Prebuilt binaries cover Linux with glibc 2.34 or later on x86_64 and arm64. Other platforms, including macOS, build from source, which needs a stable Rust toolchain and libclang.
 
 ## Installing
 
-phpolars is not on Packagist yet, so build it from a checkout and load the library directly:
-
 ```sh
-git clone https://github.com/phpstats/phpolars && cd phpolars
-PHP=$(which php) PHP_CONFIG=$(which php-config) cargo build --release
-php -d extension=$PWD/target/release/libphp_polars.so script.php   # .dylib on macOS
+pie install phpstats/phpolars
+php -r 'echo phpversion("php_polars"), PHP_EOL;'
 ```
 
-The `-d` flag loads the extension for one run. To load it on every run, add `extension=$PWD/target/release/libphp_polars.so`, with the path written out in full, to the php.ini that `php --ini` reports.
+The second command prints the installed version. Restart PHP-FPM and queue workers after installing. [Deployment](https://phpolars.phpstats.org/docs/deployment) covers manual installs, Ubuntu and Laravel Forge, Laravel Herd, threads under PHP-FPM, and memory.
 
-On macOS with Homebrew, set `LIBCLANG_PATH=$(brew --prefix llvm)/lib`. If several PHP versions are installed, point `PHP` and `PHP_CONFIG` at the PHP you will load the extension into, because ext-php-rs builds against that PHP's headers. A build for one PHP version does not load in another. For deployment, build with `--profile dist` (fat LTO, stripped), which on macOS gives a 65 MB library instead of the 207 MB `release` build. [Deployment](https://phpstats.github.io/phpolars/deployment.html) covers Ubuntu and Laravel Forge, and Laravel Herd.
+## Documentation
 
-Releases attach prebuilt PHP 8.3, 8.4, and 8.5 binaries for Linux on x86_64 and arm64, built on Debian Bookworm. Copy `php_polars.so` into `php-config --extension-dir` and add `extension=php_polars.so` to php.ini. Once the package is on Packagist, `pie install phpstats/phpolars` will install a prebuilt binary or a source build with [PIE](https://github.com/php/pie).
-
-## API conventions
-
-- Methods use the py-polars name in camelCase: `with_columns` is `withColumns`, `group_by` is `groupBy`, and `to_dicts` is `toDicts`.
-- Functions use the py-polars name in snake_case in the `Phpolars` namespace: `col`, `lit`, `when`, `concat`, `read_csv`, `scan_parquet`, and `sum_horizontal`.
-- Named parameters use camelCase: `join($other, leftOn: 'id', rightOn: 'key', how: 'left')`.
-- Where py-polars takes `*exprs`, the method is variadic. Each argument is a column name, an `Expr`, a list of those, or an associative array `['alias' => Expr]` in place of py's `**named_exprs`.
-- PHP does not allow parameters after a variadic one. Methods that need both take a single argument that accepts a name, an `Expr`, or a list: `groupBy(['a', 'b'], maintainOrder: true)` and `over('g', orderBy: 'x')`.
-- Expression namespaces are methods: `col('s')->str()->contains('x')`, `col('t')->dt()->year()`, `col('v')->list()->len()`, and `col('p')->struct()->field('x')`. The same namespaces exist on `Series` and return a `Series`.
-- Strings in comparisons and arithmetic are literals (`col('g')->eq('a')`). Strings passed where py expects an expression input, such as `select()`, `then()`, and `groupBy()`, name columns. Use `lit('text')` for a string value in those places.
-- Data types use the py-polars names as strings: `'Int64'`, `'Float64'`, `'String'`, `'Date'`, `'Datetime(ms, UTC)'`, and `'List(Int64)'`. `Phpolars\DataType` has the same names as constants, such as `DataType::Int64`.
-- Defaults follow py-polars. `groupBy()` and `unique()` do not keep row order unless `maintainOrder: true` is passed.
-
-## Values
-
-Null is PHP `null`. Values convert as follows.
-
-| Polars | PHP |
-| --- | --- |
-| integer types | `int` (UInt64 values beyond `PHP_INT_MAX` become `float`) |
-| Float32, Float64 | `float` |
-| Boolean | `bool` |
-| String, Categorical | `string` |
-| Date, Datetime | `DateTimeImmutable` (naive values in UTC, zoned values in their zone) |
-| Time | `string`, `"HH:MM:SS.ffffff"` |
-| Duration | `int` in the column's time unit |
-| Decimal | `string` |
-| List, Array | list |
-| Struct | associative array |
-
-From PHP, each column gets one inferred type. Integers widen to floats, nulls fit any type, `DateTimeInterface` values become naive `Datetime(us)` on their wall-clock time (the zone is not kept; use `dt()->replaceTimeZone()` to attach one), lists become `List`, and associative arrays become `Struct`. Any other mix of types raises `SchemaError`. Pass a `schema` to set types explicitly.
-
-## Missing values
-
-phpolars follows Polars' null semantics, which differ from R's `NA` and therefore from phibble and phplyr. Aggregates such as `sum()` and `mean()` skip nulls, `count()` counts non-null values, `null` sorts first, and null join keys match nothing unless `nullsEqual: true`. A phplyr pipeline on `Phibble\Polars\PolarsTable` keeps dplyr's semantics. The [phibble and phplyr](https://phpstats.github.io/phpolars/phibble.html#missing-values) page compares the two in a table.
-
-## Errors
-
-Polars errors are thrown as subclasses of `Phpolars\PolarsError` named after the py-polars exceptions in `Phpolars\Exception`: `ColumnNotFoundError`, `ComputeError`, `DuplicateError`, `InvalidOperationError`, `NoDataError`, `OutOfBoundsError`, `SchemaError`, `SchemaFieldNotFoundError`, `ShapeError`, and `StructFieldNotFoundError`. Invalid arguments from PHP raise `ValueError`.
-
-## PHP-FPM and threads
-
-Polars runs queries on a thread pool. PHP-FPM workers are separate processes, so a pool in every worker multiplies quickly. The INI setting `php_polars.max_threads` caps the pool size per process. It defaults to 2 and can only be set in `php.ini`, because the pool starts once per process. An explicit `POLARS_MAX_THREADS` environment variable takes precedence. `Phpolars\thread_pool_size()` reports the size in effect.
-
-PHP closures never run on Polars threads. Every phpolars operation is built from expressions that Polars evaluates natively.
-
-Polars allocates memory with its own allocator, so that memory does not count against PHP's `memory_limit`. Reading a 1M-row CSV raises the process's resident memory to about 83 MB while `memory_get_peak_usage()` reports 2 MB. Size FPM pools by process memory, not by `memory_limit`.
-
-## Performance
-
-The benchmark in `bench/pipeline.php` reads a CSV, filters it, groups and aggregates it, and returns PHP arrays. It runs each implementation five times and reports the fastest run. On a 1M-row, 16 MB CSV on an Apple M5 Ultra:
-
-| Implementation | Time |
-| --- | --- |
-| phpolars, 1 thread | 49 ms |
-| phpolars, 2 threads (default) | 27 ms |
-| phpolars, 4 threads | 17 ms |
-| plain PHP arrays (`fgetcsv` loop) | 342 ms |
-
-All implementations produce the same result. Run it with:
-
-```sh
-php bench/make-csv.php 1000000 bench/data.csv
-php -d extension=... bench/pipeline.php bench/data.csv [path/to/phibble/vendor/autoload.php]
-```
+- [Getting started](https://phpolars.phpstats.org/docs/getting-started)
+- [Coming from py-polars](https://phpolars.phpstats.org/docs/coming-from-python)
+- [phibble and phplyr](https://phpolars.phpstats.org/docs/phibble), including how Polars' missing values differ from dplyr's
+- [Reference](https://phpolars.phpstats.org/docs/reference/dataframe)
+- [Compatibility and limitations](https://phpolars.phpstats.org/docs/compatibility)
+- [Performance](https://phpolars.phpstats.org/docs/performance)
 
 ## Binary size
 
@@ -143,13 +84,7 @@ The rows marked v0.1.0 were measured before the py-polars API was filled in: tim
 
 ## Development
 
-```sh
-scripts/test                       # build and run the test files
-PHIBBLE=../phibble/vendor/autoload.php scripts/test   # also round-trip through phibble
-php -d extension=... scripts/stubs.php > stubs/phpolars.php   # regenerate IDE stubs
-```
-
-`stubs/phpolars.php` holds signatures for IDEs and static analysis. It is generated from the extension's reflection data.
+[Development](https://phpolars.phpstats.org/docs/development) covers building from a checkout, the test suites, the py-polars fixtures, the docs, and the IDE stubs in `stubs/phpolars.php`.
 
 ## License
 

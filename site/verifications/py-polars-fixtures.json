@@ -437,7 +437,7 @@
             "passed": true
         },
         {
-            "name": "fill_null_value_frame",
+            "name": "fill_null_value_dataframe",
             "quantity": "6 rows × 4 columns",
             "n_compared": 24,
             "max_abs_error": 0.0,
@@ -469,7 +469,7 @@
             "passed": true
         },
         {
-            "name": "fill_null_frame_forward",
+            "name": "fill_null_dataframe_forward",
             "quantity": "6 rows × 3 columns",
             "n_compared": 18,
             "max_abs_error": 0.0,
@@ -653,7 +653,7 @@
             "passed": true
         },
         {
-            "name": "frame_sum",
+            "name": "dataframe_sum",
             "quantity": "1 rows × 4 columns",
             "n_compared": 4,
             "max_abs_error": 0.0,
@@ -661,7 +661,7 @@
             "passed": true
         },
         {
-            "name": "frame_mean",
+            "name": "dataframe_mean",
             "quantity": "1 rows × 3 columns",
             "n_compared": 3,
             "max_abs_error": 0.0,
@@ -669,7 +669,7 @@
             "passed": true
         },
         {
-            "name": "frame_min_max",
+            "name": "dataframe_min_max",
             "quantity": "2 rows × 4 columns",
             "n_compared": 8,
             "max_abs_error": 0.0,
@@ -677,7 +677,7 @@
             "passed": true
         },
         {
-            "name": "frame_std_var",
+            "name": "dataframe_std_var",
             "quantity": "2 rows × 2 columns",
             "n_compared": 4,
             "max_abs_error": 8.881784197001252e-16,
@@ -685,7 +685,7 @@
             "passed": true
         },
         {
-            "name": "frame_median",
+            "name": "dataframe_median",
             "quantity": "1 rows × 2 columns",
             "n_compared": 2,
             "max_abs_error": 0.0,
@@ -693,7 +693,7 @@
             "passed": true
         },
         {
-            "name": "frame_n_unique",
+            "name": "dataframe_n_unique",
             "quantity": "1 rows × 3 columns",
             "n_compared": 3,
             "max_abs_error": 0.0,
@@ -1165,7 +1165,7 @@
             "passed": true
         },
         {
-            "name": "cast_frame_map",
+            "name": "cast_dataframe_map",
             "quantity": "6 rows × 3 columns",
             "n_compared": 18,
             "max_abs_error": 0.0,
@@ -1413,7 +1413,7 @@
             "passed": true
         },
         {
-            "name": "rolling_frame",
+            "name": "rolling_dataframe",
             "quantity": "6 rows × 3 columns",
             "n_compared": 18,
             "max_abs_error": 0.0,
@@ -1421,7 +1421,7 @@
             "passed": true
         },
         {
-            "name": "rolling_frame_by",
+            "name": "rolling_dataframe_by",
             "quantity": "6 rows × 3 columns",
             "n_compared": 18,
             "max_abs_error": 0.0,
@@ -1573,7 +1573,7 @@
             "passed": true
         },
         {
-            "name": "frame_shift",
+            "name": "dataframe_shift",
             "quantity": "6 rows × 2 columns",
             "n_compared": 12,
             "max_abs_error": 0.0,
@@ -1581,7 +1581,7 @@
             "passed": true
         },
         {
-            "name": "frame_shift_fill",
+            "name": "dataframe_shift_fill",
             "quantity": "6 rows × 2 columns",
             "n_compared": 12,
             "max_abs_error": 0.0,
@@ -1589,7 +1589,7 @@
             "passed": true
         },
         {
-            "name": "frame_interpolate",
+            "name": "dataframe_interpolate",
             "quantity": "6 rows × 2 columns",
             "n_compared": 12,
             "max_abs_error": 0.0,
@@ -1597,7 +1597,7 @@
             "passed": true
         },
         {
-            "name": "frame_quantile_product",
+            "name": "dataframe_quantile_product",
             "quantity": "2 rows × 3 columns",
             "n_compared": 6,
             "max_abs_error": 0.0,
@@ -1605,7 +1605,7 @@
             "passed": true
         },
         {
-            "name": "frame_top_bottom_k",
+            "name": "dataframe_top_bottom_k",
             "quantity": "7 rows × 4 columns",
             "n_compared": 28,
             "max_abs_error": 0.0,
@@ -1613,7 +1613,7 @@
             "passed": true
         },
         {
-            "name": "frame_gather_every",
+            "name": "dataframe_gather_every",
             "quantity": "3 rows × 2 columns",
             "n_compared": 6,
             "max_abs_error": 0.0,
@@ -1621,7 +1621,7 @@
             "passed": true
         },
         {
-            "name": "frame_drop_nans",
+            "name": "dataframe_drop_nans",
             "quantity": "5 rows × 4 columns",
             "n_compared": 20,
             "max_abs_error": 0.0,
@@ -1629,7 +1629,7 @@
             "passed": true
         },
         {
-            "name": "frame_drop_nans_subset",
+            "name": "dataframe_drop_nans_subset",
             "quantity": "5 rows × 5 columns",
             "n_compared": 25,
             "max_abs_error": 0.0,
@@ -1637,7 +1637,7 @@
             "passed": true
         },
         {
-            "name": "frame_is_duplicated",
+            "name": "dataframe_is_duplicated",
             "quantity": "6 rows × 2 columns",
             "n_compared": 12,
             "max_abs_error": 0.0,
@@ -1645,7 +1645,7 @@
             "passed": true
         },
         {
-            "name": "frame_upsample",
+            "name": "dataframe_upsample",
             "quantity": "6 rows × 3 columns",
             "n_compared": 18,
             "max_abs_error": 0.0,
@@ -1653,7 +1653,7 @@
             "passed": true
         },
         {
-            "name": "frame_corr",
+            "name": "dataframe_corr",
             "quantity": "3 rows × 3 columns",
             "n_compared": 9,
             "max_abs_error": 4.996003610813204e-16,
@@ -1661,7 +1661,7 @@
             "passed": true
         },
         {
-            "name": "frame_insert_to_struct",
+            "name": "dataframe_insert_to_struct",
             "quantity": "3 rows × 3 columns",
             "n_compared": 9,
             "max_abs_error": 0.0,
@@ -1669,7 +1669,7 @@
             "passed": true
         },
         {
-            "name": "frame_approx_n_unique",
+            "name": "dataframe_approx_n_unique",
             "quantity": "1 rows × 2 columns",
             "n_compared": 2,
             "max_abs_error": 0.0,
@@ -1981,7 +1981,7 @@
             "passed": true
         },
         {
-            "name": "sql_frame",
+            "name": "sql_dataframe",
             "quantity": "4 rows × 3 columns",
             "n_compared": 12,
             "max_abs_error": 0.0,
@@ -2037,7 +2037,7 @@
             "passed": true
         },
         {
-            "name": "frame_to_dummies",
+            "name": "dataframe_to_dummies",
             "quantity": "6 rows × 9 columns",
             "n_compared": 54,
             "max_abs_error": 0.0,
@@ -2045,7 +2045,7 @@
             "passed": true
         },
         {
-            "name": "frame_to_dummies_opts",
+            "name": "dataframe_to_dummies_opts",
             "quantity": "6 rows × 2 columns",
             "n_compared": 12,
             "max_abs_error": 0.0,
@@ -2061,7 +2061,7 @@
             "passed": true
         },
         {
-            "name": "frame_horizontal",
+            "name": "dataframe_horizontal",
             "quantity": "6 rows × 4 columns",
             "n_compared": 24,
             "max_abs_error": 0.0,
@@ -2069,7 +2069,7 @@
             "passed": true
         },
         {
-            "name": "frame_clear",
+            "name": "dataframe_clear",
             "quantity": "2 rows × 2 columns",
             "n_compared": 4,
             "max_abs_error": 0.0,
@@ -2077,7 +2077,7 @@
             "passed": true
         },
         {
-            "name": "frame_replace_column",
+            "name": "dataframe_replace_column",
             "quantity": "2 rows × 2 columns",
             "n_compared": 4,
             "max_abs_error": 0.0,
@@ -2085,7 +2085,7 @@
             "passed": true
         },
         {
-            "name": "frame_column_index",
+            "name": "dataframe_column_index",
             "quantity": "1 scalar values",
             "n_compared": 1,
             "max_abs_error": 0.0,
@@ -2309,7 +2309,7 @@
             "passed": true
         },
         {
-            "name": "frame_remove",
+            "name": "dataframe_remove",
             "quantity": "3 rows × 2 columns",
             "n_compared": 6,
             "max_abs_error": 0.0,
@@ -2317,7 +2317,7 @@
             "passed": true
         },
         {
-            "name": "frame_gather",
+            "name": "dataframe_gather",
             "quantity": "3 rows × 2 columns",
             "n_compared": 6,
             "max_abs_error": 0.0,
@@ -2325,7 +2325,7 @@
             "passed": true
         },
         {
-            "name": "frame_merge_sorted",
+            "name": "dataframe_merge_sorted",
             "quantity": "6 rows × 2 columns",
             "n_compared": 12,
             "max_abs_error": 0.0,
@@ -2333,7 +2333,7 @@
             "passed": true
         },
         {
-            "name": "frame_update",
+            "name": "dataframe_update",
             "quantity": "6 rows × 3 columns",
             "n_compared": 18,
             "max_abs_error": 0.0,
@@ -2341,7 +2341,7 @@
             "passed": true
         },
         {
-            "name": "frame_update_nulls_full",
+            "name": "dataframe_update_nulls_full",
             "quantity": "7 rows × 3 columns",
             "n_compared": 21,
             "max_abs_error": 0.0,
@@ -2349,7 +2349,7 @@
             "passed": true
         },
         {
-            "name": "frame_update_by_row",
+            "name": "dataframe_update_by_row",
             "quantity": "6 rows × 2 columns",
             "n_compared": 12,
             "max_abs_error": 0.0,
@@ -2357,7 +2357,7 @@
             "passed": true
         },
         {
-            "name": "frame_iter_slices",
+            "name": "dataframe_iter_slices",
             "quantity": "6 rows × 2 columns",
             "n_compared": 12,
             "max_abs_error": 0.0,
@@ -2365,7 +2365,7 @@
             "passed": true
         },
         {
-            "name": "frame_map_rows",
+            "name": "dataframe_map_rows",
             "quantity": "6 rows × 2 columns",
             "n_compared": 12,
             "max_abs_error": 0.0,
@@ -2373,7 +2373,7 @@
             "passed": true
         },
         {
-            "name": "frame_map_rows_scalar",
+            "name": "dataframe_map_rows_scalar",
             "quantity": "6 rows × 1 columns",
             "n_compared": 6,
             "max_abs_error": 0.0,

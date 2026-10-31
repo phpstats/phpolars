@@ -2,16 +2,34 @@
   "package": "phpolars",
   "title": "phpolars",
   "tagline": "Polars data frames for PHP",
-  "summary": "phpolars is a PHP extension, written in Rust, that brings the Polars data frame engine to PHP. It follows the py-polars API: DataFrame, LazyFrame, Series, and expressions, with lazy queries, time series windows, joins, SQL, and readers for CSV, Parquet, JSON, and Arrow IPC. Queries run on Polars' multithreaded engine. It is also the engine behind phibble's PolarsTable, so phplyr pipelines can run in Polars.",
+  "summary": "phpolars is a PHP extension, written in Rust, that runs the Polars data frame library inside PHP. Its API follows py-polars: DataFrame, LazyFrame, Series, and expressions, with lazy queries, time series windows, joins, SQL, and readers and writers for CSV, Parquet, JSON, Arrow IPC, and PDO. Queries run on Polars' own threads. phibble's PolarsTable adapter uses the extension to run phibble tables and phplyr pipelines in Polars.",
   "install": [
     "pie install phpstats/phpolars"
   ],
-  "requires": [
-    "PHP 8.3+, NTS build",
-    "macOS or Linux",
-    "PIE",
-    "Rust toolchain and libclang on macOS"
+  "php": [
+    "8.3",
+    "8.4",
+    "8.5"
   ],
+  "requires": [
+    "PIE"
+  ],
+  "optional": [],
+  "build": [
+    "Rust toolchain",
+    "libclang"
+  ],
+  "platforms": [
+    "Linux",
+    "macOS",
+    "NTS (non-thread-safe) PHP"
+  ],
+  "verify": {
+    "command": "php -r 'echo phpversion(\"php_polars\"), PHP_EOL;'",
+    "output": "0.2.0",
+    "note": "This checks the CLI. PHP-FPM reads its own php.ini and loads extensions when it starts, so restart FPM after installing and check it with a web request."
+  },
+  "quickstart": "getting-started",
   "repository": "https://github.com/phpstats/phpolars",
   "example": {
     "chain": "use function Phpolars\\{col, len, read_csv};\n\n$sales = read_csv('sales.csv', tryParseDates: true);\n\n$top = $sales\n    ->filter(col('units')->gt(0))\n    ->withColumns(col('units')->mul(col('price'))->alias('revenue'))\n    ->groupBy('product', maintainOrder: true)\n    ->agg(col('revenue')->sum()->round(2), ['orders' => len()], col('price')->mean()->round(2)->alias('avg_price'))\n    ->sort('revenue', descending: true);\n\necho $top;\n",
@@ -35,6 +53,14 @@
         "path": "coming-from-python.qmd"
       },
       {
+        "title": "phibble and phplyr",
+        "path": "phibble.qmd"
+      },
+      {
+        "title": "Deployment",
+        "path": "deployment.qmd"
+      },
+      {
         "title": "DataFrame and LazyFrame",
         "path": "reference/dataframe.qmd"
       },
@@ -55,12 +81,8 @@
         "path": "reference/types.qmd"
       },
       {
-        "title": "phibble and phplyr",
-        "path": "phibble.qmd"
-      },
-      {
-        "title": "Deployment",
-        "path": "deployment.qmd"
+        "title": "Compatibility and limitations",
+        "path": "compatibility.qmd"
       },
       {
         "title": "Performance",
@@ -109,6 +131,5 @@
       ],
       "script": "site/vignettes/time-series.php"
     }
-  ],
-  "optional": []
+  ]
 }

@@ -2,7 +2,12 @@
 title: "Series"
 ---
 
-A `Series` is one named column. Aggregations return PHP values; element-wise methods return a new `Series`. The `str()`, `dt()`, `list()`, and `struct()` namespaces work on a `Series` and return a `Series`.
+A `Series` is one named column. Its methods never change it in place.
+
+- Aggregations return a PHP value: `sum()`, `mean()`, `median()`, `min()`, `max()`, `std()`, `count()` (non-null values), `nullCount()`, `nUnique()`, and `len()`. They skip nulls, so `sum()` over `[3, null, 1]` is `4` and `count()` is `2`.
+- Element-wise and reordering methods, such as `add()`, `sort()`, `unique()`, and `cumSum()`, return a new `Series`.
+- The `str()`, `dt()`, `list()`, and `struct()` namespaces work on a `Series` and return a `Series`.
+- `toList()` returns the values as a PHP list, converted as [Types and values](types.qmd) describes.
 
 {{< include ../examples/_series.md >}}
 

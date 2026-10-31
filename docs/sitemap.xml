@@ -2,11 +2,11 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://phpstats.github.io/phpolars/reference/types.html</loc>
-    <lastmod>2026-10-17T20:02:21.110Z</lastmod>
+    <lastmod>2026-10-31T14:47:46.668Z</lastmod>
   </url>
   <url>
     <loc>https://phpstats.github.io/phpolars/reference/io.html</loc>
-    <lastmod>2026-10-17T20:02:21.109Z</lastmod>
+    <lastmod>2026-10-31T14:47:54.773Z</lastmod>
   </url>
   <url>
     <loc>https://phpstats.github.io/phpolars/reference/dataframe.html</loc>
@@ -14,38 +14,42 @@
   </url>
   <url>
     <loc>https://phpstats.github.io/phpolars/performance.html</loc>
-    <lastmod>2026-10-31T00:04:53.335Z</lastmod>
+    <lastmod>2026-10-31T14:47:22.691Z</lastmod>
   </url>
   <url>
     <loc>https://phpstats.github.io/phpolars/getting-started.html</loc>
-    <lastmod>2026-10-30T19:57:06.268Z</lastmod>
+    <lastmod>2026-10-31T14:44:29.314Z</lastmod>
   </url>
   <url>
     <loc>https://phpstats.github.io/phpolars/deployment.html</loc>
-    <lastmod>2026-10-30T23:25:36.728Z</lastmod>
+    <lastmod>2026-10-31T14:45:06.556Z</lastmod>
   </url>
   <url>
     <loc>https://phpstats.github.io/phpolars/coming-from-python.html</loc>
-    <lastmod>2026-10-17T20:02:21.105Z</lastmod>
+    <lastmod>2026-10-31T14:48:27.875Z</lastmod>
+  </url>
+  <url>
+    <loc>https://phpstats.github.io/phpolars/compatibility.html</loc>
+    <lastmod>2026-10-31T14:46:32.858Z</lastmod>
   </url>
   <url>
     <loc>https://phpstats.github.io/phpolars/development.html</loc>
-    <lastmod>2026-10-17T20:02:21.106Z</lastmod>
+    <lastmod>2026-10-31T14:48:06.846Z</lastmod>
   </url>
   <url>
     <loc>https://phpstats.github.io/phpolars/index.html</loc>
-    <lastmod>2026-10-19T15:18:00.431Z</lastmod>
+    <lastmod>2026-10-31T14:44:19.702Z</lastmod>
   </url>
   <url>
     <loc>https://phpstats.github.io/phpolars/phibble.html</loc>
-    <lastmod>2026-10-30T18:30:58.414Z</lastmod>
+    <lastmod>2026-10-31T14:45:57.674Z</lastmod>
   </url>
   <url>
     <loc>https://phpstats.github.io/phpolars/reference/expressions.html</loc>
-    <lastmod>2026-10-21T03:58:04.874Z</lastmod>
+    <lastmod>2026-10-31T14:47:46.668Z</lastmod>
   </url>
   <url>
     <loc>https://phpstats.github.io/phpolars/reference/series.html</loc>
-    <lastmod>2026-10-17T20:02:21.110Z</lastmod>
+    <lastmod>2026-10-31T14:47:46.667Z</lastmod>
   </url>
 </urlset>

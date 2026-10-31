@@ -158,21 +158,44 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
  <span class="menu-text">Getting started</span></a>
   </div>
 </li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../coming-from-python.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Coming from py-polars</span></a>
-  </div>
-</li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
- <span class="menu-text">Reference</span></a>
+ <span class="menu-text">Guides</span></a>
           <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
       <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../coming-from-python.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Coming from py-polars</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../phibble.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">phibble and phplyr</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../deployment.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Deployment</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">Reference</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../reference/dataframe.html" class="sidebar-item-text sidebar-link">
@@ -207,28 +230,44 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../phibble.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">phibble and phplyr</span></a>
+  <a href="../compatibility.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Compatibility and limitations</span></a>
   </div>
 </li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../deployment.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Deployment</span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
+ <span class="menu-text">Benchmarks and verification</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../performance.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Performance</span></a>
   </div>
 </li>
-        <li class="sidebar-item">
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
+ <span class="menu-text">Contributing</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../development.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Development</span></a>
   </div>
 </li>
+      </ul>
+  </li>
     </ul>
     </div>
 </nav>
@@ -239,7 +278,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#windows-and-order" id="toc-windows-and-order" class="nav-link active" data-scroll-target="#windows-and-order">Windows and order</a></li>
+  <li><a href="#missing-values" id="toc-missing-values" class="nav-link active" data-scroll-target="#missing-values">Missing values</a></li>
+  <li><a href="#windows-and-order" id="toc-windows-and-order" class="nav-link" data-scroll-target="#windows-and-order">Windows and order</a></li>
   <li><a href="#strings" id="toc-strings" class="nav-link" data-scroll-target="#strings">Strings</a></li>
   <li><a href="#dates-and-times" id="toc-dates-and-times" class="nav-link" data-scroll-target="#dates-and-times">Dates and times</a></li>
   <li><a href="#lists-and-structs" id="toc-lists-and-structs" class="nav-link" data-scroll-target="#lists-and-structs">Lists and structs</a></li>
@@ -286,6 +326,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <p>An <code>Expr</code> describes a computation on columns. Expressions are built with <code>col()</code>, <code>lit()</code>, <code>when()</code>, and the other functions below, and are evaluated by verbs such as <code>select()</code>, <code>withColumns()</code>, <code>filter()</code>, and <code>agg()</code>. They never hold PHP closures, so Polars runs them on its own threads.</p>
 <p>Operands of comparison and arithmetic methods may be an <code>Expr</code> or a PHP value. PHP strings there are string literals.</p>
+<section id="missing-values" class="level2">
+<h2 class="anchored" data-anchor-id="missing-values">Missing values</h2>
+<p>Expressions follow Polars’ null semantics. Arithmetic and comparisons with <code>null</code> give <code>null</code>. Aggregations such as <code>sum()</code>, <code>mean()</code>, <code>min()</code>, and <code>max()</code> skip nulls, <code>count()</code> counts non-null values, and <code>len()</code> counts rows. <code>filter()</code> drops rows whose condition is <code>null</code>. <code>isNull()</code>, <code>fillNull()</code>, <code>dropNulls()</code>, <code>eqMissing()</code>, and <code>neMissing()</code> handle nulls explicitly. <code>NaN</code> is a float value, so <code>isNull()</code> is false for it and <code>isNan()</code> is true. <a href="../phibble.html#missing-values">phibble and phplyr</a> compares these rules with dplyr’s.</p>
+</section>
 <section id="windows-and-order" class="level2">
 <h2 class="anchored" data-anchor-id="windows-and-order">Windows and order</h2>
 <p><code>over()</code> evaluates an expression within groups and maps the result back to every row. <code>orderBy</code> sets the order for order-dependent expressions such as <code>cumSum()</code> and <code>shift()</code>.</p>

@@ -3,19 +3,26 @@ title: "phpolars"
 subtitle: "Polars data frames for PHP"
 ---
 
-phpolars brings [Polars](https://pola.rs) to PHP as a native extension written in Rust. It follows the py-polars API: the same classes, methods, and semantics, with camelCase method names and snake_case functions. A test suite compares 314 cases against py-polars 1.43.2, and all of them match.
+phpolars is a PHP extension, written in Rust, that runs [Polars](https://pola.rs) inside PHP. Polars is a columnar data frame library: a `DataFrame` holds typed columns, and expressions such as `col('units')->mul(col('price'))` describe computations that Polars runs on its own threads, outside PHP. A query that reads a CSV file, filters it, and groups it runs in Polars. PHP values are created only when the code asks for them, for example with `toDicts()`.
+
+The API follows py-polars, Polars' Python package, with camelCase method names and snake_case functions. The test suite compares 314 cases with py-polars 1.43.2, and all of them match; [Compatibility and limitations](compatibility.qmd) lists what that comparison covers and what phpolars leaves out.
 
 {{< include examples/_quickstart.md >}}
 
 ## What it includes
 
-- `DataFrame` and `LazyFrame` with py-polars' verbs: `select`, `withColumns`, `filter`, `sort`, `groupBy`/`agg`, `join`, `unique`, `pivot`, `unpivot`, `explode`, `describe`, and more.
+- `DataFrame` and `LazyFrame` with py-polars' methods: `select`, `withColumns`, `filter`, `sort`, `groupBy`/`agg`, `join`, `unique`, `pivot`, `unpivot`, `explode`, `describe`, and more.
 - Expressions with arithmetic, three-valued logic, aggregations, window functions (`over`), `when`/`then`/`otherwise`, and the `str`, `dt`, `list`, `struct`, and `name` namespaces.
 - `Series`, with the same expression methods.
-- CSV, Parquet, JSON, NDJSON, and Arrow IPC reading and writing, with lazy scans and streaming sinks.
+- CSV, Parquet, JSON, NDJSON, and Arrow IPC reading and writing, with lazy scans and streaming sinks, and reading and writing through PDO.
+- SQL queries over data frames.
 - A thread-pool cap for PHP-FPM (`php_polars.max_threads`).
-- A backend for [phibble](https://phpstats.github.io/phibble/), `Phibble\Polars\PolarsTable`, that runs [phplyr](https://phpstats.github.io/phplyr/) pipelines in Polars. It ships with phibble ^0.2; see phibble's [Backends](https://phpstats.github.io/phibble/backends.html) page.
 
-## The family
+## The phpolars API or phibble and phplyr
 
-phpolars is one of a set of PHP 8.3+ packages for data work. phibble is a pure-PHP data frame and the shared table contract. phplyr adds dplyr verbs on top of it. [phit](https://github.com/phpstats/phit) fits regression and mixed models. phpolars is the optional fast backend: install it when the data is large or the pipeline is heavy, and keep using phplyr's verbs.
+phpolars can be used directly or through [phibble](https://phibble.phpstats.org) and [phplyr](https://phplyr.phpstats.org).
+
+- The phpolars API (`Phpolars\DataFrame`, `LazyFrame`, `Series`, and expressions) follows Polars and its semantics. A missing value is `null`, and aggregates skip it.
+- phibble's `Phibble\Polars\PolarsTable` adapter runs phibble tables and phplyr pipelines in Polars. It belongs to phibble, and phpolars supplies the extension that it runs on. The pipeline keeps dplyr's semantics, in which `null` is R's `NA`, and the same code also runs on phibble's in-memory `DataFrame` and on SQL tables.
+
+[phibble and phplyr](phibble.qmd) covers the adapter and the differences between the two sets of semantics.

@@ -23,6 +23,15 @@ Data types are written as py-polars names: `'Int8'` … `'Int64'`, `'UInt8'` …
 | List, Array | list |
 | Struct | associative array |
 
+Details of the conversion:
+
+- Integer precision: Int8 through Int64 and UInt8 through UInt32 fit PHP's 64-bit `int`. UInt64, Int128, and UInt128 values beyond `PHP_INT_MAX` become `float`, as PHP's own integer overflow does, so they lose precision above 2^53.
+- Decimal: values come back as strings, such as `"1.25"` for `Decimal(10, 2)`, so no precision is lost.
+- Time units: `Datetime` defaults to microseconds. `Datetime(ms)` and `Datetime(ns)` keep their unit inside Polars, and PHP's `DateTimeImmutable` holds microseconds. A `Duration` comes back as an integer count of its unit: 1.5 seconds in `Duration(ms)` is `1500`.
+- Time zones: a naive `Datetime` comes back in UTC. A zoned `Datetime`, such as `Datetime(us, America/New_York)`, comes back in its zone.
+- Null and NaN: `null` is a missing value of any type. `NaN` is a float value, and `isNull()` is false for it.
+- Lists and structs: a `List` or `Array` value is a PHP list, and a `Struct` value is an associative array keyed by field name.
+
 From PHP, each column gets one inferred type. Integers widen to floats, nulls fit any type, `DateTimeInterface` values become naive `Datetime(us)` on their wall-clock time (the zone is not kept; use `dt()->replaceTimeZone()` to attach one), lists become `List`, and associative arrays become `Struct`. Any other mix raises `SchemaError`; pass a `schema` to set types.
 
 ## Errors
