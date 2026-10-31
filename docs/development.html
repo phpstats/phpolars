@@ -331,7 +331,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="documentation" class="level2">
 <h2 class="anchored" data-anchor-id="documentation">Documentation</h2>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">scripts/render-docs</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>This runs every <code>docs/examples/*.php</code> against the release build and embeds its output, regenerates the reference signatures from the extension (<code>scripts/docs-reference.php</code>), renders the site with Quarto, and copies it into <code>docs/</code> for GitHub Pages.</p>
+<p>This runs every <code>docs/examples/*.php</code> against the release build and embeds its output, regenerates the reference signatures from the extension (<code>scripts/docs-reference.php</code>), renders the site with Quarto, and copies it into <code>docs/</code>. phpolars.phpstats.org imports the rendered HTML from <code>main:/docs</code>, so commit it. GitHub Pages serves only redirects to phpolars.phpstats.org, from <code>.github/workflows/pages.yml</code>.</p>
 </section>
 <section id="stubs" class="level2">
 <h2 class="anchored" data-anchor-id="stubs">Stubs</h2>
@@ -415,7 +415,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     }
       var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
       var mailtoRegex = new RegExp(/^mailto:/);
-        var filterRegex = new RegExp("https:\/\/phpstats\.github\.io\/phpolars\/");
+        var filterRegex = new RegExp("https:\/\/phpolars\.phpstats\.org\/docs");
       var isInternal = (href) => {
           return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
       }

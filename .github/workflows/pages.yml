@@ -1,0 +1,62 @@
+name: Pages redirect
+# The docs live at https://phpolars.phpstats.org/docs, which imports the
+# rendered HTML from main:/docs. GitHub Pages serves a redirect for each page.
+on:
+  push:
+    branches: [main]
+    paths: ['docs/**', '.github/workflows/pages.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+concurrency:
+  group: pages
+  cancel-in-progress: true
+jobs:
+  deploy:
+    runs-on: ubuntu-24.04
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Write a redirect for each page
+        run: |
+          python3 - <<'PY'
+          from html import escape
+          from pathlib import Path
+          base = 'https://phpolars.phpstats.org/docs'
+          out = Path('_pages')
+          for page in Path('docs').rglob('*.html'):
+              rel = page.relative_to('docs')
+              if rel.parts[0] in ('_site', 'site_libs'):
+                  continue
+              path = rel.with_suffix('').as_posix()
+              if path == 'index':
+                  target = base
+              elif path.endswith('/index'):
+                  target = f'{base}/{path[:-len("/index")]}'
+              else:
+                  target = f'{base}/{path}'
+              t = escape(target, quote=True)
+              dest = out / rel
+              dest.parent.mkdir(parents=True, exist_ok=True)
+              dest.write_text(
+                  '<!DOCTYPE html>\n<html lang="en"><head><meta charset="utf-8">\n'
+                  f'<title>Moved to {t}</title>\n'
+                  f'<link rel="canonical" href="{t}">\n'
+                  f'<meta http-equiv="refresh" content="0; url={t}">\n'
+                  f'<meta name="robots" content="noindex">\n'
+                  f'</head><body><p>The phpolars documentation is now at <a href="{t}">{t}</a>.</p></body></html>\n')
+          for extra in ('sitemap.xml', 'robots.txt'):
+              if Path('docs', extra).is_file():
+                  (out / extra).write_bytes(Path('docs', extra).read_bytes())
+          (out / '.nojekyll').touch()
+          print(len(list(out.rglob('*.html'))), 'redirects')
+          PY
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _pages
+      - id: deployment
+        uses: actions/deploy-pages@v4

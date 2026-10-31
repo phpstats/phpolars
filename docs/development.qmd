@@ -38,7 +38,7 @@ py-polars 1.43.2 is the release whose Rust core is closest to the pinned Polars 
 scripts/render-docs
 ```
 
-This runs every `docs/examples/*.php` against the release build and embeds its output, regenerates the reference signatures from the extension (`scripts/docs-reference.php`), renders the site with Quarto, and copies it into `docs/` for GitHub Pages.
+This runs every `docs/examples/*.php` against the release build and embeds its output, regenerates the reference signatures from the extension (`scripts/docs-reference.php`), renders the site with Quarto, and copies it into `docs/`. phpolars.phpstats.org imports the rendered HTML from `main:/docs`, so commit it. GitHub Pages serves only redirects to phpolars.phpstats.org, from `.github/workflows/pages.yml`.
 
 ## Stubs
 

@@ -8,7 +8,7 @@ project:
     - data/*.csv
 
 website:
-  site-url: "https://phpstats.github.io/phpolars/"
+  site-url: "https://phpolars.phpstats.org/docs"
   title: "phpolars"
   repo-url: "https://github.com/phpstats/phpolars"
   sidebar:

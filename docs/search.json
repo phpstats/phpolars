@@ -595,7 +595,7 @@
     "href": "development.html#documentation",
     "title": "Development",
     "section": "Documentation",
-    "text": "Documentation\nscripts/render-docs\nThis runs every docs/examples/*.php against the release build and embeds its output, regenerates the reference signatures from the extension (scripts/docs-reference.php), renders the site with Quarto, and copies it into docs/ for GitHub Pages.",
+    "text": "Documentation\nscripts/render-docs\nThis runs every docs/examples/*.php against the release build and embeds its output, regenerates the reference signatures from the extension (scripts/docs-reference.php), renders the site with Quarto, and copies it into docs/. phpolars.phpstats.org imports the rendered HTML from main:/docs, so commit it. GitHub Pages serves only redirects to phpolars.phpstats.org, from .github/workflows/pages.yml.",
     "crumbs": [
       "Contributing",
       "Development"

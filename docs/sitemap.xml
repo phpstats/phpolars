@@ -1,55 +1,55 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://phpstats.github.io/phpolars/reference/types.html</loc>
+    <loc>https://phpolars.phpstats.org/docs/reference/types.html</loc>
     <lastmod>2026-10-31T14:47:46.668Z</lastmod>
   </url>
   <url>
-    <loc>https://phpstats.github.io/phpolars/reference/io.html</loc>
+    <loc>https://phpolars.phpstats.org/docs/reference/io.html</loc>
     <lastmod>2026-10-31T14:47:54.773Z</lastmod>
   </url>
   <url>
-    <loc>https://phpstats.github.io/phpolars/reference/dataframe.html</loc>
+    <loc>https://phpolars.phpstats.org/docs/reference/dataframe.html</loc>
     <lastmod>2026-10-21T03:58:04.873Z</lastmod>
   </url>
   <url>
-    <loc>https://phpstats.github.io/phpolars/performance.html</loc>
+    <loc>https://phpolars.phpstats.org/docs/performance.html</loc>
     <lastmod>2026-10-31T14:47:22.691Z</lastmod>
   </url>
   <url>
-    <loc>https://phpstats.github.io/phpolars/getting-started.html</loc>
+    <loc>https://phpolars.phpstats.org/docs/getting-started.html</loc>
     <lastmod>2026-10-31T14:44:29.314Z</lastmod>
   </url>
   <url>
-    <loc>https://phpstats.github.io/phpolars/deployment.html</loc>
+    <loc>https://phpolars.phpstats.org/docs/deployment.html</loc>
     <lastmod>2026-10-31T14:45:06.556Z</lastmod>
   </url>
   <url>
-    <loc>https://phpstats.github.io/phpolars/coming-from-python.html</loc>
+    <loc>https://phpolars.phpstats.org/docs/coming-from-python.html</loc>
     <lastmod>2026-10-31T14:48:27.875Z</lastmod>
   </url>
   <url>
-    <loc>https://phpstats.github.io/phpolars/compatibility.html</loc>
+    <loc>https://phpolars.phpstats.org/docs/compatibility.html</loc>
     <lastmod>2026-10-31T14:46:32.858Z</lastmod>
   </url>
   <url>
-    <loc>https://phpstats.github.io/phpolars/development.html</loc>
-    <lastmod>2026-10-31T14:48:06.846Z</lastmod>
+    <loc>https://phpolars.phpstats.org/docs/development.html</loc>
+    <lastmod>2026-10-31T17:18:33.945Z</lastmod>
   </url>
   <url>
-    <loc>https://phpstats.github.io/phpolars/index.html</loc>
+    <loc>https://phpolars.phpstats.org/docs/index.html</loc>
     <lastmod>2026-10-31T14:44:19.702Z</lastmod>
   </url>
   <url>
-    <loc>https://phpstats.github.io/phpolars/phibble.html</loc>
+    <loc>https://phpolars.phpstats.org/docs/phibble.html</loc>
     <lastmod>2026-10-31T14:45:57.674Z</lastmod>
   </url>
   <url>
-    <loc>https://phpstats.github.io/phpolars/reference/expressions.html</loc>
+    <loc>https://phpolars.phpstats.org/docs/reference/expressions.html</loc>
     <lastmod>2026-10-31T14:47:46.668Z</lastmod>
   </url>
   <url>
-    <loc>https://phpstats.github.io/phpolars/reference/series.html</loc>
+    <loc>https://phpolars.phpstats.org/docs/reference/series.html</loc>
     <lastmod>2026-10-31T14:47:46.667Z</lastmod>
   </url>
 </urlset>
