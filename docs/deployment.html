@@ -285,7 +285,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </ul></li>
   <li><a href="#ubuntu-and-laravel-forge" id="toc-ubuntu-and-laravel-forge" class="nav-link" data-scroll-target="#ubuntu-and-laravel-forge">Ubuntu and Laravel Forge</a></li>
   <li><a href="#laravel-herd" id="toc-laravel-herd" class="nav-link" data-scroll-target="#laravel-herd">Laravel Herd</a></li>
-  <li><a href="#building-from-source-by-hand" id="toc-building-from-source-by-hand" class="nav-link" data-scroll-target="#building-from-source-by-hand">Building from source by hand</a></li>
+  <li><a href="#building-from-source-by-hand" id="toc-building-from-source-by-hand" class="nav-link" data-scroll-target="#building-from-source-by-hand">Building from source by hand</a>
+  <ul class="collapse">
+  <li><a href="#optional-formats" id="toc-optional-formats" class="nav-link" data-scroll-target="#optional-formats">Optional formats</a></li>
+  </ul></li>
   <li><a href="#threads-under-php-fpm" id="toc-threads-under-php-fpm" class="nav-link" data-scroll-target="#threads-under-php-fpm">Threads under PHP-FPM</a></li>
   <li><a href="#memory" id="toc-memory" class="nav-link" data-scroll-target="#memory">Memory</a></li>
   <li><a href="#checking-an-installation" id="toc-checking-an-installation" class="nav-link" data-scroll-target="#checking-an-installation">Checking an installation</a></li>
@@ -370,6 +373,45 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="va">PHP</span><span class="op">=</span><span class="va">$(</span><span class="fu">which</span> php<span class="va">)</span> <span class="va">PHP_CONFIG</span><span class="op">=</span><span class="va">$(</span><span class="fu">which</span> php-config<span class="va">)</span> <span class="ex">cargo</span> build <span class="at">--profile</span> dist</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Copy <code>target/dist/libphp_polars.so</code>, or <code>libphp_polars.dylib</code> on macOS, into <code>php-config --extension-dir</code> as <code>php_polars.so</code>, and add <code>extension=php_polars.so</code> to the php.ini that <code>php --ini</code> reports. On macOS with Homebrew, also set <code>LIBCLANG_PATH=$(brew --prefix llvm)/lib</code>. When several PHP versions are installed, point <code>PHP</code> and <code>PHP_CONFIG</code> at the PHP that will load the extension, because the build uses that PHP’s headers.</p>
 <p>Build with <code>--profile dist</code> for anything you deploy. The <code>dist</code> profile applies fat LTO, <code>opt-level = "s"</code>, and symbol stripping. On macOS the <code>dist</code> library is 65 MB and the <code>release</code> library is 207 MB, because <code>release</code> skips LTO and keeps the symbol table.</p>
+<section id="optional-formats" class="level3">
+<h3 class="anchored" data-anchor-id="optional-formats">Optional formats</h3>
+<p>The release binaries and a default build include every format. A source build can leave formats out with Cargo features to make the library smaller:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Feature</th>
+<th>Provides</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>parquet</code></td>
+<td><code>read_parquet</code>, <code>scan_parquet</code>, <code>writeParquet</code>, and <code>sinkParquet</code></td>
+</tr>
+<tr class="even">
+<td><code>json</code></td>
+<td><code>read_json</code>, <code>read_ndjson</code>, <code>writeJson</code>, and <code>writeNdjson</code></td>
+</tr>
+<tr class="odd">
+<td><code>ipc</code></td>
+<td>Arrow IPC (Feather) reading and writing. It also enables <code>parquet</code>, which Polars 0.55’s IPC reader needs.</td>
+</tr>
+<tr class="even">
+<td><code>fmt</code></td>
+<td>the table layout that <code>__toString()</code> prints</td>
+</tr>
+<tr class="odd">
+<td><code>sql</code></td>
+<td><code>SQLContext</code>, <code>DataFrame::sql()</code>, <code>LazyFrame::sql()</code>, and <code>Phpolars\sql()</code></td>
+</tr>
+</tbody>
+</table>
+<p>For example, <code>cargo build --profile dist --no-default-features --features parquet</code> builds an extension with CSV and Parquet only. The Parquet, IPC, and JSON functions of a build without that feature raise a <code>ComputeError</code>. <a href="./performance.html#binary-size">Performance</a> lists the size of each build.</p>
+</section>
 </section>
 <section id="threads-under-php-fpm" class="level2">
 <h2 class="anchored" data-anchor-id="threads-under-php-fpm">Threads under PHP-FPM</h2>

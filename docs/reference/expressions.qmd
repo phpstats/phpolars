@@ -6,6 +6,10 @@ An `Expr` describes a computation on columns. Expressions are built with `col()`
 
 Operands of comparison and arithmetic methods may be an `Expr` or a PHP value. PHP strings there are string literals.
 
+## Method index
+
+{{< include _index-expressions.md >}}
+
 ## Missing values
 
 Expressions follow Polars' null semantics. Arithmetic and comparisons with `null` give `null`. Aggregations such as `sum()`, `mean()`, `min()`, and `max()` skip nulls, `count()` counts non-null values, and `len()` counts rows. `filter()` drops rows whose condition is `null`. `isNull()`, `fillNull()`, `dropNulls()`, `eqMissing()`, and `neMissing()` handle nulls explicitly. `NaN` is a float value, so `isNull()` is false for it and `isNan()` is true. [phibble and phplyr](../phibble.qmd#missing-values) compares these rules with dplyr's.

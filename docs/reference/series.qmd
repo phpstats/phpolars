@@ -13,4 +13,6 @@ A `Series` is one named column. Its methods never change it in place.
 
 ## Methods
 
+{{< include _index-series.md >}}
+
 {{< include _api-series.md >}}

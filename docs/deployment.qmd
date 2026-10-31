@@ -81,6 +81,20 @@ Copy `target/dist/libphp_polars.so`, or `libphp_polars.dylib` on macOS, into `ph
 
 Build with `--profile dist` for anything you deploy. The `dist` profile applies fat LTO, `opt-level = "s"`, and symbol stripping. On macOS the `dist` library is 65 MB and the `release` library is 207 MB, because `release` skips LTO and keeps the symbol table.
 
+### Optional formats
+
+The release binaries and a default build include every format. A source build can leave formats out with Cargo features to make the library smaller:
+
+| Feature | Provides |
+| --- | --- |
+| `parquet` | `read_parquet`, `scan_parquet`, `writeParquet`, and `sinkParquet` |
+| `json` | `read_json`, `read_ndjson`, `writeJson`, and `writeNdjson` |
+| `ipc` | Arrow IPC (Feather) reading and writing. It also enables `parquet`, which Polars 0.55's IPC reader needs. |
+| `fmt` | the table layout that `__toString()` prints |
+| `sql` | `SQLContext`, `DataFrame::sql()`, `LazyFrame::sql()`, and `Phpolars\sql()` |
+
+For example, `cargo build --profile dist --no-default-features --features parquet` builds an extension with CSV and Parquet only. The Parquet, IPC, and JSON functions of a build without that feature raise a `ComputeError`. [Performance](performance.qmd#binary-size) lists the size of each build.
+
 ## Threads under PHP-FPM
 
 Polars runs queries on a thread pool. FPM workers are separate processes, so each worker that uses phpolars starts its own pool. The INI setting caps the pool per process:

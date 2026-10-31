@@ -1,463 +1,441 @@
-### `Phpolars\Expr`
+### `Phpolars\Expr` {#expr}
 
-```php
-__toString(): string
-abs(): Phpolars\Expr
-add(mixed $other): Phpolars\Expr
-alias(string $name): Phpolars\Expr
-all(?bool $ignoreNulls = null): Phpolars\Expr
-and(mixed $other): Phpolars\Expr
-any(?bool $ignoreNulls = null): Phpolars\Expr
-append(mixed $other, ?bool $upcast = null): Phpolars\Expr
-approxNUnique(): Phpolars\Expr
-arccos(): Phpolars\Expr
-arccosh(): Phpolars\Expr
-arcsin(): Phpolars\Expr
-arcsinh(): Phpolars\Expr
-arctan(): Phpolars\Expr
-arctanh(): Phpolars\Expr
-argMax(): Phpolars\Expr
-argMin(): Phpolars\Expr
-argSort(?bool $descending = null, ?bool $nullsLast = null): Phpolars\Expr
-argTrue(): Phpolars\Expr
-argUnique(): Phpolars\Expr
-arr(): Phpolars\ArrayNameSpace
-backwardFill(?int $limit = null): Phpolars\Expr
-bin(): Phpolars\BinaryNameSpace
-bitwiseAnd(): Phpolars\Expr
-bitwiseCountOnes(): Phpolars\Expr
-bitwiseCountZeros(): Phpolars\Expr
-bitwiseLeadingOnes(): Phpolars\Expr
-bitwiseLeadingZeros(): Phpolars\Expr
-bitwiseOr(): Phpolars\Expr
-bitwiseTrailingOnes(): Phpolars\Expr
-bitwiseTrailingZeros(): Phpolars\Expr
-bitwiseXor(): Phpolars\Expr
-bottomK(?int $k = null): Phpolars\Expr
-bottomKBy(mixed $by, ?int $k = null, mixed $reverse = null): Phpolars\Expr
-cast(string $dtype, ?bool $strict = null): Phpolars\Expr
-cat(): Phpolars\CatNameSpace
-cbrt(): Phpolars\Expr
-ceil(): Phpolars\Expr
-clip(mixed $lowerBound = null, mixed $upperBound = null): Phpolars\Expr
-cos(): Phpolars\Expr
-cosh(): Phpolars\Expr
-cot(): Phpolars\Expr
-count(): Phpolars\Expr
-cumCount(?bool $reverse = null): Phpolars\Expr
-cumMax(?bool $reverse = null): Phpolars\Expr
-cumMin(?bool $reverse = null): Phpolars\Expr
-cumProd(?bool $reverse = null): Phpolars\Expr
-cumSum(?bool $reverse = null): Phpolars\Expr
-cumulativeEval(mixed $expr, ?int $minPeriods = null): Phpolars\Expr
-cut(mixed $breaks, ?array $labels = null, ?bool $leftClosed = null, ?bool $includeBreaks = null): Phpolars\Expr
-degrees(): Phpolars\Expr
-diff(?int $n = null, ?string $nullBehavior = null): Phpolars\Expr
-div(mixed $other): Phpolars\Expr
-dot(mixed $other): Phpolars\Expr
-dropNans(): Phpolars\Expr
-dropNulls(): Phpolars\Expr
-dt(): Phpolars\DtNameSpace
-entropy(?float $base = null, ?bool $normalize = null): Phpolars\Expr
-eq(mixed $other): Phpolars\Expr
-eqMissing(mixed $other): Phpolars\Expr
-ewmMean(?float $com = null, ?float $span = null, ?float $halfLife = null, ?float $alpha = null, ?bool $adjust = null, ?int $minPeriods = null, ?bool $ignoreNulls = null): Phpolars\Expr
-ewmMeanBy(mixed $by, string $halfLife): Phpolars\Expr
-ewmStd(?float $com = null, ?float $span = null, ?float $halfLife = null, ?float $alpha = null, ?bool $adjust = null, ?bool $bias = null, ?int $minPeriods = null, ?bool $ignoreNulls = null): Phpolars\Expr
-ewmSum(?float $com = null, ?float $span = null, ?float $halfLife = null, ?float $alpha = null, ?int $minPeriods = null, ?bool $ignoreNulls = null): Phpolars\Expr
-ewmSumBy(mixed $by, string $halfLife): Phpolars\Expr
-ewmVar(?float $com = null, ?float $span = null, ?float $halfLife = null, ?float $alpha = null, ?bool $adjust = null, ?bool $bias = null, ?int $minPeriods = null, ?bool $ignoreNulls = null): Phpolars\Expr
-exclude(mixed ...$columns): Phpolars\Expr
-exp(): Phpolars\Expr
-explode(): Phpolars\Expr
-extendConstant(mixed $value, mixed $n): Phpolars\Expr
-fillNan(mixed $value): Phpolars\Expr
-fillNull(mixed $value = null, ?string $strategy = null, ?int $limit = null): Phpolars\Expr
-filter(mixed $predicate): Phpolars\Expr
-first(?bool $ignoreNulls = null): Phpolars\Expr
-flatten(): Phpolars\Expr
-floor(): Phpolars\Expr
-floordiv(mixed $other): Phpolars\Expr
-forwardFill(?int $limit = null): Phpolars\Expr
-gather(mixed $indices): Phpolars\Expr
-gatherEvery(int $n, ?int $offset = null): Phpolars\Expr
-ge(mixed $other): Phpolars\Expr
-get(mixed $index, ?bool $nullOnOob = null): Phpolars\Expr
-gt(mixed $other): Phpolars\Expr
-hasNulls(): Phpolars\Expr
-head(?int $n = null): Phpolars\Expr
-hist(mixed $bins = null, ?int $binCount = null, ?bool $includeCategory = null, ?bool $includeBreakpoint = null): Phpolars\Expr
-implode(): Phpolars\Expr
-indexOf(mixed $element): Phpolars\Expr
-interpolate(?string $method = null): Phpolars\Expr
-interpolateBy(mixed $by): Phpolars\Expr
-isBetween(mixed $lower, mixed $upper, ?string $closed = null): Phpolars\Expr
-isClose(mixed $other, ?float $absTol = null, ?float $relTol = null, ?bool $nansEqual = null): Phpolars\Expr
-isDuplicated(): Phpolars\Expr
-isEmpty(?bool $ignoreNulls = null): Phpolars\Expr
-isFinite(): Phpolars\Expr
-isFirstDistinct(): Phpolars\Expr
-isIn(mixed $other, ?bool $nullsEqual = null): Phpolars\Expr
-isInfinite(): Phpolars\Expr
-isLastDistinct(): Phpolars\Expr
-isNan(): Phpolars\Expr
-isNotNan(): Phpolars\Expr
-isNotNull(): Phpolars\Expr
-isNull(): Phpolars\Expr
-isUnique(): Phpolars\Expr
-item(?bool $allowEmpty = null): Phpolars\Expr
-kurtosis(?bool $fisher = null, ?bool $bias = null): Phpolars\Expr
-last(?bool $ignoreNulls = null): Phpolars\Expr
-le(mixed $other): Phpolars\Expr
-len(): Phpolars\Expr
-limit(?int $n = null): Phpolars\Expr
-list(): Phpolars\ListNameSpace
-log(?float $base = null): Phpolars\Expr
-log10(): Phpolars\Expr
-log1P(): Phpolars\Expr
-lowerBound(): Phpolars\Expr
-lt(mixed $other): Phpolars\Expr
-max(): Phpolars\Expr
-maxBy(mixed $by): Phpolars\Expr
-mean(): Phpolars\Expr
-median(): Phpolars\Expr
-meta(): Phpolars\MetaNameSpace
-min(): Phpolars\Expr
-minBy(mixed $by): Phpolars\Expr
-mod(mixed $other): Phpolars\Expr
-mode(): Phpolars\Expr
-mul(mixed $other): Phpolars\Expr
-nUnique(): Phpolars\Expr
-name(): Phpolars\NameNameSpace
-nanMax(): Phpolars\Expr
-nanMin(): Phpolars\Expr
-ne(mixed $other): Phpolars\Expr
-neMissing(mixed $other): Phpolars\Expr
-neg(): Phpolars\Expr
-not(): Phpolars\Expr
-nullCount(): Phpolars\Expr
-or(mixed $other): Phpolars\Expr
-over(mixed $partitionBy, mixed $orderBy = null, ?bool $descending = null, ?bool $nullsLast = null, ?string $mappingStrategy = null): Phpolars\Expr
-pctChange(?int $n = null): Phpolars\Expr
-peakMax(): Phpolars\Expr
-peakMin(): Phpolars\Expr
-pow(mixed $exponent): Phpolars\Expr
-product(): Phpolars\Expr
-qcut(mixed $quantiles, ?array $labels = null, ?bool $leftClosed = null, ?bool $allowDuplicates = null, ?bool $includeBreaks = null): Phpolars\Expr
-quantile(mixed $quantile, ?string $interpolation = null): Phpolars\Expr
-radians(): Phpolars\Expr
-rank(?string $method = null, ?bool $descending = null, ?int $seed = null): Phpolars\Expr
-reinterpret(?bool $signed = null): Phpolars\Expr
-repeatBy(mixed $by): Phpolars\Expr
-replace(mixed $old, mixed $new = null): Phpolars\Expr
-replaceStrict(mixed $old, mixed $new = null, mixed $default = null, ?string $returnDtype = null): Phpolars\Expr
-reshape(array $dimensions): Phpolars\Expr
-reverse(): Phpolars\Expr
-rle(): Phpolars\Expr
-rleId(): Phpolars\Expr
-rolling(mixed $indexColumn, string $period, ?string $offset = null, ?string $closed = null): Phpolars\Expr
-rollingKurtosis(int $windowSize, ?bool $fisher = null, ?bool $bias = null, ?int $minPeriods = null, ?bool $center = null): Phpolars\Expr
-rollingMax(int $windowSize, ?int $minPeriods = null, ?bool $center = null): Phpolars\Expr
-rollingMaxBy(mixed $by, string $windowSize, ?int $minPeriods = null, ?string $closed = null): Phpolars\Expr
-rollingMean(int $windowSize, ?int $minPeriods = null, ?bool $center = null): Phpolars\Expr
-rollingMeanBy(mixed $by, string $windowSize, ?int $minPeriods = null, ?string $closed = null): Phpolars\Expr
-rollingMedian(int $windowSize, ?int $minPeriods = null, ?bool $center = null): Phpolars\Expr
-rollingMedianBy(mixed $by, string $windowSize, ?int $minPeriods = null, ?string $closed = null): Phpolars\Expr
-rollingMin(int $windowSize, ?int $minPeriods = null, ?bool $center = null): Phpolars\Expr
-rollingMinBy(mixed $by, string $windowSize, ?int $minPeriods = null, ?string $closed = null): Phpolars\Expr
-rollingQuantile(float $quantile, int $windowSize, ?string $interpolation = null, ?int $minPeriods = null, ?bool $center = null): Phpolars\Expr
-rollingQuantileBy(mixed $by, string $windowSize, float $quantile, ?string $interpolation = null, ?int $minPeriods = null, ?string $closed = null): Phpolars\Expr
-rollingRank(int $windowSize, ?string $method = null, ?int $seed = null, ?int $minPeriods = null, ?bool $center = null): Phpolars\Expr
-rollingRankBy(mixed $by, string $windowSize, ?string $method = null, ?int $seed = null, ?int $minPeriods = null, ?string $closed = null): Phpolars\Expr
-rollingSkew(int $windowSize, ?bool $bias = null, ?int $minPeriods = null, ?bool $center = null): Phpolars\Expr
-rollingStd(int $windowSize, ?int $minPeriods = null, ?bool $center = null): Phpolars\Expr
-rollingStdBy(mixed $by, string $windowSize, ?int $minPeriods = null, ?string $closed = null, ?int $ddof = null): Phpolars\Expr
-rollingSum(int $windowSize, ?int $minPeriods = null, ?bool $center = null): Phpolars\Expr
-rollingSumBy(mixed $by, string $windowSize, ?int $minPeriods = null, ?string $closed = null): Phpolars\Expr
-rollingVar(int $windowSize, ?int $minPeriods = null, ?bool $center = null): Phpolars\Expr
-rollingVarBy(mixed $by, string $windowSize, ?int $minPeriods = null, ?string $closed = null, ?int $ddof = null): Phpolars\Expr
-round(?int $decimals = null, ?string $mode = null): Phpolars\Expr
-roundSigFigs(int $digits): Phpolars\Expr
-sample(?int $n = null, ?float $fraction = null, ?bool $withReplacement = null, ?bool $shuffle = null, ?int $seed = null): Phpolars\Expr
-searchSorted(mixed $element, ?string $side = null, ?bool $descending = null): Phpolars\Expr
-shift(?int $n = null, mixed $fillValue = null): Phpolars\Expr
-shuffle(?int $seed = null): Phpolars\Expr
-sign(): Phpolars\Expr
-sin(): Phpolars\Expr
-sinh(): Phpolars\Expr
-skew(?bool $bias = null): Phpolars\Expr
-slice(int $offset, ?int $length = null): Phpolars\Expr
-sort(?bool $descending = null, ?bool $nullsLast = null): Phpolars\Expr
-sortBy(mixed $by, mixed $descending = null, mixed $nullsLast = null): Phpolars\Expr
-sqrt(): Phpolars\Expr
-std(?int $ddof = null): Phpolars\Expr
-str(): Phpolars\StrNameSpace
-struct(): Phpolars\StructNameSpace
-sub(mixed $other): Phpolars\Expr
-sum(): Phpolars\Expr
-tail(?int $n = null): Phpolars\Expr
-tan(): Phpolars\Expr
-tanh(): Phpolars\Expr
-toPhysical(): Phpolars\Expr
-topK(?int $k = null): Phpolars\Expr
-topKBy(mixed $by, ?int $k = null, mixed $reverse = null): Phpolars\Expr
-truediv(mixed $other): Phpolars\Expr
-unique(?bool $maintainOrder = null): Phpolars\Expr
-uniqueCounts(): Phpolars\Expr
-upperBound(): Phpolars\Expr
-valueCounts(?bool $sort = null, ?string $name = null, ?bool $normalize = null): Phpolars\Expr
-var(?int $ddof = null): Phpolars\Expr
-xor(mixed $other): Phpolars\Expr
-```
+- []{#expr-__toString} `__toString(): string`
+- []{#expr-abs} `abs(): Phpolars\Expr`
+- []{#expr-add} `add(mixed $other): Phpolars\Expr`
+- []{#expr-alias} `alias(string $name): Phpolars\Expr`
+- []{#expr-all} `all(?bool $ignoreNulls = null): Phpolars\Expr`
+- []{#expr-and} `and(mixed $other): Phpolars\Expr`
+- []{#expr-any} `any(?bool $ignoreNulls = null): Phpolars\Expr`
+- []{#expr-append} `append(mixed $other, ?bool $upcast = null): Phpolars\Expr`
+- []{#expr-approxNUnique} `approxNUnique(): Phpolars\Expr`
+- []{#expr-arccos} `arccos(): Phpolars\Expr`
+- []{#expr-arccosh} `arccosh(): Phpolars\Expr`
+- []{#expr-arcsin} `arcsin(): Phpolars\Expr`
+- []{#expr-arcsinh} `arcsinh(): Phpolars\Expr`
+- []{#expr-arctan} `arctan(): Phpolars\Expr`
+- []{#expr-arctanh} `arctanh(): Phpolars\Expr`
+- []{#expr-argMax} `argMax(): Phpolars\Expr`
+- []{#expr-argMin} `argMin(): Phpolars\Expr`
+- []{#expr-argSort} `argSort(?bool $descending = null, ?bool $nullsLast = null): Phpolars\Expr`
+- []{#expr-argTrue} `argTrue(): Phpolars\Expr`
+- []{#expr-argUnique} `argUnique(): Phpolars\Expr`
+- []{#expr-arr} `arr(): Phpolars\ArrayNameSpace`
+- []{#expr-backwardFill} `backwardFill(?int $limit = null): Phpolars\Expr`
+- []{#expr-bin} `bin(): Phpolars\BinaryNameSpace`
+- []{#expr-bitwiseAnd} `bitwiseAnd(): Phpolars\Expr`
+- []{#expr-bitwiseCountOnes} `bitwiseCountOnes(): Phpolars\Expr`
+- []{#expr-bitwiseCountZeros} `bitwiseCountZeros(): Phpolars\Expr`
+- []{#expr-bitwiseLeadingOnes} `bitwiseLeadingOnes(): Phpolars\Expr`
+- []{#expr-bitwiseLeadingZeros} `bitwiseLeadingZeros(): Phpolars\Expr`
+- []{#expr-bitwiseOr} `bitwiseOr(): Phpolars\Expr`
+- []{#expr-bitwiseTrailingOnes} `bitwiseTrailingOnes(): Phpolars\Expr`
+- []{#expr-bitwiseTrailingZeros} `bitwiseTrailingZeros(): Phpolars\Expr`
+- []{#expr-bitwiseXor} `bitwiseXor(): Phpolars\Expr`
+- []{#expr-bottomK} `bottomK(?int $k = null): Phpolars\Expr`
+- []{#expr-bottomKBy} `bottomKBy(mixed $by, ?int $k = null, mixed $reverse = null): Phpolars\Expr`
+- []{#expr-cast} `cast(string $dtype, ?bool $strict = null): Phpolars\Expr`
+- []{#expr-cat} `cat(): Phpolars\CatNameSpace`
+- []{#expr-cbrt} `cbrt(): Phpolars\Expr`
+- []{#expr-ceil} `ceil(): Phpolars\Expr`
+- []{#expr-clip} `clip(mixed $lowerBound = null, mixed $upperBound = null): Phpolars\Expr`
+- []{#expr-cos} `cos(): Phpolars\Expr`
+- []{#expr-cosh} `cosh(): Phpolars\Expr`
+- []{#expr-cot} `cot(): Phpolars\Expr`
+- []{#expr-count} `count(): Phpolars\Expr`
+- []{#expr-cumCount} `cumCount(?bool $reverse = null): Phpolars\Expr`
+- []{#expr-cumMax} `cumMax(?bool $reverse = null): Phpolars\Expr`
+- []{#expr-cumMin} `cumMin(?bool $reverse = null): Phpolars\Expr`
+- []{#expr-cumProd} `cumProd(?bool $reverse = null): Phpolars\Expr`
+- []{#expr-cumSum} `cumSum(?bool $reverse = null): Phpolars\Expr`
+- []{#expr-cumulativeEval} `cumulativeEval(mixed $expr, ?int $minPeriods = null): Phpolars\Expr`
+- []{#expr-cut} `cut(mixed $breaks, ?array $labels = null, ?bool $leftClosed = null, ?bool $includeBreaks = null): Phpolars\Expr`
+- []{#expr-degrees} `degrees(): Phpolars\Expr`
+- []{#expr-diff} `diff(?int $n = null, ?string $nullBehavior = null): Phpolars\Expr`
+- []{#expr-div} `div(mixed $other): Phpolars\Expr`
+- []{#expr-dot} `dot(mixed $other): Phpolars\Expr`
+- []{#expr-dropNans} `dropNans(): Phpolars\Expr`
+- []{#expr-dropNulls} `dropNulls(): Phpolars\Expr`
+- []{#expr-dt} `dt(): Phpolars\DtNameSpace`
+- []{#expr-entropy} `entropy(?float $base = null, ?bool $normalize = null): Phpolars\Expr`
+- []{#expr-eq} `eq(mixed $other): Phpolars\Expr`
+- []{#expr-eqMissing} `eqMissing(mixed $other): Phpolars\Expr`
+- []{#expr-ewmMean} `ewmMean(?float $com = null, ?float $span = null, ?float $halfLife = null, ?float $alpha = null, ?bool $adjust = null, ?int $minPeriods = null, ?bool $ignoreNulls = null): Phpolars\Expr`
+- []{#expr-ewmMeanBy} `ewmMeanBy(mixed $by, string $halfLife): Phpolars\Expr`
+- []{#expr-ewmStd} `ewmStd(?float $com = null, ?float $span = null, ?float $halfLife = null, ?float $alpha = null, ?bool $adjust = null, ?bool $bias = null, ?int $minPeriods = null, ?bool $ignoreNulls = null): Phpolars\Expr`
+- []{#expr-ewmSum} `ewmSum(?float $com = null, ?float $span = null, ?float $halfLife = null, ?float $alpha = null, ?int $minPeriods = null, ?bool $ignoreNulls = null): Phpolars\Expr`
+- []{#expr-ewmSumBy} `ewmSumBy(mixed $by, string $halfLife): Phpolars\Expr`
+- []{#expr-ewmVar} `ewmVar(?float $com = null, ?float $span = null, ?float $halfLife = null, ?float $alpha = null, ?bool $adjust = null, ?bool $bias = null, ?int $minPeriods = null, ?bool $ignoreNulls = null): Phpolars\Expr`
+- []{#expr-exclude} `exclude(mixed ...$columns): Phpolars\Expr`
+- []{#expr-exp} `exp(): Phpolars\Expr`
+- []{#expr-explode} `explode(): Phpolars\Expr`
+- []{#expr-extendConstant} `extendConstant(mixed $value, mixed $n): Phpolars\Expr`
+- []{#expr-fillNan} `fillNan(mixed $value): Phpolars\Expr`
+- []{#expr-fillNull} `fillNull(mixed $value = null, ?string $strategy = null, ?int $limit = null): Phpolars\Expr`
+- []{#expr-filter} `filter(mixed $predicate): Phpolars\Expr`
+- []{#expr-first} `first(?bool $ignoreNulls = null): Phpolars\Expr`
+- []{#expr-flatten} `flatten(): Phpolars\Expr`
+- []{#expr-floor} `floor(): Phpolars\Expr`
+- []{#expr-floordiv} `floordiv(mixed $other): Phpolars\Expr`
+- []{#expr-forwardFill} `forwardFill(?int $limit = null): Phpolars\Expr`
+- []{#expr-gather} `gather(mixed $indices): Phpolars\Expr`
+- []{#expr-gatherEvery} `gatherEvery(int $n, ?int $offset = null): Phpolars\Expr`
+- []{#expr-ge} `ge(mixed $other): Phpolars\Expr`
+- []{#expr-get} `get(mixed $index, ?bool $nullOnOob = null): Phpolars\Expr`
+- []{#expr-gt} `gt(mixed $other): Phpolars\Expr`
+- []{#expr-hasNulls} `hasNulls(): Phpolars\Expr`
+- []{#expr-head} `head(?int $n = null): Phpolars\Expr`
+- []{#expr-hist} `hist(mixed $bins = null, ?int $binCount = null, ?bool $includeCategory = null, ?bool $includeBreakpoint = null): Phpolars\Expr`
+- []{#expr-implode} `implode(): Phpolars\Expr`
+- []{#expr-indexOf} `indexOf(mixed $element): Phpolars\Expr`
+- []{#expr-interpolate} `interpolate(?string $method = null): Phpolars\Expr`
+- []{#expr-interpolateBy} `interpolateBy(mixed $by): Phpolars\Expr`
+- []{#expr-isBetween} `isBetween(mixed $lower, mixed $upper, ?string $closed = null): Phpolars\Expr`
+- []{#expr-isClose} `isClose(mixed $other, ?float $absTol = null, ?float $relTol = null, ?bool $nansEqual = null): Phpolars\Expr`
+- []{#expr-isDuplicated} `isDuplicated(): Phpolars\Expr`
+- []{#expr-isEmpty} `isEmpty(?bool $ignoreNulls = null): Phpolars\Expr`
+- []{#expr-isFinite} `isFinite(): Phpolars\Expr`
+- []{#expr-isFirstDistinct} `isFirstDistinct(): Phpolars\Expr`
+- []{#expr-isIn} `isIn(mixed $other, ?bool $nullsEqual = null): Phpolars\Expr`
+- []{#expr-isInfinite} `isInfinite(): Phpolars\Expr`
+- []{#expr-isLastDistinct} `isLastDistinct(): Phpolars\Expr`
+- []{#expr-isNan} `isNan(): Phpolars\Expr`
+- []{#expr-isNotNan} `isNotNan(): Phpolars\Expr`
+- []{#expr-isNotNull} `isNotNull(): Phpolars\Expr`
+- []{#expr-isNull} `isNull(): Phpolars\Expr`
+- []{#expr-isUnique} `isUnique(): Phpolars\Expr`
+- []{#expr-item} `item(?bool $allowEmpty = null): Phpolars\Expr`
+- []{#expr-kurtosis} `kurtosis(?bool $fisher = null, ?bool $bias = null): Phpolars\Expr`
+- []{#expr-last} `last(?bool $ignoreNulls = null): Phpolars\Expr`
+- []{#expr-le} `le(mixed $other): Phpolars\Expr`
+- []{#expr-len} `len(): Phpolars\Expr`
+- []{#expr-limit} `limit(?int $n = null): Phpolars\Expr`
+- []{#expr-list} `list(): Phpolars\ListNameSpace`
+- []{#expr-log} `log(?float $base = null): Phpolars\Expr`
+- []{#expr-log10} `log10(): Phpolars\Expr`
+- []{#expr-log1P} `log1P(): Phpolars\Expr`
+- []{#expr-lowerBound} `lowerBound(): Phpolars\Expr`
+- []{#expr-lt} `lt(mixed $other): Phpolars\Expr`
+- []{#expr-max} `max(): Phpolars\Expr`
+- []{#expr-maxBy} `maxBy(mixed $by): Phpolars\Expr`
+- []{#expr-mean} `mean(): Phpolars\Expr`
+- []{#expr-median} `median(): Phpolars\Expr`
+- []{#expr-meta} `meta(): Phpolars\MetaNameSpace`
+- []{#expr-min} `min(): Phpolars\Expr`
+- []{#expr-minBy} `minBy(mixed $by): Phpolars\Expr`
+- []{#expr-mod} `mod(mixed $other): Phpolars\Expr`
+- []{#expr-mode} `mode(): Phpolars\Expr`
+- []{#expr-mul} `mul(mixed $other): Phpolars\Expr`
+- []{#expr-name} `name(): Phpolars\NameNameSpace`
+- []{#expr-nanMax} `nanMax(): Phpolars\Expr`
+- []{#expr-nanMin} `nanMin(): Phpolars\Expr`
+- []{#expr-ne} `ne(mixed $other): Phpolars\Expr`
+- []{#expr-neg} `neg(): Phpolars\Expr`
+- []{#expr-neMissing} `neMissing(mixed $other): Phpolars\Expr`
+- []{#expr-not} `not(): Phpolars\Expr`
+- []{#expr-nullCount} `nullCount(): Phpolars\Expr`
+- []{#expr-nUnique} `nUnique(): Phpolars\Expr`
+- []{#expr-or} `or(mixed $other): Phpolars\Expr`
+- []{#expr-over} `over(mixed $partitionBy, mixed $orderBy = null, ?bool $descending = null, ?bool $nullsLast = null, ?string $mappingStrategy = null): Phpolars\Expr`
+- []{#expr-pctChange} `pctChange(?int $n = null): Phpolars\Expr`
+- []{#expr-peakMax} `peakMax(): Phpolars\Expr`
+- []{#expr-peakMin} `peakMin(): Phpolars\Expr`
+- []{#expr-pow} `pow(mixed $exponent): Phpolars\Expr`
+- []{#expr-product} `product(): Phpolars\Expr`
+- []{#expr-qcut} `qcut(mixed $quantiles, ?array $labels = null, ?bool $leftClosed = null, ?bool $allowDuplicates = null, ?bool $includeBreaks = null): Phpolars\Expr`
+- []{#expr-quantile} `quantile(mixed $quantile, ?string $interpolation = null): Phpolars\Expr`
+- []{#expr-radians} `radians(): Phpolars\Expr`
+- []{#expr-rank} `rank(?string $method = null, ?bool $descending = null, ?int $seed = null): Phpolars\Expr`
+- []{#expr-reinterpret} `reinterpret(?bool $signed = null): Phpolars\Expr`
+- []{#expr-repeatBy} `repeatBy(mixed $by): Phpolars\Expr`
+- []{#expr-replace} `replace(mixed $old, mixed $new = null): Phpolars\Expr`
+- []{#expr-replaceStrict} `replaceStrict(mixed $old, mixed $new = null, mixed $default = null, ?string $returnDtype = null): Phpolars\Expr`
+- []{#expr-reshape} `reshape(array $dimensions): Phpolars\Expr`
+- []{#expr-reverse} `reverse(): Phpolars\Expr`
+- []{#expr-rle} `rle(): Phpolars\Expr`
+- []{#expr-rleId} `rleId(): Phpolars\Expr`
+- []{#expr-rolling} `rolling(mixed $indexColumn, string $period, ?string $offset = null, ?string $closed = null): Phpolars\Expr`
+- []{#expr-rollingKurtosis} `rollingKurtosis(int $windowSize, ?bool $fisher = null, ?bool $bias = null, ?int $minPeriods = null, ?bool $center = null): Phpolars\Expr`
+- []{#expr-rollingMax} `rollingMax(int $windowSize, ?int $minPeriods = null, ?bool $center = null): Phpolars\Expr`
+- []{#expr-rollingMaxBy} `rollingMaxBy(mixed $by, string $windowSize, ?int $minPeriods = null, ?string $closed = null): Phpolars\Expr`
+- []{#expr-rollingMean} `rollingMean(int $windowSize, ?int $minPeriods = null, ?bool $center = null): Phpolars\Expr`
+- []{#expr-rollingMeanBy} `rollingMeanBy(mixed $by, string $windowSize, ?int $minPeriods = null, ?string $closed = null): Phpolars\Expr`
+- []{#expr-rollingMedian} `rollingMedian(int $windowSize, ?int $minPeriods = null, ?bool $center = null): Phpolars\Expr`
+- []{#expr-rollingMedianBy} `rollingMedianBy(mixed $by, string $windowSize, ?int $minPeriods = null, ?string $closed = null): Phpolars\Expr`
+- []{#expr-rollingMin} `rollingMin(int $windowSize, ?int $minPeriods = null, ?bool $center = null): Phpolars\Expr`
+- []{#expr-rollingMinBy} `rollingMinBy(mixed $by, string $windowSize, ?int $minPeriods = null, ?string $closed = null): Phpolars\Expr`
+- []{#expr-rollingQuantile} `rollingQuantile(float $quantile, int $windowSize, ?string $interpolation = null, ?int $minPeriods = null, ?bool $center = null): Phpolars\Expr`
+- []{#expr-rollingQuantileBy} `rollingQuantileBy(mixed $by, string $windowSize, float $quantile, ?string $interpolation = null, ?int $minPeriods = null, ?string $closed = null): Phpolars\Expr`
+- []{#expr-rollingRank} `rollingRank(int $windowSize, ?string $method = null, ?int $seed = null, ?int $minPeriods = null, ?bool $center = null): Phpolars\Expr`
+- []{#expr-rollingRankBy} `rollingRankBy(mixed $by, string $windowSize, ?string $method = null, ?int $seed = null, ?int $minPeriods = null, ?string $closed = null): Phpolars\Expr`
+- []{#expr-rollingSkew} `rollingSkew(int $windowSize, ?bool $bias = null, ?int $minPeriods = null, ?bool $center = null): Phpolars\Expr`
+- []{#expr-rollingStd} `rollingStd(int $windowSize, ?int $minPeriods = null, ?bool $center = null): Phpolars\Expr`
+- []{#expr-rollingStdBy} `rollingStdBy(mixed $by, string $windowSize, ?int $minPeriods = null, ?string $closed = null, ?int $ddof = null): Phpolars\Expr`
+- []{#expr-rollingSum} `rollingSum(int $windowSize, ?int $minPeriods = null, ?bool $center = null): Phpolars\Expr`
+- []{#expr-rollingSumBy} `rollingSumBy(mixed $by, string $windowSize, ?int $minPeriods = null, ?string $closed = null): Phpolars\Expr`
+- []{#expr-rollingVar} `rollingVar(int $windowSize, ?int $minPeriods = null, ?bool $center = null): Phpolars\Expr`
+- []{#expr-rollingVarBy} `rollingVarBy(mixed $by, string $windowSize, ?int $minPeriods = null, ?string $closed = null, ?int $ddof = null): Phpolars\Expr`
+- []{#expr-round} `round(?int $decimals = null, ?string $mode = null): Phpolars\Expr`
+- []{#expr-roundSigFigs} `roundSigFigs(int $digits): Phpolars\Expr`
+- []{#expr-sample} `sample(?int $n = null, ?float $fraction = null, ?bool $withReplacement = null, ?bool $shuffle = null, ?int $seed = null): Phpolars\Expr`
+- []{#expr-searchSorted} `searchSorted(mixed $element, ?string $side = null, ?bool $descending = null): Phpolars\Expr`
+- []{#expr-shift} `shift(?int $n = null, mixed $fillValue = null): Phpolars\Expr`
+- []{#expr-shuffle} `shuffle(?int $seed = null): Phpolars\Expr`
+- []{#expr-sign} `sign(): Phpolars\Expr`
+- []{#expr-sin} `sin(): Phpolars\Expr`
+- []{#expr-sinh} `sinh(): Phpolars\Expr`
+- []{#expr-skew} `skew(?bool $bias = null): Phpolars\Expr`
+- []{#expr-slice} `slice(int $offset, ?int $length = null): Phpolars\Expr`
+- []{#expr-sort} `sort(?bool $descending = null, ?bool $nullsLast = null): Phpolars\Expr`
+- []{#expr-sortBy} `sortBy(mixed $by, mixed $descending = null, mixed $nullsLast = null): Phpolars\Expr`
+- []{#expr-sqrt} `sqrt(): Phpolars\Expr`
+- []{#expr-std} `std(?int $ddof = null): Phpolars\Expr`
+- []{#expr-str} `str(): Phpolars\StrNameSpace`
+- []{#expr-struct} `struct(): Phpolars\StructNameSpace`
+- []{#expr-sub} `sub(mixed $other): Phpolars\Expr`
+- []{#expr-sum} `sum(): Phpolars\Expr`
+- []{#expr-tail} `tail(?int $n = null): Phpolars\Expr`
+- []{#expr-tan} `tan(): Phpolars\Expr`
+- []{#expr-tanh} `tanh(): Phpolars\Expr`
+- []{#expr-toPhysical} `toPhysical(): Phpolars\Expr`
+- []{#expr-topK} `topK(?int $k = null): Phpolars\Expr`
+- []{#expr-topKBy} `topKBy(mixed $by, ?int $k = null, mixed $reverse = null): Phpolars\Expr`
+- []{#expr-truediv} `truediv(mixed $other): Phpolars\Expr`
+- []{#expr-unique} `unique(?bool $maintainOrder = null): Phpolars\Expr`
+- []{#expr-uniqueCounts} `uniqueCounts(): Phpolars\Expr`
+- []{#expr-upperBound} `upperBound(): Phpolars\Expr`
+- []{#expr-valueCounts} `valueCounts(?bool $sort = null, ?string $name = null, ?bool $normalize = null): Phpolars\Expr`
+- []{#expr-var} `var(?int $ddof = null): Phpolars\Expr`
+- []{#expr-xor} `xor(mixed $other): Phpolars\Expr`
 
-### `Phpolars\When`
+### `Phpolars\When` {#when}
 
-```php
-then(mixed $value): Phpolars\Then
-```
+- []{#when-then} `then(mixed $value): Phpolars\Then`
 
-### `Phpolars\Then`
+### `Phpolars\Then` {#then}
 
-```php
-alias(string $name): Phpolars\Expr
-otherwise(mixed $value): Phpolars\Expr
-when(mixed ...$condition): Phpolars\When
-```
+- []{#then-alias} `alias(string $name): Phpolars\Expr`
+- []{#then-otherwise} `otherwise(mixed $value): Phpolars\Expr`
+- []{#then-when} `when(mixed ...$condition): Phpolars\When`
 
-### `Phpolars\StrNameSpace`
+### `Phpolars\StrNameSpace` {#str}
 
-```php
-contains(mixed $pattern, ?bool $literal = null, ?bool $strict = null): mixed
-containsAny(mixed $patterns, ?bool $asciiCaseInsensitive = null): mixed
-countMatches(mixed $pattern, ?bool $literal = null): mixed
-decode(string $encoding, ?bool $strict = null): mixed
-encode(string $encoding): mixed
-endsWith(mixed $suffix): mixed
-escapeRegex(): mixed
-extract(mixed $pattern, ?int $groupIndex = null): mixed
-extractAll(mixed $pattern): mixed
-extractGroups(string $pattern): mixed
-extractMany(mixed $patterns, ?bool $asciiCaseInsensitive = null, ?bool $overlapping = null, ?bool $leftmost = null): mixed
-find(mixed $pattern, ?bool $literal = null, ?bool $strict = null): mixed
-findMany(mixed $patterns, ?bool $asciiCaseInsensitive = null, ?bool $overlapping = null, ?bool $leftmost = null): mixed
-head(int $n): mixed
-join(?string $delimiter = null, ?bool $ignoreNulls = null): mixed
-jsonDecode(string $dtype): mixed
-jsonPathMatch(mixed $jsonPath): mixed
-lenBytes(): mixed
-lenChars(): mixed
-normalize(?string $form = null): mixed
-padEnd(mixed $length, ?string $fillChar = null): mixed
-padStart(mixed $length, ?string $fillChar = null): mixed
-replace(mixed $pattern, mixed $value, ?bool $literal = null, ?int $n = null): mixed
-replaceAll(mixed $pattern, mixed $value, ?bool $literal = null): mixed
-replaceMany(mixed $patterns, mixed $replaceWith = null, ?bool $asciiCaseInsensitive = null, ?bool $leftmost = null): mixed
-reverse(): mixed
-slice(mixed $offset, mixed $length = null): mixed
-split(mixed $by, ?bool $inclusive = null, ?bool $literal = null): mixed
-splitExact(mixed $by, int $n, ?bool $inclusive = null): mixed
-splitn(mixed $by, int $n): mixed
-startsWith(mixed $prefix): mixed
-stripChars(?string $characters = null): mixed
-stripCharsEnd(?string $characters = null): mixed
-stripCharsStart(?string $characters = null): mixed
-stripPrefix(mixed $prefix): mixed
-stripSuffix(mixed $suffix): mixed
-strptime(string $dtype, ?string $format = null, ?bool $strict = null, ?bool $exact = null): mixed
-tail(int $n): mixed
-toDate(?string $format = null, ?bool $strict = null, ?bool $exact = null): mixed
-toDatetime(?string $format = null, ?string $timeUnit = null, ?string $timeZone = null, ?bool $strict = null, ?bool $exact = null): mixed
-toDecimal(int $scale): mixed
-toInteger(?int $base = null, ?string $dtype = null, ?bool $strict = null): mixed
-toLowercase(): mixed
-toTime(?string $format = null, ?bool $strict = null): mixed
-toUppercase(): mixed
-zfill(int $length): mixed
-```
+- []{#str-contains} `contains(mixed $pattern, ?bool $literal = null, ?bool $strict = null): mixed`
+- []{#str-containsAny} `containsAny(mixed $patterns, ?bool $asciiCaseInsensitive = null): mixed`
+- []{#str-countMatches} `countMatches(mixed $pattern, ?bool $literal = null): mixed`
+- []{#str-decode} `decode(string $encoding, ?bool $strict = null): mixed`
+- []{#str-encode} `encode(string $encoding): mixed`
+- []{#str-endsWith} `endsWith(mixed $suffix): mixed`
+- []{#str-escapeRegex} `escapeRegex(): mixed`
+- []{#str-extract} `extract(mixed $pattern, ?int $groupIndex = null): mixed`
+- []{#str-extractAll} `extractAll(mixed $pattern): mixed`
+- []{#str-extractGroups} `extractGroups(string $pattern): mixed`
+- []{#str-extractMany} `extractMany(mixed $patterns, ?bool $asciiCaseInsensitive = null, ?bool $overlapping = null, ?bool $leftmost = null): mixed`
+- []{#str-find} `find(mixed $pattern, ?bool $literal = null, ?bool $strict = null): mixed`
+- []{#str-findMany} `findMany(mixed $patterns, ?bool $asciiCaseInsensitive = null, ?bool $overlapping = null, ?bool $leftmost = null): mixed`
+- []{#str-head} `head(int $n): mixed`
+- []{#str-join} `join(?string $delimiter = null, ?bool $ignoreNulls = null): mixed`
+- []{#str-jsonDecode} `jsonDecode(string $dtype): mixed`
+- []{#str-jsonPathMatch} `jsonPathMatch(mixed $jsonPath): mixed`
+- []{#str-lenBytes} `lenBytes(): mixed`
+- []{#str-lenChars} `lenChars(): mixed`
+- []{#str-normalize} `normalize(?string $form = null): mixed`
+- []{#str-padEnd} `padEnd(mixed $length, ?string $fillChar = null): mixed`
+- []{#str-padStart} `padStart(mixed $length, ?string $fillChar = null): mixed`
+- []{#str-replace} `replace(mixed $pattern, mixed $value, ?bool $literal = null, ?int $n = null): mixed`
+- []{#str-replaceAll} `replaceAll(mixed $pattern, mixed $value, ?bool $literal = null): mixed`
+- []{#str-replaceMany} `replaceMany(mixed $patterns, mixed $replaceWith = null, ?bool $asciiCaseInsensitive = null, ?bool $leftmost = null): mixed`
+- []{#str-reverse} `reverse(): mixed`
+- []{#str-slice} `slice(mixed $offset, mixed $length = null): mixed`
+- []{#str-split} `split(mixed $by, ?bool $inclusive = null, ?bool $literal = null): mixed`
+- []{#str-splitExact} `splitExact(mixed $by, int $n, ?bool $inclusive = null): mixed`
+- []{#str-splitn} `splitn(mixed $by, int $n): mixed`
+- []{#str-startsWith} `startsWith(mixed $prefix): mixed`
+- []{#str-stripChars} `stripChars(?string $characters = null): mixed`
+- []{#str-stripCharsEnd} `stripCharsEnd(?string $characters = null): mixed`
+- []{#str-stripCharsStart} `stripCharsStart(?string $characters = null): mixed`
+- []{#str-stripPrefix} `stripPrefix(mixed $prefix): mixed`
+- []{#str-stripSuffix} `stripSuffix(mixed $suffix): mixed`
+- []{#str-strptime} `strptime(string $dtype, ?string $format = null, ?bool $strict = null, ?bool $exact = null): mixed`
+- []{#str-tail} `tail(int $n): mixed`
+- []{#str-toDate} `toDate(?string $format = null, ?bool $strict = null, ?bool $exact = null): mixed`
+- []{#str-toDatetime} `toDatetime(?string $format = null, ?string $timeUnit = null, ?string $timeZone = null, ?bool $strict = null, ?bool $exact = null): mixed`
+- []{#str-toDecimal} `toDecimal(int $scale): mixed`
+- []{#str-toInteger} `toInteger(?int $base = null, ?string $dtype = null, ?bool $strict = null): mixed`
+- []{#str-toLowercase} `toLowercase(): mixed`
+- []{#str-toTime} `toTime(?string $format = null, ?bool $strict = null): mixed`
+- []{#str-toUppercase} `toUppercase(): mixed`
+- []{#str-zfill} `zfill(int $length): mixed`
 
-### `Phpolars\DtNameSpace`
+### `Phpolars\DtNameSpace` {#dt}
 
-```php
-addBusinessDays(mixed $n, ?array $weekMask = null, mixed $holidays = null, ?string $roll = null): mixed
-baseUtcOffset(): mixed
-castTimeUnit(string $timeUnit): mixed
-century(): mixed
-combine(mixed $time, ?string $timeUnit = null): mixed
-convertTimeZone(string $timeZone): mixed
-date(): mixed
-datetime(): mixed
-day(): mixed
-daysInMonth(): mixed
-dstOffset(): mixed
-epoch(?string $timeUnit = null): mixed
-hour(): mixed
-isBusinessDay(?array $weekMask = null, mixed $holidays = null): mixed
-isLeapYear(): mixed
-isoYear(): mixed
-microsecond(): mixed
-millennium(): mixed
-millisecond(): mixed
-minute(): mixed
-month(): mixed
-monthEnd(): mixed
-monthStart(): mixed
-nanosecond(): mixed
-offsetBy(string $by): mixed
-ordinalDay(): mixed
-quarter(): mixed
-replace(mixed $year = null, mixed $month = null, mixed $day = null, mixed $hour = null, mixed $minute = null, mixed $second = null, mixed $microsecond = null, ?string $ambiguous = null): mixed
-replaceTimeZone(?string $timeZone = null, ?string $ambiguous = null, ?string $nonExistent = null): mixed
-round(string $every): mixed
-second(): mixed
-strftime(string $format): mixed
-time(): mixed
-timestamp(?string $timeUnit = null): mixed
-toString(?string $format = null): mixed
-totalDays(?bool $fractional = null): mixed
-totalHours(?bool $fractional = null): mixed
-totalMicroseconds(?bool $fractional = null): mixed
-totalMilliseconds(?bool $fractional = null): mixed
-totalMinutes(?bool $fractional = null): mixed
-totalNanoseconds(?bool $fractional = null): mixed
-totalSeconds(?bool $fractional = null): mixed
-truncate(string $every): mixed
-week(): mixed
-weekday(): mixed
-withTimeUnit(string $timeUnit): mixed
-year(): mixed
-```
+- []{#dt-addBusinessDays} `addBusinessDays(mixed $n, ?array $weekMask = null, mixed $holidays = null, ?string $roll = null): mixed`
+- []{#dt-baseUtcOffset} `baseUtcOffset(): mixed`
+- []{#dt-castTimeUnit} `castTimeUnit(string $timeUnit): mixed`
+- []{#dt-century} `century(): mixed`
+- []{#dt-combine} `combine(mixed $time, ?string $timeUnit = null): mixed`
+- []{#dt-convertTimeZone} `convertTimeZone(string $timeZone): mixed`
+- []{#dt-date} `date(): mixed`
+- []{#dt-datetime} `datetime(): mixed`
+- []{#dt-day} `day(): mixed`
+- []{#dt-daysInMonth} `daysInMonth(): mixed`
+- []{#dt-dstOffset} `dstOffset(): mixed`
+- []{#dt-epoch} `epoch(?string $timeUnit = null): mixed`
+- []{#dt-hour} `hour(): mixed`
+- []{#dt-isBusinessDay} `isBusinessDay(?array $weekMask = null, mixed $holidays = null): mixed`
+- []{#dt-isLeapYear} `isLeapYear(): mixed`
+- []{#dt-isoYear} `isoYear(): mixed`
+- []{#dt-microsecond} `microsecond(): mixed`
+- []{#dt-millennium} `millennium(): mixed`
+- []{#dt-millisecond} `millisecond(): mixed`
+- []{#dt-minute} `minute(): mixed`
+- []{#dt-month} `month(): mixed`
+- []{#dt-monthEnd} `monthEnd(): mixed`
+- []{#dt-monthStart} `monthStart(): mixed`
+- []{#dt-nanosecond} `nanosecond(): mixed`
+- []{#dt-offsetBy} `offsetBy(string $by): mixed`
+- []{#dt-ordinalDay} `ordinalDay(): mixed`
+- []{#dt-quarter} `quarter(): mixed`
+- []{#dt-replace} `replace(mixed $year = null, mixed $month = null, mixed $day = null, mixed $hour = null, mixed $minute = null, mixed $second = null, mixed $microsecond = null, ?string $ambiguous = null): mixed`
+- []{#dt-replaceTimeZone} `replaceTimeZone(?string $timeZone = null, ?string $ambiguous = null, ?string $nonExistent = null): mixed`
+- []{#dt-round} `round(string $every): mixed`
+- []{#dt-second} `second(): mixed`
+- []{#dt-strftime} `strftime(string $format): mixed`
+- []{#dt-time} `time(): mixed`
+- []{#dt-timestamp} `timestamp(?string $timeUnit = null): mixed`
+- []{#dt-toString} `toString(?string $format = null): mixed`
+- []{#dt-totalDays} `totalDays(?bool $fractional = null): mixed`
+- []{#dt-totalHours} `totalHours(?bool $fractional = null): mixed`
+- []{#dt-totalMicroseconds} `totalMicroseconds(?bool $fractional = null): mixed`
+- []{#dt-totalMilliseconds} `totalMilliseconds(?bool $fractional = null): mixed`
+- []{#dt-totalMinutes} `totalMinutes(?bool $fractional = null): mixed`
+- []{#dt-totalNanoseconds} `totalNanoseconds(?bool $fractional = null): mixed`
+- []{#dt-totalSeconds} `totalSeconds(?bool $fractional = null): mixed`
+- []{#dt-truncate} `truncate(string $every): mixed`
+- []{#dt-week} `week(): mixed`
+- []{#dt-weekday} `weekday(): mixed`
+- []{#dt-withTimeUnit} `withTimeUnit(string $timeUnit): mixed`
+- []{#dt-year} `year(): mixed`
 
-### `Phpolars\ListNameSpace`
+### `Phpolars\ListNameSpace` {#list}
 
-```php
-agg(mixed $expr): mixed
-all(?bool $ignoreNulls = null): mixed
-any(?bool $ignoreNulls = null): mixed
-argMax(): mixed
-argMin(): mixed
-concat(mixed $other): mixed
-contains(mixed $item, ?bool $nullsEqual = null): mixed
-countMatches(mixed $element): mixed
-diff(?int $n = null): mixed
-dropNulls(): mixed
-eval(mixed $expr): mixed
-explode(): mixed
-filter(mixed $predicate): mixed
-first(): mixed
-gather(mixed $indices, ?bool $nullOnOob = null): mixed
-gatherEvery(mixed $n, mixed $offset = null): mixed
-get(mixed $index, ?bool $nullOnOob = null): mixed
-head(?int $n = null): mixed
-item(?bool $allowEmpty = null): mixed
-join(mixed $separator, ?bool $ignoreNulls = null): mixed
-last(): mixed
-len(): mixed
-max(): mixed
-mean(): mixed
-median(): mixed
-min(): mixed
-nUnique(): mixed
-reverse(): mixed
-sample(mixed $n = null, mixed $fraction = null, ?bool $withReplacement = null, ?bool $shuffle = null, ?int $seed = null): mixed
-setDifference(mixed $other): mixed
-setIntersection(mixed $other): mixed
-setSymmetricDifference(mixed $other): mixed
-setUnion(mixed $other): mixed
-shift(?int $n = null): mixed
-slice(int $offset, ?int $length = null): mixed
-sort(?bool $descending = null, ?bool $nullsLast = null): mixed
-std(?int $ddof = null): mixed
-sum(): mixed
-tail(?int $n = null): mixed
-toArray(int $width): mixed
-toStruct(mixed $fields = null): mixed
-unique(?bool $maintainOrder = null): mixed
-var(?int $ddof = null): mixed
-```
+- []{#list-agg} `agg(mixed $expr): mixed`
+- []{#list-all} `all(?bool $ignoreNulls = null): mixed`
+- []{#list-any} `any(?bool $ignoreNulls = null): mixed`
+- []{#list-argMax} `argMax(): mixed`
+- []{#list-argMin} `argMin(): mixed`
+- []{#list-concat} `concat(mixed $other): mixed`
+- []{#list-contains} `contains(mixed $item, ?bool $nullsEqual = null): mixed`
+- []{#list-countMatches} `countMatches(mixed $element): mixed`
+- []{#list-diff} `diff(?int $n = null): mixed`
+- []{#list-dropNulls} `dropNulls(): mixed`
+- []{#list-eval} `eval(mixed $expr): mixed`
+- []{#list-explode} `explode(): mixed`
+- []{#list-filter} `filter(mixed $predicate): mixed`
+- []{#list-first} `first(): mixed`
+- []{#list-gather} `gather(mixed $indices, ?bool $nullOnOob = null): mixed`
+- []{#list-gatherEvery} `gatherEvery(mixed $n, mixed $offset = null): mixed`
+- []{#list-get} `get(mixed $index, ?bool $nullOnOob = null): mixed`
+- []{#list-head} `head(?int $n = null): mixed`
+- []{#list-item} `item(?bool $allowEmpty = null): mixed`
+- []{#list-join} `join(mixed $separator, ?bool $ignoreNulls = null): mixed`
+- []{#list-last} `last(): mixed`
+- []{#list-len} `len(): mixed`
+- []{#list-max} `max(): mixed`
+- []{#list-mean} `mean(): mixed`
+- []{#list-median} `median(): mixed`
+- []{#list-min} `min(): mixed`
+- []{#list-nUnique} `nUnique(): mixed`
+- []{#list-reverse} `reverse(): mixed`
+- []{#list-sample} `sample(mixed $n = null, mixed $fraction = null, ?bool $withReplacement = null, ?bool $shuffle = null, ?int $seed = null): mixed`
+- []{#list-setDifference} `setDifference(mixed $other): mixed`
+- []{#list-setIntersection} `setIntersection(mixed $other): mixed`
+- []{#list-setSymmetricDifference} `setSymmetricDifference(mixed $other): mixed`
+- []{#list-setUnion} `setUnion(mixed $other): mixed`
+- []{#list-shift} `shift(?int $n = null): mixed`
+- []{#list-slice} `slice(int $offset, ?int $length = null): mixed`
+- []{#list-sort} `sort(?bool $descending = null, ?bool $nullsLast = null): mixed`
+- []{#list-std} `std(?int $ddof = null): mixed`
+- []{#list-sum} `sum(): mixed`
+- []{#list-tail} `tail(?int $n = null): mixed`
+- []{#list-toArray} `toArray(int $width): mixed`
+- []{#list-toStruct} `toStruct(mixed $fields = null): mixed`
+- []{#list-unique} `unique(?bool $maintainOrder = null): mixed`
+- []{#list-var} `var(?int $ddof = null): mixed`
 
-### `Phpolars\StructNameSpace`
+### `Phpolars\StructNameSpace` {#struct}
 
-```php
-field(string $name): mixed
-jsonEncode(): mixed
-renameFields(mixed $names): mixed
-unnest(): mixed
-withFields(mixed ...$exprs): mixed
-```
+- []{#struct-field} `field(string $name): mixed`
+- []{#struct-jsonEncode} `jsonEncode(): mixed`
+- []{#struct-renameFields} `renameFields(mixed $names): mixed`
+- []{#struct-unnest} `unnest(): mixed`
+- []{#struct-withFields} `withFields(mixed ...$exprs): mixed`
 
-### `Phpolars\NameNameSpace`
+### `Phpolars\NameNameSpace` {#name}
 
-```php
-keep(): Phpolars\Expr
-prefix(string $prefix): Phpolars\Expr
-prefixFields(string $prefix): Phpolars\Expr
-replace(string $pattern, string $value, ?bool $literal = null): Phpolars\Expr
-suffix(string $suffix): Phpolars\Expr
-suffixFields(string $suffix): Phpolars\Expr
-toLowercase(): Phpolars\Expr
-toUppercase(): Phpolars\Expr
-```
+- []{#name-keep} `keep(): Phpolars\Expr`
+- []{#name-prefix} `prefix(string $prefix): Phpolars\Expr`
+- []{#name-prefixFields} `prefixFields(string $prefix): Phpolars\Expr`
+- []{#name-replace} `replace(string $pattern, string $value, ?bool $literal = null): Phpolars\Expr`
+- []{#name-suffix} `suffix(string $suffix): Phpolars\Expr`
+- []{#name-suffixFields} `suffixFields(string $suffix): Phpolars\Expr`
+- []{#name-toLowercase} `toLowercase(): Phpolars\Expr`
+- []{#name-toUppercase} `toUppercase(): Phpolars\Expr`
 
-### `Phpolars\CatNameSpace`
+### `Phpolars\CatNameSpace` {#cat}
 
-```php
-endsWith(string $suffix): mixed
-getCategories(): mixed
-lenBytes(): mixed
-lenChars(): mixed
-slice(int $offset, ?int $length = null): mixed
-startsWith(string $prefix): mixed
-```
+- []{#cat-endsWith} `endsWith(string $suffix): mixed`
+- []{#cat-getCategories} `getCategories(): mixed`
+- []{#cat-lenBytes} `lenBytes(): mixed`
+- []{#cat-lenChars} `lenChars(): mixed`
+- []{#cat-slice} `slice(int $offset, ?int $length = null): mixed`
+- []{#cat-startsWith} `startsWith(string $prefix): mixed`
 
-### `Phpolars\ArrayNameSpace`
+### `Phpolars\ArrayNameSpace` {#arr}
 
-```php
-agg(mixed $expr): mixed
-all(?bool $ignoreNulls = null): mixed
-any(?bool $ignoreNulls = null): mixed
-argMax(): mixed
-argMin(): mixed
-contains(mixed $item, ?bool $nullsEqual = null): mixed
-countMatches(mixed $element): mixed
-eval(mixed $expr, ?bool $asList = null): mixed
-explode(): mixed
-first(): mixed
-get(mixed $index, ?bool $nullOnOob = null): mixed
-head(?int $n = null, ?bool $asArray = null): mixed
-join(mixed $separator, ?bool $ignoreNulls = null): mixed
-last(): mixed
-len(): mixed
-max(): mixed
-mean(): mixed
-median(): mixed
-min(): mixed
-nUnique(): mixed
-reverse(): mixed
-shift(mixed $n = null): mixed
-slice(mixed $offset, mixed $length = null, ?bool $asArray = null): mixed
-sort(?bool $descending = null, ?bool $nullsLast = null): mixed
-std(?int $ddof = null): mixed
-sum(): mixed
-tail(?int $n = null, ?bool $asArray = null): mixed
-toList(): mixed
-toStruct(): mixed
-unique(?bool $maintainOrder = null): mixed
-var(?int $ddof = null): mixed
-```
+- []{#arr-agg} `agg(mixed $expr): mixed`
+- []{#arr-all} `all(?bool $ignoreNulls = null): mixed`
+- []{#arr-any} `any(?bool $ignoreNulls = null): mixed`
+- []{#arr-argMax} `argMax(): mixed`
+- []{#arr-argMin} `argMin(): mixed`
+- []{#arr-contains} `contains(mixed $item, ?bool $nullsEqual = null): mixed`
+- []{#arr-countMatches} `countMatches(mixed $element): mixed`
+- []{#arr-eval} `eval(mixed $expr, ?bool $asList = null): mixed`
+- []{#arr-explode} `explode(): mixed`
+- []{#arr-first} `first(): mixed`
+- []{#arr-get} `get(mixed $index, ?bool $nullOnOob = null): mixed`
+- []{#arr-head} `head(?int $n = null, ?bool $asArray = null): mixed`
+- []{#arr-join} `join(mixed $separator, ?bool $ignoreNulls = null): mixed`
+- []{#arr-last} `last(): mixed`
+- []{#arr-len} `len(): mixed`
+- []{#arr-max} `max(): mixed`
+- []{#arr-mean} `mean(): mixed`
+- []{#arr-median} `median(): mixed`
+- []{#arr-min} `min(): mixed`
+- []{#arr-nUnique} `nUnique(): mixed`
+- []{#arr-reverse} `reverse(): mixed`
+- []{#arr-shift} `shift(mixed $n = null): mixed`
+- []{#arr-slice} `slice(mixed $offset, mixed $length = null, ?bool $asArray = null): mixed`
+- []{#arr-sort} `sort(?bool $descending = null, ?bool $nullsLast = null): mixed`
+- []{#arr-std} `std(?int $ddof = null): mixed`
+- []{#arr-sum} `sum(): mixed`
+- []{#arr-tail} `tail(?int $n = null, ?bool $asArray = null): mixed`
+- []{#arr-toList} `toList(): mixed`
+- []{#arr-toStruct} `toStruct(): mixed`
+- []{#arr-unique} `unique(?bool $maintainOrder = null): mixed`
+- []{#arr-var} `var(?int $ddof = null): mixed`
 
-### `Phpolars\BinaryNameSpace`
+### `Phpolars\BinaryNameSpace` {#bin}
 
-```php
-contains(mixed $literal): mixed
-decode(string $encoding, ?bool $strict = null): mixed
-encode(string $encoding): mixed
-endsWith(mixed $suffix): mixed
-get(mixed $index, ?bool $nullOnOob = null): mixed
-head(?int $n = null): mixed
-reinterpret(string $dtype, ?string $endianness = null): mixed
-size(?string $unit = null): mixed
-slice(mixed $offset, mixed $length = null): mixed
-startsWith(mixed $prefix): mixed
-tail(?int $n = null): mixed
-```
+- []{#bin-contains} `contains(mixed $literal): mixed`
+- []{#bin-decode} `decode(string $encoding, ?bool $strict = null): mixed`
+- []{#bin-encode} `encode(string $encoding): mixed`
+- []{#bin-endsWith} `endsWith(mixed $suffix): mixed`
+- []{#bin-get} `get(mixed $index, ?bool $nullOnOob = null): mixed`
+- []{#bin-head} `head(?int $n = null): mixed`
+- []{#bin-reinterpret} `reinterpret(string $dtype, ?string $endianness = null): mixed`
+- []{#bin-size} `size(?string $unit = null): mixed`
+- []{#bin-slice} `slice(mixed $offset, mixed $length = null): mixed`
+- []{#bin-startsWith} `startsWith(mixed $prefix): mixed`
+- []{#bin-tail} `tail(?int $n = null): mixed`
 

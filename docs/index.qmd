@@ -9,6 +9,8 @@ The API follows py-polars, Polars' Python package, with camelCase method names a
 
 {{< include examples/_quickstart.md >}}
 
+The example reads `sales.csv`, the example data from the docs. [Getting started](getting-started.qmd#a-starter-script) has a complete script with its imports, and the command that downloads the data.
+
 ## What it includes
 
 - `DataFrame` and `LazyFrame` with py-polars' methods: `select`, `withColumns`, `filter`, `sort`, `groupBy`/`agg`, `join`, `unique`, `pivot`, `unpivot`, `explode`, `describe`, and more.

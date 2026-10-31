@@ -12,7 +12,8 @@
     "8.5"
   ],
   "requires": [
-    "PIE"
+    "PIE",
+    "NTS (non-thread-safe) PHP"
   ],
   "optional": [],
   "build": [
@@ -21,15 +22,15 @@
   ],
   "platforms": [
     "Linux",
-    "macOS",
-    "NTS (non-thread-safe) PHP"
+    "macOS"
   ],
   "verify": {
     "command": "php -r 'echo phpversion(\"php_polars\"), PHP_EOL;'",
     "output": "0.2.1",
-    "note": "This checks the CLI. PHP-FPM reads its own php.ini and loads extensions when it starts, so restart FPM after installing and check it with a web request."
+    "note": "PHP-FPM reads its own php.ini, so enable the extension there and restart FPM."
   },
   "quickstart": "getting-started",
+  "installation": "deployment",
   "repository": "https://github.com/phpstats/phpolars",
   "example": {
     "chain": "use function Phpolars\\{col, len, read_csv};\n\n$sales = read_csv('sales.csv', tryParseDates: true);\n\n$top = $sales\n    ->filter(col('units')->gt(0))\n    ->withColumns(col('units')->mul(col('price'))->alias('revenue'))\n    ->groupBy('product', maintainOrder: true)\n    ->agg(col('revenue')->sum()->round(2), ['orders' => len()], col('price')->mean()->round(2)->alias('avg_price'))\n    ->sort('revenue', descending: true);\n\necho $top;\n",

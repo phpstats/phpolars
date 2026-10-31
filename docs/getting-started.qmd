@@ -20,14 +20,28 @@ php -r 'echo phpversion("php_polars"), PHP_EOL;'
 
 The command prints the installed version, such as `0.2.1`. It checks the CLI. PHP-FPM reads its own php.ini, so check a web request separately, for example with `extension_loaded('php_polars')` in a page.
 
+## A starter script
+
+phpolars needs no Composer packages, so an empty directory is enough. Download the example data, `sales.csv` (200 rows of sales by store and product), into it:
+
+```sh
+mkdir phpolars-start && cd phpolars-start
+curl -fsSLO https://raw.githubusercontent.com/phpstats/phpolars/v0.2.1/docs/data/sales.csv
+```
+
+Save this as `start.php` and run it with `php start.php`:
+
+{{< include examples/_starter.md >}}
+
 ## Imports
 
-Classes live in `Phpolars`, and functions are namespaced, so import them:
+Classes such as `Phpolars\DataFrame` live in the `Phpolars` namespace, and so do the functions, which need `use function`. The examples on this page use these:
 
 ```php
-use Phpolars\{DataFrame, Series};
-use function Phpolars\{col, lit, when, read_csv};
+use function Phpolars\{col, len, lit, read_csv, scan_csv, when};
 ```
+
+The examples below read the same `sales.csv`.
 
 ## A first query
 

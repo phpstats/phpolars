@@ -1,115 +1,113 @@
-### `Phpolars\Series`
+### `Phpolars\Series` {#series}
 
-```php
-__call(string $name, array $arguments): mixed
-__toString(): string
-abs(): Phpolars\Series
-add(mixed $other): Phpolars\Series
-alias(string $name): Phpolars\Series
-all(?bool $ignoreNulls = null): mixed
-and(mixed $other): Phpolars\Series
-any(?bool $ignoreNulls = null): mixed
-append(Phpolars\Series $other): Phpolars\Series
-argMax(): mixed
-argMin(): mixed
-argSort(?bool $descending = null, ?bool $nullsLast = null): Phpolars\Series
-argTrue(): Phpolars\Series
-arr(): Phpolars\ArrayNameSpace
-bin(): Phpolars\BinaryNameSpace
-cast(string $dtype, ?bool $strict = null): Phpolars\Series
-cat(): Phpolars\CatNameSpace
-chunkLengths(): array
-clear(?int $n = null): Phpolars\Series
-clip(mixed $lowerBound = null, mixed $upperBound = null): Phpolars\Series
-clone(): Phpolars\Series
-count(): int
-cumMax(?bool $reverse = null): Phpolars\Series
-cumMin(?bool $reverse = null): Phpolars\Series
-cumProd(?bool $reverse = null): Phpolars\Series
-cumSum(?bool $reverse = null): Phpolars\Series
-describe(?array $percentiles = null): Phpolars\DataFrame
-diff(?int $n = null): Phpolars\Series
-div(mixed $other): Phpolars\Series
-dropNulls(): Phpolars\Series
-dt(): Phpolars\DtNameSpace
-dtype(): string
-eq(mixed $other): Phpolars\Series
-equals(Phpolars\Series $other): bool
-estimatedSize(): int
-exp(): Phpolars\Series
-extend(Phpolars\Series $other): Phpolars\Series
-fillNan(mixed $value): Phpolars\Series
-fillNull(mixed $value = null, ?string $strategy = null, ?int $limit = null): Phpolars\Series
-filter(mixed $predicate): Phpolars\Series
-first(): mixed
-floordiv(mixed $other): Phpolars\Series
-gather(mixed $indices): Phpolars\Series
-ge(mixed $other): Phpolars\Series
-get(int $index): mixed
-gt(mixed $other): Phpolars\Series
-hasNulls(): bool
-head(?int $n = null): Phpolars\Series
-isBetween(mixed $lower, mixed $upper, ?string $closed = null): Phpolars\Series
-isDuplicated(): Phpolars\Series
-isEmpty(): bool
-isIn(mixed $other, ?bool $nullsEqual = null): Phpolars\Series
-isNan(): Phpolars\Series
-isNotNull(): Phpolars\Series
-isNull(): Phpolars\Series
-isSorted(?bool $descending = null, ?bool $nullsLast = null): bool
-isUnique(): Phpolars\Series
-item(): mixed
-last(): mixed
-le(mixed $other): Phpolars\Series
-len(): int
-list(): Phpolars\ListNameSpace
-log(?float $base = null): Phpolars\Series
-lt(mixed $other): Phpolars\Series
-max(): mixed
-mean(): mixed
-median(): mixed
-min(): mixed
-mod(mixed $other): Phpolars\Series
-mul(mixed $other): Phpolars\Series
-nChunks(): int
-nUnique(): mixed
-name(): string
-ne(mixed $other): Phpolars\Series
-newFromIndex(int $index, int $length): Phpolars\Series
-not(): Phpolars\Series
-nullCount(): int
-or(mixed $other): Phpolars\Series
-pctChange(?int $n = null): Phpolars\Series
-pow(mixed $exponent): Phpolars\Series
-product(): mixed
-quantile(float $quantile, ?string $interpolation = null): mixed
-rank(?string $method = null, ?bool $descending = null, ?int $seed = null): Phpolars\Series
-rechunk(): Phpolars\Series
-rename(string $name): Phpolars\Series
-reverse(): Phpolars\Series
-round(?int $decimals = null): Phpolars\Series
-sample(?int $n = null, ?float $fraction = null, ?bool $withReplacement = null, ?bool $shuffle = null, ?int $seed = null): Phpolars\Series
-scatter(mixed $indices, mixed $values): Phpolars\Series
-set(Phpolars\Series $filter, mixed $value): Phpolars\Series
-shape(): array
-shift(?int $n = null): Phpolars\Series
-shrinkToFit(): Phpolars\Series
-slice(int $offset, ?int $length = null): Phpolars\Series
-sort(?bool $descending = null, ?bool $nullsLast = null): Phpolars\Series
-sqrt(): Phpolars\Series
-std(?int $ddof = null): mixed
-str(): Phpolars\StrNameSpace
-struct(): Phpolars\StructNameSpace
-sub(mixed $other): Phpolars\Series
-sum(): mixed
-tail(?int $n = null): Phpolars\Series
-toDummies(?string $separator = null, ?bool $dropFirst = null, ?bool $dropNulls = null): Phpolars\DataFrame
-toFrame(?string $name = null): Phpolars\DataFrame
-toList(): array
-truediv(mixed $other): Phpolars\Series
-unique(?bool $maintainOrder = null): Phpolars\Series
-valueCounts(?bool $sort = null, ?string $name = null, ?bool $normalize = null): Phpolars\DataFrame
-var(?int $ddof = null): mixed
-zipWith(Phpolars\Series $mask, Phpolars\Series $other): Phpolars\Series
-```
+- []{#series-__call} `__call(string $name, array $arguments): mixed`
+- []{#series-__toString} `__toString(): string`
+- []{#series-abs} `abs(): Phpolars\Series`
+- []{#series-add} `add(mixed $other): Phpolars\Series`
+- []{#series-alias} `alias(string $name): Phpolars\Series`
+- []{#series-all} `all(?bool $ignoreNulls = null): mixed`
+- []{#series-and} `and(mixed $other): Phpolars\Series`
+- []{#series-any} `any(?bool $ignoreNulls = null): mixed`
+- []{#series-append} `append(Phpolars\Series $other): Phpolars\Series`
+- []{#series-argMax} `argMax(): mixed`
+- []{#series-argMin} `argMin(): mixed`
+- []{#series-argSort} `argSort(?bool $descending = null, ?bool $nullsLast = null): Phpolars\Series`
+- []{#series-argTrue} `argTrue(): Phpolars\Series`
+- []{#series-arr} `arr(): Phpolars\ArrayNameSpace`
+- []{#series-bin} `bin(): Phpolars\BinaryNameSpace`
+- []{#series-cast} `cast(string $dtype, ?bool $strict = null): Phpolars\Series`
+- []{#series-cat} `cat(): Phpolars\CatNameSpace`
+- []{#series-chunkLengths} `chunkLengths(): array`
+- []{#series-clear} `clear(?int $n = null): Phpolars\Series`
+- []{#series-clip} `clip(mixed $lowerBound = null, mixed $upperBound = null): Phpolars\Series`
+- []{#series-clone} `clone(): Phpolars\Series`
+- []{#series-count} `count(): int`
+- []{#series-cumMax} `cumMax(?bool $reverse = null): Phpolars\Series`
+- []{#series-cumMin} `cumMin(?bool $reverse = null): Phpolars\Series`
+- []{#series-cumProd} `cumProd(?bool $reverse = null): Phpolars\Series`
+- []{#series-cumSum} `cumSum(?bool $reverse = null): Phpolars\Series`
+- []{#series-describe} `describe(?array $percentiles = null): Phpolars\DataFrame`
+- []{#series-diff} `diff(?int $n = null): Phpolars\Series`
+- []{#series-div} `div(mixed $other): Phpolars\Series`
+- []{#series-dropNulls} `dropNulls(): Phpolars\Series`
+- []{#series-dt} `dt(): Phpolars\DtNameSpace`
+- []{#series-dtype} `dtype(): string`
+- []{#series-eq} `eq(mixed $other): Phpolars\Series`
+- []{#series-equals} `equals(Phpolars\Series $other): bool`
+- []{#series-estimatedSize} `estimatedSize(): int`
+- []{#series-exp} `exp(): Phpolars\Series`
+- []{#series-extend} `extend(Phpolars\Series $other): Phpolars\Series`
+- []{#series-fillNan} `fillNan(mixed $value): Phpolars\Series`
+- []{#series-fillNull} `fillNull(mixed $value = null, ?string $strategy = null, ?int $limit = null): Phpolars\Series`
+- []{#series-filter} `filter(mixed $predicate): Phpolars\Series`
+- []{#series-first} `first(): mixed`
+- []{#series-floordiv} `floordiv(mixed $other): Phpolars\Series`
+- []{#series-gather} `gather(mixed $indices): Phpolars\Series`
+- []{#series-ge} `ge(mixed $other): Phpolars\Series`
+- []{#series-get} `get(int $index): mixed`
+- []{#series-gt} `gt(mixed $other): Phpolars\Series`
+- []{#series-hasNulls} `hasNulls(): bool`
+- []{#series-head} `head(?int $n = null): Phpolars\Series`
+- []{#series-isBetween} `isBetween(mixed $lower, mixed $upper, ?string $closed = null): Phpolars\Series`
+- []{#series-isDuplicated} `isDuplicated(): Phpolars\Series`
+- []{#series-isEmpty} `isEmpty(): bool`
+- []{#series-isIn} `isIn(mixed $other, ?bool $nullsEqual = null): Phpolars\Series`
+- []{#series-isNan} `isNan(): Phpolars\Series`
+- []{#series-isNotNull} `isNotNull(): Phpolars\Series`
+- []{#series-isNull} `isNull(): Phpolars\Series`
+- []{#series-isSorted} `isSorted(?bool $descending = null, ?bool $nullsLast = null): bool`
+- []{#series-isUnique} `isUnique(): Phpolars\Series`
+- []{#series-item} `item(): mixed`
+- []{#series-last} `last(): mixed`
+- []{#series-le} `le(mixed $other): Phpolars\Series`
+- []{#series-len} `len(): int`
+- []{#series-list} `list(): Phpolars\ListNameSpace`
+- []{#series-log} `log(?float $base = null): Phpolars\Series`
+- []{#series-lt} `lt(mixed $other): Phpolars\Series`
+- []{#series-max} `max(): mixed`
+- []{#series-mean} `mean(): mixed`
+- []{#series-median} `median(): mixed`
+- []{#series-min} `min(): mixed`
+- []{#series-mod} `mod(mixed $other): Phpolars\Series`
+- []{#series-mul} `mul(mixed $other): Phpolars\Series`
+- []{#series-name} `name(): string`
+- []{#series-nChunks} `nChunks(): int`
+- []{#series-ne} `ne(mixed $other): Phpolars\Series`
+- []{#series-newFromIndex} `newFromIndex(int $index, int $length): Phpolars\Series`
+- []{#series-not} `not(): Phpolars\Series`
+- []{#series-nullCount} `nullCount(): int`
+- []{#series-nUnique} `nUnique(): mixed`
+- []{#series-or} `or(mixed $other): Phpolars\Series`
+- []{#series-pctChange} `pctChange(?int $n = null): Phpolars\Series`
+- []{#series-pow} `pow(mixed $exponent): Phpolars\Series`
+- []{#series-product} `product(): mixed`
+- []{#series-quantile} `quantile(float $quantile, ?string $interpolation = null): mixed`
+- []{#series-rank} `rank(?string $method = null, ?bool $descending = null, ?int $seed = null): Phpolars\Series`
+- []{#series-rechunk} `rechunk(): Phpolars\Series`
+- []{#series-rename} `rename(string $name): Phpolars\Series`
+- []{#series-reverse} `reverse(): Phpolars\Series`
+- []{#series-round} `round(?int $decimals = null): Phpolars\Series`
+- []{#series-sample} `sample(?int $n = null, ?float $fraction = null, ?bool $withReplacement = null, ?bool $shuffle = null, ?int $seed = null): Phpolars\Series`
+- []{#series-scatter} `scatter(mixed $indices, mixed $values): Phpolars\Series`
+- []{#series-set} `set(Phpolars\Series $filter, mixed $value): Phpolars\Series`
+- []{#series-shape} `shape(): array`
+- []{#series-shift} `shift(?int $n = null): Phpolars\Series`
+- []{#series-shrinkToFit} `shrinkToFit(): Phpolars\Series`
+- []{#series-slice} `slice(int $offset, ?int $length = null): Phpolars\Series`
+- []{#series-sort} `sort(?bool $descending = null, ?bool $nullsLast = null): Phpolars\Series`
+- []{#series-sqrt} `sqrt(): Phpolars\Series`
+- []{#series-std} `std(?int $ddof = null): mixed`
+- []{#series-str} `str(): Phpolars\StrNameSpace`
+- []{#series-struct} `struct(): Phpolars\StructNameSpace`
+- []{#series-sub} `sub(mixed $other): Phpolars\Series`
+- []{#series-sum} `sum(): mixed`
+- []{#series-tail} `tail(?int $n = null): Phpolars\Series`
+- []{#series-toDummies} `toDummies(?string $separator = null, ?bool $dropFirst = null, ?bool $dropNulls = null): Phpolars\DataFrame`
+- []{#series-toFrame} `toFrame(?string $name = null): Phpolars\DataFrame`
+- []{#series-toList} `toList(): array`
+- []{#series-truediv} `truediv(mixed $other): Phpolars\Series`
+- []{#series-unique} `unique(?bool $maintainOrder = null): Phpolars\Series`
+- []{#series-valueCounts} `valueCounts(?bool $sort = null, ?string $name = null, ?bool $normalize = null): Phpolars\DataFrame`
+- []{#series-var} `var(?int $ddof = null): mixed`
+- []{#series-zipWith} `zipWith(Phpolars\Series $mask, Phpolars\Series $other): Phpolars\Series`
 

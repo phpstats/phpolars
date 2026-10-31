@@ -57,4 +57,6 @@ foreach ($sales->groupBy('store', maintainOrder: true) as $key => $rows) {
 
 ## Methods
 
+{{< include _index-dataframe.md >}}
+
 {{< include _api-dataframe.md >}}
