@@ -7,7 +7,12 @@ suppressPackageStartupMessages({
 path <- commandArgs(trailingOnly = TRUE)[1]
 start <- Sys.time()
 
-summary <- read_csv(path, col_types = cols(placed_on = col_character()), progress = FALSE) |>
+summary <- read_csv(
+  path,
+  col_select = c(placed_on, region, status, quantity, amount),
+  col_types = cols(placed_on = col_character()),
+  progress = FALSE
+) |>
   filter(status == "completed") |>
   group_by(region, month = substr(placed_on, 1, 7)) |>
   summarise(
