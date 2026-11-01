@@ -273,13 +273,7 @@ ul.task-list li input[type="checkbox"] {
    
   <ul>
   <li><a href="#practical-guidance" id="toc-practical-guidance" class="nav-link active" data-scroll-target="#practical-guidance">Practical guidance</a></li>
-  <li><a href="#benchmark-reports" id="toc-benchmark-reports" class="nav-link" data-scroll-target="#benchmark-reports">Benchmark reports</a>
-  <ul class="collapse">
-  <li><a href="#a-csv-pipeline-best-of-five" id="toc-a-csv-pipeline-best-of-five" class="nav-link" data-scroll-target="#a-csv-pipeline-best-of-five">A CSV pipeline (best of five)</a></li>
-  <li><a href="#phplyr-pipelines-on-three-backends-best-of-three" id="toc-phplyr-pipelines-on-three-backends-best-of-three" class="nav-link" data-scroll-target="#phplyr-pipelines-on-three-backends-best-of-three">phplyr pipelines on three backends (best of three)</a></li>
   <li><a href="#memory-on-large-files" id="toc-memory-on-large-files" class="nav-link" data-scroll-target="#memory-on-large-files">Memory on large files</a></li>
-  </ul></li>
-  <li><a href="#binary-size" id="toc-binary-size" class="nav-link" data-scroll-target="#binary-size">Binary size</a></li>
   </ul>
 </nav>
     </div>
@@ -309,264 +303,23 @@ ul.task-list li input[type="checkbox"] {
 <h2 class="anchored" data-anchor-id="practical-guidance">Practical guidance</h2>
 <ul>
 <li>Polars memory is outside PHP’s memory manager, so <code>memory_limit</code> does not count it. PHP arrays built from a result do count.</li>
-<li><code>rows()</code> and <code>iterRows()</code> build PHP arrays for every row. On 200,000 rows of 22 strings, they use about 340 MB of PHP memory. Calling <code>rows()</code> on each slice from <code>iterSlices(10000)</code> keeps PHP’s peak near 20 MB.</li>
-<li>Collecting 1M rows into PHP takes about 0.2 s for plain columns, plus about 0.5 s for each datetime column, because each value becomes a <code>DateTimeImmutable</code> object.</li>
+<li><code>rows()</code>, <code>toDicts()</code>, and <code>iterRows()</code> build PHP arrays for every row, which can take far more memory than the data does in Polars. Calling <code>rows()</code> on each slice from <code>iterSlices(10000)</code> keeps PHP’s peak low.</li>
+<li>Collecting rows into PHP costs time in proportion to the rows and columns returned. Datetime columns cost the most, because each value becomes a <code>DateTimeImmutable</code> object.</li>
 <li>A <code>PolarsTable</code> gains the most when a pipeline reduces the data (summaries, filters, or joins followed by summaries) or chains several verbs before collecting.</li>
 <li>Reading files with <code>Phpolars\read_csv()</code> or <code>read_parquet()</code> and wrapping the result with <code>PolarsTable::fromPolars()</code> avoids parsing the file in PHP.</li>
-<li>A verb given a PHP closure converts a <code>PolarsTable</code> to a phibble <code>DataFrame</code> and back. That costs about 1 s per million rows with a datetime column. Use expressions on large data, or phibble’s in-memory <code>DataFrame</code> for closure-heavy pipelines.</li>
-<li>For a filtered scan of a large file, <code>collect(engine: 'streaming')</code> keeps much less in memory. <a href="#memory-on-large-files">Memory on large files</a> has the measurements.</li>
+<li>A verb given a PHP closure converts a <code>PolarsTable</code> to a phibble <code>DataFrame</code> and back. Use expressions on large data, or phibble’s in-memory <code>DataFrame</code> for closure-heavy pipelines.</li>
+<li>For a filtered scan of a large file, <code>collect(engine: 'streaming')</code> runs in batches and keeps less in memory.</li>
 </ul>
 </section>
-<section id="benchmark-reports" class="level2">
-<h2 class="anchored" data-anchor-id="benchmark-reports">Benchmark reports</h2>
-<p>The reports below share these methods. The Benchmarks tab on phpolars.phpstats.org shows separate records, which report medians.</p>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 50%">
-<col style="width: 50%">
-</colgroup>
-<tbody>
-<tr class="odd">
-<td>Hardware</td>
-<td>Apple M5 Ultra</td>
-</tr>
-<tr class="even">
-<td>Software</td>
-<td>Homebrew PHP 8.5.10 on macOS, and phpolars at the commit given with each report</td>
-</tr>
-<tr class="odd">
-<td>Threads</td>
-<td>Polars’ default of 2, unless a row says otherwise</td>
-</tr>
-<tr class="even">
-<td>Repetitions</td>
-<td>several runs in one process, as each report states</td>
-</tr>
-<tr class="odd">
-<td>Statistic</td>
-<td>the fastest run, which leaves out one-time costs such as starting the thread pool and loading the file into the file cache</td>
-</tr>
-</tbody>
-</table>
-<section id="a-csv-pipeline-best-of-five" class="level3">
-<h3 class="anchored" data-anchor-id="a-csv-pipeline-best-of-five">A CSV pipeline (best of five)</h3>
-<p><code>bench/pipeline.php</code> reads a 1M-row, 16 MB CSV, filters it, groups and aggregates it, and returns PHP arrays. <code>bench/make-csv.php</code> generates the CSV with a fixed seed: a string group column with 50 values, an integer column with about 2% missing values, and a float column. Each run is timed from <code>read_csv()</code> through <code>toDicts()</code>, so it includes parsing the file and building the PHP arrays. All implementations produce the same result. Recorded on 2026-10-15 at commit 8fd9d36.</p>
-<table class="caption-top table">
-<thead>
-<tr class="header">
-<th>Implementation</th>
-<th>Time</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>phpolars, 1 thread</td>
-<td>49 ms</td>
-</tr>
-<tr class="even">
-<td>phpolars, 2 threads (default)</td>
-<td>27 ms</td>
-</tr>
-<tr class="odd">
-<td>phpolars, 4 threads</td>
-<td>17 ms</td>
-</tr>
-<tr class="even">
-<td>plain PHP arrays (<code>fgetcsv</code> loop)</td>
-<td>342 ms</td>
-</tr>
-</tbody>
-</table>
-</section>
-<section id="phplyr-pipelines-on-three-backends-best-of-three" class="level3">
-<h3 class="anchored" data-anchor-id="phplyr-pipelines-on-three-backends-best-of-three">phplyr pipelines on three backends (best of three)</h3>
-<p><code>bench/phplyr.php</code> runs phplyr pipelines on phibble’s in-memory <code>DataFrame</code>, <code>PolarsTable</code>, and phibble’s <code>SqlTable</code> over SQLite. The data is a sales table (store, product, day, units with 2% NA and 5% zeros, price) and a 100-row store lookup. Loading is not timed. Each pipeline is timed through <code>collect()</code>, which builds a <code>Phibble\DataFrame</code>, and the results of all backends are compared.</p>
+<section id="memory-on-large-files" class="level2">
+<h2 class="anchored" data-anchor-id="memory-on-large-files">Memory on large files</h2>
 <ul>
-<li><strong>A:</strong> filter, left join, grouped summary, then a ranked window within regions.</li>
-<li><strong>B:</strong> per-store windows over every row: <code>lag(order_by: day)</code>, <code>cumsum</code>, and a share of the group sum.</li>
-<li><strong>C:</strong> pipeline A with a PHP closure in <code>filter()</code>.</li>
-</ul>
-<table class="caption-top table">
-<thead>
-<tr class="header">
-<th>Pipeline</th>
-<th>Rows</th>
-<th>phibble DataFrame</th>
-<th>PolarsTable</th>
-<th>SqlTable</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>A</td>
-<td>100k</td>
-<td>0.166 s</td>
-<td>0.009 s</td>
-<td>0.044 s</td>
-</tr>
-<tr class="even">
-<td>B</td>
-<td>100k</td>
-<td>0.212 s</td>
-<td>0.048 s</td>
-<td>0.279 s</td>
-</tr>
-<tr class="odd">
-<td>C</td>
-<td>100k</td>
-<td>0.180 s</td>
-<td>0.088 s</td>
-<td>0.291 s</td>
-</tr>
-<tr class="even">
-<td>A</td>
-<td>1M</td>
-<td>1.517 s</td>
-<td>0.062 s</td>
-<td>0.456 s</td>
-</tr>
-<tr class="odd">
-<td>B</td>
-<td>1M</td>
-<td>2.677 s</td>
-<td>0.438 s</td>
-<td>3.571 s</td>
-</tr>
-<tr class="even">
-<td>C</td>
-<td>1M</td>
-<td>1.670 s</td>
-<td>0.909 s</td>
-<td>2.875 s</td>
-</tr>
-</tbody>
-</table>
-<p>Compared with phibble’s in-memory <code>DataFrame</code>, <code>PolarsTable</code> took 18 to 24 times less time on pipeline A, 4 to 6 times less on pipeline B, and about half the time on pipeline C, whose closure converts the table. These runs used phpolars at 5b4b0fa and phibble at dbd8b1e, on 2026-10-16. SqlTable’s pipeline B results differed from the other backends then. phibble fixed this in ccafa98.</p>
-</section>
-<section id="memory-on-large-files" class="level3">
-<h3 class="anchored" data-anchor-id="memory-on-large-files">Memory on large files</h3>
-<p>The query filters a 500 MB, 22-column CSV and keeps 4% of its rows (a 17 MB result). Measured on 2026-10-30 at 810f689.</p>
-<table class="caption-top table">
-<thead>
-<tr class="header">
-<th>Engine</th>
-<th>Peak footprint, macOS</th>
-<th>Anonymous memory at the end, Linux</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>default (in memory)</td>
-<td>about 550 MB</td>
-<td>485 MB</td>
-</tr>
-<tr class="even">
-<td>streaming, 1 thread</td>
-<td>about 100 MB</td>
-<td>80 MB</td>
-</tr>
-<tr class="odd">
-<td>streaming, 4 threads</td>
-<td>about 130 MB</td>
-<td>115 MB</td>
-</tr>
-</tbody>
-</table>
-<ul>
-<li>The Linux numbers come from Docker with the <code>dist</code> build. <code>tests/memory.php</code> checks the bound on both systems.</li>
-<li><code>scan_csv()</code> applies filters in the reader with either engine. A filter that keeps no rows reads the same file in 45 to 100 MB of process memory.</li>
-<li>With the default engine, kept rows cost more than their own size. A String column that keeps a few strings from a parsed batch holds the batch’s whole buffer. The streaming engine, added in v0.2.1, copies the kept strings into buffers of their own.</li>
-<li>Polars maps the CSV file into memory, so a process’s resident set size also includes up to the file’s size in pages that the operating system can reclaim. The macOS footprint leaves these pages out.</li>
+<li><code>scan_csv()</code> applies filters in the reader with either engine, so rows that a filter rejects are not kept.</li>
+<li>With the default engine, kept rows can cost more than their own size. A String column that keeps a few strings from a parsed batch holds the batch’s whole buffer. The streaming engine copies the kept strings into buffers of their own.</li>
+<li>Polars maps the CSV file into memory, so a process’s resident set size also includes up to the file’s size in pages that the operating system can reclaim.</li>
+<li><code>tests/memory.php</code> checks that a filtered streaming scan holds much less than the file.</li>
 <li>The <code>sink*()</code> methods stream a result to a file without collecting it.</li>
 </ul>
-</section>
-</section>
-<section id="binary-size" class="level2">
-<h2 class="anchored" data-anchor-id="binary-size">Binary size</h2>
-<table class="caption-top table">
-<thead>
-<tr class="header">
-<th>Build</th>
-<th>opt-level</th>
-<th>Size</th>
-<th>Benchmark, 1 / 4 threads</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>all features (<code>dist</code> default)</td>
-<td>s</td>
-<td>64.5 MB</td>
-<td>47 / 23 ms</td>
-</tr>
-<tr class="even">
-<td>without <code>sql</code></td>
-<td>s</td>
-<td>60.4 MB</td>
-<td></td>
-</tr>
-<tr class="odd">
-<td>v0.1.0, all features, <code>release</code> profile (no LTO)</td>
-<td>3</td>
-<td>117 MB</td>
-<td></td>
-</tr>
-<tr class="even">
-<td>v0.1.0, all features</td>
-<td>3</td>
-<td>57.3 MB</td>
-<td>44 / 23 ms</td>
-</tr>
-<tr class="odd">
-<td>v0.1.0, all features (<code>dist</code> default)</td>
-<td>s</td>
-<td>40.2 MB</td>
-<td>45 / 21 ms</td>
-</tr>
-<tr class="even">
-<td>v0.1.0, all features</td>
-<td>z</td>
-<td>23.9 MB</td>
-<td>86 / 33 ms</td>
-</tr>
-<tr class="odd">
-<td>v0.1.0, without <code>fmt</code></td>
-<td>3</td>
-<td>57.2 MB</td>
-<td></td>
-</tr>
-<tr class="even">
-<td>v0.1.0, without <code>json</code></td>
-<td>3</td>
-<td>56.8 MB</td>
-<td></td>
-</tr>
-<tr class="odd">
-<td>v0.1.0, without <code>ipc</code></td>
-<td>3</td>
-<td>56.9 MB</td>
-<td></td>
-</tr>
-<tr class="even">
-<td>v0.1.0, without <code>parquet</code> and <code>ipc</code></td>
-<td>3</td>
-<td>52.4 MB</td>
-<td></td>
-</tr>
-<tr class="odd">
-<td>v0.1.0, CSV only (no optional features)</td>
-<td>3</td>
-<td>51.8 MB</td>
-<td></td>
-</tr>
-<tr class="even">
-<td>v0.1.0, CSV only (no optional features)</td>
-<td>s</td>
-<td>35.9 MB</td>
-<td></td>
-</tr>
-</tbody>
-</table>
 
 
 </section>

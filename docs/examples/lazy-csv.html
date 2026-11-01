@@ -416,7 +416,7 @@ shape: (4, 3)
 <li><code>ESTIMATED ROWS</code> is the planner’s estimate, not a count.</li>
 <li><code>scan_csv()</code> doesn’t open the file. A missing file raises an error at <code>explain()</code> or <code>collect()</code>.</li>
 <li><code>read_csv()</code> would parse all six columns of every row before filtering.</li>
-<li><code>collect(engine: 'streaming')</code> runs the query in batches. On a 276 MB version of this file, it peaked at 71 MB, against 217 MB with the default engine (one run each, macOS).</li>
+<li><code>collect(engine: 'streaming')</code> runs the query in batches, which can lower peak memory on large files.</li>
 </ul>
 <p>Reference: <a href="../reference/io.html#fn-scan_csv">scan_csv()</a> · <a href="../reference/dataframe.html#lazyframe-explain">explain()</a> · <a href="../reference/dataframe.html#lazyframe-collect">collect()</a> · <a href="../getting-started.html#lazy-queries">Lazy queries</a> · <a href="../performance.html#memory-on-large-files">Memory on large files</a></p>
 

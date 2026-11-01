@@ -1,8 +1,9 @@
 <?php
-// php -d memory_limit=-1 -d extension=... bench/site.php DATA_DIR [REPS]
+// php -d memory_limit=-1 -d extension=... bench/site.php DATA_DIR [REPS] [phpolars|plain]
 //
 // Times reads, group-bys, and joins for the site benchmarks, with phpolars and
-// with plain PHP arrays, and prints one JSON object. bench/site.py runs the
+// with plain PHP arrays, and prints one JSON object. The last argument runs
+// one implementation, so that a process's peak memory belongs to it. bench/site.py runs the
 // same cases with py-polars on the same files. scripts/site-content writes the
 // data files and combines the results.
 //
@@ -12,7 +13,7 @@ declare(strict_types=1);
 
 use function Phpolars\col;
 
-[$_, $dir, $reps] = $argv + [null, null, '5'];
+[$_, $dir, $reps, $only] = $argv + [null, null, '5', null];
 $reps = (int) $reps;
 $facts = "$dir/facts.csv";
 $dim = "$dir/dim.csv";
@@ -32,7 +33,9 @@ function timed(callable $f, int $reps): array
 }
 
 $results = [];
+$check = [];
 
+if ($only === null || $only === 'phpolars') {
 // phpolars. Results stay in Polars, as they do in the py-polars script.
 $pf = Phpolars\read_csv($facts);
 $pd = Phpolars\read_csv($dim);
@@ -50,6 +53,9 @@ $check['phpolars'] = [
     'joined' => $pf->join($pd, on: 'k', how: 'inner')->height(),
 ];
 unset($pf, $pd);
+}
+
+if ($only === null || $only === 'plain') {
 
 // Plain PHP arrays: rows as lists, read with fgetcsv.
 $readRows = function (string $path, callable $cast): array {
@@ -103,6 +109,7 @@ $results['plain PHP arrays'] = [
     'join' => timed($join, $reps),
 ];
 $check['plain PHP arrays'] = ['groups' => count($groupBy()), 'joined' => count($join())];
+}
 
 echo json_encode(['results' => $results, 'check' => $check, 'php' => PHP_VERSION,
-    'phpolars' => phpversion('php_polars'), 'threads' => Phpolars\thread_pool_size()]), "\n";
+    'phpolars' => phpversion('php_polars'), 'threads' => extension_loaded('php_polars') ? Phpolars\thread_pool_size() : null]), "\n";

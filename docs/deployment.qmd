@@ -75,7 +75,7 @@ PHP=$(which php) PHP_CONFIG=$(which php-config) cargo build --profile dist
 
 Copy `target/dist/libphp_polars.so`, or `libphp_polars.dylib` on macOS, into `php-config --extension-dir` as `php_polars.so`, and add `extension=php_polars.so` to the php.ini that `php --ini` reports. On macOS with Homebrew, also set `LIBCLANG_PATH=$(brew --prefix llvm)/lib`. When several PHP versions are installed, point `PHP` and `PHP_CONFIG` at the PHP that will load the extension, because the build uses that PHP's headers.
 
-Build with `--profile dist` for anything you deploy. The `dist` profile applies fat LTO, `opt-level = "s"`, and symbol stripping, so its library is about a third the size of a `release` build. [Performance](performance.qmd#binary-size) lists the sizes.
+Build with `--profile dist` for anything you deploy. The `dist` profile applies fat LTO, `opt-level = "s"`, and symbol stripping, so its library is much smaller than a `release` build's.
 
 ### Optional formats
 
@@ -89,7 +89,7 @@ The release binaries and a default build include every format. A source build ca
 | `fmt` | the table layout that `__toString()` prints |
 | `sql` | `SQLContext`, `DataFrame::sql()`, `LazyFrame::sql()`, and `Phpolars\sql()` |
 
-For example, `cargo build --profile dist --no-default-features --features parquet` builds an extension with CSV and Parquet only. The Parquet, IPC, and JSON functions of a build without that feature raise a `ComputeError`. [Performance](performance.qmd#binary-size) lists the size of each build.
+For example, `cargo build --profile dist --no-default-features --features parquet` builds an extension with CSV and Parquet only. The Parquet, IPC, and JSON functions of a build without that feature raise a `ComputeError`.
 
 ## Threads under PHP-FPM
 
@@ -107,7 +107,7 @@ PHP closures never run on Polars threads. Every phpolars operation is built from
 
 ## Memory
 
-Polars allocates with its own allocator, outside PHP's memory manager. `memory_get_usage()` and `memory_limit` do not see that memory. Reading a 1M-row CSV raises a process's resident memory to about 83 MB while `memory_get_peak_usage()` reports 2 MB. Size FPM pools and queue workers by process memory, and limit request data with the application's own checks. PHP arrays built from a result, for example with `rows()` or `toDicts()`, do count against `memory_limit`. [Performance](performance.qmd#memory-on-large-files) measures memory on large files.
+Polars allocates with its own allocator, outside PHP's memory manager. `memory_get_usage()` and `memory_limit` do not see that memory, so a process can hold far more than `memory_get_peak_usage()` reports. Size FPM pools and queue workers by process memory, and limit request data with the application's own checks. PHP arrays built from a result, for example with `rows()` or `toDicts()`, do count against `memory_limit`. [Performance](performance.qmd#memory-on-large-files) measures memory on large files.
 
 ## Checking an installation
 

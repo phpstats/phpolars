@@ -414,7 +414,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> checkout v0.2.1</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="va">PHP</span><span class="op">=</span><span class="va">$(</span><span class="fu">which</span> php<span class="va">)</span> <span class="va">PHP_CONFIG</span><span class="op">=</span><span class="va">$(</span><span class="fu">which</span> php-config<span class="va">)</span> <span class="ex">cargo</span> build <span class="at">--profile</span> dist</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Copy <code>target/dist/libphp_polars.so</code>, or <code>libphp_polars.dylib</code> on macOS, into <code>php-config --extension-dir</code> as <code>php_polars.so</code>, and add <code>extension=php_polars.so</code> to the php.ini that <code>php --ini</code> reports. On macOS with Homebrew, also set <code>LIBCLANG_PATH=$(brew --prefix llvm)/lib</code>. When several PHP versions are installed, point <code>PHP</code> and <code>PHP_CONFIG</code> at the PHP that will load the extension, because the build uses that PHP’s headers.</p>
-<p>Build with <code>--profile dist</code> for anything you deploy. The <code>dist</code> profile applies fat LTO, <code>opt-level = "s"</code>, and symbol stripping, so its library is about a third the size of a <code>release</code> build. <a href="./performance.html#binary-size">Performance</a> lists the sizes.</p>
+<p>Build with <code>--profile dist</code> for anything you deploy. The <code>dist</code> profile applies fat LTO, <code>opt-level = "s"</code>, and symbol stripping, so its library is much smaller than a <code>release</code> build’s.</p>
 <section id="optional-formats" class="level3">
 <h3 class="anchored" data-anchor-id="optional-formats">Optional formats</h3>
 <p>The release binaries and a default build include every format. A source build can leave formats out with Cargo features to make the library smaller:</p>
@@ -452,7 +452,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </tr>
 </tbody>
 </table>
-<p>For example, <code>cargo build --profile dist --no-default-features --features parquet</code> builds an extension with CSV and Parquet only. The Parquet, IPC, and JSON functions of a build without that feature raise a <code>ComputeError</code>. <a href="./performance.html#binary-size">Performance</a> lists the size of each build.</p>
+<p>For example, <code>cargo build --profile dist --no-default-features --features parquet</code> builds an extension with CSV and Parquet only. The Parquet, IPC, and JSON functions of a build without that feature raise a <code>ComputeError</code>.</p>
 </section>
 </section>
 <section id="threads-under-php-fpm" class="level2">
@@ -466,7 +466,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="memory" class="level2">
 <h2 class="anchored" data-anchor-id="memory">Memory</h2>
-<p>Polars allocates with its own allocator, outside PHP’s memory manager. <code>memory_get_usage()</code> and <code>memory_limit</code> do not see that memory. Reading a 1M-row CSV raises a process’s resident memory to about 83 MB while <code>memory_get_peak_usage()</code> reports 2 MB. Size FPM pools and queue workers by process memory, and limit request data with the application’s own checks. PHP arrays built from a result, for example with <code>rows()</code> or <code>toDicts()</code>, do count against <code>memory_limit</code>. <a href="./performance.html#memory-on-large-files">Performance</a> measures memory on large files.</p>
+<p>Polars allocates with its own allocator, outside PHP’s memory manager. <code>memory_get_usage()</code> and <code>memory_limit</code> do not see that memory, so a process can hold far more than <code>memory_get_peak_usage()</code> reports. Size FPM pools and queue workers by process memory, and limit request data with the application’s own checks. PHP arrays built from a result, for example with <code>rows()</code> or <code>toDicts()</code>, do count against <code>memory_limit</code>. <a href="./performance.html#memory-on-large-files">Performance</a> measures memory on large files.</p>
 </section>
 <section id="checking-an-installation" class="level2">
 <h2 class="anchored" data-anchor-id="checking-an-installation">Checking an installation</h2>

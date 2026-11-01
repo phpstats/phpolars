@@ -311,10 +311,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#testing" id="toc-testing" class="nav-link" data-scroll-target="#testing">Testing</a></li>
   <li><a href="#comparing-with-py-polars" id="toc-comparing-with-py-polars" class="nav-link" data-scroll-target="#comparing-with-py-polars">Comparing with py-polars</a></li>
   <li><a href="#documentation" id="toc-documentation" class="nav-link" data-scroll-target="#documentation">Documentation</a></li>
-  <li><a href="#release-packaging" id="toc-release-packaging" class="nav-link" data-scroll-target="#release-packaging">Release packaging</a>
-  <ul class="collapse">
-  <li><a href="#release-notes" id="toc-release-notes" class="nav-link" data-scroll-target="#release-notes">Release notes</a></li>
-  </ul></li>
+  <li><a href="#release-packaging" id="toc-release-packaging" class="nav-link" data-scroll-target="#release-packaging">Release packaging</a></li>
   <li><a href="#stubs" id="toc-stubs" class="nav-link" data-scroll-target="#stubs">Stubs</a></li>
   </ul>
 </nav>
@@ -369,18 +366,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="release-packaging" class="level2">
 <h2 class="anchored" data-anchor-id="release-packaging">Release packaging</h2>
 <p>The packaging workflow builds the extension inside the official <code>php:8.3-fpm-bookworm</code>, <code>php:8.4-fpm-bookworm</code>, and <code>php:8.5-fpm-bookworm</code> images for x86_64 and arm64. It installs each build with PIE, runs the release checks, and sends requests through PHP-FPM. Each tested <code>php_polars.so</code> is packaged in a zip named as PIE expects, with <code>manifest.json</code>, <code>INSTALL.txt</code>, and <code>THIRD_PARTY_NOTICES.txt</code>. After a release is published, the release workflow installs each archive into a clean PHP image by hand, and again with <code>pie install</code>, which must pick the prebuilt archive without a Rust toolchain.</p>
-<section id="release-notes" class="level3">
-<h3 class="anchored" data-anchor-id="release-notes">Release notes</h3>
-<p>These are dated records of checks on past releases. <a href="./deployment.html">Deployment</a> has the current instructions.</p>
-<ul>
-<li>v0.2.0 (published 2026-10-30):
-<ul>
-<li><code>pie install phpstats/phpolars</code> installed the prebuilt binary, and <code>phpversion("php_polars")</code> reported <code>0.2.0</code>, in the official <code>php:8.5-cli-bookworm</code> image and on Ubuntu 24.04 with the ondrej/php PPA’s PHP 8.5, both on arm64. On Ubuntu, PIE enabled the extension for the CLI and for PHP-FPM.</li>
-<li>The PHP 8.5 binaries passed <code>tests/deployment.php</code> under the CLI and under PHP-FPM on Ubuntu 24.04 with the PPA’s PHP 8.5.12, on x86_64 and arm64.</li>
-<li>The Linux binaries were 71 MB on x86_64 and 64 MB on arm64, and 21 MB and 19 MB zipped. On macOS, the <code>dist</code> library was 65 MB and the <code>release</code> library 207 MB.</li>
-</ul></li>
-</ul>
-</section>
 </section>
 <section id="stubs" class="level2">
 <h2 class="anchored" data-anchor-id="stubs">Stubs</h2>

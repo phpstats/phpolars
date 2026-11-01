@@ -59,8 +59,6 @@ $out = phplyr($table)
 4 S4        17      8.88
 ```
 
-These examples were run with phibble v0.5.0 and phplyr at f7edd6e on `docs/data/sales.csv`.
-
 ## Moving data in and out
 
 - `PolarsTable::fromPolars($df)` wraps a phpolars `DataFrame` without copying it. A `LazyFrame` is collected first.

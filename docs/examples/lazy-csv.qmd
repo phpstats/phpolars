@@ -21,6 +21,6 @@ The setup script writes `orders.csv`, one million orders in six columns (53 MB),
 - `ESTIMATED ROWS` is the planner's estimate, not a count.
 - `scan_csv()` doesn't open the file. A missing file raises an error at `explain()` or `collect()`.
 - `read_csv()` would parse all six columns of every row before filtering.
-- `collect(engine: 'streaming')` runs the query in batches. On a 276 MB version of this file, it peaked at 71 MB, against 217 MB with the default engine (one run each, macOS).
+- `collect(engine: 'streaming')` runs the query in batches, which can lower peak memory on large files.
 
 Reference: [scan_csv()](../reference/io.qmd#fn-scan_csv) · [explain()](../reference/dataframe.qmd#lazyframe-explain) · [collect()](../reference/dataframe.qmd#lazyframe-collect) · [Lazy queries](../getting-started.qmd#lazy-queries) · [Memory on large files](../performance.qmd#memory-on-large-files)

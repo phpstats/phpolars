@@ -108,8 +108,6 @@
     ]
   },
   "benchmarks": [
-    "site/benchmarks/py-polars.json",
-    "site/benchmarks/php-arrays.json",
     "site/benchmarks/csv-pipeline.json"
   ],
   "verifications": [

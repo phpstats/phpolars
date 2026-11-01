@@ -5,7 +5,9 @@
  * Write phpolars' content for phpolars.phpstats.org into site/:
  *   site/verifications/py-polars-fixtures.json  from tests/pyfixtures.php
  *   site/benchmarks/py-polars.json and php-arrays.json  from bench/site.php and bench/site.py
- * The benchmarks need uv (for py-polars) and take a few minutes.
+ * The benchmarks need uv (for py-polars) and take a few minutes. Each implementation
+ * runs in its own process, under /usr/bin/time -l on macOS and under peakmem
+ * (bench/csv-pipeline/peakmem.c, on the PATH) on Linux, which report its peak memory.
  *
  * Usage: scripts/site-content [verifications|benchmarks ...]
  * PHP and PHPOLARS_EXT select the PHP binary and the extension (the release build by default).
@@ -33,6 +35,25 @@ function run(array $cmd, array $env = []): string
         exit(1);
     }
     return $out;
+}
+
+/**
+ * Runs $cmd under /usr/bin/time -l or peakmem and returns its decoded JSON output,
+ * with memory_mib (the peak memory footprint on macOS, the peak anonymous memory on
+ * Linux) and maxrss_mib (the peak resident set size).
+ */
+function measured(array $cmd, array $env = []): array
+{
+    $proc = proc_open([PHP_OS_FAMILY === 'Darwin' ? '/usr/bin/time' : 'peakmem', '-l', ...$cmd], [1 => ['pipe', 'w'], 2 => ['pipe', 'w']], $pipes, null, $env + getenv());
+    $out = stream_get_contents($pipes[1]);
+    $err = stream_get_contents($pipes[2]);
+    if (proc_close($proc) !== 0) {
+        fwrite(STDERR, 'failed: '.implode(' ', $cmd)."\n{$err}");
+        exit(1);
+    }
+    $mib = fn (string $label) => preg_match('/(\d+)\s+'.$label.'/', $err, $m) ? round((int) $m[1] / 2 ** 20, 1) : null;
+
+    return json_decode($out, true, flags: JSON_THROW_ON_ERROR) + ['memory_mib' => $mib('peak memory footprint'), 'maxrss_mib' => $mib('maximum resident set size')];
 }
 
 function write(string $path, array $data): void
@@ -81,11 +102,18 @@ if (in_array('benchmarks', $parts, true)) {
     }
     fclose($out);
 
-    $phpRun = json_decode(run([$php, '-n', '-d', 'memory_limit=-1', '-d', 'extension='.$ext, $root.'/bench/site.php', $data, '5']), true, flags: JSON_THROW_ON_ERROR);
-    $threads = (string) $phpRun['threads'];
-    $pyRun = json_decode(run(['uv', 'run', '--quiet', '--no-project', '--with', 'polars=='.$pyPolars, 'python', $root.'/bench/site.py', $data, '5'],
-        ['POLARS_MAX_THREADS' => $threads]), true, flags: JSON_THROW_ON_ERROR);
-    $checks = $phpRun['check'] + $pyRun['check'];
+    $phpCmd = [$php, '-n', '-d', 'memory_limit=-1', '-d', 'extension='.$ext, $root.'/bench/site.php', $data, '5'];
+    $polarsRun = measured([...$phpCmd, 'phpolars']);
+    $plainRun = measured([...$phpCmd, 'plain']);
+    $threads = (string) $polarsRun['threads'];
+    // A virtual environment with py-polars, so the measured process is Python itself, not uv.
+    run(['uv', 'venv', '--quiet', '--allow-existing', "$data/venv"]);
+    run(['uv', 'pip', 'install', '--quiet', '--python', "$data/venv/bin/python", 'polars=='.$pyPolars]);
+    $python = "$data/venv/bin/python";
+    $pyRun = measured([$python, $root.'/bench/site.py', $data, '5'], ['POLARS_MAX_THREADS' => $threads]);
+    $phpRun = ['php' => $polarsRun['php'], 'results' => $polarsRun['results'] + $plainRun['results']];
+    $memory = ['phpolars' => $polarsRun, 'plain PHP arrays' => $plainRun, 'py-polars' => $pyRun];
+    $checks = $polarsRun['check'] + $plainRun['check'] + $pyRun['check'];
     if (count(array_unique(array_map('json_encode', $checks))) !== 1) {
         fwrite(STDERR, 'implementations disagree: '.json_encode($checks)."\n");
         exit(1);
@@ -95,20 +123,26 @@ if (in_array('benchmarks', $parts, true)) {
         'group_by' => 'Group 1M rows by 50 keys: mean, sum, count',
         'join' => 'Inner join 1M rows with a 100k-row table',
     ];
-    $rows = function (array $impls) use ($caseNames): array {
+    $rows = function (array $impls) use ($caseNames, $memory): array {
         $out = [];
         foreach ($caseNames as $key => $case) {
             foreach ($impls as $impl => $results) {
                 $reps = $results[$key];
                 sort($reps);
-                $out[] = ['case' => $case, 'implementation' => $impl, 'value' => $reps[intdiv(count($reps), 2)], 'reps' => $results[$key]];
+                $out[] = ['case' => $case, 'implementation' => $impl, 'value' => $reps[intdiv(count($reps), 2)], 'reps' => $results[$key],
+                    'peak_memory_mib' => $memory[$impl]['memory_mib'], 'peak_rss_mib' => $memory[$impl]['maxrss_mib']];
             }
         }
         return $out;
     };
-    $env = ['cpu' => $cpu, 'php' => $phpRun['php'], 'date' => $date, 'commit' => $commit];
+    $darwin = PHP_OS_FAMILY === 'Darwin';
+    $env = ['cpu' => $cpu, 'cores' => (int) trim((string) shell_exec($darwin ? 'sysctl -n hw.ncpu' : 'nproc')),
+        'os' => $darwin ? 'macOS '.trim((string) shell_exec('sw_vers -productVersion')) : php_uname('s').' '.php_uname('r'),
+        'php' => $phpRun['php'], 'threads' => (int) $threads, 'statistic' => 'median', 'repeats' => 5, 'date' => $date, 'commit' => $commit,
+        'memory' => $darwin ? 'peak memory footprint (/usr/bin/time -l)' : 'peak anonymous memory (peakmem)'];
     $data = 'The data are a 1M-row CSV (k: 100,000 keys, g: 50 groups, x: integers with 2% missing, y: floats; 22 MB) and a 100,000-row lookup table on k. '
-        .'Each case runs once to warm up and then five times; the value is the median.';
+        .'Each case runs once to warm up and then five times; the value is the median. '
+        .'Each implementation runs all three cases in its own process, and its peak memory is that process\'s peak over the three cases.';
     write($root.'/site/benchmarks/py-polars.json', [
         'title' => 'phpolars and py-polars',
         'description' => "phpolars and py-polars both run Polars' Rust engine. phpolars embeds the Rust crate at version 0.55.2, built with Cargo's release profile; py-polars ships its own build of the engine. $data "
