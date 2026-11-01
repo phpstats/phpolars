@@ -119,17 +119,17 @@
     {
       "path": "examples/expressions",
       "title": "Aggregate with expressions",
-      "description": "Summarizes each region of a small orders table with several expressions in one groupBy()->agg() call."
+      "description": "Computes counts, sums, a filtered sum, distinct counts, and a value picked by another column's sort order for each group in one groupBy()->agg() call."
     },
     {
       "path": "examples/lazy-csv",
       "title": "Query a large CSV file lazily",
-      "description": "Scans a CSV file of one million orders, filters and aggregates it, and shows that Polars reads only the columns and rows the query needs."
+      "description": "Builds a scan_csv() query whose plan pushes the column selection and the filter into the CSV reader, and runs it with collect()."
     },
     {
       "path": "examples/time-series",
       "title": "Rolling windows and as-of joins",
-      "description": "Gives each day of sales the price in force on that date and a rolling mean over three calendar days."
+      "description": "Matches each sale to the price in force with joinAsof() and averages units over three calendar days with rollingMeanBy() on dates with gaps."
     }
   ]
 }

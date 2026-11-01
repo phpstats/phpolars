@@ -1,5 +1,4 @@
 ```php
-<?php
 use Phpolars\DataFrame;
 use function Phpolars\col;
 

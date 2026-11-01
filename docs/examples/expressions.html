@@ -327,31 +327,29 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<p>This example summarizes each group of a data frame with several expressions in one <code>agg()</code> call.</p>
-<p>Prerequisites: the phpolars extension, which needs no Composer packages. <a href="../getting-started.html">Getting started</a> covers installing it.</p>
-<p>The input is a small data frame of six orders across three regions. Save the script as <code>expressions.php</code> and run it with <code>php expressions.php</code>:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode php code-with-copy"><code class="sourceCode php"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">&lt;?php</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="kw">use</span> Phpolars\DataFrame<span class="ot">;</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="kw">use</span> <span class="kw">function</span> Phpolars\{col<span class="ot">,</span> len}<span class="ot">;</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="va">$orders</span> <span class="op">=</span> <span class="kw">new</span> DataFrame([</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">'region'</span> =&gt; [<span class="st">'north'</span><span class="ot">,</span> <span class="st">'north'</span><span class="ot">,</span> <span class="st">'south'</span><span class="ot">,</span> <span class="st">'south'</span><span class="ot">,</span> <span class="st">'south'</span><span class="ot">,</span> <span class="st">'west'</span>]<span class="ot">,</span></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">'customer'</span> =&gt; [<span class="st">'ana'</span><span class="ot">,</span> <span class="st">'ben'</span><span class="ot">,</span> <span class="st">'ana'</span><span class="ot">,</span> <span class="st">'cy'</span><span class="ot">,</span> <span class="st">'cy'</span><span class="ot">,</span> <span class="st">'di'</span>]<span class="ot">,</span></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    <span class="st">'amount'</span> =&gt; [<span class="fl">120.0</span><span class="ot">,</span> <span class="fl">80.0</span><span class="ot">,</span> <span class="fl">45.5</span><span class="ot">,</span> <span class="fl">300.0</span><span class="ot">,</span> <span class="fl">60.0</span><span class="ot">,</span> <span class="fl">95.0</span>]<span class="ot">,</span></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    <span class="st">'returned'</span> =&gt; [<span class="kw">false</span><span class="ot">,</span> <span class="kw">true</span><span class="ot">,</span> <span class="kw">false</span><span class="ot">,</span> <span class="kw">false</span><span class="ot">,</span> <span class="kw">true</span><span class="ot">,</span> <span class="kw">false</span>]<span class="ot">,</span></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>])<span class="ot">;</span></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="va">$byRegion</span> <span class="op">=</span> <span class="va">$orders</span></span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>    -&gt;groupBy(<span class="st">'region'</span><span class="ot">,</span> maintainOrder<span class="ot">:</span> <span class="kw">true</span>)</span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>    -&gt;agg(</span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>        len()-&gt;alias(<span class="st">'orders'</span>)<span class="ot">,</span></span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>        col(<span class="st">'amount'</span>)-&gt;sum()-&gt;alias(<span class="st">'total'</span>)<span class="ot">,</span></span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>        col(<span class="st">'amount'</span>)-&gt;filter(col(<span class="st">'returned'</span>)-&gt;not())-&gt;sum()-&gt;alias(<span class="st">'kept'</span>)<span class="ot">,</span></span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>        col(<span class="st">'customer'</span>)-&gt;nUnique()-&gt;alias(<span class="st">'customers'</span>)<span class="ot">,</span></span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>        col(<span class="st">'customer'</span>)-&gt;sortBy(<span class="st">'amount'</span><span class="ot">,</span> descending<span class="ot">:</span> <span class="kw">true</span>)-&gt;first()-&gt;alias(<span class="st">'top_customer'</span>)<span class="ot">,</span></span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>    )<span class="ot">;</span></span>
-<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a><span class="kw">echo</span> <span class="va">$byRegion</span><span class="ot">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Summarize each group of a DataFrame with several expressions in one <code>agg()</code> call.</p>
+<p>Requires the phpolars extension (<a href="../getting-started.html">Getting started</a>). Script: <a href="https://raw.githubusercontent.com/phpstats/phpolars/main/docs/examples/expressions.php">expressions.php</a>.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode php code-with-copy"><code class="sourceCode php"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">use</span> Phpolars\DataFrame<span class="ot">;</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="kw">use</span> <span class="kw">function</span> Phpolars\{col<span class="ot">,</span> len}<span class="ot">;</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="va">$orders</span> <span class="op">=</span> <span class="kw">new</span> DataFrame([</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">'region'</span> =&gt; [<span class="st">'north'</span><span class="ot">,</span> <span class="st">'north'</span><span class="ot">,</span> <span class="st">'south'</span><span class="ot">,</span> <span class="st">'south'</span><span class="ot">,</span> <span class="st">'south'</span><span class="ot">,</span> <span class="st">'west'</span>]<span class="ot">,</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">'customer'</span> =&gt; [<span class="st">'ana'</span><span class="ot">,</span> <span class="st">'ben'</span><span class="ot">,</span> <span class="st">'ana'</span><span class="ot">,</span> <span class="st">'cy'</span><span class="ot">,</span> <span class="st">'cy'</span><span class="ot">,</span> <span class="st">'di'</span>]<span class="ot">,</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">'amount'</span> =&gt; [<span class="fl">120.0</span><span class="ot">,</span> <span class="fl">80.0</span><span class="ot">,</span> <span class="fl">45.5</span><span class="ot">,</span> <span class="fl">300.0</span><span class="ot">,</span> <span class="fl">60.0</span><span class="ot">,</span> <span class="fl">95.0</span>]<span class="ot">,</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    <span class="st">'returned'</span> =&gt; [<span class="kw">false</span><span class="ot">,</span> <span class="kw">true</span><span class="ot">,</span> <span class="kw">false</span><span class="ot">,</span> <span class="kw">false</span><span class="ot">,</span> <span class="kw">true</span><span class="ot">,</span> <span class="kw">false</span>]<span class="ot">,</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>])<span class="ot">;</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="va">$byRegion</span> <span class="op">=</span> <span class="va">$orders</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>    -&gt;groupBy(<span class="st">'region'</span><span class="ot">,</span> maintainOrder<span class="ot">:</span> <span class="kw">true</span>)</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>    -&gt;agg(</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>        len()-&gt;alias(<span class="st">'orders'</span>)<span class="ot">,</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>        col(<span class="st">'amount'</span>)-&gt;sum()-&gt;alias(<span class="st">'total'</span>)<span class="ot">,</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>        col(<span class="st">'amount'</span>)-&gt;filter(col(<span class="st">'returned'</span>)-&gt;not())-&gt;sum()-&gt;alias(<span class="st">'kept'</span>)<span class="ot">,</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>        col(<span class="st">'customer'</span>)-&gt;nUnique()-&gt;alias(<span class="st">'customers'</span>)<span class="ot">,</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>        col(<span class="st">'customer'</span>)-&gt;sortBy(<span class="st">'amount'</span><span class="ot">,</span> descending<span class="ot">:</span> <span class="kw">true</span>)-&gt;first()-&gt;alias(<span class="st">'top_customer'</span>)<span class="ot">,</span></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>    )<span class="ot">;</span></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="kw">echo</span> <span class="va">$byRegion</span><span class="ot">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <pre class="text output"><code>shape: (3, 6)
 ┌────────┬────────┬───────┬───────┬───────────┬──────────────┐
 │ region ┆ orders ┆ total ┆ kept  ┆ customers ┆ top_customer │
@@ -362,16 +360,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 │ south  ┆ 3      ┆ 405.5 ┆ 345.5 ┆ 2         ┆ cy           │
 │ west   ┆ 1      ┆ 95.0  ┆ 95.0  ┆ 1         ┆ di           │
 └────────┴────────┴───────┴───────┴───────────┴──────────────┘</code></pre>
-<p><code>groupBy()</code> splits the rows by region, and <code>agg()</code> evaluates each expression once per group. An expression describes a computation on columns. It holds no data of its own, and Polars evaluates the expressions on its own threads.</p>
 <ul>
-<li><code>len()</code> counts the rows in the group.</li>
-<li><code>col('amount')-&gt;sum()</code> adds up a column.</li>
-<li><code>filter()</code> inside an expression keeps only some of the group’s rows, here the orders that were not returned, before <code>sum()</code> runs.</li>
-<li><code>nUnique()</code> counts distinct values.</li>
-<li><code>sortBy('amount', descending: true)-&gt;first()</code> takes the customer of the largest order.</li>
+<li><code>col('amount')-&gt;filter(col('returned')-&gt;not())-&gt;sum()</code> filters inside the aggregate. It sums only the group’s orders that were not returned, while <code>orders</code> and <code>total</code> still include every order.</li>
+<li><code>col('customer')-&gt;sortBy('amount', descending: true)-&gt;first()</code> orders each group’s customers by another column, <code>amount</code>, and takes the first. The result is the customer of the group’s largest order.</li>
+<li><code>maintainOrder: true</code> keeps the groups in the order they first appear. Without it, the order of the groups in the result is not guaranteed and can change between runs.</li>
 </ul>
-<p><code>alias()</code> names each result column. <code>maintainOrder: true</code> keeps the groups in the order they first appear. Without it, the group order can change between runs.</p>
-<p>Reference: <a href="../reference/dataframe.html#dataframe-groupBy"><code>groupBy()</code></a>, <a href="../reference/dataframe.html#groupby-agg"><code>agg()</code></a>, <a href="../reference/expressions.html#fn-len"><code>len()</code></a>, and <a href="../reference/expressions.html">expressions</a>.</p>
+<p>Reference: <a href="../reference/dataframe.html#dataframe-groupBy">groupBy()</a> · <a href="../reference/dataframe.html#groupby-agg">agg()</a> · <a href="../reference/expressions.html#fn-len">len()</a> · <a href="../reference/expressions.html">Expressions</a></p>
 
 
 
