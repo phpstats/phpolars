@@ -337,13 +337,39 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<p><a href="https://phibble.phpstats.org">phibble</a> defines a table contract with several backends: its in-memory <code>DataFrame</code>, <code>SqlTable</code> for PDO databases, and <code>Phibble\Polars\PolarsTable</code>, which keeps its data in a Polars <code>DataFrame</code>. <code>PolarsTable</code> is part of phibble (since phibble v0.2.0) and needs the php_polars extension that phpolars supplies. phibble lists the extension as a Composer suggestion, so installing phibble does not install phpolars. <a href="https://phplyr.phpstats.org">phplyr</a>’s verbs work on any phibble table, so a phplyr pipeline runs in Polars when it starts from a <code>PolarsTable</code>. phibble’s <a href="https://phibble.phpstats.org/docs/backends">Backends</a> page compares the backends.</p>
+<p><code>Phibble\Polars\PolarsTable</code> is a <a href="https://phibble.phpstats.org">phibble</a> table that keeps its data in a Polars <code>DataFrame</code>, so <a href="https://phplyr.phpstats.org">phplyr</a> pipelines that start from it run in Polars. It belongs to phibble (since v0.2.0) and needs the php_polars extension. phibble only suggests the extension, so installing phibble does not install phpolars. phibble’s <a href="https://phibble.phpstats.org/docs/backends">Backends</a> page compares its table backends.</p>
 <section id="choosing-an-api" class="level2">
 <h2 class="anchored" data-anchor-id="choosing-an-api">Choosing an API</h2>
-<ul>
-<li>Use phplyr or phibble on a <code>PolarsTable</code> to keep dplyr’s semantics, or to run the same pipeline on phibble’s other backends.</li>
-<li>Use the phpolars API to get Polars’ semantics and the parts of Polars that phibble does not expose, such as lazy scans, sinks, and SQL.</li>
-</ul>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Need</th>
+<th>Use</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>dplyr semantics: <code>NA</code>, <code>naRm</code>, and groups in sorted key order</td>
+<td>phplyr or phibble on a <code>PolarsTable</code></td>
+</tr>
+<tr class="even">
+<td>One pipeline on phibble’s in-memory <code>DataFrame</code>, a SQL table, and Polars</td>
+<td>phplyr or phibble</td>
+</tr>
+<tr class="odd">
+<td>Polars’ <code>null</code> semantics</td>
+<td>the phpolars API</td>
+</tr>
+<tr class="even">
+<td>Lazy scans, the streaming engine, sinks, or SQL over data frames</td>
+<td>the phpolars API</td>
+</tr>
+<tr class="odd">
+<td>PHP closures in many verbs</td>
+<td>phibble’s in-memory <code>DataFrame</code>. On a <code>PolarsTable</code>, each closure converts the table (see <a href="#what-runs-in-polars">What runs in Polars</a>).</td>
+</tr>
+</tbody>
+</table>
 </section>
 <section id="a-pipeline-on-a-polarstable" class="level2">
 <h2 class="anchored" data-anchor-id="a-pipeline-on-a-polarstable">A pipeline on a PolarsTable</h2>
@@ -397,7 +423,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="what-runs-in-polars" class="level2">
 <h2 class="anchored" data-anchor-id="what-runs-in-polars">What runs in Polars</h2>
-<p>Verbs given column names or phibble expressions (<code>Phibble\Expr</code>, which phplyr’s helpers such as <code>col()</code>, <code>mean()</code>, and <code>n()</code> build) run in Polars with dplyr’s semantics. NA propagates, aggregates default to <code>naRm: false</code>, grouped <code>mutate()</code> and <code>filter()</code> evaluate aggregates and windows per group, groups follow sorted key order, and joins follow dplyr 1.2, including <code>join_by()</code> inequality and rolling joins. Pivots and most stringr and lubridate functions also run in Polars.</p>
+<p>Verbs given column names or phibble expressions (<code>Phibble\Expr</code>, which phplyr’s helpers such as <code>col()</code>, <code>mean()</code>, and <code>n()</code> build) run in Polars with dplyr’s semantics:</p>
+<ul>
+<li><code>NA</code> propagates, and aggregates default to <code>naRm: false</code>.</li>
+<li>Grouped <code>mutate()</code> and <code>filter()</code> evaluate aggregates and windows per group.</li>
+<li>Groups follow sorted key order.</li>
+<li>Joins follow dplyr 1.2, including <code>join_by()</code> inequality and rolling joins.</li>
+<li>Pivots and most stringr and lubridate functions also run in Polars.</li>
+</ul>
 <p>Some steps cannot run in Polars, and the adapter runs them on a phibble <code>DataFrame</code> and converts the result back:</p>
 <ul>
 <li>a verb given a PHP closure, because PHP code cannot run on Polars threads</li>
@@ -405,7 +438,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>grouped verbs on factor keys that keep empty groups (phibble’s <code>groupBy(drop: false)</code> or phplyr’s <code>group_by(_drop: false)</code>), because Polars does not see empty groups</li>
 <li>functions that the translator does not support, such as <code>str_to_title()</code></li>
 </ul>
-<p><code>PolarsTable::$fallbacks</code> counts these conversions. Set <code>PolarsTable::$strict = true</code> to throw <code>Phibble\Polars\PolarsFallback</code> instead; its message names the verb and the reason. <a href="./performance.html#where-the-time-goes">Performance</a> measures the cost of a fallback.</p>
+<p><code>PolarsTable::$fallbacks</code> counts these conversions. Set <code>PolarsTable::$strict = true</code> to throw <code>Phibble\Polars\PolarsFallback</code> instead; its message names the verb and the reason. <a href="./performance.html#practical-guidance">Performance</a> measures the cost of a fallback.</p>
 </section>
 <section id="missing-values" class="level2">
 <h2 class="anchored" data-anchor-id="missing-values">Missing values</h2>

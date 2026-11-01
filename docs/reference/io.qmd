@@ -25,4 +25,6 @@ Parquet, IPC, and JSON support are Cargo features. An extension built without on
 
 ## Functions
 
+In the signatures, `= null` marks an optional argument. Leaving it out, or passing `null`, uses Polars' default for that argument, which in most cases is py-polars' default. A note after a signature describes behavior that is easy to misread.
+
 {{< include _api-io.md >}}

@@ -8,6 +8,8 @@ Operands of comparison and arithmetic methods may be an `Expr` or a PHP value. P
 
 ## Method index
 
+In the signatures, `= null` marks an optional argument. Leaving it out, or passing `null`, uses Polars' default for that argument, which in most cases is py-polars' default. A note after a signature describes behavior that is easy to misread.
+
 {{< include _index-expressions.md >}}
 
 ## Missing values

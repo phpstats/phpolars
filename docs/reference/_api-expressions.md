@@ -1,28 +1,34 @@
 ### `Phpolars\Expr` {#expr}
 
-- []{#expr-__toString} `__toString(): string`
+#### Arithmetic and comparison {#expr--arithmetic-and-comparison}
+
 - []{#expr-abs} `abs(): Phpolars\Expr`
 - []{#expr-add} `add(mixed $other): Phpolars\Expr`
-- []{#expr-alias} `alias(string $name): Phpolars\Expr`
-- []{#expr-all} `all(?bool $ignoreNulls = null): Phpolars\Expr`
+- []{#expr-div} `div(mixed $other): Phpolars\Expr`: the same as `truediv()`, so integer columns divide to floats; `floordiv()` floors
+- []{#expr-dot} `dot(mixed $other): Phpolars\Expr`
+- []{#expr-eq} `eq(mixed $other): Phpolars\Expr`
+- []{#expr-eqMissing} `eqMissing(mixed $other): Phpolars\Expr`
+- []{#expr-floordiv} `floordiv(mixed $other): Phpolars\Expr`
+- []{#expr-ge} `ge(mixed $other): Phpolars\Expr`
+- []{#expr-gt} `gt(mixed $other): Phpolars\Expr`
+- []{#expr-isBetween} `isBetween(mixed $lower, mixed $upper, ?string $closed = null): Phpolars\Expr`
+- []{#expr-isClose} `isClose(mixed $other, ?float $absTol = null, ?float $relTol = null, ?bool $nansEqual = null): Phpolars\Expr`
+- []{#expr-isIn} `isIn(mixed $other, ?bool $nullsEqual = null): Phpolars\Expr`
+- []{#expr-le} `le(mixed $other): Phpolars\Expr`
+- []{#expr-lt} `lt(mixed $other): Phpolars\Expr`
+- []{#expr-mod} `mod(mixed $other): Phpolars\Expr`: takes the sign of the divisor, as in Python: `-7` mod `2` is `1`, where PHP's `%` gives `-1`
+- []{#expr-mul} `mul(mixed $other): Phpolars\Expr`
+- []{#expr-ne} `ne(mixed $other): Phpolars\Expr`
+- []{#expr-neg} `neg(): Phpolars\Expr`
+- []{#expr-neMissing} `neMissing(mixed $other): Phpolars\Expr`
+- []{#expr-pow} `pow(mixed $exponent): Phpolars\Expr`
+- []{#expr-sign} `sign(): Phpolars\Expr`
+- []{#expr-sub} `sub(mixed $other): Phpolars\Expr`
+- []{#expr-truediv} `truediv(mixed $other): Phpolars\Expr`
+
+#### Logic and bits {#expr--logic-and-bits}
+
 - []{#expr-and} `and(mixed $other): Phpolars\Expr`
-- []{#expr-any} `any(?bool $ignoreNulls = null): Phpolars\Expr`
-- []{#expr-append} `append(mixed $other, ?bool $upcast = null): Phpolars\Expr`
-- []{#expr-approxNUnique} `approxNUnique(): Phpolars\Expr`
-- []{#expr-arccos} `arccos(): Phpolars\Expr`
-- []{#expr-arccosh} `arccosh(): Phpolars\Expr`
-- []{#expr-arcsin} `arcsin(): Phpolars\Expr`
-- []{#expr-arcsinh} `arcsinh(): Phpolars\Expr`
-- []{#expr-arctan} `arctan(): Phpolars\Expr`
-- []{#expr-arctanh} `arctanh(): Phpolars\Expr`
-- []{#expr-argMax} `argMax(): Phpolars\Expr`
-- []{#expr-argMin} `argMin(): Phpolars\Expr`
-- []{#expr-argSort} `argSort(?bool $descending = null, ?bool $nullsLast = null): Phpolars\Expr`
-- []{#expr-argTrue} `argTrue(): Phpolars\Expr`
-- []{#expr-argUnique} `argUnique(): Phpolars\Expr`
-- []{#expr-arr} `arr(): Phpolars\ArrayNameSpace`
-- []{#expr-backwardFill} `backwardFill(?int $limit = null): Phpolars\Expr`
-- []{#expr-bin} `bin(): Phpolars\BinaryNameSpace`
 - []{#expr-bitwiseAnd} `bitwiseAnd(): Phpolars\Expr`
 - []{#expr-bitwiseCountOnes} `bitwiseCountOnes(): Phpolars\Expr`
 - []{#expr-bitwiseCountZeros} `bitwiseCountZeros(): Phpolars\Expr`
@@ -32,126 +38,113 @@
 - []{#expr-bitwiseTrailingOnes} `bitwiseTrailingOnes(): Phpolars\Expr`
 - []{#expr-bitwiseTrailingZeros} `bitwiseTrailingZeros(): Phpolars\Expr`
 - []{#expr-bitwiseXor} `bitwiseXor(): Phpolars\Expr`
-- []{#expr-bottomK} `bottomK(?int $k = null): Phpolars\Expr`
-- []{#expr-bottomKBy} `bottomKBy(mixed $by, ?int $k = null, mixed $reverse = null): Phpolars\Expr`
-- []{#expr-cast} `cast(string $dtype, ?bool $strict = null): Phpolars\Expr`
-- []{#expr-cat} `cat(): Phpolars\CatNameSpace`
+- []{#expr-not} `not(): Phpolars\Expr`
+- []{#expr-or} `or(mixed $other): Phpolars\Expr`
+- []{#expr-xor} `xor(mixed $other): Phpolars\Expr`
+
+#### Missing values {#expr--missing-values}
+
+- []{#expr-backwardFill} `backwardFill(?int $limit = null): Phpolars\Expr`
+- []{#expr-dropNans} `dropNans(): Phpolars\Expr`
+- []{#expr-dropNulls} `dropNulls(): Phpolars\Expr`
+- []{#expr-fillNan} `fillNan(mixed $value): Phpolars\Expr`
+- []{#expr-fillNull} `fillNull(mixed $value = null, ?string $strategy = null, ?int $limit = null): Phpolars\Expr`: a `value`, or a `strategy`: `'forward'`, `'backward'`, `'mean'`, `'min'`, `'max'`, `'zero'`, or `'one'`
+- []{#expr-forwardFill} `forwardFill(?int $limit = null): Phpolars\Expr`
+- []{#expr-hasNulls} `hasNulls(): Phpolars\Expr`
+- []{#expr-interpolate} `interpolate(?string $method = null): Phpolars\Expr`
+- []{#expr-interpolateBy} `interpolateBy(mixed $by): Phpolars\Expr`
+- []{#expr-isNan} `isNan(): Phpolars\Expr`
+- []{#expr-isNotNan} `isNotNan(): Phpolars\Expr`
+- []{#expr-isNotNull} `isNotNull(): Phpolars\Expr`
+- []{#expr-isNull} `isNull(): Phpolars\Expr`
+- []{#expr-nullCount} `nullCount(): Phpolars\Expr`
+
+#### Aggregate {#expr--aggregate}
+
+- []{#expr-all} `all(?bool $ignoreNulls = null): Phpolars\Expr`
+- []{#expr-any} `any(?bool $ignoreNulls = null): Phpolars\Expr`
+- []{#expr-approxNUnique} `approxNUnique(): Phpolars\Expr`
+- []{#expr-argMax} `argMax(): Phpolars\Expr`
+- []{#expr-argMin} `argMin(): Phpolars\Expr`
+- []{#expr-count} `count(): Phpolars\Expr`: counts non-null values; `len()` counts rows
+- []{#expr-entropy} `entropy(?float $base = null, ?bool $normalize = null): Phpolars\Expr`
+- []{#expr-first} `first(?bool $ignoreNulls = null): Phpolars\Expr`
+- []{#expr-implode} `implode(): Phpolars\Expr`
+- []{#expr-isEmpty} `isEmpty(?bool $ignoreNulls = null): Phpolars\Expr`
+- []{#expr-item} `item(?bool $allowEmpty = null): Phpolars\Expr`
+- []{#expr-kurtosis} `kurtosis(?bool $fisher = null, ?bool $bias = null): Phpolars\Expr`
+- []{#expr-last} `last(?bool $ignoreNulls = null): Phpolars\Expr`
+- []{#expr-len} `len(): Phpolars\Expr`: counts rows, including nulls
+- []{#expr-max} `max(): Phpolars\Expr`
+- []{#expr-maxBy} `maxBy(mixed $by): Phpolars\Expr`
+- []{#expr-mean} `mean(): Phpolars\Expr`
+- []{#expr-median} `median(): Phpolars\Expr`
+- []{#expr-min} `min(): Phpolars\Expr`
+- []{#expr-minBy} `minBy(mixed $by): Phpolars\Expr`
+- []{#expr-mode} `mode(): Phpolars\Expr`
+- []{#expr-nanMax} `nanMax(): Phpolars\Expr`
+- []{#expr-nanMin} `nanMin(): Phpolars\Expr`
+- []{#expr-nUnique} `nUnique(): Phpolars\Expr`
+- []{#expr-product} `product(): Phpolars\Expr`
+- []{#expr-quantile} `quantile(mixed $quantile, ?string $interpolation = null): Phpolars\Expr`
+- []{#expr-skew} `skew(?bool $bias = null): Phpolars\Expr`
+- []{#expr-std} `std(?int $ddof = null): Phpolars\Expr`: the sample statistic (`ddof` 1)
+- []{#expr-sum} `sum(): Phpolars\Expr`
+- []{#expr-uniqueCounts} `uniqueCounts(): Phpolars\Expr`
+- []{#expr-valueCounts} `valueCounts(?bool $sort = null, ?string $name = null, ?bool $normalize = null): Phpolars\Expr`
+- []{#expr-var} `var(?int $ddof = null): Phpolars\Expr`: the sample statistic (`ddof` 1)
+
+#### Math {#expr--math}
+
+- []{#expr-arccos} `arccos(): Phpolars\Expr`
+- []{#expr-arccosh} `arccosh(): Phpolars\Expr`
+- []{#expr-arcsin} `arcsin(): Phpolars\Expr`
+- []{#expr-arcsinh} `arcsinh(): Phpolars\Expr`
+- []{#expr-arctan} `arctan(): Phpolars\Expr`
+- []{#expr-arctanh} `arctanh(): Phpolars\Expr`
 - []{#expr-cbrt} `cbrt(): Phpolars\Expr`
 - []{#expr-ceil} `ceil(): Phpolars\Expr`
 - []{#expr-clip} `clip(mixed $lowerBound = null, mixed $upperBound = null): Phpolars\Expr`
 - []{#expr-cos} `cos(): Phpolars\Expr`
 - []{#expr-cosh} `cosh(): Phpolars\Expr`
 - []{#expr-cot} `cot(): Phpolars\Expr`
-- []{#expr-count} `count(): Phpolars\Expr`
+- []{#expr-degrees} `degrees(): Phpolars\Expr`
+- []{#expr-exp} `exp(): Phpolars\Expr`
+- []{#expr-floor} `floor(): Phpolars\Expr`
+- []{#expr-isFinite} `isFinite(): Phpolars\Expr`
+- []{#expr-isInfinite} `isInfinite(): Phpolars\Expr`
+- []{#expr-log} `log(?float $base = null): Phpolars\Expr`
+- []{#expr-log10} `log10(): Phpolars\Expr`
+- []{#expr-log1P} `log1P(): Phpolars\Expr`
+- []{#expr-radians} `radians(): Phpolars\Expr`
+- []{#expr-round} `round(?int $decimals = null, ?string $mode = null): Phpolars\Expr`: rounds half to even by default; `mode: 'half_away_from_zero'` rounds as PHP's `round()` does
+- []{#expr-roundSigFigs} `roundSigFigs(int $digits): Phpolars\Expr`
+- []{#expr-sin} `sin(): Phpolars\Expr`
+- []{#expr-sinh} `sinh(): Phpolars\Expr`
+- []{#expr-sqrt} `sqrt(): Phpolars\Expr`
+- []{#expr-tan} `tan(): Phpolars\Expr`
+- []{#expr-tanh} `tanh(): Phpolars\Expr`
+
+#### Windows, cumulative, and rolling {#expr--windows-cumulative-and-rolling}
+
 - []{#expr-cumCount} `cumCount(?bool $reverse = null): Phpolars\Expr`
 - []{#expr-cumMax} `cumMax(?bool $reverse = null): Phpolars\Expr`
 - []{#expr-cumMin} `cumMin(?bool $reverse = null): Phpolars\Expr`
 - []{#expr-cumProd} `cumProd(?bool $reverse = null): Phpolars\Expr`
 - []{#expr-cumSum} `cumSum(?bool $reverse = null): Phpolars\Expr`
 - []{#expr-cumulativeEval} `cumulativeEval(mixed $expr, ?int $minPeriods = null): Phpolars\Expr`
-- []{#expr-cut} `cut(mixed $breaks, ?array $labels = null, ?bool $leftClosed = null, ?bool $includeBreaks = null): Phpolars\Expr`
-- []{#expr-degrees} `degrees(): Phpolars\Expr`
 - []{#expr-diff} `diff(?int $n = null, ?string $nullBehavior = null): Phpolars\Expr`
-- []{#expr-div} `div(mixed $other): Phpolars\Expr`
-- []{#expr-dot} `dot(mixed $other): Phpolars\Expr`
-- []{#expr-dropNans} `dropNans(): Phpolars\Expr`
-- []{#expr-dropNulls} `dropNulls(): Phpolars\Expr`
-- []{#expr-dt} `dt(): Phpolars\DtNameSpace`
-- []{#expr-entropy} `entropy(?float $base = null, ?bool $normalize = null): Phpolars\Expr`
-- []{#expr-eq} `eq(mixed $other): Phpolars\Expr`
-- []{#expr-eqMissing} `eqMissing(mixed $other): Phpolars\Expr`
 - []{#expr-ewmMean} `ewmMean(?float $com = null, ?float $span = null, ?float $halfLife = null, ?float $alpha = null, ?bool $adjust = null, ?int $minPeriods = null, ?bool $ignoreNulls = null): Phpolars\Expr`
 - []{#expr-ewmMeanBy} `ewmMeanBy(mixed $by, string $halfLife): Phpolars\Expr`
 - []{#expr-ewmStd} `ewmStd(?float $com = null, ?float $span = null, ?float $halfLife = null, ?float $alpha = null, ?bool $adjust = null, ?bool $bias = null, ?int $minPeriods = null, ?bool $ignoreNulls = null): Phpolars\Expr`
 - []{#expr-ewmSum} `ewmSum(?float $com = null, ?float $span = null, ?float $halfLife = null, ?float $alpha = null, ?int $minPeriods = null, ?bool $ignoreNulls = null): Phpolars\Expr`
 - []{#expr-ewmSumBy} `ewmSumBy(mixed $by, string $halfLife): Phpolars\Expr`
 - []{#expr-ewmVar} `ewmVar(?float $com = null, ?float $span = null, ?float $halfLife = null, ?float $alpha = null, ?bool $adjust = null, ?bool $bias = null, ?int $minPeriods = null, ?bool $ignoreNulls = null): Phpolars\Expr`
-- []{#expr-exclude} `exclude(mixed ...$columns): Phpolars\Expr`
-- []{#expr-exp} `exp(): Phpolars\Expr`
-- []{#expr-explode} `explode(): Phpolars\Expr`
-- []{#expr-extendConstant} `extendConstant(mixed $value, mixed $n): Phpolars\Expr`
-- []{#expr-fillNan} `fillNan(mixed $value): Phpolars\Expr`
-- []{#expr-fillNull} `fillNull(mixed $value = null, ?string $strategy = null, ?int $limit = null): Phpolars\Expr`
-- []{#expr-filter} `filter(mixed $predicate): Phpolars\Expr`
-- []{#expr-first} `first(?bool $ignoreNulls = null): Phpolars\Expr`
-- []{#expr-flatten} `flatten(): Phpolars\Expr`
-- []{#expr-floor} `floor(): Phpolars\Expr`
-- []{#expr-floordiv} `floordiv(mixed $other): Phpolars\Expr`
-- []{#expr-forwardFill} `forwardFill(?int $limit = null): Phpolars\Expr`
-- []{#expr-gather} `gather(mixed $indices): Phpolars\Expr`
-- []{#expr-gatherEvery} `gatherEvery(int $n, ?int $offset = null): Phpolars\Expr`
-- []{#expr-ge} `ge(mixed $other): Phpolars\Expr`
-- []{#expr-get} `get(mixed $index, ?bool $nullOnOob = null): Phpolars\Expr`
-- []{#expr-gt} `gt(mixed $other): Phpolars\Expr`
-- []{#expr-hasNulls} `hasNulls(): Phpolars\Expr`
-- []{#expr-head} `head(?int $n = null): Phpolars\Expr`
-- []{#expr-hist} `hist(mixed $bins = null, ?int $binCount = null, ?bool $includeCategory = null, ?bool $includeBreakpoint = null): Phpolars\Expr`
-- []{#expr-implode} `implode(): Phpolars\Expr`
-- []{#expr-indexOf} `indexOf(mixed $element): Phpolars\Expr`
-- []{#expr-interpolate} `interpolate(?string $method = null): Phpolars\Expr`
-- []{#expr-interpolateBy} `interpolateBy(mixed $by): Phpolars\Expr`
-- []{#expr-isBetween} `isBetween(mixed $lower, mixed $upper, ?string $closed = null): Phpolars\Expr`
-- []{#expr-isClose} `isClose(mixed $other, ?float $absTol = null, ?float $relTol = null, ?bool $nansEqual = null): Phpolars\Expr`
-- []{#expr-isDuplicated} `isDuplicated(): Phpolars\Expr`
-- []{#expr-isEmpty} `isEmpty(?bool $ignoreNulls = null): Phpolars\Expr`
-- []{#expr-isFinite} `isFinite(): Phpolars\Expr`
-- []{#expr-isFirstDistinct} `isFirstDistinct(): Phpolars\Expr`
-- []{#expr-isIn} `isIn(mixed $other, ?bool $nullsEqual = null): Phpolars\Expr`
-- []{#expr-isInfinite} `isInfinite(): Phpolars\Expr`
-- []{#expr-isLastDistinct} `isLastDistinct(): Phpolars\Expr`
-- []{#expr-isNan} `isNan(): Phpolars\Expr`
-- []{#expr-isNotNan} `isNotNan(): Phpolars\Expr`
-- []{#expr-isNotNull} `isNotNull(): Phpolars\Expr`
-- []{#expr-isNull} `isNull(): Phpolars\Expr`
-- []{#expr-isUnique} `isUnique(): Phpolars\Expr`
-- []{#expr-item} `item(?bool $allowEmpty = null): Phpolars\Expr`
-- []{#expr-kurtosis} `kurtosis(?bool $fisher = null, ?bool $bias = null): Phpolars\Expr`
-- []{#expr-last} `last(?bool $ignoreNulls = null): Phpolars\Expr`
-- []{#expr-le} `le(mixed $other): Phpolars\Expr`
-- []{#expr-len} `len(): Phpolars\Expr`
-- []{#expr-limit} `limit(?int $n = null): Phpolars\Expr`
-- []{#expr-list} `list(): Phpolars\ListNameSpace`
-- []{#expr-log} `log(?float $base = null): Phpolars\Expr`
-- []{#expr-log10} `log10(): Phpolars\Expr`
-- []{#expr-log1P} `log1P(): Phpolars\Expr`
-- []{#expr-lowerBound} `lowerBound(): Phpolars\Expr`
-- []{#expr-lt} `lt(mixed $other): Phpolars\Expr`
-- []{#expr-max} `max(): Phpolars\Expr`
-- []{#expr-maxBy} `maxBy(mixed $by): Phpolars\Expr`
-- []{#expr-mean} `mean(): Phpolars\Expr`
-- []{#expr-median} `median(): Phpolars\Expr`
-- []{#expr-meta} `meta(): Phpolars\MetaNameSpace`
-- []{#expr-min} `min(): Phpolars\Expr`
-- []{#expr-minBy} `minBy(mixed $by): Phpolars\Expr`
-- []{#expr-mod} `mod(mixed $other): Phpolars\Expr`
-- []{#expr-mode} `mode(): Phpolars\Expr`
-- []{#expr-mul} `mul(mixed $other): Phpolars\Expr`
-- []{#expr-name} `name(): Phpolars\NameNameSpace`
-- []{#expr-nanMax} `nanMax(): Phpolars\Expr`
-- []{#expr-nanMin} `nanMin(): Phpolars\Expr`
-- []{#expr-ne} `ne(mixed $other): Phpolars\Expr`
-- []{#expr-neg} `neg(): Phpolars\Expr`
-- []{#expr-neMissing} `neMissing(mixed $other): Phpolars\Expr`
-- []{#expr-not} `not(): Phpolars\Expr`
-- []{#expr-nullCount} `nullCount(): Phpolars\Expr`
-- []{#expr-nUnique} `nUnique(): Phpolars\Expr`
-- []{#expr-or} `or(mixed $other): Phpolars\Expr`
 - []{#expr-over} `over(mixed $partitionBy, mixed $orderBy = null, ?bool $descending = null, ?bool $nullsLast = null, ?string $mappingStrategy = null): Phpolars\Expr`
 - []{#expr-pctChange} `pctChange(?int $n = null): Phpolars\Expr`
 - []{#expr-peakMax} `peakMax(): Phpolars\Expr`
 - []{#expr-peakMin} `peakMin(): Phpolars\Expr`
-- []{#expr-pow} `pow(mixed $exponent): Phpolars\Expr`
-- []{#expr-product} `product(): Phpolars\Expr`
-- []{#expr-qcut} `qcut(mixed $quantiles, ?array $labels = null, ?bool $leftClosed = null, ?bool $allowDuplicates = null, ?bool $includeBreaks = null): Phpolars\Expr`
-- []{#expr-quantile} `quantile(mixed $quantile, ?string $interpolation = null): Phpolars\Expr`
-- []{#expr-radians} `radians(): Phpolars\Expr`
 - []{#expr-rank} `rank(?string $method = null, ?bool $descending = null, ?int $seed = null): Phpolars\Expr`
-- []{#expr-reinterpret} `reinterpret(?bool $signed = null): Phpolars\Expr`
-- []{#expr-repeatBy} `repeatBy(mixed $by): Phpolars\Expr`
-- []{#expr-replace} `replace(mixed $old, mixed $new = null): Phpolars\Expr`
-- []{#expr-replaceStrict} `replaceStrict(mixed $old, mixed $new = null, mixed $default = null, ?string $returnDtype = null): Phpolars\Expr`
-- []{#expr-reshape} `reshape(array $dimensions): Phpolars\Expr`
-- []{#expr-reverse} `reverse(): Phpolars\Expr`
 - []{#expr-rle} `rle(): Phpolars\Expr`
 - []{#expr-rleId} `rleId(): Phpolars\Expr`
 - []{#expr-rolling} `rolling(mixed $indexColumn, string $period, ?string $offset = null, ?string $closed = null): Phpolars\Expr`
@@ -175,38 +168,77 @@
 - []{#expr-rollingSumBy} `rollingSumBy(mixed $by, string $windowSize, ?int $minPeriods = null, ?string $closed = null): Phpolars\Expr`
 - []{#expr-rollingVar} `rollingVar(int $windowSize, ?int $minPeriods = null, ?bool $center = null): Phpolars\Expr`
 - []{#expr-rollingVarBy} `rollingVarBy(mixed $by, string $windowSize, ?int $minPeriods = null, ?string $closed = null, ?int $ddof = null): Phpolars\Expr`
-- []{#expr-round} `round(?int $decimals = null, ?string $mode = null): Phpolars\Expr`
-- []{#expr-roundSigFigs} `roundSigFigs(int $digits): Phpolars\Expr`
+- []{#expr-shift} `shift(?int $n = null, mixed $fillValue = null): Phpolars\Expr`
+
+#### Sort, select, and deduplicate {#expr--sort-select-and-deduplicate}
+
+- []{#expr-argSort} `argSort(?bool $descending = null, ?bool $nullsLast = null): Phpolars\Expr`
+- []{#expr-argTrue} `argTrue(): Phpolars\Expr`
+- []{#expr-argUnique} `argUnique(): Phpolars\Expr`
+- []{#expr-bottomK} `bottomK(?int $k = null): Phpolars\Expr`
+- []{#expr-bottomKBy} `bottomKBy(mixed $by, ?int $k = null, mixed $reverse = null): Phpolars\Expr`
+- []{#expr-filter} `filter(mixed $predicate): Phpolars\Expr`: inside `agg()` or `over()`, keeps only the matching values of each group
+- []{#expr-gather} `gather(mixed $indices): Phpolars\Expr`
+- []{#expr-gatherEvery} `gatherEvery(int $n, ?int $offset = null): Phpolars\Expr`
+- []{#expr-get} `get(mixed $index, ?bool $nullOnOob = null): Phpolars\Expr`
+- []{#expr-head} `head(?int $n = null): Phpolars\Expr`
+- []{#expr-indexOf} `indexOf(mixed $element): Phpolars\Expr`
+- []{#expr-isDuplicated} `isDuplicated(): Phpolars\Expr`
+- []{#expr-isFirstDistinct} `isFirstDistinct(): Phpolars\Expr`
+- []{#expr-isLastDistinct} `isLastDistinct(): Phpolars\Expr`
+- []{#expr-isUnique} `isUnique(): Phpolars\Expr`
+- []{#expr-limit} `limit(?int $n = null): Phpolars\Expr`
+- []{#expr-lowerBound} `lowerBound(): Phpolars\Expr`
+- []{#expr-reverse} `reverse(): Phpolars\Expr`
 - []{#expr-sample} `sample(?int $n = null, ?float $fraction = null, ?bool $withReplacement = null, ?bool $shuffle = null, ?int $seed = null): Phpolars\Expr`
 - []{#expr-searchSorted} `searchSorted(mixed $element, ?string $side = null, ?bool $descending = null): Phpolars\Expr`
-- []{#expr-shift} `shift(?int $n = null, mixed $fillValue = null): Phpolars\Expr`
 - []{#expr-shuffle} `shuffle(?int $seed = null): Phpolars\Expr`
-- []{#expr-sign} `sign(): Phpolars\Expr`
-- []{#expr-sin} `sin(): Phpolars\Expr`
-- []{#expr-sinh} `sinh(): Phpolars\Expr`
-- []{#expr-skew} `skew(?bool $bias = null): Phpolars\Expr`
 - []{#expr-slice} `slice(int $offset, ?int $length = null): Phpolars\Expr`
-- []{#expr-sort} `sort(?bool $descending = null, ?bool $nullsLast = null): Phpolars\Expr`
+- []{#expr-sort} `sort(?bool $descending = null, ?bool $nullsLast = null): Phpolars\Expr`: nulls sort first unless `nullsLast: true`
 - []{#expr-sortBy} `sortBy(mixed $by, mixed $descending = null, mixed $nullsLast = null): Phpolars\Expr`
-- []{#expr-sqrt} `sqrt(): Phpolars\Expr`
-- []{#expr-std} `std(?int $ddof = null): Phpolars\Expr`
-- []{#expr-str} `str(): Phpolars\StrNameSpace`
-- []{#expr-struct} `struct(): Phpolars\StructNameSpace`
-- []{#expr-sub} `sub(mixed $other): Phpolars\Expr`
-- []{#expr-sum} `sum(): Phpolars\Expr`
 - []{#expr-tail} `tail(?int $n = null): Phpolars\Expr`
-- []{#expr-tan} `tan(): Phpolars\Expr`
-- []{#expr-tanh} `tanh(): Phpolars\Expr`
-- []{#expr-toPhysical} `toPhysical(): Phpolars\Expr`
 - []{#expr-topK} `topK(?int $k = null): Phpolars\Expr`
 - []{#expr-topKBy} `topKBy(mixed $by, ?int $k = null, mixed $reverse = null): Phpolars\Expr`
-- []{#expr-truediv} `truediv(mixed $other): Phpolars\Expr`
-- []{#expr-unique} `unique(?bool $maintainOrder = null): Phpolars\Expr`
-- []{#expr-uniqueCounts} `uniqueCounts(): Phpolars\Expr`
+- []{#expr-unique} `unique(?bool $maintainOrder = null): Phpolars\Expr`: the order is not kept unless `maintainOrder: true`
 - []{#expr-upperBound} `upperBound(): Phpolars\Expr`
-- []{#expr-valueCounts} `valueCounts(?bool $sort = null, ?string $name = null, ?bool $normalize = null): Phpolars\Expr`
-- []{#expr-var} `var(?int $ddof = null): Phpolars\Expr`
-- []{#expr-xor} `xor(mixed $other): Phpolars\Expr`
+
+#### Combine and reshape {#expr--combine-and-reshape}
+
+- []{#expr-append} `append(mixed $other, ?bool $upcast = null): Phpolars\Expr`
+- []{#expr-explode} `explode(): Phpolars\Expr`
+- []{#expr-extendConstant} `extendConstant(mixed $value, mixed $n): Phpolars\Expr`
+- []{#expr-flatten} `flatten(): Phpolars\Expr`
+- []{#expr-repeatBy} `repeatBy(mixed $by): Phpolars\Expr`
+- []{#expr-reshape} `reshape(array $dimensions): Phpolars\Expr`
+
+#### Types, names, and replacing values {#expr--types-names-and-replacing-values}
+
+- []{#expr-alias} `alias(string $name): Phpolars\Expr`
+- []{#expr-cast} `cast(string $dtype, ?bool $strict = null): Phpolars\Expr`: strict: a value that cannot be converted raises `InvalidOperationError`; `strict: false` gives `null`
+- []{#expr-cut} `cut(mixed $breaks, ?array $labels = null, ?bool $leftClosed = null, ?bool $includeBreaks = null): Phpolars\Expr`
+- []{#expr-exclude} `exclude(mixed ...$columns): Phpolars\Expr`
+- []{#expr-hist} `hist(mixed $bins = null, ?int $binCount = null, ?bool $includeCategory = null, ?bool $includeBreakpoint = null): Phpolars\Expr`
+- []{#expr-qcut} `qcut(mixed $quantiles, ?array $labels = null, ?bool $leftClosed = null, ?bool $allowDuplicates = null, ?bool $includeBreaks = null): Phpolars\Expr`
+- []{#expr-reinterpret} `reinterpret(?bool $signed = null): Phpolars\Expr`
+- []{#expr-replace} `replace(mixed $old, mixed $new = null): Phpolars\Expr`: values without a mapping stay as they are
+- []{#expr-replaceStrict} `replaceStrict(mixed $old, mixed $new = null, mixed $default = null, ?string $returnDtype = null): Phpolars\Expr`: values without a mapping raise `InvalidOperationError` unless `default` is given
+- []{#expr-toPhysical} `toPhysical(): Phpolars\Expr`
+
+#### Namespaces {#expr--namespaces}
+
+- []{#expr-arr} `arr(): Phpolars\ArrayNameSpace`
+- []{#expr-bin} `bin(): Phpolars\BinaryNameSpace`
+- []{#expr-cat} `cat(): Phpolars\CatNameSpace`
+- []{#expr-dt} `dt(): Phpolars\DtNameSpace`
+- []{#expr-list} `list(): Phpolars\ListNameSpace`
+- []{#expr-meta} `meta(): Phpolars\MetaNameSpace`
+- []{#expr-name} `name(): Phpolars\NameNameSpace`
+- []{#expr-str} `str(): Phpolars\StrNameSpace`
+- []{#expr-struct} `struct(): Phpolars\StructNameSpace`
+
+#### Create and convert {#expr--create-and-convert}
+
+- []{#expr-__toString} `__toString(): string`
 
 ### `Phpolars\When` {#when}
 

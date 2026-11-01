@@ -335,8 +335,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<p>phpolars is a PHP extension, written in Rust, that runs <a href="https://pola.rs">Polars</a> inside PHP. Polars is a columnar data frame library: a <code>DataFrame</code> holds typed columns, and expressions such as <code>col('units')-&gt;mul(col('price'))</code> describe computations that Polars runs on its own threads, outside PHP. A query that reads a CSV file, filters it, and groups it runs in Polars. PHP values are created only when the code asks for them, for example with <code>toDicts()</code>.</p>
-<p>The API follows py-polars, Polars’ Python package, with camelCase method names and snake_case functions. The test suite compares 314 cases with py-polars 1.43.2, and all of them match; <a href="./compatibility.html">Compatibility and limitations</a> lists what that comparison covers and what phpolars leaves out.</p>
+<p>Query and transform data with <a href="https://pola.rs">Polars</a> from PHP. Use eager data frames, or build lazy queries with expressions.</p>
+<p>The Composer package is <code>phpstats/phpolars</code>. PIE installs it as the <code>php_polars</code> extension, which is the name that <code>extension=</code> and <code>phpversion()</code> use. Polars runs inside the PHP process: expressions such as <code>col('units')-&gt;mul(col('price'))</code> run on Polars’ own threads, and PHP values are created only when code asks for them, for example with <code>toDicts()</code>.</p>
+<p>The API follows py-polars, Polars’ Python package, with camelCase method names and snake_case functions. <a href="./compatibility.html">Compatibility and limitations</a> covers the differences and how agreement with py-polars is tested.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode php code-with-copy"><code class="sourceCode php"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="va">$sales</span> <span class="op">=</span> read_csv(<span class="st">'sales.csv'</span><span class="ot">,</span> tryParseDates<span class="ot">:</span> <span class="kw">true</span>)<span class="ot">;</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="va">$top</span> <span class="op">=</span> <span class="va">$sales</span></span>
@@ -358,7 +359,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 │ apple   ┆ 1227.68 ┆ 42     ┆ 4.38      │
 │ date    ┆ 1153.58 ┆ 41     ┆ 4.46      │
 └─────────┴─────────┴────────┴───────────┘</code></pre>
-<p>The example reads <code>sales.csv</code>, the example data from the docs. <a href="./getting-started.html#a-starter-script">Getting started</a> has a complete script with its imports, and the command that downloads the data.</p>
+<p>The example reads <code>sales.csv</code>, the docs’ example data. <a href="./getting-started.html#a-starter-script">Getting started</a> has a complete script and the command that downloads the data.</p>
 <section id="what-it-includes" class="level2">
 <h2 class="anchored" data-anchor-id="what-it-includes">What it includes</h2>
 <ul>
@@ -372,12 +373,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="the-phpolars-api-or-phibble-and-phplyr" class="level2">
 <h2 class="anchored" data-anchor-id="the-phpolars-api-or-phibble-and-phplyr">The phpolars API or phibble and phplyr</h2>
-<p>phpolars can be used directly or through <a href="https://phibble.phpstats.org">phibble</a> and <a href="https://phplyr.phpstats.org">phplyr</a>.</p>
 <ul>
-<li>The phpolars API (<code>Phpolars\DataFrame</code>, <code>LazyFrame</code>, <code>Series</code>, and expressions) follows Polars and its semantics. A missing value is <code>null</code>, and aggregates skip it.</li>
-<li>phibble’s <code>Phibble\Polars\PolarsTable</code> adapter runs phibble tables and phplyr pipelines in Polars. It belongs to phibble, and phpolars supplies the extension that it runs on. The pipeline keeps dplyr’s semantics, in which <code>null</code> is R’s <code>NA</code>, and the same code also runs on phibble’s in-memory <code>DataFrame</code> and on SQL tables.</li>
+<li>The phpolars API (<code>Phpolars\DataFrame</code>, <code>LazyFrame</code>, <code>Series</code>, and expressions) follows Polars’ semantics. A missing value is <code>null</code>, and aggregates skip it.</li>
+<li><a href="https://phibble.phpstats.org">phibble</a>’s <code>Phibble\Polars\PolarsTable</code> runs phibble tables and <a href="https://phplyr.phpstats.org">phplyr</a> pipelines in Polars with dplyr’s semantics, in which <code>null</code> is R’s <code>NA</code>. The adapter belongs to phibble and runs on this extension.</li>
 </ul>
-<p><a href="./phibble.html">phibble and phplyr</a> covers the adapter and the differences between the two sets of semantics.</p>
+<p><a href="./phibble.html">phibble and phplyr</a> covers the choice and the differences in semantics.</p>
 
 
 </section>

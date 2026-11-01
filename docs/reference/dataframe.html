@@ -549,128 +549,200 @@ shape: (9, 4)
 </section>
 <section id="methods" class="level2">
 <h2 class="anchored" data-anchor-id="methods">Methods</h2>
+<p>In the signatures, <code>= null</code> marks an optional argument. Leaving it out, or passing <code>null</code>, uses Polars’ default for that argument, which in most cases is py-polars’ default. A note after a signature describes behavior that is easy to misread.</p>
 <ul>
-<li><a href="#dataframe"><code>Phpolars\DataFrame</code></a>: <a href="#dataframe-__toString"><code>__toString</code></a> · <a href="#dataframe-approxNUnique"><code>approxNUnique</code></a> · <a href="#dataframe-bottomK"><code>bottomK</code></a> · <a href="#dataframe-cast"><code>cast</code></a> · <a href="#dataframe-clear"><code>clear</code></a> · <a href="#dataframe-clone"><code>clone</code></a> · <a href="#dataframe-collectSchema"><code>collectSchema</code></a> · <a href="#dataframe-columns"><code>columns</code></a> · <a href="#dataframe-corr"><code>corr</code></a> · <a href="#dataframe-count"><code>count</code></a> · <a href="#dataframe-describe"><code>describe</code></a> · <a href="#dataframe-drop"><code>drop</code></a> · <a href="#dataframe-dropNans"><code>dropNans</code></a> · <a href="#dataframe-dropNulls"><code>dropNulls</code></a> · <a href="#dataframe-dtypes"><code>dtypes</code></a> · <a href="#dataframe-equals"><code>equals</code></a> · <a href="#dataframe-estimatedSize"><code>estimatedSize</code></a> · <a href="#dataframe-explode"><code>explode</code></a> · <a href="#dataframe-extend"><code>extend</code></a> · <a href="#dataframe-fillNan"><code>fillNan</code></a> · <a href="#dataframe-fillNull"><code>fillNull</code></a> · <a href="#dataframe-filter"><code>filter</code></a> · <a href="#dataframe-first"><code>first</code></a> · <a href="#dataframe-fromDict"><code>fromDict</code></a> · <a href="#dataframe-fromDicts"><code>fromDicts</code></a> · <a href="#dataframe-fromPhibble"><code>fromPhibble</code></a> · <a href="#dataframe-fromRows"><code>fromRows</code></a> · <a href="#dataframe-gather"><code>gather</code></a> · <a href="#dataframe-gatherEvery"><code>gatherEvery</code></a> · <a href="#dataframe-getColumn"><code>getColumn</code></a> · <a href="#dataframe-getColumnIndex"><code>getColumnIndex</code></a> · <a href="#dataframe-getColumns"><code>getColumns</code></a> · <a href="#dataframe-glimpse"><code>glimpse</code></a> · <a href="#dataframe-groupBy"><code>groupBy</code></a> · <a href="#dataframe-groupByDynamic"><code>groupByDynamic</code></a> · <a href="#dataframe-head"><code>head</code></a> · <a href="#dataframe-height"><code>height</code></a> · <a href="#dataframe-hstack"><code>hstack</code></a> · <a href="#dataframe-insertColumn"><code>insertColumn</code></a> · <a href="#dataframe-interpolate"><code>interpolate</code></a> · <a href="#dataframe-isDuplicated"><code>isDuplicated</code></a> · <a href="#dataframe-isEmpty"><code>isEmpty</code></a> · <a href="#dataframe-isUnique"><code>isUnique</code></a> · <a href="#dataframe-item"><code>item</code></a> · <a href="#dataframe-iterColumns"><code>iterColumns</code></a> · <a href="#dataframe-iterRows"><code>iterRows</code></a> · <a href="#dataframe-iterSlices"><code>iterSlices</code></a> · <a href="#dataframe-join"><code>join</code></a> · <a href="#dataframe-joinAsof"><code>joinAsof</code></a> · <a href="#dataframe-joinWhere"><code>joinWhere</code></a> · <a href="#dataframe-last"><code>last</code></a> · <a href="#dataframe-lazy"><code>lazy</code></a> · <a href="#dataframe-limit"><code>limit</code></a> · <a href="#dataframe-mapRows"><code>mapRows</code></a> · <a href="#dataframe-max"><code>max</code></a> · <a href="#dataframe-maxHorizontal"><code>maxHorizontal</code></a> · <a href="#dataframe-mean"><code>mean</code></a> · <a href="#dataframe-meanHorizontal"><code>meanHorizontal</code></a> · <a href="#dataframe-median"><code>median</code></a> · <a href="#dataframe-melt"><code>melt</code></a> · <a href="#dataframe-mergeSorted"><code>mergeSorted</code></a> · <a href="#dataframe-min"><code>min</code></a> · <a href="#dataframe-minHorizontal"><code>minHorizontal</code></a> · <a href="#dataframe-nChunks"><code>nChunks</code></a> · <a href="#dataframe-nullCount"><code>nullCount</code></a> · <a href="#dataframe-nUnique"><code>nUnique</code></a> · <a href="#dataframe-partitionBy"><code>partitionBy</code></a> · <a href="#dataframe-pivot"><code>pivot</code></a> · <a href="#dataframe-product"><code>product</code></a> · <a href="#dataframe-quantile"><code>quantile</code></a> · <a href="#dataframe-rechunk"><code>rechunk</code></a> · <a href="#dataframe-remove"><code>remove</code></a> · <a href="#dataframe-rename"><code>rename</code></a> · <a href="#dataframe-replaceColumn"><code>replaceColumn</code></a> · <a href="#dataframe-reverse"><code>reverse</code></a> · <a href="#dataframe-rolling"><code>rolling</code></a> · <a href="#dataframe-row"><code>row</code></a> · <a href="#dataframe-rows"><code>rows</code></a> · <a href="#dataframe-rowsByKey"><code>rowsByKey</code></a> · <a href="#dataframe-sample"><code>sample</code></a> · <a href="#dataframe-schema"><code>schema</code></a> · <a href="#dataframe-select"><code>select</code></a> · <a href="#dataframe-selectSeq"><code>selectSeq</code></a> · <a href="#dataframe-shape"><code>shape</code></a> · <a href="#dataframe-shift"><code>shift</code></a> · <a href="#dataframe-shrinkToFit"><code>shrinkToFit</code></a> · <a href="#dataframe-slice"><code>slice</code></a> · <a href="#dataframe-sort"><code>sort</code></a> · <a href="#dataframe-sql"><code>sql</code></a> · <a href="#dataframe-std"><code>std</code></a> · <a href="#dataframe-sum"><code>sum</code></a> · <a href="#dataframe-sumHorizontal"><code>sumHorizontal</code></a> · <a href="#dataframe-tail"><code>tail</code></a> · <a href="#dataframe-toColumns"><code>toColumns</code></a> · <a href="#dataframe-toDict"><code>toDict</code></a> · <a href="#dataframe-toDicts"><code>toDicts</code></a> · <a href="#dataframe-toDummies"><code>toDummies</code></a> · <a href="#dataframe-toPhibble"><code>toPhibble</code></a> · <a href="#dataframe-topK"><code>topK</code></a> · <a href="#dataframe-toSeries"><code>toSeries</code></a> · <a href="#dataframe-toStruct"><code>toStruct</code></a> · <a href="#dataframe-transpose"><code>transpose</code></a> · <a href="#dataframe-unique"><code>unique</code></a> · <a href="#dataframe-unnest"><code>unnest</code></a> · <a href="#dataframe-unpivot"><code>unpivot</code></a> · <a href="#dataframe-update"><code>update</code></a> · <a href="#dataframe-upsample"><code>upsample</code></a> · <a href="#dataframe-var"><code>var</code></a> · <a href="#dataframe-vstack"><code>vstack</code></a> · <a href="#dataframe-width"><code>width</code></a> · <a href="#dataframe-withColumns"><code>withColumns</code></a> · <a href="#dataframe-withColumnsSeq"><code>withColumnsSeq</code></a> · <a href="#dataframe-withRowIndex"><code>withRowIndex</code></a> · <a href="#dataframe-writeCsv"><code>writeCsv</code></a> · <a href="#dataframe-writeDatabase"><code>writeDatabase</code></a> · <a href="#dataframe-writeIpc"><code>writeIpc</code></a> · <a href="#dataframe-writeIpcStream"><code>writeIpcStream</code></a> · <a href="#dataframe-writeJson"><code>writeJson</code></a> · <a href="#dataframe-writeNdjson"><code>writeNdjson</code></a> · <a href="#dataframe-writeParquet"><code>writeParquet</code></a></li>
-<li><a href="#lazyframe"><code>Phpolars\LazyFrame</code></a>: <a href="#lazyframe-__toString"><code>__toString</code></a> · <a href="#lazyframe-approxNUnique"><code>approxNUnique</code></a> · <a href="#lazyframe-bottomK"><code>bottomK</code></a> · <a href="#lazyframe-cache"><code>cache</code></a> · <a href="#lazyframe-cast"><code>cast</code></a> · <a href="#lazyframe-clear"><code>clear</code></a> · <a href="#lazyframe-clone"><code>clone</code></a> · <a href="#lazyframe-collect"><code>collect</code></a> · <a href="#lazyframe-collectSchema"><code>collectSchema</code></a> · <a href="#lazyframe-columns"><code>columns</code></a> · <a href="#lazyframe-count"><code>count</code></a> · <a href="#lazyframe-describe"><code>describe</code></a> · <a href="#lazyframe-drop"><code>drop</code></a> · <a href="#lazyframe-dropNans"><code>dropNans</code></a> · <a href="#lazyframe-dropNulls"><code>dropNulls</code></a> · <a href="#lazyframe-dtypes"><code>dtypes</code></a> · <a href="#lazyframe-explain"><code>explain</code></a> · <a href="#lazyframe-explode"><code>explode</code></a> · <a href="#lazyframe-fetch"><code>fetch</code></a> · <a href="#lazyframe-fillNan"><code>fillNan</code></a> · <a href="#lazyframe-fillNull"><code>fillNull</code></a> · <a href="#lazyframe-filter"><code>filter</code></a> · <a href="#lazyframe-first"><code>first</code></a> · <a href="#lazyframe-gather"><code>gather</code></a> · <a href="#lazyframe-gatherEvery"><code>gatherEvery</code></a> · <a href="#lazyframe-groupBy"><code>groupBy</code></a> · <a href="#lazyframe-groupByDynamic"><code>groupByDynamic</code></a> · <a href="#lazyframe-head"><code>head</code></a> · <a href="#lazyframe-interpolate"><code>interpolate</code></a> · <a href="#lazyframe-join"><code>join</code></a> · <a href="#lazyframe-joinAsof"><code>joinAsof</code></a> · <a href="#lazyframe-joinWhere"><code>joinWhere</code></a> · <a href="#lazyframe-last"><code>last</code></a> · <a href="#lazyframe-lazy"><code>lazy</code></a> · <a href="#lazyframe-limit"><code>limit</code></a> · <a href="#lazyframe-max"><code>max</code></a> · <a href="#lazyframe-mean"><code>mean</code></a> · <a href="#lazyframe-median"><code>median</code></a> · <a href="#lazyframe-mergeSorted"><code>mergeSorted</code></a> · <a href="#lazyframe-min"><code>min</code></a> · <a href="#lazyframe-nullCount"><code>nullCount</code></a> · <a href="#lazyframe-nUnique"><code>nUnique</code></a> · <a href="#lazyframe-product"><code>product</code></a> · <a href="#lazyframe-profile"><code>profile</code></a> · <a href="#lazyframe-quantile"><code>quantile</code></a> · <a href="#lazyframe-remove"><code>remove</code></a> · <a href="#lazyframe-rename"><code>rename</code></a> · <a href="#lazyframe-reverse"><code>reverse</code></a> · <a href="#lazyframe-rolling"><code>rolling</code></a> · <a href="#lazyframe-schema"><code>schema</code></a> · <a href="#lazyframe-select"><code>select</code></a> · <a href="#lazyframe-selectSeq"><code>selectSeq</code></a> · <a href="#lazyframe-shift"><code>shift</code></a> · <a href="#lazyframe-sinkCsv"><code>sinkCsv</code></a> · <a href="#lazyframe-sinkIpc"><code>sinkIpc</code></a> · <a href="#lazyframe-sinkNdjson"><code>sinkNdjson</code></a> · <a href="#lazyframe-sinkParquet"><code>sinkParquet</code></a> · <a href="#lazyframe-slice"><code>slice</code></a> · <a href="#lazyframe-sort"><code>sort</code></a> · <a href="#lazyframe-sql"><code>sql</code></a> · <a href="#lazyframe-std"><code>std</code></a> · <a href="#lazyframe-sum"><code>sum</code></a> · <a href="#lazyframe-tail"><code>tail</code></a> · <a href="#lazyframe-topK"><code>topK</code></a> · <a href="#lazyframe-unique"><code>unique</code></a> · <a href="#lazyframe-unnest"><code>unnest</code></a> · <a href="#lazyframe-unpivot"><code>unpivot</code></a> · <a href="#lazyframe-update"><code>update</code></a> · <a href="#lazyframe-var"><code>var</code></a> · <a href="#lazyframe-width"><code>width</code></a> · <a href="#lazyframe-withColumns"><code>withColumns</code></a> · <a href="#lazyframe-withColumnsSeq"><code>withColumnsSeq</code></a> · <a href="#lazyframe-withRowIndex"><code>withRowIndex</code></a></li>
+<li><a href="#dataframe"><code>Phpolars\DataFrame</code></a>
+<ul>
+<li><a href="#dataframe--create-and-convert">Create and convert</a>: <a href="#dataframe-__toString"><code>__toString</code></a> · <a href="#dataframe-clear"><code>clear</code></a> · <a href="#dataframe-clone"><code>clone</code></a> · <a href="#dataframe-fromDict"><code>fromDict</code></a> · <a href="#dataframe-fromDicts"><code>fromDicts</code></a> · <a href="#dataframe-fromPhibble"><code>fromPhibble</code></a> · <a href="#dataframe-fromRows"><code>fromRows</code></a> · <a href="#dataframe-getColumn"><code>getColumn</code></a> · <a href="#dataframe-getColumnIndex"><code>getColumnIndex</code></a> · <a href="#dataframe-getColumns"><code>getColumns</code></a> · <a href="#dataframe-item"><code>item</code></a> · <a href="#dataframe-iterColumns"><code>iterColumns</code></a> · <a href="#dataframe-iterRows"><code>iterRows</code></a> · <a href="#dataframe-iterSlices"><code>iterSlices</code></a> · <a href="#dataframe-lazy"><code>lazy</code></a> · <a href="#dataframe-mapRows"><code>mapRows</code></a> · <a href="#dataframe-row"><code>row</code></a> · <a href="#dataframe-rows"><code>rows</code></a> · <a href="#dataframe-rowsByKey"><code>rowsByKey</code></a> · <a href="#dataframe-toColumns"><code>toColumns</code></a> · <a href="#dataframe-toDict"><code>toDict</code></a> · <a href="#dataframe-toDicts"><code>toDicts</code></a> · <a href="#dataframe-toDummies"><code>toDummies</code></a> · <a href="#dataframe-toPhibble"><code>toPhibble</code></a> · <a href="#dataframe-toSeries"><code>toSeries</code></a> · <a href="#dataframe-toStruct"><code>toStruct</code></a></li>
+<li><a href="#dataframe--inspect">Inspect</a>: <a href="#dataframe-collectSchema"><code>collectSchema</code></a> · <a href="#dataframe-columns"><code>columns</code></a> · <a href="#dataframe-describe"><code>describe</code></a> · <a href="#dataframe-dtypes"><code>dtypes</code></a> · <a href="#dataframe-equals"><code>equals</code></a> · <a href="#dataframe-estimatedSize"><code>estimatedSize</code></a> · <a href="#dataframe-glimpse"><code>glimpse</code></a> · <a href="#dataframe-height"><code>height</code></a> · <a href="#dataframe-isEmpty"><code>isEmpty</code></a> · <a href="#dataframe-nChunks"><code>nChunks</code></a> · <a href="#dataframe-rechunk"><code>rechunk</code></a> · <a href="#dataframe-schema"><code>schema</code></a> · <a href="#dataframe-shape"><code>shape</code></a> · <a href="#dataframe-shrinkToFit"><code>shrinkToFit</code></a> · <a href="#dataframe-width"><code>width</code></a></li>
+<li><a href="#dataframe--select-and-add-columns">Select and add columns</a>: <a href="#dataframe-cast"><code>cast</code></a> · <a href="#dataframe-drop"><code>drop</code></a> · <a href="#dataframe-hstack"><code>hstack</code></a> · <a href="#dataframe-insertColumn"><code>insertColumn</code></a> · <a href="#dataframe-rename"><code>rename</code></a> · <a href="#dataframe-replaceColumn"><code>replaceColumn</code></a> · <a href="#dataframe-select"><code>select</code></a> · <a href="#dataframe-selectSeq"><code>selectSeq</code></a> · <a href="#dataframe-withColumns"><code>withColumns</code></a> · <a href="#dataframe-withColumnsSeq"><code>withColumnsSeq</code></a> · <a href="#dataframe-withRowIndex"><code>withRowIndex</code></a></li>
+<li><a href="#dataframe--filter-sort-and-slice-rows">Filter, sort, and slice rows</a>: <a href="#dataframe-bottomK"><code>bottomK</code></a> · <a href="#dataframe-filter"><code>filter</code></a> · <a href="#dataframe-first"><code>first</code></a> · <a href="#dataframe-gather"><code>gather</code></a> · <a href="#dataframe-gatherEvery"><code>gatherEvery</code></a> · <a href="#dataframe-head"><code>head</code></a> · <a href="#dataframe-isDuplicated"><code>isDuplicated</code></a> · <a href="#dataframe-isUnique"><code>isUnique</code></a> · <a href="#dataframe-last"><code>last</code></a> · <a href="#dataframe-limit"><code>limit</code></a> · <a href="#dataframe-remove"><code>remove</code></a> · <a href="#dataframe-reverse"><code>reverse</code></a> · <a href="#dataframe-sample"><code>sample</code></a> · <a href="#dataframe-shift"><code>shift</code></a> · <a href="#dataframe-slice"><code>slice</code></a> · <a href="#dataframe-sort"><code>sort</code></a> · <a href="#dataframe-tail"><code>tail</code></a> · <a href="#dataframe-topK"><code>topK</code></a> · <a href="#dataframe-unique"><code>unique</code></a></li>
+<li><a href="#dataframe--missing-values">Missing values</a>: <a href="#dataframe-dropNans"><code>dropNans</code></a> · <a href="#dataframe-dropNulls"><code>dropNulls</code></a> · <a href="#dataframe-fillNan"><code>fillNan</code></a> · <a href="#dataframe-fillNull"><code>fillNull</code></a> · <a href="#dataframe-interpolate"><code>interpolate</code></a> · <a href="#dataframe-nullCount"><code>nullCount</code></a></li>
+<li><a href="#dataframe--group-and-aggregate">Group and aggregate</a>: <a href="#dataframe-approxNUnique"><code>approxNUnique</code></a> · <a href="#dataframe-corr"><code>corr</code></a> · <a href="#dataframe-count"><code>count</code></a> · <a href="#dataframe-groupBy"><code>groupBy</code></a> · <a href="#dataframe-groupByDynamic"><code>groupByDynamic</code></a> · <a href="#dataframe-max"><code>max</code></a> · <a href="#dataframe-maxHorizontal"><code>maxHorizontal</code></a> · <a href="#dataframe-mean"><code>mean</code></a> · <a href="#dataframe-meanHorizontal"><code>meanHorizontal</code></a> · <a href="#dataframe-median"><code>median</code></a> · <a href="#dataframe-min"><code>min</code></a> · <a href="#dataframe-minHorizontal"><code>minHorizontal</code></a> · <a href="#dataframe-nUnique"><code>nUnique</code></a> · <a href="#dataframe-product"><code>product</code></a> · <a href="#dataframe-quantile"><code>quantile</code></a> · <a href="#dataframe-rolling"><code>rolling</code></a> · <a href="#dataframe-std"><code>std</code></a> · <a href="#dataframe-sum"><code>sum</code></a> · <a href="#dataframe-sumHorizontal"><code>sumHorizontal</code></a> · <a href="#dataframe-upsample"><code>upsample</code></a> · <a href="#dataframe-var"><code>var</code></a></li>
+<li><a href="#dataframe--join-and-combine">Join and combine</a>: <a href="#dataframe-extend"><code>extend</code></a> · <a href="#dataframe-join"><code>join</code></a> · <a href="#dataframe-joinAsof"><code>joinAsof</code></a> · <a href="#dataframe-joinWhere"><code>joinWhere</code></a> · <a href="#dataframe-mergeSorted"><code>mergeSorted</code></a> · <a href="#dataframe-update"><code>update</code></a> · <a href="#dataframe-vstack"><code>vstack</code></a></li>
+<li><a href="#dataframe--reshape">Reshape</a>: <a href="#dataframe-explode"><code>explode</code></a> · <a href="#dataframe-melt"><code>melt</code></a> · <a href="#dataframe-partitionBy"><code>partitionBy</code></a> · <a href="#dataframe-pivot"><code>pivot</code></a> · <a href="#dataframe-transpose"><code>transpose</code></a> · <a href="#dataframe-unnest"><code>unnest</code></a> · <a href="#dataframe-unpivot"><code>unpivot</code></a></li>
+<li><a href="#dataframe--sql">SQL</a>: <a href="#dataframe-sql"><code>sql</code></a></li>
+<li><a href="#dataframe--write">Write</a>: <a href="#dataframe-writeCsv"><code>writeCsv</code></a> · <a href="#dataframe-writeDatabase"><code>writeDatabase</code></a> · <a href="#dataframe-writeIpc"><code>writeIpc</code></a> · <a href="#dataframe-writeIpcStream"><code>writeIpcStream</code></a> · <a href="#dataframe-writeJson"><code>writeJson</code></a> · <a href="#dataframe-writeNdjson"><code>writeNdjson</code></a> · <a href="#dataframe-writeParquet"><code>writeParquet</code></a></li>
+</ul></li>
+<li><a href="#lazyframe"><code>Phpolars\LazyFrame</code></a>
+<ul>
+<li><a href="#lazyframe--create-and-convert">Create and convert</a>: <a href="#lazyframe-__toString"><code>__toString</code></a> · <a href="#lazyframe-cache"><code>cache</code></a> · <a href="#lazyframe-clear"><code>clear</code></a> · <a href="#lazyframe-clone"><code>clone</code></a> · <a href="#lazyframe-collect"><code>collect</code></a> · <a href="#lazyframe-fetch"><code>fetch</code></a> · <a href="#lazyframe-lazy"><code>lazy</code></a> · <a href="#lazyframe-profile"><code>profile</code></a></li>
+<li><a href="#lazyframe--inspect">Inspect</a>: <a href="#lazyframe-collectSchema"><code>collectSchema</code></a> · <a href="#lazyframe-columns"><code>columns</code></a> · <a href="#lazyframe-describe"><code>describe</code></a> · <a href="#lazyframe-dtypes"><code>dtypes</code></a> · <a href="#lazyframe-explain"><code>explain</code></a> · <a href="#lazyframe-schema"><code>schema</code></a> · <a href="#lazyframe-width"><code>width</code></a></li>
+<li><a href="#lazyframe--select-and-add-columns">Select and add columns</a>: <a href="#lazyframe-cast"><code>cast</code></a> · <a href="#lazyframe-drop"><code>drop</code></a> · <a href="#lazyframe-rename"><code>rename</code></a> · <a href="#lazyframe-select"><code>select</code></a> · <a href="#lazyframe-selectSeq"><code>selectSeq</code></a> · <a href="#lazyframe-withColumns"><code>withColumns</code></a> · <a href="#lazyframe-withColumnsSeq"><code>withColumnsSeq</code></a> · <a href="#lazyframe-withRowIndex"><code>withRowIndex</code></a></li>
+<li><a href="#lazyframe--filter-sort-and-slice-rows">Filter, sort, and slice rows</a>: <a href="#lazyframe-bottomK"><code>bottomK</code></a> · <a href="#lazyframe-filter"><code>filter</code></a> · <a href="#lazyframe-first"><code>first</code></a> · <a href="#lazyframe-gather"><code>gather</code></a> · <a href="#lazyframe-gatherEvery"><code>gatherEvery</code></a> · <a href="#lazyframe-head"><code>head</code></a> · <a href="#lazyframe-last"><code>last</code></a> · <a href="#lazyframe-limit"><code>limit</code></a> · <a href="#lazyframe-remove"><code>remove</code></a> · <a href="#lazyframe-reverse"><code>reverse</code></a> · <a href="#lazyframe-shift"><code>shift</code></a> · <a href="#lazyframe-slice"><code>slice</code></a> · <a href="#lazyframe-sort"><code>sort</code></a> · <a href="#lazyframe-tail"><code>tail</code></a> · <a href="#lazyframe-topK"><code>topK</code></a> · <a href="#lazyframe-unique"><code>unique</code></a></li>
+<li><a href="#lazyframe--missing-values">Missing values</a>: <a href="#lazyframe-dropNans"><code>dropNans</code></a> · <a href="#lazyframe-dropNulls"><code>dropNulls</code></a> · <a href="#lazyframe-fillNan"><code>fillNan</code></a> · <a href="#lazyframe-fillNull"><code>fillNull</code></a> · <a href="#lazyframe-interpolate"><code>interpolate</code></a> · <a href="#lazyframe-nullCount"><code>nullCount</code></a></li>
+<li><a href="#lazyframe--group-and-aggregate">Group and aggregate</a>: <a href="#lazyframe-approxNUnique"><code>approxNUnique</code></a> · <a href="#lazyframe-count"><code>count</code></a> · <a href="#lazyframe-groupBy"><code>groupBy</code></a> · <a href="#lazyframe-groupByDynamic"><code>groupByDynamic</code></a> · <a href="#lazyframe-max"><code>max</code></a> · <a href="#lazyframe-mean"><code>mean</code></a> · <a href="#lazyframe-median"><code>median</code></a> · <a href="#lazyframe-min"><code>min</code></a> · <a href="#lazyframe-nUnique"><code>nUnique</code></a> · <a href="#lazyframe-product"><code>product</code></a> · <a href="#lazyframe-quantile"><code>quantile</code></a> · <a href="#lazyframe-rolling"><code>rolling</code></a> · <a href="#lazyframe-std"><code>std</code></a> · <a href="#lazyframe-sum"><code>sum</code></a> · <a href="#lazyframe-var"><code>var</code></a></li>
+<li><a href="#lazyframe--join-and-combine">Join and combine</a>: <a href="#lazyframe-join"><code>join</code></a> · <a href="#lazyframe-joinAsof"><code>joinAsof</code></a> · <a href="#lazyframe-joinWhere"><code>joinWhere</code></a> · <a href="#lazyframe-mergeSorted"><code>mergeSorted</code></a> · <a href="#lazyframe-update"><code>update</code></a></li>
+<li><a href="#lazyframe--reshape">Reshape</a>: <a href="#lazyframe-explode"><code>explode</code></a> · <a href="#lazyframe-unnest"><code>unnest</code></a> · <a href="#lazyframe-unpivot"><code>unpivot</code></a></li>
+<li><a href="#lazyframe--sql">SQL</a>: <a href="#lazyframe-sql"><code>sql</code></a></li>
+<li><a href="#lazyframe--write">Write</a>: <a href="#lazyframe-sinkCsv"><code>sinkCsv</code></a> · <a href="#lazyframe-sinkIpc"><code>sinkIpc</code></a> · <a href="#lazyframe-sinkNdjson"><code>sinkNdjson</code></a> · <a href="#lazyframe-sinkParquet"><code>sinkParquet</code></a></li>
+</ul></li>
 <li><a href="#groupby"><code>Phpolars\GroupBy</code></a>: <a href="#groupby-agg"><code>agg</code></a> · <a href="#groupby-all"><code>all</code></a> · <a href="#groupby-count"><code>count</code></a> · <a href="#groupby-first"><code>first</code></a> · <a href="#groupby-getIterator"><code>getIterator</code></a> · <a href="#groupby-having"><code>having</code></a> · <a href="#groupby-head"><code>head</code></a> · <a href="#groupby-last"><code>last</code></a> · <a href="#groupby-len"><code>len</code></a> · <a href="#groupby-max"><code>max</code></a> · <a href="#groupby-mean"><code>mean</code></a> · <a href="#groupby-median"><code>median</code></a> · <a href="#groupby-min"><code>min</code></a> · <a href="#groupby-nUnique"><code>nUnique</code></a> · <a href="#groupby-quantile"><code>quantile</code></a> · <a href="#groupby-sum"><code>sum</code></a> · <a href="#groupby-tail"><code>tail</code></a></li>
 <li><a href="#lazygroupby"><code>Phpolars\LazyGroupBy</code></a>: <a href="#lazygroupby-agg"><code>agg</code></a> · <a href="#lazygroupby-all"><code>all</code></a> · <a href="#lazygroupby-count"><code>count</code></a> · <a href="#lazygroupby-first"><code>first</code></a> · <a href="#lazygroupby-getIterator"><code>getIterator</code></a> · <a href="#lazygroupby-having"><code>having</code></a> · <a href="#lazygroupby-head"><code>head</code></a> · <a href="#lazygroupby-last"><code>last</code></a> · <a href="#lazygroupby-len"><code>len</code></a> · <a href="#lazygroupby-max"><code>max</code></a> · <a href="#lazygroupby-mean"><code>mean</code></a> · <a href="#lazygroupby-median"><code>median</code></a> · <a href="#lazygroupby-min"><code>min</code></a> · <a href="#lazygroupby-nUnique"><code>nUnique</code></a> · <a href="#lazygroupby-quantile"><code>quantile</code></a> · <a href="#lazygroupby-sum"><code>sum</code></a> · <a href="#lazygroupby-tail"><code>tail</code></a></li>
 </ul>
 <section id="dataframe" class="level3">
 <h3 class="anchored" data-anchor-id="dataframe"><code>Phpolars\DataFrame</code></h3>
+<section id="dataframe--create-and-convert" class="level4">
+<h4 class="anchored" data-anchor-id="dataframe--create-and-convert">Create and convert</h4>
 <ul>
 <li><span id="dataframe-__toString"></span> <code>__toString(): string</code></li>
-<li><span id="dataframe-approxNUnique"></span> <code>approxNUnique(): Phpolars\DataFrame</code></li>
-<li><span id="dataframe-bottomK"></span> <code>bottomK(int $k, mixed $by, mixed $reverse = null): Phpolars\DataFrame</code></li>
-<li><span id="dataframe-cast"></span> <code>cast(mixed $dtypes, ?bool $strict = null): Phpolars\DataFrame</code></li>
 <li><span id="dataframe-clear"></span> <code>clear(?int $n = null): Phpolars\DataFrame</code></li>
 <li><span id="dataframe-clone"></span> <code>clone(): Phpolars\DataFrame</code></li>
-<li><span id="dataframe-collectSchema"></span> <code>collectSchema(): array</code></li>
-<li><span id="dataframe-columns"></span> <code>columns(): array</code></li>
-<li><span id="dataframe-corr"></span> <code>corr(): Phpolars\DataFrame</code></li>
-<li><span id="dataframe-count"></span> <code>count(): Phpolars\DataFrame</code></li>
-<li><span id="dataframe-describe"></span> <code>describe(?array $percentiles = null): Phpolars\DataFrame</code></li>
-<li><span id="dataframe-drop"></span> <code>drop(mixed ...$columns): Phpolars\DataFrame</code></li>
-<li><span id="dataframe-dropNans"></span> <code>dropNans(mixed $subset = null): Phpolars\DataFrame</code></li>
-<li><span id="dataframe-dropNulls"></span> <code>dropNulls(mixed $subset = null): Phpolars\DataFrame</code></li>
-<li><span id="dataframe-dtypes"></span> <code>dtypes(): array</code></li>
-<li><span id="dataframe-equals"></span> <code>equals(Phpolars\DataFrame $other, ?bool $nullEqual = null): bool</code></li>
-<li><span id="dataframe-estimatedSize"></span> <code>estimatedSize(): int</code></li>
-<li><span id="dataframe-explode"></span> <code>explode(mixed ...$columns): Phpolars\DataFrame</code></li>
-<li><span id="dataframe-extend"></span> <code>extend(Phpolars\DataFrame $other): Phpolars\DataFrame</code></li>
-<li><span id="dataframe-fillNan"></span> <code>fillNan(mixed $value): Phpolars\DataFrame</code></li>
-<li><span id="dataframe-fillNull"></span> <code>fillNull(mixed $value = null, ?string $strategy = null, ?int $limit = null): Phpolars\DataFrame</code></li>
-<li><span id="dataframe-filter"></span> <code>filter(mixed ...$predicates): Phpolars\DataFrame</code></li>
-<li><span id="dataframe-first"></span> <code>first(): Phpolars\DataFrame</code></li>
 <li><span id="dataframe-fromDict"></span> <code>static fromDict(array $data, ?array $schema = null): Phpolars\DataFrame</code></li>
 <li><span id="dataframe-fromDicts"></span> <code>static fromDicts(array $data, ?array $schema = null): Phpolars\DataFrame</code></li>
 <li><span id="dataframe-fromPhibble"></span> <code>static fromPhibble(mixed $table): Phpolars\DataFrame</code></li>
 <li><span id="dataframe-fromRows"></span> <code>static fromRows(array $data, ?array $schema = null): Phpolars\DataFrame</code></li>
-<li><span id="dataframe-gather"></span> <code>gather(mixed $indices): Phpolars\DataFrame</code></li>
-<li><span id="dataframe-gatherEvery"></span> <code>gatherEvery(int $n, ?int $offset = null): Phpolars\DataFrame</code></li>
 <li><span id="dataframe-getColumn"></span> <code>getColumn(string $name): Phpolars\Series</code></li>
 <li><span id="dataframe-getColumnIndex"></span> <code>getColumnIndex(string $name): int</code></li>
 <li><span id="dataframe-getColumns"></span> <code>getColumns(): array</code></li>
-<li><span id="dataframe-glimpse"></span> <code>glimpse(?int $maxItemsPerColumn = null): string</code></li>
-<li><span id="dataframe-groupBy"></span> <code>groupBy(mixed $by, ?bool $maintainOrder = null): Phpolars\GroupBy</code></li>
-<li><span id="dataframe-groupByDynamic"></span> <code>groupByDynamic(mixed $indexColumn, string $every, ?string $period = null, ?string $offset = null, ?bool $includeBoundaries = null, ?string $closed = null, ?string $label = null, mixed $groupBy = null, ?string $startBy = null): Phpolars\GroupBy</code></li>
-<li><span id="dataframe-head"></span> <code>head(?int $n = null): Phpolars\DataFrame</code></li>
-<li><span id="dataframe-height"></span> <code>height(): int</code></li>
-<li><span id="dataframe-hstack"></span> <code>hstack(mixed $columns): Phpolars\DataFrame</code></li>
-<li><span id="dataframe-insertColumn"></span> <code>insertColumn(int $index, Phpolars\Series $column): Phpolars\DataFrame</code></li>
-<li><span id="dataframe-interpolate"></span> <code>interpolate(): Phpolars\DataFrame</code></li>
-<li><span id="dataframe-isDuplicated"></span> <code>isDuplicated(): Phpolars\Series</code></li>
-<li><span id="dataframe-isEmpty"></span> <code>isEmpty(): bool</code></li>
-<li><span id="dataframe-isUnique"></span> <code>isUnique(): Phpolars\Series</code></li>
 <li><span id="dataframe-item"></span> <code>item(?int $row = null, mixed $column = null): mixed</code></li>
 <li><span id="dataframe-iterColumns"></span> <code>iterColumns(): array</code></li>
 <li><span id="dataframe-iterRows"></span> <code>iterRows(?bool $named = null): array</code></li>
 <li><span id="dataframe-iterSlices"></span> <code>iterSlices(?int $nRows = null): array</code></li>
-<li><span id="dataframe-join"></span> <code>join(mixed $other, mixed $on = null, ?string $how = null, mixed $leftOn = null, mixed $rightOn = null, ?string $suffix = null, ?bool $coalesce = null, ?string $maintainOrder = null, ?bool $nullsEqual = null): Phpolars\DataFrame</code></li>
-<li><span id="dataframe-joinAsof"></span> <code>joinAsof(mixed $other, mixed $on = null, mixed $leftOn = null, mixed $rightOn = null, mixed $by = null, mixed $byLeft = null, mixed $byRight = null, ?string $strategy = null, ?string $suffix = null, mixed $tolerance = null, ?bool $allowExactMatches = null, ?bool $checkSortedness = null, ?bool $coalesce = null): Phpolars\DataFrame</code></li>
-<li><span id="dataframe-joinWhere"></span> <code>joinWhere(mixed $other, mixed ...$predicates): Phpolars\DataFrame</code></li>
-<li><span id="dataframe-last"></span> <code>last(): Phpolars\DataFrame</code></li>
 <li><span id="dataframe-lazy"></span> <code>lazy(): Phpolars\LazyFrame</code></li>
+<li><span id="dataframe-mapRows"></span> <code>mapRows(mixed $function): Phpolars\DataFrame</code>: runs a PHP callable for each row, on the PHP thread</li>
+<li><span id="dataframe-row"></span> <code>row(int $index, ?bool $named = null): mixed</code></li>
+<li><span id="dataframe-rows"></span> <code>rows(?bool $named = null): array</code>: builds PHP arrays, which count against <code>memory_limit</code></li>
+<li><span id="dataframe-rowsByKey"></span> <code>rowsByKey(string $key, ?bool $named = null, ?bool $includeKey = null, ?bool $unique = null): array</code></li>
+<li><span id="dataframe-toColumns"></span> <code>toColumns(): array</code></li>
+<li><span id="dataframe-toDict"></span> <code>toDict(?bool $asSeries = null): array</code></li>
+<li><span id="dataframe-toDicts"></span> <code>toDicts(): array</code>: builds PHP arrays, which count against <code>memory_limit</code></li>
+<li><span id="dataframe-toDummies"></span> <code>toDummies(mixed $columns = null, ?string $separator = null, ?bool $dropFirst = null, ?bool $dropNulls = null): Phpolars\DataFrame</code></li>
+<li><span id="dataframe-toPhibble"></span> <code>toPhibble(): mixed</code></li>
+<li><span id="dataframe-toSeries"></span> <code>toSeries(?int $index = null): Phpolars\Series</code></li>
+<li><span id="dataframe-toStruct"></span> <code>toStruct(?string $name = null): Phpolars\Series</code></li>
+</ul>
+</section>
+<section id="dataframe--inspect" class="level4">
+<h4 class="anchored" data-anchor-id="dataframe--inspect">Inspect</h4>
+<ul>
+<li><span id="dataframe-collectSchema"></span> <code>collectSchema(): array</code></li>
+<li><span id="dataframe-columns"></span> <code>columns(): array</code></li>
+<li><span id="dataframe-describe"></span> <code>describe(?array $percentiles = null): Phpolars\DataFrame</code></li>
+<li><span id="dataframe-dtypes"></span> <code>dtypes(): array</code></li>
+<li><span id="dataframe-equals"></span> <code>equals(Phpolars\DataFrame $other, ?bool $nullEqual = null): bool</code></li>
+<li><span id="dataframe-estimatedSize"></span> <code>estimatedSize(): int</code></li>
+<li><span id="dataframe-glimpse"></span> <code>glimpse(?int $maxItemsPerColumn = null): string</code></li>
+<li><span id="dataframe-height"></span> <code>height(): int</code></li>
+<li><span id="dataframe-isEmpty"></span> <code>isEmpty(): bool</code></li>
+<li><span id="dataframe-nChunks"></span> <code>nChunks(): int</code></li>
+<li><span id="dataframe-rechunk"></span> <code>rechunk(): Phpolars\DataFrame</code></li>
+<li><span id="dataframe-schema"></span> <code>schema(): array</code></li>
+<li><span id="dataframe-shape"></span> <code>shape(): array</code></li>
+<li><span id="dataframe-shrinkToFit"></span> <code>shrinkToFit(): Phpolars\DataFrame</code></li>
+<li><span id="dataframe-width"></span> <code>width(): int</code></li>
+</ul>
+</section>
+<section id="dataframe--select-and-add-columns" class="level4">
+<h4 class="anchored" data-anchor-id="dataframe--select-and-add-columns">Select and add columns</h4>
+<ul>
+<li><span id="dataframe-cast"></span> <code>cast(mixed $dtypes, ?bool $strict = null): Phpolars\DataFrame</code></li>
+<li><span id="dataframe-drop"></span> <code>drop(mixed ...$columns): Phpolars\DataFrame</code></li>
+<li><span id="dataframe-hstack"></span> <code>hstack(mixed $columns): Phpolars\DataFrame</code></li>
+<li><span id="dataframe-insertColumn"></span> <code>insertColumn(int $index, Phpolars\Series $column): Phpolars\DataFrame</code></li>
+<li><span id="dataframe-rename"></span> <code>rename(array $mapping, ?bool $strict = null): Phpolars\DataFrame</code></li>
+<li><span id="dataframe-replaceColumn"></span> <code>replaceColumn(int $index, Phpolars\Series $column): Phpolars\DataFrame</code></li>
+<li><span id="dataframe-select"></span> <code>select(mixed ...$exprs): Phpolars\DataFrame</code></li>
+<li><span id="dataframe-selectSeq"></span> <code>selectSeq(mixed ...$exprs): Phpolars\DataFrame</code></li>
+<li><span id="dataframe-withColumns"></span> <code>withColumns(mixed ...$exprs): Phpolars\DataFrame</code></li>
+<li><span id="dataframe-withColumnsSeq"></span> <code>withColumnsSeq(mixed ...$exprs): Phpolars\DataFrame</code></li>
+<li><span id="dataframe-withRowIndex"></span> <code>withRowIndex(?string $name = null, ?int $offset = null): Phpolars\DataFrame</code></li>
+</ul>
+</section>
+<section id="dataframe--filter-sort-and-slice-rows" class="level4">
+<h4 class="anchored" data-anchor-id="dataframe--filter-sort-and-slice-rows">Filter, sort, and slice rows</h4>
+<ul>
+<li><span id="dataframe-bottomK"></span> <code>bottomK(int $k, mixed $by, mixed $reverse = null): Phpolars\DataFrame</code></li>
+<li><span id="dataframe-filter"></span> <code>filter(mixed ...$predicates): Phpolars\DataFrame</code></li>
+<li><span id="dataframe-first"></span> <code>first(): Phpolars\DataFrame</code></li>
+<li><span id="dataframe-gather"></span> <code>gather(mixed $indices): Phpolars\DataFrame</code></li>
+<li><span id="dataframe-gatherEvery"></span> <code>gatherEvery(int $n, ?int $offset = null): Phpolars\DataFrame</code></li>
+<li><span id="dataframe-head"></span> <code>head(?int $n = null): Phpolars\DataFrame</code></li>
+<li><span id="dataframe-isDuplicated"></span> <code>isDuplicated(): Phpolars\Series</code></li>
+<li><span id="dataframe-isUnique"></span> <code>isUnique(): Phpolars\Series</code></li>
+<li><span id="dataframe-last"></span> <code>last(): Phpolars\DataFrame</code></li>
 <li><span id="dataframe-limit"></span> <code>limit(?int $n = null): Phpolars\DataFrame</code></li>
-<li><span id="dataframe-mapRows"></span> <code>mapRows(mixed $function): Phpolars\DataFrame</code></li>
+<li><span id="dataframe-remove"></span> <code>remove(mixed ...$predicates): Phpolars\DataFrame</code></li>
+<li><span id="dataframe-reverse"></span> <code>reverse(): Phpolars\DataFrame</code></li>
+<li><span id="dataframe-sample"></span> <code>sample(?int $n = null, ?float $fraction = null, ?bool $withReplacement = null, ?bool $shuffle = null, ?int $seed = null): Phpolars\DataFrame</code></li>
+<li><span id="dataframe-shift"></span> <code>shift(?int $n = null, mixed $fillValue = null): Phpolars\DataFrame</code></li>
+<li><span id="dataframe-slice"></span> <code>slice(int $offset, ?int $length = null): Phpolars\DataFrame</code></li>
+<li><span id="dataframe-sort"></span> <code>sort(mixed $by, mixed $descending = null, mixed $nullsLast = null, ?bool $maintainOrder = null): Phpolars\DataFrame</code>: nulls sort first unless <code>nullsLast: true</code></li>
+<li><span id="dataframe-tail"></span> <code>tail(?int $n = null): Phpolars\DataFrame</code></li>
+<li><span id="dataframe-topK"></span> <code>topK(int $k, mixed $by, mixed $reverse = null): Phpolars\DataFrame</code></li>
+<li><span id="dataframe-unique"></span> <code>unique(mixed $subset = null, ?string $keep = null, ?bool $maintainOrder = null): Phpolars\DataFrame</code>: the order is not kept unless <code>maintainOrder: true</code></li>
+</ul>
+</section>
+<section id="dataframe--missing-values" class="level4">
+<h4 class="anchored" data-anchor-id="dataframe--missing-values">Missing values</h4>
+<ul>
+<li><span id="dataframe-dropNans"></span> <code>dropNans(mixed $subset = null): Phpolars\DataFrame</code></li>
+<li><span id="dataframe-dropNulls"></span> <code>dropNulls(mixed $subset = null): Phpolars\DataFrame</code></li>
+<li><span id="dataframe-fillNan"></span> <code>fillNan(mixed $value): Phpolars\DataFrame</code></li>
+<li><span id="dataframe-fillNull"></span> <code>fillNull(mixed $value = null, ?string $strategy = null, ?int $limit = null): Phpolars\DataFrame</code></li>
+<li><span id="dataframe-interpolate"></span> <code>interpolate(): Phpolars\DataFrame</code></li>
+<li><span id="dataframe-nullCount"></span> <code>nullCount(): Phpolars\DataFrame</code></li>
+</ul>
+</section>
+<section id="dataframe--group-and-aggregate" class="level4">
+<h4 class="anchored" data-anchor-id="dataframe--group-and-aggregate">Group and aggregate</h4>
+<ul>
+<li><span id="dataframe-approxNUnique"></span> <code>approxNUnique(): Phpolars\DataFrame</code></li>
+<li><span id="dataframe-corr"></span> <code>corr(): Phpolars\DataFrame</code></li>
+<li><span id="dataframe-count"></span> <code>count(): Phpolars\DataFrame</code>: counts non-null values in each column</li>
+<li><span id="dataframe-groupBy"></span> <code>groupBy(mixed $by, ?bool $maintainOrder = null): Phpolars\GroupBy</code>: the order of the groups is not kept unless <code>maintainOrder: true</code></li>
+<li><span id="dataframe-groupByDynamic"></span> <code>groupByDynamic(mixed $indexColumn, string $every, ?string $period = null, ?string $offset = null, ?bool $includeBoundaries = null, ?string $closed = null, ?string $label = null, mixed $groupBy = null, ?string $startBy = null): Phpolars\GroupBy</code></li>
 <li><span id="dataframe-max"></span> <code>max(): Phpolars\DataFrame</code></li>
 <li><span id="dataframe-maxHorizontal"></span> <code>maxHorizontal(): Phpolars\Series</code></li>
 <li><span id="dataframe-mean"></span> <code>mean(): Phpolars\DataFrame</code></li>
 <li><span id="dataframe-meanHorizontal"></span> <code>meanHorizontal(?bool $ignoreNulls = null): Phpolars\Series</code></li>
 <li><span id="dataframe-median"></span> <code>median(): Phpolars\DataFrame</code></li>
-<li><span id="dataframe-melt"></span> <code>melt(mixed $idVars = null, mixed $valueVars = null, ?string $variableName = null, ?string $valueName = null): Phpolars\DataFrame</code></li>
-<li><span id="dataframe-mergeSorted"></span> <code>mergeSorted(mixed $other, mixed $key, ?bool $maintainOrder = null): Phpolars\DataFrame</code></li>
 <li><span id="dataframe-min"></span> <code>min(): Phpolars\DataFrame</code></li>
 <li><span id="dataframe-minHorizontal"></span> <code>minHorizontal(): Phpolars\Series</code></li>
-<li><span id="dataframe-nChunks"></span> <code>nChunks(): int</code></li>
-<li><span id="dataframe-nullCount"></span> <code>nullCount(): Phpolars\DataFrame</code></li>
 <li><span id="dataframe-nUnique"></span> <code>nUnique(): Phpolars\DataFrame</code></li>
-<li><span id="dataframe-partitionBy"></span> <code>partitionBy(mixed $by, ?bool $maintainOrder = null, ?bool $includeKey = null, ?bool $asDict = null): array</code></li>
-<li><span id="dataframe-pivot"></span> <code>pivot(mixed $on, mixed $index = null, mixed $values = null, mixed $aggregateFunction = null, ?bool $sortColumns = null, ?string $separator = null, ?bool $maintainOrder = null): Phpolars\DataFrame</code></li>
 <li><span id="dataframe-product"></span> <code>product(): Phpolars\DataFrame</code></li>
 <li><span id="dataframe-quantile"></span> <code>quantile(float $quantile, ?string $interpolation = null): Phpolars\DataFrame</code></li>
-<li><span id="dataframe-rechunk"></span> <code>rechunk(): Phpolars\DataFrame</code></li>
-<li><span id="dataframe-remove"></span> <code>remove(mixed ...$predicates): Phpolars\DataFrame</code></li>
-<li><span id="dataframe-rename"></span> <code>rename(array $mapping, ?bool $strict = null): Phpolars\DataFrame</code></li>
-<li><span id="dataframe-replaceColumn"></span> <code>replaceColumn(int $index, Phpolars\Series $column): Phpolars\DataFrame</code></li>
-<li><span id="dataframe-reverse"></span> <code>reverse(): Phpolars\DataFrame</code></li>
 <li><span id="dataframe-rolling"></span> <code>rolling(mixed $indexColumn, string $period, ?string $offset = null, ?string $closed = null, mixed $groupBy = null): Phpolars\GroupBy</code></li>
-<li><span id="dataframe-row"></span> <code>row(int $index, ?bool $named = null): mixed</code></li>
-<li><span id="dataframe-rows"></span> <code>rows(?bool $named = null): array</code></li>
-<li><span id="dataframe-rowsByKey"></span> <code>rowsByKey(string $key, ?bool $named = null, ?bool $includeKey = null, ?bool $unique = null): array</code></li>
-<li><span id="dataframe-sample"></span> <code>sample(?int $n = null, ?float $fraction = null, ?bool $withReplacement = null, ?bool $shuffle = null, ?int $seed = null): Phpolars\DataFrame</code></li>
-<li><span id="dataframe-schema"></span> <code>schema(): array</code></li>
-<li><span id="dataframe-select"></span> <code>select(mixed ...$exprs): Phpolars\DataFrame</code></li>
-<li><span id="dataframe-selectSeq"></span> <code>selectSeq(mixed ...$exprs): Phpolars\DataFrame</code></li>
-<li><span id="dataframe-shape"></span> <code>shape(): array</code></li>
-<li><span id="dataframe-shift"></span> <code>shift(?int $n = null, mixed $fillValue = null): Phpolars\DataFrame</code></li>
-<li><span id="dataframe-shrinkToFit"></span> <code>shrinkToFit(): Phpolars\DataFrame</code></li>
-<li><span id="dataframe-slice"></span> <code>slice(int $offset, ?int $length = null): Phpolars\DataFrame</code></li>
-<li><span id="dataframe-sort"></span> <code>sort(mixed $by, mixed $descending = null, mixed $nullsLast = null, ?bool $maintainOrder = null): Phpolars\DataFrame</code></li>
-<li><span id="dataframe-sql"></span> <code>sql(string $query, ?string $tableName = null): Phpolars\DataFrame</code></li>
 <li><span id="dataframe-std"></span> <code>std(?int $ddof = null): Phpolars\DataFrame</code></li>
 <li><span id="dataframe-sum"></span> <code>sum(): Phpolars\DataFrame</code></li>
 <li><span id="dataframe-sumHorizontal"></span> <code>sumHorizontal(?bool $ignoreNulls = null): Phpolars\Series</code></li>
-<li><span id="dataframe-tail"></span> <code>tail(?int $n = null): Phpolars\DataFrame</code></li>
-<li><span id="dataframe-toColumns"></span> <code>toColumns(): array</code></li>
-<li><span id="dataframe-toDict"></span> <code>toDict(?bool $asSeries = null): array</code></li>
-<li><span id="dataframe-toDicts"></span> <code>toDicts(): array</code></li>
-<li><span id="dataframe-toDummies"></span> <code>toDummies(mixed $columns = null, ?string $separator = null, ?bool $dropFirst = null, ?bool $dropNulls = null): Phpolars\DataFrame</code></li>
-<li><span id="dataframe-toPhibble"></span> <code>toPhibble(): mixed</code></li>
-<li><span id="dataframe-topK"></span> <code>topK(int $k, mixed $by, mixed $reverse = null): Phpolars\DataFrame</code></li>
-<li><span id="dataframe-toSeries"></span> <code>toSeries(?int $index = null): Phpolars\Series</code></li>
-<li><span id="dataframe-toStruct"></span> <code>toStruct(?string $name = null): Phpolars\Series</code></li>
-<li><span id="dataframe-transpose"></span> <code>transpose(?bool $includeHeader = null, ?string $headerName = null, mixed $columnNames = null): Phpolars\DataFrame</code></li>
-<li><span id="dataframe-unique"></span> <code>unique(mixed $subset = null, ?string $keep = null, ?bool $maintainOrder = null): Phpolars\DataFrame</code></li>
-<li><span id="dataframe-unnest"></span> <code>unnest(mixed ...$columns): Phpolars\DataFrame</code></li>
-<li><span id="dataframe-unpivot"></span> <code>unpivot(mixed $on = null, mixed $index = null, ?string $variableName = null, ?string $valueName = null): Phpolars\DataFrame</code></li>
-<li><span id="dataframe-update"></span> <code>update(mixed $other, mixed $on = null, ?string $how = null, mixed $leftOn = null, mixed $rightOn = null, ?bool $includeNulls = null, ?string $maintainOrder = null): Phpolars\DataFrame</code></li>
 <li><span id="dataframe-upsample"></span> <code>upsample(string $timeColumn, string $every, mixed $groupBy = null, ?bool $maintainOrder = null): Phpolars\DataFrame</code></li>
 <li><span id="dataframe-var"></span> <code>var(?int $ddof = null): Phpolars\DataFrame</code></li>
+</ul>
+</section>
+<section id="dataframe--join-and-combine" class="level4">
+<h4 class="anchored" data-anchor-id="dataframe--join-and-combine">Join and combine</h4>
+<ul>
+<li><span id="dataframe-extend"></span> <code>extend(Phpolars\DataFrame $other): Phpolars\DataFrame</code></li>
+<li><span id="dataframe-join"></span> <code>join(mixed $other, mixed $on = null, ?string $how = null, mixed $leftOn = null, mixed $rightOn = null, ?string $suffix = null, ?bool $coalesce = null, ?string $maintainOrder = null, ?bool $nullsEqual = null): Phpolars\DataFrame</code>: null keys match nothing unless <code>nullsEqual: true</code></li>
+<li><span id="dataframe-joinAsof"></span> <code>joinAsof(mixed $other, mixed $on = null, mixed $leftOn = null, mixed $rightOn = null, mixed $by = null, mixed $byLeft = null, mixed $byRight = null, ?string $strategy = null, ?string $suffix = null, mixed $tolerance = null, ?bool $allowExactMatches = null, ?bool $checkSortedness = null, ?bool $coalesce = null): Phpolars\DataFrame</code></li>
+<li><span id="dataframe-joinWhere"></span> <code>joinWhere(mixed $other, mixed ...$predicates): Phpolars\DataFrame</code></li>
+<li><span id="dataframe-mergeSorted"></span> <code>mergeSorted(mixed $other, mixed $key, ?bool $maintainOrder = null): Phpolars\DataFrame</code></li>
+<li><span id="dataframe-update"></span> <code>update(mixed $other, mixed $on = null, ?string $how = null, mixed $leftOn = null, mixed $rightOn = null, ?bool $includeNulls = null, ?string $maintainOrder = null): Phpolars\DataFrame</code></li>
 <li><span id="dataframe-vstack"></span> <code>vstack(Phpolars\DataFrame $other): Phpolars\DataFrame</code></li>
-<li><span id="dataframe-width"></span> <code>width(): int</code></li>
-<li><span id="dataframe-withColumns"></span> <code>withColumns(mixed ...$exprs): Phpolars\DataFrame</code></li>
-<li><span id="dataframe-withColumnsSeq"></span> <code>withColumnsSeq(mixed ...$exprs): Phpolars\DataFrame</code></li>
-<li><span id="dataframe-withRowIndex"></span> <code>withRowIndex(?string $name = null, ?int $offset = null): Phpolars\DataFrame</code></li>
+</ul>
+</section>
+<section id="dataframe--reshape" class="level4">
+<h4 class="anchored" data-anchor-id="dataframe--reshape">Reshape</h4>
+<ul>
+<li><span id="dataframe-explode"></span> <code>explode(mixed ...$columns): Phpolars\DataFrame</code></li>
+<li><span id="dataframe-melt"></span> <code>melt(mixed $idVars = null, mixed $valueVars = null, ?string $variableName = null, ?string $valueName = null): Phpolars\DataFrame</code></li>
+<li><span id="dataframe-partitionBy"></span> <code>partitionBy(mixed $by, ?bool $maintainOrder = null, ?bool $includeKey = null, ?bool $asDict = null): array</code></li>
+<li><span id="dataframe-pivot"></span> <code>pivot(mixed $on, mixed $index = null, mixed $values = null, mixed $aggregateFunction = null, ?bool $sortColumns = null, ?string $separator = null, ?bool $maintainOrder = null): Phpolars\DataFrame</code></li>
+<li><span id="dataframe-transpose"></span> <code>transpose(?bool $includeHeader = null, ?string $headerName = null, mixed $columnNames = null): Phpolars\DataFrame</code></li>
+<li><span id="dataframe-unnest"></span> <code>unnest(mixed ...$columns): Phpolars\DataFrame</code></li>
+<li><span id="dataframe-unpivot"></span> <code>unpivot(mixed $on = null, mixed $index = null, ?string $variableName = null, ?string $valueName = null): Phpolars\DataFrame</code></li>
+</ul>
+</section>
+<section id="dataframe--sql" class="level4">
+<h4 class="anchored" data-anchor-id="dataframe--sql">SQL</h4>
+<ul>
+<li><span id="dataframe-sql"></span> <code>sql(string $query, ?string $tableName = null): Phpolars\DataFrame</code></li>
+</ul>
+</section>
+<section id="dataframe--write" class="level4">
+<h4 class="anchored" data-anchor-id="dataframe--write">Write</h4>
+<ul>
 <li><span id="dataframe-writeCsv"></span> <code>writeCsv(string $file, ?bool $includeHeader = null, ?string $separator = null, ?string $nullValue = null, ?string $quoteChar = null, ?string $dateFormat = null, ?string $datetimeFormat = null, ?string $timeFormat = null, ?bool $floatScientific = null, ?int $floatPrecision = null, ?bool $decimalComma = null, ?string $lineTerminator = null, ?string $quoteStyle = null, ?bool $includeBom = null): void</code></li>
 <li><span id="dataframe-writeDatabase"></span> <code>writeDatabase(string $tableName, mixed $connection, ?string $ifTableExists = null): int</code></li>
 <li><span id="dataframe-writeIpc"></span> <code>writeIpc(string $file): void</code></li>
@@ -680,83 +752,132 @@ shape: (9, 4)
 <li><span id="dataframe-writeParquet"></span> <code>writeParquet(string $file, ?string $compression = null, ?int $compressionLevel = null, ?bool $statistics = null, ?int $rowGroupSize = null): void</code></li>
 </ul>
 </section>
+</section>
 <section id="lazyframe" class="level3">
 <h3 class="anchored" data-anchor-id="lazyframe"><code>Phpolars\LazyFrame</code></h3>
+<section id="lazyframe--create-and-convert" class="level4">
+<h4 class="anchored" data-anchor-id="lazyframe--create-and-convert">Create and convert</h4>
 <ul>
 <li><span id="lazyframe-__toString"></span> <code>__toString(): string</code></li>
-<li><span id="lazyframe-approxNUnique"></span> <code>approxNUnique(): Phpolars\LazyFrame</code></li>
-<li><span id="lazyframe-bottomK"></span> <code>bottomK(int $k, mixed $by, mixed $reverse = null): Phpolars\LazyFrame</code></li>
 <li><span id="lazyframe-cache"></span> <code>cache(): Phpolars\LazyFrame</code></li>
-<li><span id="lazyframe-cast"></span> <code>cast(mixed $dtypes, ?bool $strict = null): Phpolars\LazyFrame</code></li>
 <li><span id="lazyframe-clear"></span> <code>clear(?int $n = null): Phpolars\LazyFrame</code></li>
 <li><span id="lazyframe-clone"></span> <code>clone(): Phpolars\LazyFrame</code></li>
-<li><span id="lazyframe-collect"></span> <code>collect(?string $engine = null): Phpolars\DataFrame</code></li>
+<li><span id="lazyframe-collect"></span> <code>collect(?string $engine = null): Phpolars\DataFrame</code>: <code>engine: 'streaming'</code> runs the query in batches</li>
+<li><span id="lazyframe-fetch"></span> <code>fetch(?int $n = null): Phpolars\DataFrame</code></li>
+<li><span id="lazyframe-lazy"></span> <code>lazy(): Phpolars\LazyFrame</code></li>
+<li><span id="lazyframe-profile"></span> <code>profile(): array</code></li>
+</ul>
+</section>
+<section id="lazyframe--inspect" class="level4">
+<h4 class="anchored" data-anchor-id="lazyframe--inspect">Inspect</h4>
+<ul>
 <li><span id="lazyframe-collectSchema"></span> <code>collectSchema(): array</code></li>
 <li><span id="lazyframe-columns"></span> <code>columns(): array</code></li>
-<li><span id="lazyframe-count"></span> <code>count(): Phpolars\LazyFrame</code></li>
 <li><span id="lazyframe-describe"></span> <code>describe(?array $percentiles = null): Phpolars\DataFrame</code></li>
-<li><span id="lazyframe-drop"></span> <code>drop(mixed ...$columns): Phpolars\LazyFrame</code></li>
-<li><span id="lazyframe-dropNans"></span> <code>dropNans(mixed $subset = null): Phpolars\LazyFrame</code></li>
-<li><span id="lazyframe-dropNulls"></span> <code>dropNulls(mixed $subset = null): Phpolars\LazyFrame</code></li>
 <li><span id="lazyframe-dtypes"></span> <code>dtypes(): array</code></li>
 <li><span id="lazyframe-explain"></span> <code>explain(?bool $optimized = null): string</code></li>
-<li><span id="lazyframe-explode"></span> <code>explode(mixed ...$columns): Phpolars\LazyFrame</code></li>
-<li><span id="lazyframe-fetch"></span> <code>fetch(?int $n = null): Phpolars\DataFrame</code></li>
-<li><span id="lazyframe-fillNan"></span> <code>fillNan(mixed $value): Phpolars\LazyFrame</code></li>
-<li><span id="lazyframe-fillNull"></span> <code>fillNull(mixed $value = null, ?string $strategy = null, ?int $limit = null): Phpolars\LazyFrame</code></li>
-<li><span id="lazyframe-filter"></span> <code>filter(mixed ...$predicates): Phpolars\LazyFrame</code></li>
-<li><span id="lazyframe-first"></span> <code>first(): Phpolars\LazyFrame</code></li>
-<li><span id="lazyframe-gather"></span> <code>gather(mixed $indices): Phpolars\LazyFrame</code></li>
-<li><span id="lazyframe-gatherEvery"></span> <code>gatherEvery(int $n, ?int $offset = null): Phpolars\LazyFrame</code></li>
-<li><span id="lazyframe-groupBy"></span> <code>groupBy(mixed $by, ?bool $maintainOrder = null): Phpolars\LazyGroupBy</code></li>
-<li><span id="lazyframe-groupByDynamic"></span> <code>groupByDynamic(mixed $indexColumn, string $every, ?string $period = null, ?string $offset = null, ?bool $includeBoundaries = null, ?string $closed = null, ?string $label = null, mixed $groupBy = null, ?string $startBy = null): Phpolars\LazyGroupBy</code></li>
-<li><span id="lazyframe-head"></span> <code>head(?int $n = null): Phpolars\LazyFrame</code></li>
-<li><span id="lazyframe-interpolate"></span> <code>interpolate(): Phpolars\LazyFrame</code></li>
-<li><span id="lazyframe-join"></span> <code>join(mixed $other, mixed $on = null, ?string $how = null, mixed $leftOn = null, mixed $rightOn = null, ?string $suffix = null, ?bool $coalesce = null, ?string $maintainOrder = null, ?bool $nullsEqual = null): Phpolars\LazyFrame</code></li>
-<li><span id="lazyframe-joinAsof"></span> <code>joinAsof(mixed $other, mixed $on = null, mixed $leftOn = null, mixed $rightOn = null, mixed $by = null, mixed $byLeft = null, mixed $byRight = null, ?string $strategy = null, ?string $suffix = null, mixed $tolerance = null, ?bool $allowExactMatches = null, ?bool $checkSortedness = null, ?bool $coalesce = null): Phpolars\LazyFrame</code></li>
-<li><span id="lazyframe-joinWhere"></span> <code>joinWhere(mixed $other, mixed ...$predicates): Phpolars\LazyFrame</code></li>
-<li><span id="lazyframe-last"></span> <code>last(): Phpolars\LazyFrame</code></li>
-<li><span id="lazyframe-lazy"></span> <code>lazy(): Phpolars\LazyFrame</code></li>
-<li><span id="lazyframe-limit"></span> <code>limit(?int $n = null): Phpolars\LazyFrame</code></li>
-<li><span id="lazyframe-max"></span> <code>max(): Phpolars\LazyFrame</code></li>
-<li><span id="lazyframe-mean"></span> <code>mean(): Phpolars\LazyFrame</code></li>
-<li><span id="lazyframe-median"></span> <code>median(): Phpolars\LazyFrame</code></li>
-<li><span id="lazyframe-mergeSorted"></span> <code>mergeSorted(mixed $other, mixed $key, ?bool $maintainOrder = null): Phpolars\LazyFrame</code></li>
-<li><span id="lazyframe-min"></span> <code>min(): Phpolars\LazyFrame</code></li>
-<li><span id="lazyframe-nullCount"></span> <code>nullCount(): Phpolars\LazyFrame</code></li>
-<li><span id="lazyframe-nUnique"></span> <code>nUnique(): Phpolars\LazyFrame</code></li>
-<li><span id="lazyframe-product"></span> <code>product(): Phpolars\LazyFrame</code></li>
-<li><span id="lazyframe-profile"></span> <code>profile(): array</code></li>
-<li><span id="lazyframe-quantile"></span> <code>quantile(float $quantile, ?string $interpolation = null): Phpolars\LazyFrame</code></li>
-<li><span id="lazyframe-remove"></span> <code>remove(mixed ...$predicates): Phpolars\LazyFrame</code></li>
-<li><span id="lazyframe-rename"></span> <code>rename(array $mapping, ?bool $strict = null): Phpolars\LazyFrame</code></li>
-<li><span id="lazyframe-reverse"></span> <code>reverse(): Phpolars\LazyFrame</code></li>
-<li><span id="lazyframe-rolling"></span> <code>rolling(mixed $indexColumn, string $period, ?string $offset = null, ?string $closed = null, mixed $groupBy = null): Phpolars\LazyGroupBy</code></li>
 <li><span id="lazyframe-schema"></span> <code>schema(): array</code></li>
+<li><span id="lazyframe-width"></span> <code>width(): int</code></li>
+</ul>
+</section>
+<section id="lazyframe--select-and-add-columns" class="level4">
+<h4 class="anchored" data-anchor-id="lazyframe--select-and-add-columns">Select and add columns</h4>
+<ul>
+<li><span id="lazyframe-cast"></span> <code>cast(mixed $dtypes, ?bool $strict = null): Phpolars\LazyFrame</code></li>
+<li><span id="lazyframe-drop"></span> <code>drop(mixed ...$columns): Phpolars\LazyFrame</code></li>
+<li><span id="lazyframe-rename"></span> <code>rename(array $mapping, ?bool $strict = null): Phpolars\LazyFrame</code></li>
 <li><span id="lazyframe-select"></span> <code>select(mixed ...$exprs): Phpolars\LazyFrame</code></li>
 <li><span id="lazyframe-selectSeq"></span> <code>selectSeq(mixed ...$exprs): Phpolars\LazyFrame</code></li>
-<li><span id="lazyframe-shift"></span> <code>shift(?int $n = null, mixed $fillValue = null): Phpolars\LazyFrame</code></li>
-<li><span id="lazyframe-sinkCsv"></span> <code>sinkCsv(string $file, ?bool $includeHeader = null, ?string $separator = null, ?string $nullValue = null, ?string $quoteChar = null, ?string $dateFormat = null, ?string $datetimeFormat = null, ?string $timeFormat = null, ?bool $floatScientific = null, ?int $floatPrecision = null, ?bool $decimalComma = null, ?string $lineTerminator = null, ?string $quoteStyle = null, ?bool $includeBom = null): void</code></li>
-<li><span id="lazyframe-sinkIpc"></span> <code>sinkIpc(string $file): void</code></li>
-<li><span id="lazyframe-sinkNdjson"></span> <code>sinkNdjson(string $file): void</code></li>
-<li><span id="lazyframe-sinkParquet"></span> <code>sinkParquet(string $file, ?string $compression = null, ?int $compressionLevel = null, ?bool $statistics = null, ?int $rowGroupSize = null): void</code></li>
-<li><span id="lazyframe-slice"></span> <code>slice(int $offset, ?int $length = null): Phpolars\LazyFrame</code></li>
-<li><span id="lazyframe-sort"></span> <code>sort(mixed $by, mixed $descending = null, mixed $nullsLast = null, ?bool $maintainOrder = null): Phpolars\LazyFrame</code></li>
-<li><span id="lazyframe-sql"></span> <code>sql(string $query, ?string $tableName = null): Phpolars\LazyFrame</code></li>
-<li><span id="lazyframe-std"></span> <code>std(?int $ddof = null): Phpolars\LazyFrame</code></li>
-<li><span id="lazyframe-sum"></span> <code>sum(): Phpolars\LazyFrame</code></li>
-<li><span id="lazyframe-tail"></span> <code>tail(?int $n = null): Phpolars\LazyFrame</code></li>
-<li><span id="lazyframe-topK"></span> <code>topK(int $k, mixed $by, mixed $reverse = null): Phpolars\LazyFrame</code></li>
-<li><span id="lazyframe-unique"></span> <code>unique(mixed $subset = null, ?string $keep = null, ?bool $maintainOrder = null): Phpolars\LazyFrame</code></li>
-<li><span id="lazyframe-unnest"></span> <code>unnest(mixed ...$columns): Phpolars\LazyFrame</code></li>
-<li><span id="lazyframe-unpivot"></span> <code>unpivot(mixed $on = null, mixed $index = null, ?string $variableName = null, ?string $valueName = null): Phpolars\LazyFrame</code></li>
-<li><span id="lazyframe-update"></span> <code>update(mixed $other, mixed $on = null, ?string $how = null, mixed $leftOn = null, mixed $rightOn = null, ?bool $includeNulls = null, ?string $maintainOrder = null): Phpolars\LazyFrame</code></li>
-<li><span id="lazyframe-var"></span> <code>var(?int $ddof = null): Phpolars\LazyFrame</code></li>
-<li><span id="lazyframe-width"></span> <code>width(): int</code></li>
 <li><span id="lazyframe-withColumns"></span> <code>withColumns(mixed ...$exprs): Phpolars\LazyFrame</code></li>
 <li><span id="lazyframe-withColumnsSeq"></span> <code>withColumnsSeq(mixed ...$exprs): Phpolars\LazyFrame</code></li>
 <li><span id="lazyframe-withRowIndex"></span> <code>withRowIndex(?string $name = null, ?int $offset = null): Phpolars\LazyFrame</code></li>
 </ul>
+</section>
+<section id="lazyframe--filter-sort-and-slice-rows" class="level4">
+<h4 class="anchored" data-anchor-id="lazyframe--filter-sort-and-slice-rows">Filter, sort, and slice rows</h4>
+<ul>
+<li><span id="lazyframe-bottomK"></span> <code>bottomK(int $k, mixed $by, mixed $reverse = null): Phpolars\LazyFrame</code></li>
+<li><span id="lazyframe-filter"></span> <code>filter(mixed ...$predicates): Phpolars\LazyFrame</code></li>
+<li><span id="lazyframe-first"></span> <code>first(): Phpolars\LazyFrame</code></li>
+<li><span id="lazyframe-gather"></span> <code>gather(mixed $indices): Phpolars\LazyFrame</code></li>
+<li><span id="lazyframe-gatherEvery"></span> <code>gatherEvery(int $n, ?int $offset = null): Phpolars\LazyFrame</code></li>
+<li><span id="lazyframe-head"></span> <code>head(?int $n = null): Phpolars\LazyFrame</code></li>
+<li><span id="lazyframe-last"></span> <code>last(): Phpolars\LazyFrame</code></li>
+<li><span id="lazyframe-limit"></span> <code>limit(?int $n = null): Phpolars\LazyFrame</code></li>
+<li><span id="lazyframe-remove"></span> <code>remove(mixed ...$predicates): Phpolars\LazyFrame</code></li>
+<li><span id="lazyframe-reverse"></span> <code>reverse(): Phpolars\LazyFrame</code></li>
+<li><span id="lazyframe-shift"></span> <code>shift(?int $n = null, mixed $fillValue = null): Phpolars\LazyFrame</code></li>
+<li><span id="lazyframe-slice"></span> <code>slice(int $offset, ?int $length = null): Phpolars\LazyFrame</code></li>
+<li><span id="lazyframe-sort"></span> <code>sort(mixed $by, mixed $descending = null, mixed $nullsLast = null, ?bool $maintainOrder = null): Phpolars\LazyFrame</code>: nulls sort first unless <code>nullsLast: true</code></li>
+<li><span id="lazyframe-tail"></span> <code>tail(?int $n = null): Phpolars\LazyFrame</code></li>
+<li><span id="lazyframe-topK"></span> <code>topK(int $k, mixed $by, mixed $reverse = null): Phpolars\LazyFrame</code></li>
+<li><span id="lazyframe-unique"></span> <code>unique(mixed $subset = null, ?string $keep = null, ?bool $maintainOrder = null): Phpolars\LazyFrame</code>: the order is not kept unless <code>maintainOrder: true</code></li>
+</ul>
+</section>
+<section id="lazyframe--missing-values" class="level4">
+<h4 class="anchored" data-anchor-id="lazyframe--missing-values">Missing values</h4>
+<ul>
+<li><span id="lazyframe-dropNans"></span> <code>dropNans(mixed $subset = null): Phpolars\LazyFrame</code></li>
+<li><span id="lazyframe-dropNulls"></span> <code>dropNulls(mixed $subset = null): Phpolars\LazyFrame</code></li>
+<li><span id="lazyframe-fillNan"></span> <code>fillNan(mixed $value): Phpolars\LazyFrame</code></li>
+<li><span id="lazyframe-fillNull"></span> <code>fillNull(mixed $value = null, ?string $strategy = null, ?int $limit = null): Phpolars\LazyFrame</code></li>
+<li><span id="lazyframe-interpolate"></span> <code>interpolate(): Phpolars\LazyFrame</code></li>
+<li><span id="lazyframe-nullCount"></span> <code>nullCount(): Phpolars\LazyFrame</code></li>
+</ul>
+</section>
+<section id="lazyframe--group-and-aggregate" class="level4">
+<h4 class="anchored" data-anchor-id="lazyframe--group-and-aggregate">Group and aggregate</h4>
+<ul>
+<li><span id="lazyframe-approxNUnique"></span> <code>approxNUnique(): Phpolars\LazyFrame</code></li>
+<li><span id="lazyframe-count"></span> <code>count(): Phpolars\LazyFrame</code></li>
+<li><span id="lazyframe-groupBy"></span> <code>groupBy(mixed $by, ?bool $maintainOrder = null): Phpolars\LazyGroupBy</code>: the order of the groups is not kept unless <code>maintainOrder: true</code></li>
+<li><span id="lazyframe-groupByDynamic"></span> <code>groupByDynamic(mixed $indexColumn, string $every, ?string $period = null, ?string $offset = null, ?bool $includeBoundaries = null, ?string $closed = null, ?string $label = null, mixed $groupBy = null, ?string $startBy = null): Phpolars\LazyGroupBy</code></li>
+<li><span id="lazyframe-max"></span> <code>max(): Phpolars\LazyFrame</code></li>
+<li><span id="lazyframe-mean"></span> <code>mean(): Phpolars\LazyFrame</code></li>
+<li><span id="lazyframe-median"></span> <code>median(): Phpolars\LazyFrame</code></li>
+<li><span id="lazyframe-min"></span> <code>min(): Phpolars\LazyFrame</code></li>
+<li><span id="lazyframe-nUnique"></span> <code>nUnique(): Phpolars\LazyFrame</code></li>
+<li><span id="lazyframe-product"></span> <code>product(): Phpolars\LazyFrame</code></li>
+<li><span id="lazyframe-quantile"></span> <code>quantile(float $quantile, ?string $interpolation = null): Phpolars\LazyFrame</code></li>
+<li><span id="lazyframe-rolling"></span> <code>rolling(mixed $indexColumn, string $period, ?string $offset = null, ?string $closed = null, mixed $groupBy = null): Phpolars\LazyGroupBy</code></li>
+<li><span id="lazyframe-std"></span> <code>std(?int $ddof = null): Phpolars\LazyFrame</code></li>
+<li><span id="lazyframe-sum"></span> <code>sum(): Phpolars\LazyFrame</code></li>
+<li><span id="lazyframe-var"></span> <code>var(?int $ddof = null): Phpolars\LazyFrame</code></li>
+</ul>
+</section>
+<section id="lazyframe--join-and-combine" class="level4">
+<h4 class="anchored" data-anchor-id="lazyframe--join-and-combine">Join and combine</h4>
+<ul>
+<li><span id="lazyframe-join"></span> <code>join(mixed $other, mixed $on = null, ?string $how = null, mixed $leftOn = null, mixed $rightOn = null, ?string $suffix = null, ?bool $coalesce = null, ?string $maintainOrder = null, ?bool $nullsEqual = null): Phpolars\LazyFrame</code>: null keys match nothing unless <code>nullsEqual: true</code></li>
+<li><span id="lazyframe-joinAsof"></span> <code>joinAsof(mixed $other, mixed $on = null, mixed $leftOn = null, mixed $rightOn = null, mixed $by = null, mixed $byLeft = null, mixed $byRight = null, ?string $strategy = null, ?string $suffix = null, mixed $tolerance = null, ?bool $allowExactMatches = null, ?bool $checkSortedness = null, ?bool $coalesce = null): Phpolars\LazyFrame</code></li>
+<li><span id="lazyframe-joinWhere"></span> <code>joinWhere(mixed $other, mixed ...$predicates): Phpolars\LazyFrame</code></li>
+<li><span id="lazyframe-mergeSorted"></span> <code>mergeSorted(mixed $other, mixed $key, ?bool $maintainOrder = null): Phpolars\LazyFrame</code></li>
+<li><span id="lazyframe-update"></span> <code>update(mixed $other, mixed $on = null, ?string $how = null, mixed $leftOn = null, mixed $rightOn = null, ?bool $includeNulls = null, ?string $maintainOrder = null): Phpolars\LazyFrame</code></li>
+</ul>
+</section>
+<section id="lazyframe--reshape" class="level4">
+<h4 class="anchored" data-anchor-id="lazyframe--reshape">Reshape</h4>
+<ul>
+<li><span id="lazyframe-explode"></span> <code>explode(mixed ...$columns): Phpolars\LazyFrame</code></li>
+<li><span id="lazyframe-unnest"></span> <code>unnest(mixed ...$columns): Phpolars\LazyFrame</code></li>
+<li><span id="lazyframe-unpivot"></span> <code>unpivot(mixed $on = null, mixed $index = null, ?string $variableName = null, ?string $valueName = null): Phpolars\LazyFrame</code></li>
+</ul>
+</section>
+<section id="lazyframe--sql" class="level4">
+<h4 class="anchored" data-anchor-id="lazyframe--sql">SQL</h4>
+<ul>
+<li><span id="lazyframe-sql"></span> <code>sql(string $query, ?string $tableName = null): Phpolars\LazyFrame</code></li>
+</ul>
+</section>
+<section id="lazyframe--write" class="level4">
+<h4 class="anchored" data-anchor-id="lazyframe--write">Write</h4>
+<ul>
+<li><span id="lazyframe-sinkCsv"></span> <code>sinkCsv(string $file, ?bool $includeHeader = null, ?string $separator = null, ?string $nullValue = null, ?string $quoteChar = null, ?string $dateFormat = null, ?string $datetimeFormat = null, ?string $timeFormat = null, ?bool $floatScientific = null, ?int $floatPrecision = null, ?bool $decimalComma = null, ?string $lineTerminator = null, ?string $quoteStyle = null, ?bool $includeBom = null): void</code></li>
+<li><span id="lazyframe-sinkIpc"></span> <code>sinkIpc(string $file): void</code></li>
+<li><span id="lazyframe-sinkNdjson"></span> <code>sinkNdjson(string $file): void</code></li>
+<li><span id="lazyframe-sinkParquet"></span> <code>sinkParquet(string $file, ?string $compression = null, ?int $compressionLevel = null, ?bool $statistics = null, ?int $rowGroupSize = null): void</code></li>
+</ul>
+</section>
 </section>
 <section id="groupby" class="level3">
 <h3 class="anchored" data-anchor-id="groupby"><code>Phpolars\GroupBy</code></h3>

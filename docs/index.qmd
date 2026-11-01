@@ -3,13 +3,15 @@ title: "phpolars"
 subtitle: "Polars data frames for PHP"
 ---
 
-phpolars is a PHP extension, written in Rust, that runs [Polars](https://pola.rs) inside PHP. Polars is a columnar data frame library: a `DataFrame` holds typed columns, and expressions such as `col('units')->mul(col('price'))` describe computations that Polars runs on its own threads, outside PHP. A query that reads a CSV file, filters it, and groups it runs in Polars. PHP values are created only when the code asks for them, for example with `toDicts()`.
+Query and transform data with [Polars](https://pola.rs) from PHP. Use eager data frames, or build lazy queries with expressions.
 
-The API follows py-polars, Polars' Python package, with camelCase method names and snake_case functions. The test suite compares 314 cases with py-polars 1.43.2, and all of them match; [Compatibility and limitations](compatibility.qmd) lists what that comparison covers and what phpolars leaves out.
+The Composer package is `phpstats/phpolars`. PIE installs it as the `php_polars` extension, which is the name that `extension=` and `phpversion()` use. Polars runs inside the PHP process: expressions such as `col('units')->mul(col('price'))` run on Polars' own threads, and PHP values are created only when code asks for them, for example with `toDicts()`.
+
+The API follows py-polars, Polars' Python package, with camelCase method names and snake_case functions. [Compatibility and limitations](compatibility.qmd) covers the differences and how agreement with py-polars is tested.
 
 {{< include examples/_quickstart.md >}}
 
-The example reads `sales.csv`, the example data from the docs. [Getting started](getting-started.qmd#a-starter-script) has a complete script with its imports, and the command that downloads the data.
+The example reads `sales.csv`, the docs' example data. [Getting started](getting-started.qmd#a-starter-script) has a complete script and the command that downloads the data.
 
 ## What it includes
 
@@ -22,9 +24,7 @@ The example reads `sales.csv`, the example data from the docs. [Getting started]
 
 ## The phpolars API or phibble and phplyr
 
-phpolars can be used directly or through [phibble](https://phibble.phpstats.org) and [phplyr](https://phplyr.phpstats.org).
+- The phpolars API (`Phpolars\DataFrame`, `LazyFrame`, `Series`, and expressions) follows Polars' semantics. A missing value is `null`, and aggregates skip it.
+- [phibble](https://phibble.phpstats.org)'s `Phibble\Polars\PolarsTable` runs phibble tables and [phplyr](https://phplyr.phpstats.org) pipelines in Polars with dplyr's semantics, in which `null` is R's `NA`. The adapter belongs to phibble and runs on this extension.
 
-- The phpolars API (`Phpolars\DataFrame`, `LazyFrame`, `Series`, and expressions) follows Polars and its semantics. A missing value is `null`, and aggregates skip it.
-- phibble's `Phibble\Polars\PolarsTable` adapter runs phibble tables and phplyr pipelines in Polars. It belongs to phibble, and phpolars supplies the extension that it runs on. The pipeline keeps dplyr's semantics, in which `null` is R's `NA`, and the same code also runs on phibble's in-memory `DataFrame` and on SQL tables.
-
-[phibble and phplyr](phibble.qmd) covers the adapter and the differences between the two sets of semantics.
+[phibble and phplyr](phibble.qmd) covers the choice and the differences in semantics.

@@ -418,6 +418,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 String</code></pre>
 <section id="functions" class="level2">
 <h2 class="anchored" data-anchor-id="functions">Functions</h2>
+<p>In the signatures, <code>= null</code> marks an optional argument. Leaving it out, or passing <code>null</code>, uses Polars’ default for that argument, which in most cases is py-polars’ default. A note after a signature describes behavior that is easy to misread.</p>
 <ul>
 <li><span id="fn-read_csv"></span> <code>read_csv(string $source, ?bool $hasHeader = null, ?string $separator = null, mixed $nullValues = null, ?array $schemaOverrides = null, ?int $nRows = null, ?int $skipRows = null, ?int $inferSchemaLength = null, ?bool $tryParseDates = null, mixed $columns = null, ?array $schema = null, ?string $commentPrefix = null, mixed $quoteChar = null, ?string $eolChar = null, ?string $encoding = null, ?bool $ignoreErrors = null, ?bool $missingUtf8IsEmptyString = null, ?bool $truncateRaggedLines = null, ?bool $decimalComma = null, ?string $rowIndexName = null, ?int $rowIndexOffset = null, ?int $skipRowsAfterHeader = null, ?array $newColumns = null, ?bool $raiseIfEmpty = null, ?bool $glob = null): Phpolars\DataFrame</code></li>
 <li><span id="fn-read_database"></span> <code>read_database(string $query, mixed $connection, ?array $params = null, ?array $schemaOverrides = null): Phpolars\DataFrame</code></li>

@@ -57,6 +57,8 @@ foreach ($sales->groupBy('store', maintainOrder: true) as $key => $rows) {
 
 ## Methods
 
+In the signatures, `= null` marks an optional argument. Leaving it out, or passing `null`, uses Polars' default for that argument, which in most cases is py-polars' default. A note after a signature describes behavior that is easy to misread.
+
 {{< include _index-dataframe.md >}}
 
 {{< include _api-dataframe.md >}}

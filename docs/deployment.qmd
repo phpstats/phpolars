@@ -10,8 +10,6 @@ pie install phpstats/phpolars
 
 PIE resolves the release from Packagist and downloads a prebuilt binary when one matches the PHP version, architecture, and C library. Otherwise it builds the extension from source with the `dist` profile. It then enables the extension and checks that it loads. A PHP-FPM service, queue workers, and other long-running PHP processes load extensions only when they start, so restart them after installing or upgrading.
 
-The v0.2.0 release installs with `pie install phpstats/phpolars` from its prebuilt binary, and `phpversion("php_polars")` reports `0.2.0`, in the official `php:8.5-cli-bookworm` image and on Ubuntu 24.04 with the ondrej/php PPA's PHP 8.5, both on arm64. On Ubuntu, PIE enables the extension for the CLI and for PHP-FPM.
-
 ## Prebuilt binaries and source builds
 
 Each release attaches prebuilt binaries for:
@@ -23,21 +21,19 @@ Each release attaches prebuilt binaries for:
 
 The binaries are built on Debian Bookworm and do not run on Alpine or other musl systems. macOS, musl Linux, and other platforms build from source. A source build needs a stable Rust toolchain and libclang, and takes several minutes. ZTS (thread-safe) PHP builds are not supported. A build for one PHP minor version loads only in that version, because PHP 8.3, 8.4, and 8.5 have different module APIs.
 
-The v0.2.0 Linux binaries are 71 MB on x86_64 and 64 MB on arm64, and 21 MB and 19 MB zipped.
+Each release zip, such as `php_php_polars-v0.2.1_php8.4-x86_64-linux-glibc-nts.zip`, holds `php_polars.so` and:
 
-### What a release archive contains
+| File | Contents |
+| --- | --- |
+| `manifest.json` | PHP version and API number, architecture, glibc, Rust version, Cargo.lock hash, and the extension's SHA-256 |
+| `INSTALL.txt` | manual install steps |
+| `THIRD_PARTY_NOTICES.txt` | licenses of the Rust dependencies compiled into the binary |
 
-The packaging workflow builds the extension inside the official `php:8.3-fpm-bookworm`, `php:8.4-fpm-bookworm`, and `php:8.5-fpm-bookworm` images, installs it with PIE, runs the release checks, and sends real requests through PHP-FPM. It then packages each tested `php_polars.so` for x86_64 and arm64 in a zip named as PIE expects, such as `php_php_polars-v0.2.1_php8.4-x86_64-linux-glibc-nts.zip`, with:
-
-- `manifest.json`: PHP version and API number, architecture, glibc, the Rust version, the Cargo.lock hash, and the extension's SHA-256.
-- `THIRD_PARTY_NOTICES.txt`: the licenses of every Rust dependency compiled into the binary.
-- `INSTALL.txt`: copy the file to `php-config --extension-dir`, add `extension=php_polars.so`, and set `php_polars.max_threads`.
-
-After a release is published, the release workflow installs each archive into a clean PHP image by hand, and again with `pie install`, which must pick the prebuilt archive without a Rust toolchain.
+[Development](development.qmd#release-packaging) describes how the archives are built and checked.
 
 ## Ubuntu and Laravel Forge
 
-Forge installs PHP from the ondrej/php PPA, and `pie install phpstats/phpolars` works there as above. The v0.2.0 PHP 8.5 binaries also pass `tests/deployment.php` under the CLI and under PHP-FPM on Ubuntu 24.04 with the PPA's PHP 8.5.12, on x86_64 and arm64.
+Forge installs PHP from the ondrej/php PPA, and `pie install phpstats/phpolars` works there as above. On Ubuntu, PIE enables the extension for both the CLI and PHP-FPM.
 
 To install a binary from the release by hand instead:
 
@@ -79,7 +75,7 @@ PHP=$(which php) PHP_CONFIG=$(which php-config) cargo build --profile dist
 
 Copy `target/dist/libphp_polars.so`, or `libphp_polars.dylib` on macOS, into `php-config --extension-dir` as `php_polars.so`, and add `extension=php_polars.so` to the php.ini that `php --ini` reports. On macOS with Homebrew, also set `LIBCLANG_PATH=$(brew --prefix llvm)/lib`. When several PHP versions are installed, point `PHP` and `PHP_CONFIG` at the PHP that will load the extension, because the build uses that PHP's headers.
 
-Build with `--profile dist` for anything you deploy. The `dist` profile applies fat LTO, `opt-level = "s"`, and symbol stripping. On macOS the `dist` library is 65 MB and the `release` library is 207 MB, because `release` skips LTO and keeps the symbol table.
+Build with `--profile dist` for anything you deploy. The `dist` profile applies fat LTO, `opt-level = "s"`, and symbol stripping, so its library is about a third the size of a `release` build. [Performance](performance.qmd#binary-size) lists the sizes.
 
 ### Optional formats
 

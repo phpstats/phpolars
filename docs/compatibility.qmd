@@ -15,9 +15,13 @@ The pipe operator `|>` in some examples is PHP 8.5 syntax. phpolars itself does 
 
 ## Agreement with py-polars
 
-phpolars uses the Polars 0.55.2 Rust crates. The test suite compares phpolars with py-polars 1.43.2, the release whose Rust core is closest to 0.55.2. `scripts/pyfixtures.py` builds 314 cases with py-polars, and `tests/pyfixtures.php` builds the same cases with phpolars. A case passes when the column names, the data types, and every value agree. Floats may differ by a relative tolerance of 1e-9. Cases that expect an error pass when phpolars raises the same exception class. All 314 cases pass.
+phpolars uses the Polars 0.55.2 Rust crates. The test suite compares it with py-polars 1.43.2, the release whose Rust core is closest to 0.55.2, on a fixed set of cases.
 
-The cases cover data frame methods, functions, joins, grouping, windows, sorting, casts, SQL, and the `str`, `dt`, `list`, `struct`, and `arr` namespaces. A method or argument outside those cases follows py-polars' names, but its agreement with py-polars has not been tested. The [verification page](https://phpolars.phpstats.org/verification) lists every case.
+- Compared: column names, data types, and values. Floats may differ by a relative tolerance of 1e-9. A case that expects an error must raise the same exception class.
+- Covered: data frame methods, functions, joins, grouping, windows, sorting, casts, SQL, and the `str`, `dt`, `list`, `struct`, and `arr` namespaces.
+- Not covered: other methods and arguments follow py-polars' names, but their agreement with py-polars has not been compared.
+
+The [verification page](https://phpolars.phpstats.org/verification) lists each case and its result.
 
 ## Not available
 

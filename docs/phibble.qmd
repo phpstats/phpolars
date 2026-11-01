@@ -2,12 +2,17 @@
 title: "phibble and phplyr"
 ---
 
-[phibble](https://phibble.phpstats.org) defines a table contract with several backends: its in-memory `DataFrame`, `SqlTable` for PDO databases, and `Phibble\Polars\PolarsTable`, which keeps its data in a Polars `DataFrame`. `PolarsTable` is part of phibble (since phibble v0.2.0) and needs the php_polars extension that phpolars supplies. phibble lists the extension as a Composer suggestion, so installing phibble does not install phpolars. [phplyr](https://phplyr.phpstats.org)'s verbs work on any phibble table, so a phplyr pipeline runs in Polars when it starts from a `PolarsTable`. phibble's [Backends](https://phibble.phpstats.org/docs/backends) page compares the backends.
+`Phibble\Polars\PolarsTable` is a [phibble](https://phibble.phpstats.org) table that keeps its data in a Polars `DataFrame`, so [phplyr](https://phplyr.phpstats.org) pipelines that start from it run in Polars. It belongs to phibble (since v0.2.0) and needs the php_polars extension. phibble only suggests the extension, so installing phibble does not install phpolars. phibble's [Backends](https://phibble.phpstats.org/docs/backends) page compares its table backends.
 
 ## Choosing an API
 
-- Use phplyr or phibble on a `PolarsTable` to keep dplyr's semantics, or to run the same pipeline on phibble's other backends.
-- Use the phpolars API to get Polars' semantics and the parts of Polars that phibble does not expose, such as lazy scans, sinks, and SQL.
+| Need | Use |
+| --- | --- |
+| dplyr semantics: `NA`, `naRm`, and groups in sorted key order | phplyr or phibble on a `PolarsTable` |
+| One pipeline on phibble's in-memory `DataFrame`, a SQL table, and Polars | phplyr or phibble |
+| Polars' `null` semantics | the phpolars API |
+| Lazy scans, the streaming engine, sinks, or SQL over data frames | the phpolars API |
+| PHP closures in many verbs | phibble's in-memory `DataFrame`. On a `PolarsTable`, each closure converts the table (see [What runs in Polars](#what-runs-in-polars)). |
 
 ## A pipeline on a PolarsTable
 
@@ -67,7 +72,13 @@ Without the adapter, `Phpolars\DataFrame::fromPhibble($table)` reads any phibble
 
 ## What runs in Polars
 
-Verbs given column names or phibble expressions (`Phibble\Expr`, which phplyr's helpers such as `col()`, `mean()`, and `n()` build) run in Polars with dplyr's semantics. NA propagates, aggregates default to `naRm: false`, grouped `mutate()` and `filter()` evaluate aggregates and windows per group, groups follow sorted key order, and joins follow dplyr 1.2, including `join_by()` inequality and rolling joins. Pivots and most stringr and lubridate functions also run in Polars.
+Verbs given column names or phibble expressions (`Phibble\Expr`, which phplyr's helpers such as `col()`, `mean()`, and `n()` build) run in Polars with dplyr's semantics:
+
+- `NA` propagates, and aggregates default to `naRm: false`.
+- Grouped `mutate()` and `filter()` evaluate aggregates and windows per group.
+- Groups follow sorted key order.
+- Joins follow dplyr 1.2, including `join_by()` inequality and rolling joins.
+- Pivots and most stringr and lubridate functions also run in Polars.
 
 Some steps cannot run in Polars, and the adapter runs them on a phibble `DataFrame` and converts the result back:
 
@@ -76,7 +87,7 @@ Some steps cannot run in Polars, and the adapter runs them on a phibble `DataFra
 - grouped verbs on factor keys that keep empty groups (phibble's `groupBy(drop: false)` or phplyr's `group_by(_drop: false)`), because Polars does not see empty groups
 - functions that the translator does not support, such as `str_to_title()`
 
-`PolarsTable::$fallbacks` counts these conversions. Set `PolarsTable::$strict = true` to throw `Phibble\Polars\PolarsFallback` instead; its message names the verb and the reason. [Performance](performance.qmd#where-the-time-goes) measures the cost of a fallback.
+`PolarsTable::$fallbacks` counts these conversions. Set `PolarsTable::$strict = true` to throw `Phibble\Polars\PolarsFallback` instead; its message names the verb and the reason. [Performance](performance.qmd#practical-guidance) measures the cost of a fallback.
 
 ## Missing values
 

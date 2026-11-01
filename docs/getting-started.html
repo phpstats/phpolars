@@ -354,24 +354,23 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="a-starter-script" class="level2">
 <h2 class="anchored" data-anchor-id="a-starter-script">A starter script</h2>
-<p>phpolars needs no Composer packages, so an empty directory is enough. Download the example data, <code>sales.csv</code> (200 rows of sales by store and product), into it:</p>
+<p>phpolars needs no Composer packages. Download the example data, <code>sales.csv</code> (200 rows of sales by store and product):</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> phpolars-start <span class="kw">&amp;&amp;</span> <span class="bu">cd</span> phpolars-start</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">-fsSLO</span> https://raw.githubusercontent.com/phpstats/phpolars/v0.2.1/docs/data/sales.csv</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Save this as <code>start.php</code> and run it with <code>php start.php</code>:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode php code-with-copy"><code class="sourceCode php"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">&lt;?php</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="kw">use</span> <span class="kw">function</span> Phpolars\{col<span class="ot">,</span> len<span class="ot">,</span> read_csv}<span class="ot">;</span></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="va">$sales</span> <span class="op">=</span> read_csv(<span class="st">'sales.csv'</span><span class="ot">,</span> tryParseDates<span class="ot">:</span> <span class="kw">true</span>)<span class="ot">;</span></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="va">$byProduct</span> <span class="op">=</span> <span class="va">$sales</span></span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    -&gt;filter(col(<span class="st">'units'</span>)-&gt;gt(<span class="dv">0</span>))</span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>    -&gt;withColumns(col(<span class="st">'units'</span>)-&gt;mul(col(<span class="st">'price'</span>))-&gt;alias(<span class="st">'revenue'</span>))</span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>    -&gt;groupBy(<span class="st">'product'</span><span class="ot">,</span> maintainOrder<span class="ot">:</span> <span class="kw">true</span>)</span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>    -&gt;agg(col(<span class="st">'revenue'</span>)-&gt;sum()-&gt;<span class="fu">round</span>(<span class="dv">2</span>)<span class="ot">,</span> [<span class="st">'orders'</span> =&gt; len()])</span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>    -&gt;<span class="fu">sort</span>(<span class="st">'revenue'</span><span class="ot">,</span> descending<span class="ot">:</span> <span class="kw">true</span>)<span class="ot">;</span></span>
-<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a><span class="kw">echo</span> <span class="va">$byProduct</span><span class="ot">,</span> <span class="st">"</span><span class="sc">\n</span><span class="st">"</span><span class="ot">;</span></span>
-<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a><span class="fu">print_r</span>(<span class="va">$byProduct</span>-&gt;row(<span class="dv">0</span><span class="ot">,</span> named<span class="ot">:</span> <span class="kw">true</span>))<span class="ot">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Runnable script: <a href="https://raw.githubusercontent.com/phpstats/phpolars/main/docs/examples/starter.php">starter.php</a>.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode php code-with-copy"><code class="sourceCode php"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">use</span> <span class="kw">function</span> Phpolars\{col<span class="ot">,</span> len<span class="ot">,</span> read_csv}<span class="ot">;</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="va">$sales</span> <span class="op">=</span> read_csv(<span class="st">'sales.csv'</span><span class="ot">,</span> tryParseDates<span class="ot">:</span> <span class="kw">true</span>)<span class="ot">;</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="va">$byProduct</span> <span class="op">=</span> <span class="va">$sales</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    -&gt;filter(col(<span class="st">'units'</span>)-&gt;gt(<span class="dv">0</span>))</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    -&gt;withColumns(col(<span class="st">'units'</span>)-&gt;mul(col(<span class="st">'price'</span>))-&gt;alias(<span class="st">'revenue'</span>))</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>    -&gt;groupBy(<span class="st">'product'</span><span class="ot">,</span> maintainOrder<span class="ot">:</span> <span class="kw">true</span>)</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>    -&gt;agg(col(<span class="st">'revenue'</span>)-&gt;sum()-&gt;<span class="fu">round</span>(<span class="dv">2</span>)<span class="ot">,</span> [<span class="st">'orders'</span> =&gt; len()])</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>    -&gt;<span class="fu">sort</span>(<span class="st">'revenue'</span><span class="ot">,</span> descending<span class="ot">:</span> <span class="kw">true</span>)<span class="ot">;</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a><span class="kw">echo</span> <span class="va">$byProduct</span><span class="ot">,</span> <span class="st">"</span><span class="sc">\n</span><span class="st">"</span><span class="ot">;</span></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a><span class="fu">print_r</span>(<span class="va">$byProduct</span>-&gt;row(<span class="dv">0</span><span class="ot">,</span> named<span class="ot">:</span> <span class="kw">true</span>))<span class="ot">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <pre class="text output"><code>shape: (4, 3)
 ┌─────────┬─────────┬────────┐
 │ product ┆ revenue ┆ orders │
@@ -490,7 +489,7 @@ shape: (4, 3)
 </section>
 <section id="lazy-queries" class="level2">
 <h2 class="anchored" data-anchor-id="lazy-queries">Lazy queries</h2>
-<p>A <code>DataFrame</code> runs each method immediately. A <code>LazyFrame</code> records operations and runs them, optimized, when <code>collect()</code> is called. <code>scan_csv()</code> starts a lazy query from a file, so Polars reads only the columns and rows that the query needs:</p>
+<p>A <code>DataFrame</code> runs each method immediately. A <code>LazyFrame</code> records operations and runs them when <code>collect()</code> is called. <code>scan_csv()</code> creates a lazy query. Polars optimizes the column selection and the filters before running it, so the reader converts only the columns that the query uses and drops filtered rows as it parses them. The reader still reads the whole file. <a href="./examples/lazy-csv.html">Query a large CSV file lazily</a> walks through a query plan.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode php code-with-copy"><code class="sourceCode php"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="va">$query</span> <span class="op">=</span> scan_csv(<span class="st">'sales.csv'</span>)</span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>    -&gt;filter(col(<span class="st">'units'</span>)-&gt;gt(<span class="dv">5</span>))</span>
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>    -&gt;groupBy(<span class="st">'store'</span>)</span>

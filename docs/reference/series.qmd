@@ -13,6 +13,8 @@ A `Series` is one named column. Its methods never change it in place.
 
 ## Methods
 
+In the signatures, `= null` marks an optional argument. Leaving it out, or passing `null`, uses Polars' default for that argument, which in most cases is py-polars' default. A note after a signature describes behavior that is easy to misread.
+
 {{< include _index-series.md >}}
 
 {{< include _api-series.md >}}

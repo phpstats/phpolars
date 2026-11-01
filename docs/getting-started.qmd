@@ -22,14 +22,14 @@ The command prints the installed version, such as `0.2.1`. It checks the CLI. PH
 
 ## A starter script
 
-phpolars needs no Composer packages, so an empty directory is enough. Download the example data, `sales.csv` (200 rows of sales by store and product), into it:
+phpolars needs no Composer packages. Download the example data, `sales.csv` (200 rows of sales by store and product):
 
 ```sh
 mkdir phpolars-start && cd phpolars-start
 curl -fsSLO https://raw.githubusercontent.com/phpstats/phpolars/v0.2.1/docs/data/sales.csv
 ```
 
-Save this as `start.php` and run it with `php start.php`:
+Runnable script: [starter.php](https://raw.githubusercontent.com/phpstats/phpolars/main/docs/examples/starter.php).
 
 {{< include examples/_starter.md >}}
 
@@ -61,7 +61,7 @@ Strings passed where py-polars expects an expression input, such as `select()`, 
 
 ## Lazy queries
 
-A `DataFrame` runs each method immediately. A `LazyFrame` records operations and runs them, optimized, when `collect()` is called. `scan_csv()` starts a lazy query from a file, so Polars reads only the columns and rows that the query needs:
+A `DataFrame` runs each method immediately. A `LazyFrame` records operations and runs them when `collect()` is called. `scan_csv()` creates a lazy query. Polars optimizes the column selection and the filters before running it, so the reader converts only the columns that the query uses and drops filtered rows as it parses them. The reader still reads the whole file. [Query a large CSV file lazily](examples/lazy-csv.qmd) walks through a query plan.
 
 {{< include examples/_lazy.md >}}
 

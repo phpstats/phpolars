@@ -358,10 +358,24 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Operands of comparison and arithmetic methods may be an <code>Expr</code> or a PHP value. PHP strings there are string literals.</p>
 <section id="method-index" class="level2">
 <h2 class="anchored" data-anchor-id="method-index">Method index</h2>
+<p>In the signatures, <code>= null</code> marks an optional argument. Leaving it out, or passing <code>null</code>, uses Polars’ default for that argument, which in most cases is py-polars’ default. A note after a signature describes behavior that is easy to misread.</p>
 <ul>
 <li><a href="#functions">Functions</a>: <a href="#fn-all"><code>all</code></a> · <a href="#fn-all_horizontal"><code>all_horizontal</code></a> · <a href="#fn-any"><code>any</code></a> · <a href="#fn-any_horizontal"><code>any_horizontal</code></a> · <a href="#fn-approx_n_unique"><code>approx_n_unique</code></a> · <a href="#fn-arange"><code>arange</code></a> · <a href="#fn-arctan2"><code>arctan2</code></a> · <a href="#fn-arg_sort_by"><code>arg_sort_by</code></a> · <a href="#fn-arg_where"><code>arg_where</code></a> · <a href="#fn-business_day_count"><code>business_day_count</code></a> · <a href="#fn-coalesce"><code>coalesce</code></a> · <a href="#fn-col"><code>col</code></a> · <a href="#fn-collect_all"><code>collect_all</code></a> · <a href="#fn-concat"><code>concat</code></a> · <a href="#fn-concat_arr"><code>concat_arr</code></a> · <a href="#fn-concat_list"><code>concat_list</code></a> · <a href="#fn-concat_str"><code>concat_str</code></a> · <a href="#fn-corr"><code>corr</code></a> · <a href="#fn-count"><code>count</code></a> · <a href="#fn-cov"><code>cov</code></a> · <a href="#fn-cum_count"><code>cum_count</code></a> · <a href="#fn-cum_sum"><code>cum_sum</code></a> · <a href="#fn-cum_sum_horizontal"><code>cum_sum_horizontal</code></a> · <a href="#fn-date"><code>date</code></a> · <a href="#fn-date_range"><code>date_range</code></a> · <a href="#fn-date_ranges"><code>date_ranges</code></a> · <a href="#fn-datetime"><code>datetime</code></a> · <a href="#fn-datetime_range"><code>datetime_range</code></a> · <a href="#fn-datetime_ranges"><code>datetime_ranges</code></a> · <a href="#fn-duration"><code>duration</code></a> · <a href="#fn-element"><code>element</code></a> · <a href="#fn-escape_regex"><code>escape_regex</code></a> · <a href="#fn-exclude"><code>exclude</code></a> · <a href="#fn-field"><code>field</code></a> · <a href="#fn-first"><code>first</code></a> · <a href="#fn-format"><code>format</code></a> · <a href="#fn-from_dict"><code>from_dict</code></a> · <a href="#fn-from_dicts"><code>from_dicts</code></a> · <a href="#fn-from_epoch"><code>from_epoch</code></a> · <a href="#fn-from_records"><code>from_records</code></a> · <a href="#fn-head"><code>head</code></a> · <a href="#fn-implode"><code>implode</code></a> · <a href="#fn-int_range"><code>int_range</code></a> · <a href="#fn-int_ranges"><code>int_ranges</code></a> · <a href="#fn-json_normalize"><code>json_normalize</code></a> · <a href="#fn-last"><code>last</code></a> · <a href="#fn-len"><code>len</code></a> · <a href="#fn-linear_space"><code>linear_space</code></a> · <a href="#fn-linear_spaces"><code>linear_spaces</code></a> · <a href="#fn-lit"><code>lit</code></a> · <a href="#fn-max"><code>max</code></a> · <a href="#fn-max_horizontal"><code>max_horizontal</code></a> · <a href="#fn-mean"><code>mean</code></a> · <a href="#fn-mean_horizontal"><code>mean_horizontal</code></a> · <a href="#fn-median"><code>median</code></a> · <a href="#fn-min"><code>min</code></a> · <a href="#fn-min_horizontal"><code>min_horizontal</code></a> · <a href="#fn-n_unique"><code>n_unique</code></a> · <a href="#fn-nth"><code>nth</code></a> · <a href="#fn-ones"><code>ones</code></a> · <a href="#fn-polars_version"><code>polars_version</code></a> · <a href="#fn-quantile"><code>quantile</code></a> · <a href="#fn-repeat"><code>repeat</code></a> · <a href="#fn-rolling_corr"><code>rolling_corr</code></a> · <a href="#fn-rolling_cov"><code>rolling_cov</code></a> · <a href="#fn-row_index"><code>row_index</code></a> · <a href="#fn-select"><code>select</code></a> · <a href="#fn-set_random_seed"><code>set_random_seed</code></a> · <a href="#fn-sql"><code>sql</code></a> · <a href="#fn-sql_expr"><code>sql_expr</code></a> · <a href="#fn-std"><code>std</code></a> · <a href="#fn-struct_"><code>struct_</code></a> · <a href="#fn-sum"><code>sum</code></a> · <a href="#fn-sum_horizontal"><code>sum_horizontal</code></a> · <a href="#fn-tail"><code>tail</code></a> · <a href="#fn-thread_pool_size"><code>thread_pool_size</code></a> · <a href="#fn-time"><code>time</code></a> · <a href="#fn-time_range"><code>time_range</code></a> · <a href="#fn-time_ranges"><code>time_ranges</code></a> · <a href="#fn-union"><code>union</code></a> · <a href="#fn-var_"><code>var_</code></a> · <a href="#fn-version"><code>version</code></a> · <a href="#fn-when"><code>when</code></a> · <a href="#fn-zeros"><code>zeros</code></a></li>
 <li><a href="#selectors">Selectors</a>: <a href="#cs-all"><code>all</code></a> · <a href="#cs-array_"><code>array_</code></a> · <a href="#cs-binary"><code>binary</code></a> · <a href="#cs-boolean"><code>boolean</code></a> · <a href="#cs-by_dtype"><code>by_dtype</code></a> · <a href="#cs-by_index"><code>by_index</code></a> · <a href="#cs-by_name"><code>by_name</code></a> · <a href="#cs-categorical"><code>categorical</code></a> · <a href="#cs-contains"><code>contains</code></a> · <a href="#cs-date"><code>date</code></a> · <a href="#cs-datetime"><code>datetime</code></a> · <a href="#cs-decimal"><code>decimal</code></a> · <a href="#cs-duration"><code>duration</code></a> · <a href="#cs-empty_"><code>empty_</code></a> · <a href="#cs-ends_with"><code>ends_with</code></a> · <a href="#cs-enum_"><code>enum_</code></a> · <a href="#cs-exclude"><code>exclude</code></a> · <a href="#cs-first"><code>first</code></a> · <a href="#cs-float"><code>float</code></a> · <a href="#cs-integer"><code>integer</code></a> · <a href="#cs-last"><code>last</code></a> · <a href="#cs-list_"><code>list_</code></a> · <a href="#cs-matches"><code>matches</code></a> · <a href="#cs-nested"><code>nested</code></a> · <a href="#cs-numeric"><code>numeric</code></a> · <a href="#cs-signed_integer"><code>signed_integer</code></a> · <a href="#cs-starts_with"><code>starts_with</code></a> · <a href="#cs-string"><code>string</code></a> · <a href="#cs-struct_"><code>struct_</code></a> · <a href="#cs-temporal"><code>temporal</code></a> · <a href="#cs-time"><code>time</code></a> · <a href="#cs-unsigned_integer"><code>unsigned_integer</code></a></li>
-<li><a href="#expr"><code>Phpolars\Expr</code></a>: <a href="#expr-__toString"><code>__toString</code></a> · <a href="#expr-abs"><code>abs</code></a> · <a href="#expr-add"><code>add</code></a> · <a href="#expr-alias"><code>alias</code></a> · <a href="#expr-all"><code>all</code></a> · <a href="#expr-and"><code>and</code></a> · <a href="#expr-any"><code>any</code></a> · <a href="#expr-append"><code>append</code></a> · <a href="#expr-approxNUnique"><code>approxNUnique</code></a> · <a href="#expr-arccos"><code>arccos</code></a> · <a href="#expr-arccosh"><code>arccosh</code></a> · <a href="#expr-arcsin"><code>arcsin</code></a> · <a href="#expr-arcsinh"><code>arcsinh</code></a> · <a href="#expr-arctan"><code>arctan</code></a> · <a href="#expr-arctanh"><code>arctanh</code></a> · <a href="#expr-argMax"><code>argMax</code></a> · <a href="#expr-argMin"><code>argMin</code></a> · <a href="#expr-argSort"><code>argSort</code></a> · <a href="#expr-argTrue"><code>argTrue</code></a> · <a href="#expr-argUnique"><code>argUnique</code></a> · <a href="#expr-arr"><code>arr</code></a> · <a href="#expr-backwardFill"><code>backwardFill</code></a> · <a href="#expr-bin"><code>bin</code></a> · <a href="#expr-bitwiseAnd"><code>bitwiseAnd</code></a> · <a href="#expr-bitwiseCountOnes"><code>bitwiseCountOnes</code></a> · <a href="#expr-bitwiseCountZeros"><code>bitwiseCountZeros</code></a> · <a href="#expr-bitwiseLeadingOnes"><code>bitwiseLeadingOnes</code></a> · <a href="#expr-bitwiseLeadingZeros"><code>bitwiseLeadingZeros</code></a> · <a href="#expr-bitwiseOr"><code>bitwiseOr</code></a> · <a href="#expr-bitwiseTrailingOnes"><code>bitwiseTrailingOnes</code></a> · <a href="#expr-bitwiseTrailingZeros"><code>bitwiseTrailingZeros</code></a> · <a href="#expr-bitwiseXor"><code>bitwiseXor</code></a> · <a href="#expr-bottomK"><code>bottomK</code></a> · <a href="#expr-bottomKBy"><code>bottomKBy</code></a> · <a href="#expr-cast"><code>cast</code></a> · <a href="#expr-cat"><code>cat</code></a> · <a href="#expr-cbrt"><code>cbrt</code></a> · <a href="#expr-ceil"><code>ceil</code></a> · <a href="#expr-clip"><code>clip</code></a> · <a href="#expr-cos"><code>cos</code></a> · <a href="#expr-cosh"><code>cosh</code></a> · <a href="#expr-cot"><code>cot</code></a> · <a href="#expr-count"><code>count</code></a> · <a href="#expr-cumCount"><code>cumCount</code></a> · <a href="#expr-cumMax"><code>cumMax</code></a> · <a href="#expr-cumMin"><code>cumMin</code></a> · <a href="#expr-cumProd"><code>cumProd</code></a> · <a href="#expr-cumSum"><code>cumSum</code></a> · <a href="#expr-cumulativeEval"><code>cumulativeEval</code></a> · <a href="#expr-cut"><code>cut</code></a> · <a href="#expr-degrees"><code>degrees</code></a> · <a href="#expr-diff"><code>diff</code></a> · <a href="#expr-div"><code>div</code></a> · <a href="#expr-dot"><code>dot</code></a> · <a href="#expr-dropNans"><code>dropNans</code></a> · <a href="#expr-dropNulls"><code>dropNulls</code></a> · <a href="#expr-dt"><code>dt</code></a> · <a href="#expr-entropy"><code>entropy</code></a> · <a href="#expr-eq"><code>eq</code></a> · <a href="#expr-eqMissing"><code>eqMissing</code></a> · <a href="#expr-ewmMean"><code>ewmMean</code></a> · <a href="#expr-ewmMeanBy"><code>ewmMeanBy</code></a> · <a href="#expr-ewmStd"><code>ewmStd</code></a> · <a href="#expr-ewmSum"><code>ewmSum</code></a> · <a href="#expr-ewmSumBy"><code>ewmSumBy</code></a> · <a href="#expr-ewmVar"><code>ewmVar</code></a> · <a href="#expr-exclude"><code>exclude</code></a> · <a href="#expr-exp"><code>exp</code></a> · <a href="#expr-explode"><code>explode</code></a> · <a href="#expr-extendConstant"><code>extendConstant</code></a> · <a href="#expr-fillNan"><code>fillNan</code></a> · <a href="#expr-fillNull"><code>fillNull</code></a> · <a href="#expr-filter"><code>filter</code></a> · <a href="#expr-first"><code>first</code></a> · <a href="#expr-flatten"><code>flatten</code></a> · <a href="#expr-floor"><code>floor</code></a> · <a href="#expr-floordiv"><code>floordiv</code></a> · <a href="#expr-forwardFill"><code>forwardFill</code></a> · <a href="#expr-gather"><code>gather</code></a> · <a href="#expr-gatherEvery"><code>gatherEvery</code></a> · <a href="#expr-ge"><code>ge</code></a> · <a href="#expr-get"><code>get</code></a> · <a href="#expr-gt"><code>gt</code></a> · <a href="#expr-hasNulls"><code>hasNulls</code></a> · <a href="#expr-head"><code>head</code></a> · <a href="#expr-hist"><code>hist</code></a> · <a href="#expr-implode"><code>implode</code></a> · <a href="#expr-indexOf"><code>indexOf</code></a> · <a href="#expr-interpolate"><code>interpolate</code></a> · <a href="#expr-interpolateBy"><code>interpolateBy</code></a> · <a href="#expr-isBetween"><code>isBetween</code></a> · <a href="#expr-isClose"><code>isClose</code></a> · <a href="#expr-isDuplicated"><code>isDuplicated</code></a> · <a href="#expr-isEmpty"><code>isEmpty</code></a> · <a href="#expr-isFinite"><code>isFinite</code></a> · <a href="#expr-isFirstDistinct"><code>isFirstDistinct</code></a> · <a href="#expr-isIn"><code>isIn</code></a> · <a href="#expr-isInfinite"><code>isInfinite</code></a> · <a href="#expr-isLastDistinct"><code>isLastDistinct</code></a> · <a href="#expr-isNan"><code>isNan</code></a> · <a href="#expr-isNotNan"><code>isNotNan</code></a> · <a href="#expr-isNotNull"><code>isNotNull</code></a> · <a href="#expr-isNull"><code>isNull</code></a> · <a href="#expr-isUnique"><code>isUnique</code></a> · <a href="#expr-item"><code>item</code></a> · <a href="#expr-kurtosis"><code>kurtosis</code></a> · <a href="#expr-last"><code>last</code></a> · <a href="#expr-le"><code>le</code></a> · <a href="#expr-len"><code>len</code></a> · <a href="#expr-limit"><code>limit</code></a> · <a href="#expr-list"><code>list</code></a> · <a href="#expr-log"><code>log</code></a> · <a href="#expr-log10"><code>log10</code></a> · <a href="#expr-log1P"><code>log1P</code></a> · <a href="#expr-lowerBound"><code>lowerBound</code></a> · <a href="#expr-lt"><code>lt</code></a> · <a href="#expr-max"><code>max</code></a> · <a href="#expr-maxBy"><code>maxBy</code></a> · <a href="#expr-mean"><code>mean</code></a> · <a href="#expr-median"><code>median</code></a> · <a href="#expr-meta"><code>meta</code></a> · <a href="#expr-min"><code>min</code></a> · <a href="#expr-minBy"><code>minBy</code></a> · <a href="#expr-mod"><code>mod</code></a> · <a href="#expr-mode"><code>mode</code></a> · <a href="#expr-mul"><code>mul</code></a> · <a href="#expr-name"><code>name</code></a> · <a href="#expr-nanMax"><code>nanMax</code></a> · <a href="#expr-nanMin"><code>nanMin</code></a> · <a href="#expr-ne"><code>ne</code></a> · <a href="#expr-neg"><code>neg</code></a> · <a href="#expr-neMissing"><code>neMissing</code></a> · <a href="#expr-not"><code>not</code></a> · <a href="#expr-nullCount"><code>nullCount</code></a> · <a href="#expr-nUnique"><code>nUnique</code></a> · <a href="#expr-or"><code>or</code></a> · <a href="#expr-over"><code>over</code></a> · <a href="#expr-pctChange"><code>pctChange</code></a> · <a href="#expr-peakMax"><code>peakMax</code></a> · <a href="#expr-peakMin"><code>peakMin</code></a> · <a href="#expr-pow"><code>pow</code></a> · <a href="#expr-product"><code>product</code></a> · <a href="#expr-qcut"><code>qcut</code></a> · <a href="#expr-quantile"><code>quantile</code></a> · <a href="#expr-radians"><code>radians</code></a> · <a href="#expr-rank"><code>rank</code></a> · <a href="#expr-reinterpret"><code>reinterpret</code></a> · <a href="#expr-repeatBy"><code>repeatBy</code></a> · <a href="#expr-replace"><code>replace</code></a> · <a href="#expr-replaceStrict"><code>replaceStrict</code></a> · <a href="#expr-reshape"><code>reshape</code></a> · <a href="#expr-reverse"><code>reverse</code></a> · <a href="#expr-rle"><code>rle</code></a> · <a href="#expr-rleId"><code>rleId</code></a> · <a href="#expr-rolling"><code>rolling</code></a> · <a href="#expr-rollingKurtosis"><code>rollingKurtosis</code></a> · <a href="#expr-rollingMax"><code>rollingMax</code></a> · <a href="#expr-rollingMaxBy"><code>rollingMaxBy</code></a> · <a href="#expr-rollingMean"><code>rollingMean</code></a> · <a href="#expr-rollingMeanBy"><code>rollingMeanBy</code></a> · <a href="#expr-rollingMedian"><code>rollingMedian</code></a> · <a href="#expr-rollingMedianBy"><code>rollingMedianBy</code></a> · <a href="#expr-rollingMin"><code>rollingMin</code></a> · <a href="#expr-rollingMinBy"><code>rollingMinBy</code></a> · <a href="#expr-rollingQuantile"><code>rollingQuantile</code></a> · <a href="#expr-rollingQuantileBy"><code>rollingQuantileBy</code></a> · <a href="#expr-rollingRank"><code>rollingRank</code></a> · <a href="#expr-rollingRankBy"><code>rollingRankBy</code></a> · <a href="#expr-rollingSkew"><code>rollingSkew</code></a> · <a href="#expr-rollingStd"><code>rollingStd</code></a> · <a href="#expr-rollingStdBy"><code>rollingStdBy</code></a> · <a href="#expr-rollingSum"><code>rollingSum</code></a> · <a href="#expr-rollingSumBy"><code>rollingSumBy</code></a> · <a href="#expr-rollingVar"><code>rollingVar</code></a> · <a href="#expr-rollingVarBy"><code>rollingVarBy</code></a> · <a href="#expr-round"><code>round</code></a> · <a href="#expr-roundSigFigs"><code>roundSigFigs</code></a> · <a href="#expr-sample"><code>sample</code></a> · <a href="#expr-searchSorted"><code>searchSorted</code></a> · <a href="#expr-shift"><code>shift</code></a> · <a href="#expr-shuffle"><code>shuffle</code></a> · <a href="#expr-sign"><code>sign</code></a> · <a href="#expr-sin"><code>sin</code></a> · <a href="#expr-sinh"><code>sinh</code></a> · <a href="#expr-skew"><code>skew</code></a> · <a href="#expr-slice"><code>slice</code></a> · <a href="#expr-sort"><code>sort</code></a> · <a href="#expr-sortBy"><code>sortBy</code></a> · <a href="#expr-sqrt"><code>sqrt</code></a> · <a href="#expr-std"><code>std</code></a> · <a href="#expr-str"><code>str</code></a> · <a href="#expr-struct"><code>struct</code></a> · <a href="#expr-sub"><code>sub</code></a> · <a href="#expr-sum"><code>sum</code></a> · <a href="#expr-tail"><code>tail</code></a> · <a href="#expr-tan"><code>tan</code></a> · <a href="#expr-tanh"><code>tanh</code></a> · <a href="#expr-toPhysical"><code>toPhysical</code></a> · <a href="#expr-topK"><code>topK</code></a> · <a href="#expr-topKBy"><code>topKBy</code></a> · <a href="#expr-truediv"><code>truediv</code></a> · <a href="#expr-unique"><code>unique</code></a> · <a href="#expr-uniqueCounts"><code>uniqueCounts</code></a> · <a href="#expr-upperBound"><code>upperBound</code></a> · <a href="#expr-valueCounts"><code>valueCounts</code></a> · <a href="#expr-var"><code>var</code></a> · <a href="#expr-xor"><code>xor</code></a></li>
+<li><a href="#expr"><code>Phpolars\Expr</code></a>
+<ul>
+<li><a href="#expr--arithmetic-and-comparison">Arithmetic and comparison</a>: <a href="#expr-abs"><code>abs</code></a> · <a href="#expr-add"><code>add</code></a> · <a href="#expr-div"><code>div</code></a> · <a href="#expr-dot"><code>dot</code></a> · <a href="#expr-eq"><code>eq</code></a> · <a href="#expr-eqMissing"><code>eqMissing</code></a> · <a href="#expr-floordiv"><code>floordiv</code></a> · <a href="#expr-ge"><code>ge</code></a> · <a href="#expr-gt"><code>gt</code></a> · <a href="#expr-isBetween"><code>isBetween</code></a> · <a href="#expr-isClose"><code>isClose</code></a> · <a href="#expr-isIn"><code>isIn</code></a> · <a href="#expr-le"><code>le</code></a> · <a href="#expr-lt"><code>lt</code></a> · <a href="#expr-mod"><code>mod</code></a> · <a href="#expr-mul"><code>mul</code></a> · <a href="#expr-ne"><code>ne</code></a> · <a href="#expr-neg"><code>neg</code></a> · <a href="#expr-neMissing"><code>neMissing</code></a> · <a href="#expr-pow"><code>pow</code></a> · <a href="#expr-sign"><code>sign</code></a> · <a href="#expr-sub"><code>sub</code></a> · <a href="#expr-truediv"><code>truediv</code></a></li>
+<li><a href="#expr--logic-and-bits">Logic and bits</a>: <a href="#expr-and"><code>and</code></a> · <a href="#expr-bitwiseAnd"><code>bitwiseAnd</code></a> · <a href="#expr-bitwiseCountOnes"><code>bitwiseCountOnes</code></a> · <a href="#expr-bitwiseCountZeros"><code>bitwiseCountZeros</code></a> · <a href="#expr-bitwiseLeadingOnes"><code>bitwiseLeadingOnes</code></a> · <a href="#expr-bitwiseLeadingZeros"><code>bitwiseLeadingZeros</code></a> · <a href="#expr-bitwiseOr"><code>bitwiseOr</code></a> · <a href="#expr-bitwiseTrailingOnes"><code>bitwiseTrailingOnes</code></a> · <a href="#expr-bitwiseTrailingZeros"><code>bitwiseTrailingZeros</code></a> · <a href="#expr-bitwiseXor"><code>bitwiseXor</code></a> · <a href="#expr-not"><code>not</code></a> · <a href="#expr-or"><code>or</code></a> · <a href="#expr-xor"><code>xor</code></a></li>
+<li><a href="#expr--missing-values">Missing values</a>: <a href="#expr-backwardFill"><code>backwardFill</code></a> · <a href="#expr-dropNans"><code>dropNans</code></a> · <a href="#expr-dropNulls"><code>dropNulls</code></a> · <a href="#expr-fillNan"><code>fillNan</code></a> · <a href="#expr-fillNull"><code>fillNull</code></a> · <a href="#expr-forwardFill"><code>forwardFill</code></a> · <a href="#expr-hasNulls"><code>hasNulls</code></a> · <a href="#expr-interpolate"><code>interpolate</code></a> · <a href="#expr-interpolateBy"><code>interpolateBy</code></a> · <a href="#expr-isNan"><code>isNan</code></a> · <a href="#expr-isNotNan"><code>isNotNan</code></a> · <a href="#expr-isNotNull"><code>isNotNull</code></a> · <a href="#expr-isNull"><code>isNull</code></a> · <a href="#expr-nullCount"><code>nullCount</code></a></li>
+<li><a href="#expr--aggregate">Aggregate</a>: <a href="#expr-all"><code>all</code></a> · <a href="#expr-any"><code>any</code></a> · <a href="#expr-approxNUnique"><code>approxNUnique</code></a> · <a href="#expr-argMax"><code>argMax</code></a> · <a href="#expr-argMin"><code>argMin</code></a> · <a href="#expr-count"><code>count</code></a> · <a href="#expr-entropy"><code>entropy</code></a> · <a href="#expr-first"><code>first</code></a> · <a href="#expr-implode"><code>implode</code></a> · <a href="#expr-isEmpty"><code>isEmpty</code></a> · <a href="#expr-item"><code>item</code></a> · <a href="#expr-kurtosis"><code>kurtosis</code></a> · <a href="#expr-last"><code>last</code></a> · <a href="#expr-len"><code>len</code></a> · <a href="#expr-max"><code>max</code></a> · <a href="#expr-maxBy"><code>maxBy</code></a> · <a href="#expr-mean"><code>mean</code></a> · <a href="#expr-median"><code>median</code></a> · <a href="#expr-min"><code>min</code></a> · <a href="#expr-minBy"><code>minBy</code></a> · <a href="#expr-mode"><code>mode</code></a> · <a href="#expr-nanMax"><code>nanMax</code></a> · <a href="#expr-nanMin"><code>nanMin</code></a> · <a href="#expr-nUnique"><code>nUnique</code></a> · <a href="#expr-product"><code>product</code></a> · <a href="#expr-quantile"><code>quantile</code></a> · <a href="#expr-skew"><code>skew</code></a> · <a href="#expr-std"><code>std</code></a> · <a href="#expr-sum"><code>sum</code></a> · <a href="#expr-uniqueCounts"><code>uniqueCounts</code></a> · <a href="#expr-valueCounts"><code>valueCounts</code></a> · <a href="#expr-var"><code>var</code></a></li>
+<li><a href="#expr--math">Math</a>: <a href="#expr-arccos"><code>arccos</code></a> · <a href="#expr-arccosh"><code>arccosh</code></a> · <a href="#expr-arcsin"><code>arcsin</code></a> · <a href="#expr-arcsinh"><code>arcsinh</code></a> · <a href="#expr-arctan"><code>arctan</code></a> · <a href="#expr-arctanh"><code>arctanh</code></a> · <a href="#expr-cbrt"><code>cbrt</code></a> · <a href="#expr-ceil"><code>ceil</code></a> · <a href="#expr-clip"><code>clip</code></a> · <a href="#expr-cos"><code>cos</code></a> · <a href="#expr-cosh"><code>cosh</code></a> · <a href="#expr-cot"><code>cot</code></a> · <a href="#expr-degrees"><code>degrees</code></a> · <a href="#expr-exp"><code>exp</code></a> · <a href="#expr-floor"><code>floor</code></a> · <a href="#expr-isFinite"><code>isFinite</code></a> · <a href="#expr-isInfinite"><code>isInfinite</code></a> · <a href="#expr-log"><code>log</code></a> · <a href="#expr-log10"><code>log10</code></a> · <a href="#expr-log1P"><code>log1P</code></a> · <a href="#expr-radians"><code>radians</code></a> · <a href="#expr-round"><code>round</code></a> · <a href="#expr-roundSigFigs"><code>roundSigFigs</code></a> · <a href="#expr-sin"><code>sin</code></a> · <a href="#expr-sinh"><code>sinh</code></a> · <a href="#expr-sqrt"><code>sqrt</code></a> · <a href="#expr-tan"><code>tan</code></a> · <a href="#expr-tanh"><code>tanh</code></a></li>
+<li><a href="#expr--windows-cumulative-and-rolling">Windows, cumulative, and rolling</a>: <a href="#expr-cumCount"><code>cumCount</code></a> · <a href="#expr-cumMax"><code>cumMax</code></a> · <a href="#expr-cumMin"><code>cumMin</code></a> · <a href="#expr-cumProd"><code>cumProd</code></a> · <a href="#expr-cumSum"><code>cumSum</code></a> · <a href="#expr-cumulativeEval"><code>cumulativeEval</code></a> · <a href="#expr-diff"><code>diff</code></a> · <a href="#expr-ewmMean"><code>ewmMean</code></a> · <a href="#expr-ewmMeanBy"><code>ewmMeanBy</code></a> · <a href="#expr-ewmStd"><code>ewmStd</code></a> · <a href="#expr-ewmSum"><code>ewmSum</code></a> · <a href="#expr-ewmSumBy"><code>ewmSumBy</code></a> · <a href="#expr-ewmVar"><code>ewmVar</code></a> · <a href="#expr-over"><code>over</code></a> · <a href="#expr-pctChange"><code>pctChange</code></a> · <a href="#expr-peakMax"><code>peakMax</code></a> · <a href="#expr-peakMin"><code>peakMin</code></a> · <a href="#expr-rank"><code>rank</code></a> · <a href="#expr-rle"><code>rle</code></a> · <a href="#expr-rleId"><code>rleId</code></a> · <a href="#expr-rolling"><code>rolling</code></a> · <a href="#expr-rollingKurtosis"><code>rollingKurtosis</code></a> · <a href="#expr-rollingMax"><code>rollingMax</code></a> · <a href="#expr-rollingMaxBy"><code>rollingMaxBy</code></a> · <a href="#expr-rollingMean"><code>rollingMean</code></a> · <a href="#expr-rollingMeanBy"><code>rollingMeanBy</code></a> · <a href="#expr-rollingMedian"><code>rollingMedian</code></a> · <a href="#expr-rollingMedianBy"><code>rollingMedianBy</code></a> · <a href="#expr-rollingMin"><code>rollingMin</code></a> · <a href="#expr-rollingMinBy"><code>rollingMinBy</code></a> · <a href="#expr-rollingQuantile"><code>rollingQuantile</code></a> · <a href="#expr-rollingQuantileBy"><code>rollingQuantileBy</code></a> · <a href="#expr-rollingRank"><code>rollingRank</code></a> · <a href="#expr-rollingRankBy"><code>rollingRankBy</code></a> · <a href="#expr-rollingSkew"><code>rollingSkew</code></a> · <a href="#expr-rollingStd"><code>rollingStd</code></a> · <a href="#expr-rollingStdBy"><code>rollingStdBy</code></a> · <a href="#expr-rollingSum"><code>rollingSum</code></a> · <a href="#expr-rollingSumBy"><code>rollingSumBy</code></a> · <a href="#expr-rollingVar"><code>rollingVar</code></a> · <a href="#expr-rollingVarBy"><code>rollingVarBy</code></a> · <a href="#expr-shift"><code>shift</code></a></li>
+<li><a href="#expr--sort-select-and-deduplicate">Sort, select, and deduplicate</a>: <a href="#expr-argSort"><code>argSort</code></a> · <a href="#expr-argTrue"><code>argTrue</code></a> · <a href="#expr-argUnique"><code>argUnique</code></a> · <a href="#expr-bottomK"><code>bottomK</code></a> · <a href="#expr-bottomKBy"><code>bottomKBy</code></a> · <a href="#expr-filter"><code>filter</code></a> · <a href="#expr-gather"><code>gather</code></a> · <a href="#expr-gatherEvery"><code>gatherEvery</code></a> · <a href="#expr-get"><code>get</code></a> · <a href="#expr-head"><code>head</code></a> · <a href="#expr-indexOf"><code>indexOf</code></a> · <a href="#expr-isDuplicated"><code>isDuplicated</code></a> · <a href="#expr-isFirstDistinct"><code>isFirstDistinct</code></a> · <a href="#expr-isLastDistinct"><code>isLastDistinct</code></a> · <a href="#expr-isUnique"><code>isUnique</code></a> · <a href="#expr-limit"><code>limit</code></a> · <a href="#expr-lowerBound"><code>lowerBound</code></a> · <a href="#expr-reverse"><code>reverse</code></a> · <a href="#expr-sample"><code>sample</code></a> · <a href="#expr-searchSorted"><code>searchSorted</code></a> · <a href="#expr-shuffle"><code>shuffle</code></a> · <a href="#expr-slice"><code>slice</code></a> · <a href="#expr-sort"><code>sort</code></a> · <a href="#expr-sortBy"><code>sortBy</code></a> · <a href="#expr-tail"><code>tail</code></a> · <a href="#expr-topK"><code>topK</code></a> · <a href="#expr-topKBy"><code>topKBy</code></a> · <a href="#expr-unique"><code>unique</code></a> · <a href="#expr-upperBound"><code>upperBound</code></a></li>
+<li><a href="#expr--combine-and-reshape">Combine and reshape</a>: <a href="#expr-append"><code>append</code></a> · <a href="#expr-explode"><code>explode</code></a> · <a href="#expr-extendConstant"><code>extendConstant</code></a> · <a href="#expr-flatten"><code>flatten</code></a> · <a href="#expr-repeatBy"><code>repeatBy</code></a> · <a href="#expr-reshape"><code>reshape</code></a></li>
+<li><a href="#expr--types-names-and-replacing-values">Types, names, and replacing values</a>: <a href="#expr-alias"><code>alias</code></a> · <a href="#expr-cast"><code>cast</code></a> · <a href="#expr-cut"><code>cut</code></a> · <a href="#expr-exclude"><code>exclude</code></a> · <a href="#expr-hist"><code>hist</code></a> · <a href="#expr-qcut"><code>qcut</code></a> · <a href="#expr-reinterpret"><code>reinterpret</code></a> · <a href="#expr-replace"><code>replace</code></a> · <a href="#expr-replaceStrict"><code>replaceStrict</code></a> · <a href="#expr-toPhysical"><code>toPhysical</code></a></li>
+<li><a href="#expr--namespaces">Namespaces</a>: <a href="#expr-arr"><code>arr</code></a> · <a href="#expr-bin"><code>bin</code></a> · <a href="#expr-cat"><code>cat</code></a> · <a href="#expr-dt"><code>dt</code></a> · <a href="#expr-list"><code>list</code></a> · <a href="#expr-meta"><code>meta</code></a> · <a href="#expr-name"><code>name</code></a> · <a href="#expr-str"><code>str</code></a> · <a href="#expr-struct"><code>struct</code></a></li>
+<li><a href="#expr--create-and-convert">Create and convert</a>: <a href="#expr-__toString"><code>__toString</code></a></li>
+</ul></li>
 <li><a href="#when"><code>Phpolars\When</code></a>: <a href="#when-then"><code>then</code></a></li>
 <li><a href="#then"><code>Phpolars\Then</code></a>: <a href="#then-alias"><code>alias</code></a> · <a href="#then-otherwise"><code>otherwise</code></a> · <a href="#then-when"><code>when</code></a></li>
 <li><a href="#str"><code>Phpolars\StrNameSpace</code></a>: <a href="#str-contains"><code>contains</code></a> · <a href="#str-containsAny"><code>containsAny</code></a> · <a href="#str-countMatches"><code>countMatches</code></a> · <a href="#str-decode"><code>decode</code></a> · <a href="#str-encode"><code>encode</code></a> · <a href="#str-endsWith"><code>endsWith</code></a> · <a href="#str-escapeRegex"><code>escapeRegex</code></a> · <a href="#str-extract"><code>extract</code></a> · <a href="#str-extractAll"><code>extractAll</code></a> · <a href="#str-extractGroups"><code>extractGroups</code></a> · <a href="#str-extractMany"><code>extractMany</code></a> · <a href="#str-find"><code>find</code></a> · <a href="#str-findMany"><code>findMany</code></a> · <a href="#str-head"><code>head</code></a> · <a href="#str-join"><code>join</code></a> · <a href="#str-jsonDecode"><code>jsonDecode</code></a> · <a href="#str-jsonPathMatch"><code>jsonPathMatch</code></a> · <a href="#str-lenBytes"><code>lenBytes</code></a> · <a href="#str-lenChars"><code>lenChars</code></a> · <a href="#str-normalize"><code>normalize</code></a> · <a href="#str-padEnd"><code>padEnd</code></a> · <a href="#str-padStart"><code>padStart</code></a> · <a href="#str-replace"><code>replace</code></a> · <a href="#str-replaceAll"><code>replaceAll</code></a> · <a href="#str-replaceMany"><code>replaceMany</code></a> · <a href="#str-reverse"><code>reverse</code></a> · <a href="#str-slice"><code>slice</code></a> · <a href="#str-split"><code>split</code></a> · <a href="#str-splitExact"><code>splitExact</code></a> · <a href="#str-splitn"><code>splitn</code></a> · <a href="#str-startsWith"><code>startsWith</code></a> · <a href="#str-stripChars"><code>stripChars</code></a> · <a href="#str-stripCharsEnd"><code>stripCharsEnd</code></a> · <a href="#str-stripCharsStart"><code>stripCharsStart</code></a> · <a href="#str-stripPrefix"><code>stripPrefix</code></a> · <a href="#str-stripSuffix"><code>stripSuffix</code></a> · <a href="#str-strptime"><code>strptime</code></a> · <a href="#str-tail"><code>tail</code></a> · <a href="#str-toDate"><code>toDate</code></a> · <a href="#str-toDatetime"><code>toDatetime</code></a> · <a href="#str-toDecimal"><code>toDecimal</code></a> · <a href="#str-toInteger"><code>toInteger</code></a> · <a href="#str-toLowercase"><code>toLowercase</code></a> · <a href="#str-toTime"><code>toTime</code></a> · <a href="#str-toUppercase"><code>toUppercase</code></a> · <a href="#str-zfill"><code>zfill</code></a></li>
@@ -692,30 +706,38 @@ shape: (3, 2)
 <h2 class="anchored" data-anchor-id="methods">Methods</h2>
 <section id="expr" class="level3">
 <h3 class="anchored" data-anchor-id="expr"><code>Phpolars\Expr</code></h3>
+<section id="expr--arithmetic-and-comparison" class="level4">
+<h4 class="anchored" data-anchor-id="expr--arithmetic-and-comparison">Arithmetic and comparison</h4>
 <ul>
-<li><span id="expr-__toString"></span> <code>__toString(): string</code></li>
 <li><span id="expr-abs"></span> <code>abs(): Phpolars\Expr</code></li>
 <li><span id="expr-add"></span> <code>add(mixed $other): Phpolars\Expr</code></li>
-<li><span id="expr-alias"></span> <code>alias(string $name): Phpolars\Expr</code></li>
-<li><span id="expr-all"></span> <code>all(?bool $ignoreNulls = null): Phpolars\Expr</code></li>
+<li><span id="expr-div"></span> <code>div(mixed $other): Phpolars\Expr</code>: the same as <code>truediv()</code>, so integer columns divide to floats; <code>floordiv()</code> floors</li>
+<li><span id="expr-dot"></span> <code>dot(mixed $other): Phpolars\Expr</code></li>
+<li><span id="expr-eq"></span> <code>eq(mixed $other): Phpolars\Expr</code></li>
+<li><span id="expr-eqMissing"></span> <code>eqMissing(mixed $other): Phpolars\Expr</code></li>
+<li><span id="expr-floordiv"></span> <code>floordiv(mixed $other): Phpolars\Expr</code></li>
+<li><span id="expr-ge"></span> <code>ge(mixed $other): Phpolars\Expr</code></li>
+<li><span id="expr-gt"></span> <code>gt(mixed $other): Phpolars\Expr</code></li>
+<li><span id="expr-isBetween"></span> <code>isBetween(mixed $lower, mixed $upper, ?string $closed = null): Phpolars\Expr</code></li>
+<li><span id="expr-isClose"></span> <code>isClose(mixed $other, ?float $absTol = null, ?float $relTol = null, ?bool $nansEqual = null): Phpolars\Expr</code></li>
+<li><span id="expr-isIn"></span> <code>isIn(mixed $other, ?bool $nullsEqual = null): Phpolars\Expr</code></li>
+<li><span id="expr-le"></span> <code>le(mixed $other): Phpolars\Expr</code></li>
+<li><span id="expr-lt"></span> <code>lt(mixed $other): Phpolars\Expr</code></li>
+<li><span id="expr-mod"></span> <code>mod(mixed $other): Phpolars\Expr</code>: takes the sign of the divisor, as in Python: <code>-7</code> mod <code>2</code> is <code>1</code>, where PHP’s <code>%</code> gives <code>-1</code></li>
+<li><span id="expr-mul"></span> <code>mul(mixed $other): Phpolars\Expr</code></li>
+<li><span id="expr-ne"></span> <code>ne(mixed $other): Phpolars\Expr</code></li>
+<li><span id="expr-neg"></span> <code>neg(): Phpolars\Expr</code></li>
+<li><span id="expr-neMissing"></span> <code>neMissing(mixed $other): Phpolars\Expr</code></li>
+<li><span id="expr-pow"></span> <code>pow(mixed $exponent): Phpolars\Expr</code></li>
+<li><span id="expr-sign"></span> <code>sign(): Phpolars\Expr</code></li>
+<li><span id="expr-sub"></span> <code>sub(mixed $other): Phpolars\Expr</code></li>
+<li><span id="expr-truediv"></span> <code>truediv(mixed $other): Phpolars\Expr</code></li>
+</ul>
+</section>
+<section id="expr--logic-and-bits" class="level4">
+<h4 class="anchored" data-anchor-id="expr--logic-and-bits">Logic and bits</h4>
+<ul>
 <li><span id="expr-and"></span> <code>and(mixed $other): Phpolars\Expr</code></li>
-<li><span id="expr-any"></span> <code>any(?bool $ignoreNulls = null): Phpolars\Expr</code></li>
-<li><span id="expr-append"></span> <code>append(mixed $other, ?bool $upcast = null): Phpolars\Expr</code></li>
-<li><span id="expr-approxNUnique"></span> <code>approxNUnique(): Phpolars\Expr</code></li>
-<li><span id="expr-arccos"></span> <code>arccos(): Phpolars\Expr</code></li>
-<li><span id="expr-arccosh"></span> <code>arccosh(): Phpolars\Expr</code></li>
-<li><span id="expr-arcsin"></span> <code>arcsin(): Phpolars\Expr</code></li>
-<li><span id="expr-arcsinh"></span> <code>arcsinh(): Phpolars\Expr</code></li>
-<li><span id="expr-arctan"></span> <code>arctan(): Phpolars\Expr</code></li>
-<li><span id="expr-arctanh"></span> <code>arctanh(): Phpolars\Expr</code></li>
-<li><span id="expr-argMax"></span> <code>argMax(): Phpolars\Expr</code></li>
-<li><span id="expr-argMin"></span> <code>argMin(): Phpolars\Expr</code></li>
-<li><span id="expr-argSort"></span> <code>argSort(?bool $descending = null, ?bool $nullsLast = null): Phpolars\Expr</code></li>
-<li><span id="expr-argTrue"></span> <code>argTrue(): Phpolars\Expr</code></li>
-<li><span id="expr-argUnique"></span> <code>argUnique(): Phpolars\Expr</code></li>
-<li><span id="expr-arr"></span> <code>arr(): Phpolars\ArrayNameSpace</code></li>
-<li><span id="expr-backwardFill"></span> <code>backwardFill(?int $limit = null): Phpolars\Expr</code></li>
-<li><span id="expr-bin"></span> <code>bin(): Phpolars\BinaryNameSpace</code></li>
 <li><span id="expr-bitwiseAnd"></span> <code>bitwiseAnd(): Phpolars\Expr</code></li>
 <li><span id="expr-bitwiseCountOnes"></span> <code>bitwiseCountOnes(): Phpolars\Expr</code></li>
 <li><span id="expr-bitwiseCountZeros"></span> <code>bitwiseCountZeros(): Phpolars\Expr</code></li>
@@ -725,126 +747,121 @@ shape: (3, 2)
 <li><span id="expr-bitwiseTrailingOnes"></span> <code>bitwiseTrailingOnes(): Phpolars\Expr</code></li>
 <li><span id="expr-bitwiseTrailingZeros"></span> <code>bitwiseTrailingZeros(): Phpolars\Expr</code></li>
 <li><span id="expr-bitwiseXor"></span> <code>bitwiseXor(): Phpolars\Expr</code></li>
-<li><span id="expr-bottomK"></span> <code>bottomK(?int $k = null): Phpolars\Expr</code></li>
-<li><span id="expr-bottomKBy"></span> <code>bottomKBy(mixed $by, ?int $k = null, mixed $reverse = null): Phpolars\Expr</code></li>
-<li><span id="expr-cast"></span> <code>cast(string $dtype, ?bool $strict = null): Phpolars\Expr</code></li>
-<li><span id="expr-cat"></span> <code>cat(): Phpolars\CatNameSpace</code></li>
+<li><span id="expr-not"></span> <code>not(): Phpolars\Expr</code></li>
+<li><span id="expr-or"></span> <code>or(mixed $other): Phpolars\Expr</code></li>
+<li><span id="expr-xor"></span> <code>xor(mixed $other): Phpolars\Expr</code></li>
+</ul>
+</section>
+<section id="expr--missing-values" class="level4">
+<h4 class="anchored" data-anchor-id="expr--missing-values">Missing values</h4>
+<ul>
+<li><span id="expr-backwardFill"></span> <code>backwardFill(?int $limit = null): Phpolars\Expr</code></li>
+<li><span id="expr-dropNans"></span> <code>dropNans(): Phpolars\Expr</code></li>
+<li><span id="expr-dropNulls"></span> <code>dropNulls(): Phpolars\Expr</code></li>
+<li><span id="expr-fillNan"></span> <code>fillNan(mixed $value): Phpolars\Expr</code></li>
+<li><span id="expr-fillNull"></span> <code>fillNull(mixed $value = null, ?string $strategy = null, ?int $limit = null): Phpolars\Expr</code>: a <code>value</code>, or a <code>strategy</code>: <code>'forward'</code>, <code>'backward'</code>, <code>'mean'</code>, <code>'min'</code>, <code>'max'</code>, <code>'zero'</code>, or <code>'one'</code></li>
+<li><span id="expr-forwardFill"></span> <code>forwardFill(?int $limit = null): Phpolars\Expr</code></li>
+<li><span id="expr-hasNulls"></span> <code>hasNulls(): Phpolars\Expr</code></li>
+<li><span id="expr-interpolate"></span> <code>interpolate(?string $method = null): Phpolars\Expr</code></li>
+<li><span id="expr-interpolateBy"></span> <code>interpolateBy(mixed $by): Phpolars\Expr</code></li>
+<li><span id="expr-isNan"></span> <code>isNan(): Phpolars\Expr</code></li>
+<li><span id="expr-isNotNan"></span> <code>isNotNan(): Phpolars\Expr</code></li>
+<li><span id="expr-isNotNull"></span> <code>isNotNull(): Phpolars\Expr</code></li>
+<li><span id="expr-isNull"></span> <code>isNull(): Phpolars\Expr</code></li>
+<li><span id="expr-nullCount"></span> <code>nullCount(): Phpolars\Expr</code></li>
+</ul>
+</section>
+<section id="expr--aggregate" class="level4">
+<h4 class="anchored" data-anchor-id="expr--aggregate">Aggregate</h4>
+<ul>
+<li><span id="expr-all"></span> <code>all(?bool $ignoreNulls = null): Phpolars\Expr</code></li>
+<li><span id="expr-any"></span> <code>any(?bool $ignoreNulls = null): Phpolars\Expr</code></li>
+<li><span id="expr-approxNUnique"></span> <code>approxNUnique(): Phpolars\Expr</code></li>
+<li><span id="expr-argMax"></span> <code>argMax(): Phpolars\Expr</code></li>
+<li><span id="expr-argMin"></span> <code>argMin(): Phpolars\Expr</code></li>
+<li><span id="expr-count"></span> <code>count(): Phpolars\Expr</code>: counts non-null values; <code>len()</code> counts rows</li>
+<li><span id="expr-entropy"></span> <code>entropy(?float $base = null, ?bool $normalize = null): Phpolars\Expr</code></li>
+<li><span id="expr-first"></span> <code>first(?bool $ignoreNulls = null): Phpolars\Expr</code></li>
+<li><span id="expr-implode"></span> <code>implode(): Phpolars\Expr</code></li>
+<li><span id="expr-isEmpty"></span> <code>isEmpty(?bool $ignoreNulls = null): Phpolars\Expr</code></li>
+<li><span id="expr-item"></span> <code>item(?bool $allowEmpty = null): Phpolars\Expr</code></li>
+<li><span id="expr-kurtosis"></span> <code>kurtosis(?bool $fisher = null, ?bool $bias = null): Phpolars\Expr</code></li>
+<li><span id="expr-last"></span> <code>last(?bool $ignoreNulls = null): Phpolars\Expr</code></li>
+<li><span id="expr-len"></span> <code>len(): Phpolars\Expr</code>: counts rows, including nulls</li>
+<li><span id="expr-max"></span> <code>max(): Phpolars\Expr</code></li>
+<li><span id="expr-maxBy"></span> <code>maxBy(mixed $by): Phpolars\Expr</code></li>
+<li><span id="expr-mean"></span> <code>mean(): Phpolars\Expr</code></li>
+<li><span id="expr-median"></span> <code>median(): Phpolars\Expr</code></li>
+<li><span id="expr-min"></span> <code>min(): Phpolars\Expr</code></li>
+<li><span id="expr-minBy"></span> <code>minBy(mixed $by): Phpolars\Expr</code></li>
+<li><span id="expr-mode"></span> <code>mode(): Phpolars\Expr</code></li>
+<li><span id="expr-nanMax"></span> <code>nanMax(): Phpolars\Expr</code></li>
+<li><span id="expr-nanMin"></span> <code>nanMin(): Phpolars\Expr</code></li>
+<li><span id="expr-nUnique"></span> <code>nUnique(): Phpolars\Expr</code></li>
+<li><span id="expr-product"></span> <code>product(): Phpolars\Expr</code></li>
+<li><span id="expr-quantile"></span> <code>quantile(mixed $quantile, ?string $interpolation = null): Phpolars\Expr</code></li>
+<li><span id="expr-skew"></span> <code>skew(?bool $bias = null): Phpolars\Expr</code></li>
+<li><span id="expr-std"></span> <code>std(?int $ddof = null): Phpolars\Expr</code>: the sample statistic (<code>ddof</code> 1)</li>
+<li><span id="expr-sum"></span> <code>sum(): Phpolars\Expr</code></li>
+<li><span id="expr-uniqueCounts"></span> <code>uniqueCounts(): Phpolars\Expr</code></li>
+<li><span id="expr-valueCounts"></span> <code>valueCounts(?bool $sort = null, ?string $name = null, ?bool $normalize = null): Phpolars\Expr</code></li>
+<li><span id="expr-var"></span> <code>var(?int $ddof = null): Phpolars\Expr</code>: the sample statistic (<code>ddof</code> 1)</li>
+</ul>
+</section>
+<section id="expr--math" class="level4">
+<h4 class="anchored" data-anchor-id="expr--math">Math</h4>
+<ul>
+<li><span id="expr-arccos"></span> <code>arccos(): Phpolars\Expr</code></li>
+<li><span id="expr-arccosh"></span> <code>arccosh(): Phpolars\Expr</code></li>
+<li><span id="expr-arcsin"></span> <code>arcsin(): Phpolars\Expr</code></li>
+<li><span id="expr-arcsinh"></span> <code>arcsinh(): Phpolars\Expr</code></li>
+<li><span id="expr-arctan"></span> <code>arctan(): Phpolars\Expr</code></li>
+<li><span id="expr-arctanh"></span> <code>arctanh(): Phpolars\Expr</code></li>
 <li><span id="expr-cbrt"></span> <code>cbrt(): Phpolars\Expr</code></li>
 <li><span id="expr-ceil"></span> <code>ceil(): Phpolars\Expr</code></li>
 <li><span id="expr-clip"></span> <code>clip(mixed $lowerBound = null, mixed $upperBound = null): Phpolars\Expr</code></li>
 <li><span id="expr-cos"></span> <code>cos(): Phpolars\Expr</code></li>
 <li><span id="expr-cosh"></span> <code>cosh(): Phpolars\Expr</code></li>
 <li><span id="expr-cot"></span> <code>cot(): Phpolars\Expr</code></li>
-<li><span id="expr-count"></span> <code>count(): Phpolars\Expr</code></li>
+<li><span id="expr-degrees"></span> <code>degrees(): Phpolars\Expr</code></li>
+<li><span id="expr-exp"></span> <code>exp(): Phpolars\Expr</code></li>
+<li><span id="expr-floor"></span> <code>floor(): Phpolars\Expr</code></li>
+<li><span id="expr-isFinite"></span> <code>isFinite(): Phpolars\Expr</code></li>
+<li><span id="expr-isInfinite"></span> <code>isInfinite(): Phpolars\Expr</code></li>
+<li><span id="expr-log"></span> <code>log(?float $base = null): Phpolars\Expr</code></li>
+<li><span id="expr-log10"></span> <code>log10(): Phpolars\Expr</code></li>
+<li><span id="expr-log1P"></span> <code>log1P(): Phpolars\Expr</code></li>
+<li><span id="expr-radians"></span> <code>radians(): Phpolars\Expr</code></li>
+<li><span id="expr-round"></span> <code>round(?int $decimals = null, ?string $mode = null): Phpolars\Expr</code>: rounds half to even by default; <code>mode: 'half_away_from_zero'</code> rounds as PHP’s <code>round()</code> does</li>
+<li><span id="expr-roundSigFigs"></span> <code>roundSigFigs(int $digits): Phpolars\Expr</code></li>
+<li><span id="expr-sin"></span> <code>sin(): Phpolars\Expr</code></li>
+<li><span id="expr-sinh"></span> <code>sinh(): Phpolars\Expr</code></li>
+<li><span id="expr-sqrt"></span> <code>sqrt(): Phpolars\Expr</code></li>
+<li><span id="expr-tan"></span> <code>tan(): Phpolars\Expr</code></li>
+<li><span id="expr-tanh"></span> <code>tanh(): Phpolars\Expr</code></li>
+</ul>
+</section>
+<section id="expr--windows-cumulative-and-rolling" class="level4">
+<h4 class="anchored" data-anchor-id="expr--windows-cumulative-and-rolling">Windows, cumulative, and rolling</h4>
+<ul>
 <li><span id="expr-cumCount"></span> <code>cumCount(?bool $reverse = null): Phpolars\Expr</code></li>
 <li><span id="expr-cumMax"></span> <code>cumMax(?bool $reverse = null): Phpolars\Expr</code></li>
 <li><span id="expr-cumMin"></span> <code>cumMin(?bool $reverse = null): Phpolars\Expr</code></li>
 <li><span id="expr-cumProd"></span> <code>cumProd(?bool $reverse = null): Phpolars\Expr</code></li>
 <li><span id="expr-cumSum"></span> <code>cumSum(?bool $reverse = null): Phpolars\Expr</code></li>
 <li><span id="expr-cumulativeEval"></span> <code>cumulativeEval(mixed $expr, ?int $minPeriods = null): Phpolars\Expr</code></li>
-<li><span id="expr-cut"></span> <code>cut(mixed $breaks, ?array $labels = null, ?bool $leftClosed = null, ?bool $includeBreaks = null): Phpolars\Expr</code></li>
-<li><span id="expr-degrees"></span> <code>degrees(): Phpolars\Expr</code></li>
 <li><span id="expr-diff"></span> <code>diff(?int $n = null, ?string $nullBehavior = null): Phpolars\Expr</code></li>
-<li><span id="expr-div"></span> <code>div(mixed $other): Phpolars\Expr</code></li>
-<li><span id="expr-dot"></span> <code>dot(mixed $other): Phpolars\Expr</code></li>
-<li><span id="expr-dropNans"></span> <code>dropNans(): Phpolars\Expr</code></li>
-<li><span id="expr-dropNulls"></span> <code>dropNulls(): Phpolars\Expr</code></li>
-<li><span id="expr-dt"></span> <code>dt(): Phpolars\DtNameSpace</code></li>
-<li><span id="expr-entropy"></span> <code>entropy(?float $base = null, ?bool $normalize = null): Phpolars\Expr</code></li>
-<li><span id="expr-eq"></span> <code>eq(mixed $other): Phpolars\Expr</code></li>
-<li><span id="expr-eqMissing"></span> <code>eqMissing(mixed $other): Phpolars\Expr</code></li>
 <li><span id="expr-ewmMean"></span> <code>ewmMean(?float $com = null, ?float $span = null, ?float $halfLife = null, ?float $alpha = null, ?bool $adjust = null, ?int $minPeriods = null, ?bool $ignoreNulls = null): Phpolars\Expr</code></li>
 <li><span id="expr-ewmMeanBy"></span> <code>ewmMeanBy(mixed $by, string $halfLife): Phpolars\Expr</code></li>
 <li><span id="expr-ewmStd"></span> <code>ewmStd(?float $com = null, ?float $span = null, ?float $halfLife = null, ?float $alpha = null, ?bool $adjust = null, ?bool $bias = null, ?int $minPeriods = null, ?bool $ignoreNulls = null): Phpolars\Expr</code></li>
 <li><span id="expr-ewmSum"></span> <code>ewmSum(?float $com = null, ?float $span = null, ?float $halfLife = null, ?float $alpha = null, ?int $minPeriods = null, ?bool $ignoreNulls = null): Phpolars\Expr</code></li>
 <li><span id="expr-ewmSumBy"></span> <code>ewmSumBy(mixed $by, string $halfLife): Phpolars\Expr</code></li>
 <li><span id="expr-ewmVar"></span> <code>ewmVar(?float $com = null, ?float $span = null, ?float $halfLife = null, ?float $alpha = null, ?bool $adjust = null, ?bool $bias = null, ?int $minPeriods = null, ?bool $ignoreNulls = null): Phpolars\Expr</code></li>
-<li><span id="expr-exclude"></span> <code>exclude(mixed ...$columns): Phpolars\Expr</code></li>
-<li><span id="expr-exp"></span> <code>exp(): Phpolars\Expr</code></li>
-<li><span id="expr-explode"></span> <code>explode(): Phpolars\Expr</code></li>
-<li><span id="expr-extendConstant"></span> <code>extendConstant(mixed $value, mixed $n): Phpolars\Expr</code></li>
-<li><span id="expr-fillNan"></span> <code>fillNan(mixed $value): Phpolars\Expr</code></li>
-<li><span id="expr-fillNull"></span> <code>fillNull(mixed $value = null, ?string $strategy = null, ?int $limit = null): Phpolars\Expr</code></li>
-<li><span id="expr-filter"></span> <code>filter(mixed $predicate): Phpolars\Expr</code></li>
-<li><span id="expr-first"></span> <code>first(?bool $ignoreNulls = null): Phpolars\Expr</code></li>
-<li><span id="expr-flatten"></span> <code>flatten(): Phpolars\Expr</code></li>
-<li><span id="expr-floor"></span> <code>floor(): Phpolars\Expr</code></li>
-<li><span id="expr-floordiv"></span> <code>floordiv(mixed $other): Phpolars\Expr</code></li>
-<li><span id="expr-forwardFill"></span> <code>forwardFill(?int $limit = null): Phpolars\Expr</code></li>
-<li><span id="expr-gather"></span> <code>gather(mixed $indices): Phpolars\Expr</code></li>
-<li><span id="expr-gatherEvery"></span> <code>gatherEvery(int $n, ?int $offset = null): Phpolars\Expr</code></li>
-<li><span id="expr-ge"></span> <code>ge(mixed $other): Phpolars\Expr</code></li>
-<li><span id="expr-get"></span> <code>get(mixed $index, ?bool $nullOnOob = null): Phpolars\Expr</code></li>
-<li><span id="expr-gt"></span> <code>gt(mixed $other): Phpolars\Expr</code></li>
-<li><span id="expr-hasNulls"></span> <code>hasNulls(): Phpolars\Expr</code></li>
-<li><span id="expr-head"></span> <code>head(?int $n = null): Phpolars\Expr</code></li>
-<li><span id="expr-hist"></span> <code>hist(mixed $bins = null, ?int $binCount = null, ?bool $includeCategory = null, ?bool $includeBreakpoint = null): Phpolars\Expr</code></li>
-<li><span id="expr-implode"></span> <code>implode(): Phpolars\Expr</code></li>
-<li><span id="expr-indexOf"></span> <code>indexOf(mixed $element): Phpolars\Expr</code></li>
-<li><span id="expr-interpolate"></span> <code>interpolate(?string $method = null): Phpolars\Expr</code></li>
-<li><span id="expr-interpolateBy"></span> <code>interpolateBy(mixed $by): Phpolars\Expr</code></li>
-<li><span id="expr-isBetween"></span> <code>isBetween(mixed $lower, mixed $upper, ?string $closed = null): Phpolars\Expr</code></li>
-<li><span id="expr-isClose"></span> <code>isClose(mixed $other, ?float $absTol = null, ?float $relTol = null, ?bool $nansEqual = null): Phpolars\Expr</code></li>
-<li><span id="expr-isDuplicated"></span> <code>isDuplicated(): Phpolars\Expr</code></li>
-<li><span id="expr-isEmpty"></span> <code>isEmpty(?bool $ignoreNulls = null): Phpolars\Expr</code></li>
-<li><span id="expr-isFinite"></span> <code>isFinite(): Phpolars\Expr</code></li>
-<li><span id="expr-isFirstDistinct"></span> <code>isFirstDistinct(): Phpolars\Expr</code></li>
-<li><span id="expr-isIn"></span> <code>isIn(mixed $other, ?bool $nullsEqual = null): Phpolars\Expr</code></li>
-<li><span id="expr-isInfinite"></span> <code>isInfinite(): Phpolars\Expr</code></li>
-<li><span id="expr-isLastDistinct"></span> <code>isLastDistinct(): Phpolars\Expr</code></li>
-<li><span id="expr-isNan"></span> <code>isNan(): Phpolars\Expr</code></li>
-<li><span id="expr-isNotNan"></span> <code>isNotNan(): Phpolars\Expr</code></li>
-<li><span id="expr-isNotNull"></span> <code>isNotNull(): Phpolars\Expr</code></li>
-<li><span id="expr-isNull"></span> <code>isNull(): Phpolars\Expr</code></li>
-<li><span id="expr-isUnique"></span> <code>isUnique(): Phpolars\Expr</code></li>
-<li><span id="expr-item"></span> <code>item(?bool $allowEmpty = null): Phpolars\Expr</code></li>
-<li><span id="expr-kurtosis"></span> <code>kurtosis(?bool $fisher = null, ?bool $bias = null): Phpolars\Expr</code></li>
-<li><span id="expr-last"></span> <code>last(?bool $ignoreNulls = null): Phpolars\Expr</code></li>
-<li><span id="expr-le"></span> <code>le(mixed $other): Phpolars\Expr</code></li>
-<li><span id="expr-len"></span> <code>len(): Phpolars\Expr</code></li>
-<li><span id="expr-limit"></span> <code>limit(?int $n = null): Phpolars\Expr</code></li>
-<li><span id="expr-list"></span> <code>list(): Phpolars\ListNameSpace</code></li>
-<li><span id="expr-log"></span> <code>log(?float $base = null): Phpolars\Expr</code></li>
-<li><span id="expr-log10"></span> <code>log10(): Phpolars\Expr</code></li>
-<li><span id="expr-log1P"></span> <code>log1P(): Phpolars\Expr</code></li>
-<li><span id="expr-lowerBound"></span> <code>lowerBound(): Phpolars\Expr</code></li>
-<li><span id="expr-lt"></span> <code>lt(mixed $other): Phpolars\Expr</code></li>
-<li><span id="expr-max"></span> <code>max(): Phpolars\Expr</code></li>
-<li><span id="expr-maxBy"></span> <code>maxBy(mixed $by): Phpolars\Expr</code></li>
-<li><span id="expr-mean"></span> <code>mean(): Phpolars\Expr</code></li>
-<li><span id="expr-median"></span> <code>median(): Phpolars\Expr</code></li>
-<li><span id="expr-meta"></span> <code>meta(): Phpolars\MetaNameSpace</code></li>
-<li><span id="expr-min"></span> <code>min(): Phpolars\Expr</code></li>
-<li><span id="expr-minBy"></span> <code>minBy(mixed $by): Phpolars\Expr</code></li>
-<li><span id="expr-mod"></span> <code>mod(mixed $other): Phpolars\Expr</code></li>
-<li><span id="expr-mode"></span> <code>mode(): Phpolars\Expr</code></li>
-<li><span id="expr-mul"></span> <code>mul(mixed $other): Phpolars\Expr</code></li>
-<li><span id="expr-name"></span> <code>name(): Phpolars\NameNameSpace</code></li>
-<li><span id="expr-nanMax"></span> <code>nanMax(): Phpolars\Expr</code></li>
-<li><span id="expr-nanMin"></span> <code>nanMin(): Phpolars\Expr</code></li>
-<li><span id="expr-ne"></span> <code>ne(mixed $other): Phpolars\Expr</code></li>
-<li><span id="expr-neg"></span> <code>neg(): Phpolars\Expr</code></li>
-<li><span id="expr-neMissing"></span> <code>neMissing(mixed $other): Phpolars\Expr</code></li>
-<li><span id="expr-not"></span> <code>not(): Phpolars\Expr</code></li>
-<li><span id="expr-nullCount"></span> <code>nullCount(): Phpolars\Expr</code></li>
-<li><span id="expr-nUnique"></span> <code>nUnique(): Phpolars\Expr</code></li>
-<li><span id="expr-or"></span> <code>or(mixed $other): Phpolars\Expr</code></li>
 <li><span id="expr-over"></span> <code>over(mixed $partitionBy, mixed $orderBy = null, ?bool $descending = null, ?bool $nullsLast = null, ?string $mappingStrategy = null): Phpolars\Expr</code></li>
 <li><span id="expr-pctChange"></span> <code>pctChange(?int $n = null): Phpolars\Expr</code></li>
 <li><span id="expr-peakMax"></span> <code>peakMax(): Phpolars\Expr</code></li>
 <li><span id="expr-peakMin"></span> <code>peakMin(): Phpolars\Expr</code></li>
-<li><span id="expr-pow"></span> <code>pow(mixed $exponent): Phpolars\Expr</code></li>
-<li><span id="expr-product"></span> <code>product(): Phpolars\Expr</code></li>
-<li><span id="expr-qcut"></span> <code>qcut(mixed $quantiles, ?array $labels = null, ?bool $leftClosed = null, ?bool $allowDuplicates = null, ?bool $includeBreaks = null): Phpolars\Expr</code></li>
-<li><span id="expr-quantile"></span> <code>quantile(mixed $quantile, ?string $interpolation = null): Phpolars\Expr</code></li>
-<li><span id="expr-radians"></span> <code>radians(): Phpolars\Expr</code></li>
 <li><span id="expr-rank"></span> <code>rank(?string $method = null, ?bool $descending = null, ?int $seed = null): Phpolars\Expr</code></li>
-<li><span id="expr-reinterpret"></span> <code>reinterpret(?bool $signed = null): Phpolars\Expr</code></li>
-<li><span id="expr-repeatBy"></span> <code>repeatBy(mixed $by): Phpolars\Expr</code></li>
-<li><span id="expr-replace"></span> <code>replace(mixed $old, mixed $new = null): Phpolars\Expr</code></li>
-<li><span id="expr-replaceStrict"></span> <code>replaceStrict(mixed $old, mixed $new = null, mixed $default = null, ?string $returnDtype = null): Phpolars\Expr</code></li>
-<li><span id="expr-reshape"></span> <code>reshape(array $dimensions): Phpolars\Expr</code></li>
-<li><span id="expr-reverse"></span> <code>reverse(): Phpolars\Expr</code></li>
 <li><span id="expr-rle"></span> <code>rle(): Phpolars\Expr</code></li>
 <li><span id="expr-rleId"></span> <code>rleId(): Phpolars\Expr</code></li>
 <li><span id="expr-rolling"></span> <code>rolling(mixed $indexColumn, string $period, ?string $offset = null, ?string $closed = null): Phpolars\Expr</code></li>
@@ -868,39 +885,89 @@ shape: (3, 2)
 <li><span id="expr-rollingSumBy"></span> <code>rollingSumBy(mixed $by, string $windowSize, ?int $minPeriods = null, ?string $closed = null): Phpolars\Expr</code></li>
 <li><span id="expr-rollingVar"></span> <code>rollingVar(int $windowSize, ?int $minPeriods = null, ?bool $center = null): Phpolars\Expr</code></li>
 <li><span id="expr-rollingVarBy"></span> <code>rollingVarBy(mixed $by, string $windowSize, ?int $minPeriods = null, ?string $closed = null, ?int $ddof = null): Phpolars\Expr</code></li>
-<li><span id="expr-round"></span> <code>round(?int $decimals = null, ?string $mode = null): Phpolars\Expr</code></li>
-<li><span id="expr-roundSigFigs"></span> <code>roundSigFigs(int $digits): Phpolars\Expr</code></li>
+<li><span id="expr-shift"></span> <code>shift(?int $n = null, mixed $fillValue = null): Phpolars\Expr</code></li>
+</ul>
+</section>
+<section id="expr--sort-select-and-deduplicate" class="level4">
+<h4 class="anchored" data-anchor-id="expr--sort-select-and-deduplicate">Sort, select, and deduplicate</h4>
+<ul>
+<li><span id="expr-argSort"></span> <code>argSort(?bool $descending = null, ?bool $nullsLast = null): Phpolars\Expr</code></li>
+<li><span id="expr-argTrue"></span> <code>argTrue(): Phpolars\Expr</code></li>
+<li><span id="expr-argUnique"></span> <code>argUnique(): Phpolars\Expr</code></li>
+<li><span id="expr-bottomK"></span> <code>bottomK(?int $k = null): Phpolars\Expr</code></li>
+<li><span id="expr-bottomKBy"></span> <code>bottomKBy(mixed $by, ?int $k = null, mixed $reverse = null): Phpolars\Expr</code></li>
+<li><span id="expr-filter"></span> <code>filter(mixed $predicate): Phpolars\Expr</code>: inside <code>agg()</code> or <code>over()</code>, keeps only the matching values of each group</li>
+<li><span id="expr-gather"></span> <code>gather(mixed $indices): Phpolars\Expr</code></li>
+<li><span id="expr-gatherEvery"></span> <code>gatherEvery(int $n, ?int $offset = null): Phpolars\Expr</code></li>
+<li><span id="expr-get"></span> <code>get(mixed $index, ?bool $nullOnOob = null): Phpolars\Expr</code></li>
+<li><span id="expr-head"></span> <code>head(?int $n = null): Phpolars\Expr</code></li>
+<li><span id="expr-indexOf"></span> <code>indexOf(mixed $element): Phpolars\Expr</code></li>
+<li><span id="expr-isDuplicated"></span> <code>isDuplicated(): Phpolars\Expr</code></li>
+<li><span id="expr-isFirstDistinct"></span> <code>isFirstDistinct(): Phpolars\Expr</code></li>
+<li><span id="expr-isLastDistinct"></span> <code>isLastDistinct(): Phpolars\Expr</code></li>
+<li><span id="expr-isUnique"></span> <code>isUnique(): Phpolars\Expr</code></li>
+<li><span id="expr-limit"></span> <code>limit(?int $n = null): Phpolars\Expr</code></li>
+<li><span id="expr-lowerBound"></span> <code>lowerBound(): Phpolars\Expr</code></li>
+<li><span id="expr-reverse"></span> <code>reverse(): Phpolars\Expr</code></li>
 <li><span id="expr-sample"></span> <code>sample(?int $n = null, ?float $fraction = null, ?bool $withReplacement = null, ?bool $shuffle = null, ?int $seed = null): Phpolars\Expr</code></li>
 <li><span id="expr-searchSorted"></span> <code>searchSorted(mixed $element, ?string $side = null, ?bool $descending = null): Phpolars\Expr</code></li>
-<li><span id="expr-shift"></span> <code>shift(?int $n = null, mixed $fillValue = null): Phpolars\Expr</code></li>
 <li><span id="expr-shuffle"></span> <code>shuffle(?int $seed = null): Phpolars\Expr</code></li>
-<li><span id="expr-sign"></span> <code>sign(): Phpolars\Expr</code></li>
-<li><span id="expr-sin"></span> <code>sin(): Phpolars\Expr</code></li>
-<li><span id="expr-sinh"></span> <code>sinh(): Phpolars\Expr</code></li>
-<li><span id="expr-skew"></span> <code>skew(?bool $bias = null): Phpolars\Expr</code></li>
 <li><span id="expr-slice"></span> <code>slice(int $offset, ?int $length = null): Phpolars\Expr</code></li>
-<li><span id="expr-sort"></span> <code>sort(?bool $descending = null, ?bool $nullsLast = null): Phpolars\Expr</code></li>
+<li><span id="expr-sort"></span> <code>sort(?bool $descending = null, ?bool $nullsLast = null): Phpolars\Expr</code>: nulls sort first unless <code>nullsLast: true</code></li>
 <li><span id="expr-sortBy"></span> <code>sortBy(mixed $by, mixed $descending = null, mixed $nullsLast = null): Phpolars\Expr</code></li>
-<li><span id="expr-sqrt"></span> <code>sqrt(): Phpolars\Expr</code></li>
-<li><span id="expr-std"></span> <code>std(?int $ddof = null): Phpolars\Expr</code></li>
-<li><span id="expr-str"></span> <code>str(): Phpolars\StrNameSpace</code></li>
-<li><span id="expr-struct"></span> <code>struct(): Phpolars\StructNameSpace</code></li>
-<li><span id="expr-sub"></span> <code>sub(mixed $other): Phpolars\Expr</code></li>
-<li><span id="expr-sum"></span> <code>sum(): Phpolars\Expr</code></li>
 <li><span id="expr-tail"></span> <code>tail(?int $n = null): Phpolars\Expr</code></li>
-<li><span id="expr-tan"></span> <code>tan(): Phpolars\Expr</code></li>
-<li><span id="expr-tanh"></span> <code>tanh(): Phpolars\Expr</code></li>
-<li><span id="expr-toPhysical"></span> <code>toPhysical(): Phpolars\Expr</code></li>
 <li><span id="expr-topK"></span> <code>topK(?int $k = null): Phpolars\Expr</code></li>
 <li><span id="expr-topKBy"></span> <code>topKBy(mixed $by, ?int $k = null, mixed $reverse = null): Phpolars\Expr</code></li>
-<li><span id="expr-truediv"></span> <code>truediv(mixed $other): Phpolars\Expr</code></li>
-<li><span id="expr-unique"></span> <code>unique(?bool $maintainOrder = null): Phpolars\Expr</code></li>
-<li><span id="expr-uniqueCounts"></span> <code>uniqueCounts(): Phpolars\Expr</code></li>
+<li><span id="expr-unique"></span> <code>unique(?bool $maintainOrder = null): Phpolars\Expr</code>: the order is not kept unless <code>maintainOrder: true</code></li>
 <li><span id="expr-upperBound"></span> <code>upperBound(): Phpolars\Expr</code></li>
-<li><span id="expr-valueCounts"></span> <code>valueCounts(?bool $sort = null, ?string $name = null, ?bool $normalize = null): Phpolars\Expr</code></li>
-<li><span id="expr-var"></span> <code>var(?int $ddof = null): Phpolars\Expr</code></li>
-<li><span id="expr-xor"></span> <code>xor(mixed $other): Phpolars\Expr</code></li>
 </ul>
+</section>
+<section id="expr--combine-and-reshape" class="level4">
+<h4 class="anchored" data-anchor-id="expr--combine-and-reshape">Combine and reshape</h4>
+<ul>
+<li><span id="expr-append"></span> <code>append(mixed $other, ?bool $upcast = null): Phpolars\Expr</code></li>
+<li><span id="expr-explode"></span> <code>explode(): Phpolars\Expr</code></li>
+<li><span id="expr-extendConstant"></span> <code>extendConstant(mixed $value, mixed $n): Phpolars\Expr</code></li>
+<li><span id="expr-flatten"></span> <code>flatten(): Phpolars\Expr</code></li>
+<li><span id="expr-repeatBy"></span> <code>repeatBy(mixed $by): Phpolars\Expr</code></li>
+<li><span id="expr-reshape"></span> <code>reshape(array $dimensions): Phpolars\Expr</code></li>
+</ul>
+</section>
+<section id="expr--types-names-and-replacing-values" class="level4">
+<h4 class="anchored" data-anchor-id="expr--types-names-and-replacing-values">Types, names, and replacing values</h4>
+<ul>
+<li><span id="expr-alias"></span> <code>alias(string $name): Phpolars\Expr</code></li>
+<li><span id="expr-cast"></span> <code>cast(string $dtype, ?bool $strict = null): Phpolars\Expr</code>: strict: a value that cannot be converted raises <code>InvalidOperationError</code>; <code>strict: false</code> gives <code>null</code></li>
+<li><span id="expr-cut"></span> <code>cut(mixed $breaks, ?array $labels = null, ?bool $leftClosed = null, ?bool $includeBreaks = null): Phpolars\Expr</code></li>
+<li><span id="expr-exclude"></span> <code>exclude(mixed ...$columns): Phpolars\Expr</code></li>
+<li><span id="expr-hist"></span> <code>hist(mixed $bins = null, ?int $binCount = null, ?bool $includeCategory = null, ?bool $includeBreakpoint = null): Phpolars\Expr</code></li>
+<li><span id="expr-qcut"></span> <code>qcut(mixed $quantiles, ?array $labels = null, ?bool $leftClosed = null, ?bool $allowDuplicates = null, ?bool $includeBreaks = null): Phpolars\Expr</code></li>
+<li><span id="expr-reinterpret"></span> <code>reinterpret(?bool $signed = null): Phpolars\Expr</code></li>
+<li><span id="expr-replace"></span> <code>replace(mixed $old, mixed $new = null): Phpolars\Expr</code>: values without a mapping stay as they are</li>
+<li><span id="expr-replaceStrict"></span> <code>replaceStrict(mixed $old, mixed $new = null, mixed $default = null, ?string $returnDtype = null): Phpolars\Expr</code>: values without a mapping raise <code>InvalidOperationError</code> unless <code>default</code> is given</li>
+<li><span id="expr-toPhysical"></span> <code>toPhysical(): Phpolars\Expr</code></li>
+</ul>
+</section>
+<section id="expr--namespaces" class="level4">
+<h4 class="anchored" data-anchor-id="expr--namespaces">Namespaces</h4>
+<ul>
+<li><span id="expr-arr"></span> <code>arr(): Phpolars\ArrayNameSpace</code></li>
+<li><span id="expr-bin"></span> <code>bin(): Phpolars\BinaryNameSpace</code></li>
+<li><span id="expr-cat"></span> <code>cat(): Phpolars\CatNameSpace</code></li>
+<li><span id="expr-dt"></span> <code>dt(): Phpolars\DtNameSpace</code></li>
+<li><span id="expr-list"></span> <code>list(): Phpolars\ListNameSpace</code></li>
+<li><span id="expr-meta"></span> <code>meta(): Phpolars\MetaNameSpace</code></li>
+<li><span id="expr-name"></span> <code>name(): Phpolars\NameNameSpace</code></li>
+<li><span id="expr-str"></span> <code>str(): Phpolars\StrNameSpace</code></li>
+<li><span id="expr-struct"></span> <code>struct(): Phpolars\StructNameSpace</code></li>
+</ul>
+</section>
+<section id="expr--create-and-convert" class="level4">
+<h4 class="anchored" data-anchor-id="expr--create-and-convert">Create and convert</h4>
+<ul>
+<li><span id="expr-__toString"></span> <code>__toString(): string</code></li>
+</ul>
+</section>
 </section>
 <section id="when" class="level3">
 <h3 class="anchored" data-anchor-id="when"><code>Phpolars\When</code></h3>

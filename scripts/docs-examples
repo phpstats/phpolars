@@ -6,8 +6,7 @@
  * example's code and its actual output, for Quarto to include. Examples run
  * in docs/data, after a hidden prelude that imports the phpolars classes and
  * functions, unless the example imports phpolars functions itself. The shown
- * code leaves out the opening <?php tag, except for the scripts in $whole,
- * which a page asks the reader to save. An example with a <name>.setup.php
+ * code leaves out the opening <?php tag. An example with a <name>.setup.php
  * runs after it in a fresh temporary directory, and the setup gets its own
  * _<name>.setup.md. The extension is the release build unless PHPOLARS_EXT is
  * set.
@@ -32,10 +31,9 @@ use function Phpolars\{col, lit, when, all, exclude, len, element, concat, conca
 
 PHP;
 
-$whole = ['starter'];
 $only = array_slice($argv, 1);
 $failed = 0;
-$run = function (string $file, string $cwd) use ($php, $ext, $prelude, $whole): ?string {
+$run = function (string $file, string $cwd) use ($php, $ext, $prelude): ?string {
     $name = basename($file, '.php');
     $code = trim((string) preg_replace('/^<\?php\s*(declare\(strict_types=1\);\s*)?/', '', file_get_contents($file)));
     $script = tempnam(sys_get_temp_dir(), 'phpolars-doc').'.php';
@@ -53,8 +51,7 @@ $run = function (string $file, string $cwd) use ($php, $ext, $prelude, $whole): 
 
         return null;
     }
-    $shown = in_array($name, $whole, true) ? trim(file_get_contents($file)) : $code;
-    $md = "```php\n{$shown}\n```\n";
+    $md = "```php\n{$code}\n```\n";
     if (trim($out) !== '') {
         $md .= "\n```{.text .output}\n".rtrim($out)."\n```\n";
     }

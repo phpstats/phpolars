@@ -2,7 +2,7 @@
   "package": "phpolars",
   "title": "phpolars",
   "tagline": "Polars data frames for PHP",
-  "summary": "phpolars is a PHP extension, written in Rust, that runs the Polars data frame library inside PHP. Its API follows py-polars: DataFrame, LazyFrame, Series, and expressions, with lazy queries, time series windows, joins, SQL, and readers and writers for CSV, Parquet, JSON, Arrow IPC, and PDO. Queries run on Polars' own threads. phibble's PolarsTable adapter uses the extension to run phibble tables and phplyr pipelines in Polars.",
+  "summary": "Query and transform data with Polars from PHP. Use eager data frames, or build lazy queries with expressions, with an API that follows py-polars: DataFrame, LazyFrame, Series, joins, time series windows, SQL, and readers and writers for CSV, Parquet, JSON, Arrow IPC, and PDO. PIE installs the phpstats/phpolars package as the php_polars extension. phibble's PolarsTable uses the extension to run phibble tables and phplyr pipelines in Polars.",
   "install": [
     "pie install phpstats/phpolars"
   ],

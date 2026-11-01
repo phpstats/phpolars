@@ -313,8 +313,13 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="agreement-with-py-polars" class="level2">
 <h2 class="anchored" data-anchor-id="agreement-with-py-polars">Agreement with py-polars</h2>
-<p>phpolars uses the Polars 0.55.2 Rust crates. The test suite compares phpolars with py-polars 1.43.2, the release whose Rust core is closest to 0.55.2. <code>scripts/pyfixtures.py</code> builds 314 cases with py-polars, and <code>tests/pyfixtures.php</code> builds the same cases with phpolars. A case passes when the column names, the data types, and every value agree. Floats may differ by a relative tolerance of 1e-9. Cases that expect an error pass when phpolars raises the same exception class. All 314 cases pass.</p>
-<p>The cases cover data frame methods, functions, joins, grouping, windows, sorting, casts, SQL, and the <code>str</code>, <code>dt</code>, <code>list</code>, <code>struct</code>, and <code>arr</code> namespaces. A method or argument outside those cases follows py-polars’ names, but its agreement with py-polars has not been tested. The <a href="https://phpolars.phpstats.org/verification">verification page</a> lists every case.</p>
+<p>phpolars uses the Polars 0.55.2 Rust crates. The test suite compares it with py-polars 1.43.2, the release whose Rust core is closest to 0.55.2, on a fixed set of cases.</p>
+<ul>
+<li>Compared: column names, data types, and values. Floats may differ by a relative tolerance of 1e-9. A case that expects an error must raise the same exception class.</li>
+<li>Covered: data frame methods, functions, joins, grouping, windows, sorting, casts, SQL, and the <code>str</code>, <code>dt</code>, <code>list</code>, <code>struct</code>, and <code>arr</code> namespaces.</li>
+<li>Not covered: other methods and arguments follow py-polars’ names, but their agreement with py-polars has not been compared.</li>
+</ul>
+<p>The <a href="https://phpolars.phpstats.org/verification">verification page</a> lists each case and its result.</p>
 </section>
 <section id="not-available" class="level2">
 <h2 class="anchored" data-anchor-id="not-available">Not available</h2>

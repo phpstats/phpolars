@@ -40,6 +40,19 @@ scripts/render-docs
 
 This runs every `docs/examples/*.php` against the release build and embeds its output, regenerates the reference signatures from the extension (`scripts/docs-reference.php`), renders the site with Quarto, and copies it into `docs/`. phpolars.phpstats.org imports the rendered HTML from `main:/docs`, so commit it. GitHub Pages serves only redirects to phpolars.phpstats.org, from `.github/workflows/pages.yml`.
 
+## Release packaging
+
+The packaging workflow builds the extension inside the official `php:8.3-fpm-bookworm`, `php:8.4-fpm-bookworm`, and `php:8.5-fpm-bookworm` images for x86_64 and arm64. It installs each build with PIE, runs the release checks, and sends requests through PHP-FPM. Each tested `php_polars.so` is packaged in a zip named as PIE expects, with `manifest.json`, `INSTALL.txt`, and `THIRD_PARTY_NOTICES.txt`. After a release is published, the release workflow installs each archive into a clean PHP image by hand, and again with `pie install`, which must pick the prebuilt archive without a Rust toolchain.
+
+### Release notes
+
+These are dated records of checks on past releases. [Deployment](deployment.qmd) has the current instructions.
+
+- v0.2.0 (published 2026-10-30):
+    - `pie install phpstats/phpolars` installed the prebuilt binary, and `phpversion("php_polars")` reported `0.2.0`, in the official `php:8.5-cli-bookworm` image and on Ubuntu 24.04 with the ondrej/php PPA's PHP 8.5, both on arm64. On Ubuntu, PIE enabled the extension for the CLI and for PHP-FPM.
+    - The PHP 8.5 binaries passed `tests/deployment.php` under the CLI and under PHP-FPM on Ubuntu 24.04 with the PPA's PHP 8.5.12, on x86_64 and arm64.
+    - The Linux binaries were 71 MB on x86_64 and 64 MB on arm64, and 21 MB and 19 MB zipped. On macOS, the `dist` library was 65 MB and the `release` library 207 MB.
+
 ## Stubs
 
 `stubs/phpolars.php` holds signatures for IDEs and static analysis. Regenerate it after changing the API:
