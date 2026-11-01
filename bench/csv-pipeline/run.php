@@ -37,6 +37,10 @@ $once = function (array $spec) use ($darwin): array {
     if (proc_close($p) !== 0) { throw new RuntimeException($err); }
     $run = json_decode($out, true, flags: JSON_THROW_ON_ERROR);
     $run['footprint'] = preg_match('/(\d+)\s+peak memory footprint/', $err, $m) ? (int) $m[1] : null;
+    // R can't report its own peak RSS, so it comes from /usr/bin/time like the footprint.
+    if (($run['maxrss'] ?? null) === null && preg_match('/(\d+)\s+maximum resident set size/', $err, $m)) {
+        $run['maxrss'] = (int) $m[1];
+    }
     return $run;
 };
 $runs = [];
@@ -90,7 +94,7 @@ $timed = function (string $file): string {
 };
 $sh = fn (string $cmd) => trim((string) shell_exec($cmd.' 2>/dev/null'));
 echo json_encode([
-    'title' => 'A '.round(filesize($csv) / 1e9, 1).' GB CSV file: phpolars, phibble, and plain PHP',
+    'title' => 'A '.round(filesize($csv) / 1e9, 1).' GB CSV file: phpolars, phibble, plain PHP, tibble, and pandas',
     'description' => 'Each script reads every row of a seeded order-events CSV, keeps the completed orders, and computes orders, units, revenue, and the mean amount for each region and month. phpolars scans the file lazily and runs the query with the streaming engine. phibble reads the file in chunks of 100,000 rows with fromCsvChunked(), filters, groups, and summarizes each chunk, and adds the chunk totals together; with the phit extension loaded, the chunks are parsed by Phit\\CsvReader (phibble (phit reader)), and with PHIBBLE_NATIVE_CSV=0 by phibble\'s PHP reader (phibble (PHP reader)). Plain PHP reads one row at a time with fgetcsv and adds each row to the totals of its group. tibble (R) reads the file with readr and summarizes it with dplyr, and pandas reads it with read_csv and groupby; both read the whole file, as is usual for them. Each run is a fresh process. Time is measured inside the script, from opening the file to holding the result as PHP values. Memory is the process\'s peak memory footprint as macOS reports it (/usr/bin/time -l): its own allocations, including Polars\' native ones, without the clean pages of the file that a CSV reader maps, which the system can drop at any time. peak_rss_mib gives the peak resident set size, which counts those pages. The file was in the operating system\'s page cache in every run. The value is the median of '.$reps.' runs after one warm-up run of each.',
     'measure' => 'Elapsed time',
     'unit' => 'ms',
