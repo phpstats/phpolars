@@ -21,7 +21,7 @@ Each release attaches prebuilt binaries for:
 
 The binaries are built on Debian Bookworm and do not run on Alpine or other musl systems. macOS, musl Linux, and other platforms build from source. A source build needs a stable Rust toolchain and libclang, and takes several minutes. ZTS (thread-safe) PHP builds are not supported. A build for one PHP minor version loads only in that version, because PHP 8.3, 8.4, and 8.5 have different module APIs.
 
-Each release zip, such as `php_php_polars-v0.2.1_php8.4-x86_64-linux-glibc-nts.zip`, holds `php_polars.so` and:
+Each release zip, such as `php_php_polars-v0.2.2_php8.4-x86_64-linux-glibc-nts.zip`, holds `php_polars.so` and:
 
 | File | Contents |
 | --- | --- |
@@ -52,7 +52,7 @@ A source build, with PIE or by hand, needs `phpize` and `php-config`, which Herd
 
 ```sh
 git clone https://github.com/phpstats/phpolars && cd phpolars
-git checkout v0.2.1
+git checkout v0.2.2
 P=$(brew --prefix php@8.5)/bin
 PHP=$P/php PHP_CONFIG=$P/php-config LIBCLANG_PATH=$(brew --prefix llvm)/lib cargo build --profile dist
 ```
@@ -69,7 +69,7 @@ For PHP 8.4, use `php@8.4` and `config/php/84/php.ini`.
 
 ```sh
 git clone https://github.com/phpstats/phpolars && cd phpolars
-git checkout v0.2.1
+git checkout v0.2.2
 PHP=$(which php) PHP_CONFIG=$(which php-config) cargo build --profile dist
 ```
 

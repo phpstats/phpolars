@@ -364,7 +364,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>glibc 2.34 or later (Debian 12, Ubuntu 22.04, RHEL 9, or newer)</li>
 </ul>
 <p>The binaries are built on Debian Bookworm and do not run on Alpine or other musl systems. macOS, musl Linux, and other platforms build from source. A source build needs a stable Rust toolchain and libclang, and takes several minutes. ZTS (thread-safe) PHP builds are not supported. A build for one PHP minor version loads only in that version, because PHP 8.3, 8.4, and 8.5 have different module APIs.</p>
-<p>Each release zip, such as <code>php_php_polars-v0.2.1_php8.4-x86_64-linux-glibc-nts.zip</code>, holds <code>php_polars.so</code> and:</p>
+<p>Each release zip, such as <code>php_php_polars-v0.2.2_php8.4-x86_64-linux-glibc-nts.zip</code>, holds <code>php_polars.so</code> and:</p>
 <table class="caption-top table">
 <colgroup>
 <col style="width: 50%">
@@ -407,7 +407,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 class="anchored" data-anchor-id="laravel-herd">Laravel Herd</h2>
 <p>A source build, with PIE or by hand, needs <code>phpize</code> and <code>php-config</code>, which Herd’s PHP binaries do not have. Build against Homebrew’s PHP of the same minor version, which has the same module API. For Herd’s PHP 8.5:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> clone https://github.com/phpstats/phpolars <span class="kw">&amp;&amp;</span> <span class="bu">cd</span> phpolars</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> checkout v0.2.1</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> checkout v0.2.2</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="va">P</span><span class="op">=</span><span class="va">$(</span><span class="ex">brew</span> <span class="at">--prefix</span> php@8.5<span class="va">)</span>/bin</span>
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="va">PHP</span><span class="op">=</span><span class="va">$P</span>/php <span class="va">PHP_CONFIG</span><span class="op">=</span><span class="va">$P</span>/php-config <span class="va">LIBCLANG_PATH</span><span class="op">=</span><span class="va">$(</span><span class="ex">brew</span> <span class="at">--prefix</span> llvm<span class="va">)</span>/lib <span class="ex">cargo</span> build <span class="at">--profile</span> dist</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Then add the library to the php.ini that Herd opens from its PHP settings, <code>~/Library/Application Support/Herd/config/php/85/php.ini</code>, with the path written out in full, and restart Herd:</p>
@@ -417,7 +417,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="building-from-source-by-hand" class="level2">
 <h2 class="anchored" data-anchor-id="building-from-source-by-hand">Building from source by hand</h2>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> clone https://github.com/phpstats/phpolars <span class="kw">&amp;&amp;</span> <span class="bu">cd</span> phpolars</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> checkout v0.2.1</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> checkout v0.2.2</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="va">PHP</span><span class="op">=</span><span class="va">$(</span><span class="fu">which</span> php<span class="va">)</span> <span class="va">PHP_CONFIG</span><span class="op">=</span><span class="va">$(</span><span class="fu">which</span> php-config<span class="va">)</span> <span class="ex">cargo</span> build <span class="at">--profile</span> dist</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Copy <code>target/dist/libphp_polars.so</code>, or <code>libphp_polars.dylib</code> on macOS, into <code>php-config --extension-dir</code> as <code>php_polars.so</code>, and add <code>extension=php_polars.so</code> to the php.ini that <code>php --ini</code> reports. On macOS with Homebrew, also set <code>LIBCLANG_PATH=$(brew --prefix llvm)/lib</code>. When several PHP versions are installed, point <code>PHP</code> and <code>PHP_CONFIG</code> at the PHP that will load the extension, because the build uses that PHP’s headers.</p>
 <p>Build with <code>--profile dist</code> for anything you deploy. The <code>dist</code> profile applies fat LTO, <code>opt-level = "s"</code>, and symbol stripping, so its library is much smaller than a <code>release</code> build’s.</p>

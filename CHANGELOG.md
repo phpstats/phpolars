@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.2.2
+
+- `first()` and `last()` without arguments select the first and the last column, as `pl.first()` and `pl.last()` do in py-polars. With column names they return each column's first or last value, as before.
+- The reference has a Functions and methods index of every function, selector, and class, with a purpose for each function.
+
 ## 0.2.1
 
 - `LazyFrame::collect()` and `collect_all()` take `engine`, as in py-polars: `'auto'` (the default, in-memory), `'in-memory'`, or `'streaming'`. After a filter, the streaming engine copies the strings that each batch keeps, because Polars' filter keeps the whole input buffer alive. A streaming filter that keeps 4% of a 500 MB CSV peaks at about 100 MB, against 550 MB in memory. `tests/memory.php` checks the bound and runs in `scripts/check`.

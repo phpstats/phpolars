@@ -18,7 +18,7 @@ On Linux on x86_64 and arm64 with glibc 2.34 or later, PIE downloads a prebuilt 
 php -r 'echo phpversion("php_polars"), PHP_EOL;'
 ```
 
-The command prints the installed version, such as `0.2.1`. It checks the CLI. PHP-FPM reads its own php.ini, so check a web request separately, for example with `extension_loaded('php_polars')` in a page.
+The command prints the installed version, such as `0.2.2`. It checks the CLI. PHP-FPM reads its own php.ini, so check a web request separately, for example with `extension_loaded('php_polars')` in a page.
 
 ## A starter script
 
@@ -26,7 +26,7 @@ phpolars needs no Composer packages. Download the example data, `sales.csv` (200
 
 ```sh
 mkdir phpolars-start && cd phpolars-start
-curl -fsSLO https://raw.githubusercontent.com/phpstats/phpolars/v0.2.1/docs/data/sales.csv
+curl -fsSLO https://raw.githubusercontent.com/phpstats/phpolars/v0.2.2/docs/data/sales.csv
 ```
 
 Runnable script: [starter.php](https://raw.githubusercontent.com/phpstats/phpolars/main/docs/examples/starter.php).

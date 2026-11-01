@@ -356,13 +356,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="checking-the-installation" class="level2">
 <h2 class="anchored" data-anchor-id="checking-the-installation">Checking the installation</h2>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">php</span> <span class="at">-r</span> <span class="st">'echo phpversion("php_polars"), PHP_EOL;'</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>The command prints the installed version, such as <code>0.2.1</code>. It checks the CLI. PHP-FPM reads its own php.ini, so check a web request separately, for example with <code>extension_loaded('php_polars')</code> in a page.</p>
+<p>The command prints the installed version, such as <code>0.2.2</code>. It checks the CLI. PHP-FPM reads its own php.ini, so check a web request separately, for example with <code>extension_loaded('php_polars')</code> in a page.</p>
 </section>
 <section id="a-starter-script" class="level2">
 <h2 class="anchored" data-anchor-id="a-starter-script">A starter script</h2>
 <p>phpolars needs no Composer packages. Download the example data, <code>sales.csv</code> (200 rows of sales by store and product):</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> phpolars-start <span class="kw">&amp;&amp;</span> <span class="bu">cd</span> phpolars-start</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">-fsSLO</span> https://raw.githubusercontent.com/phpstats/phpolars/v0.2.1/docs/data/sales.csv</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">-fsSLO</span> https://raw.githubusercontent.com/phpstats/phpolars/v0.2.2/docs/data/sales.csv</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Runnable script: <a href="https://raw.githubusercontent.com/phpstats/phpolars/main/docs/examples/starter.php">starter.php</a>.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode php code-with-copy"><code class="sourceCode php"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">use</span> <span class="kw">function</span> Phpolars\{col<span class="ot">,</span> len<span class="ot">,</span> read_csv}<span class="ot">;</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
