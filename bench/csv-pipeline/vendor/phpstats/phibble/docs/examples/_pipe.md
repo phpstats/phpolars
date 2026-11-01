@@ -1,0 +1,19 @@
+```php
+$penguins = DataFrame::fromCsv('penguins.csv');
+
+$counts = $penguins |>
+    (fn (DataFrame $f) => $f->groupBy(['island'])) |>
+    (fn (DataFrame $f) => $f->summarize(['n' => n()])) |>
+    (fn (DataFrame $f) => $f->arrange([desc(col('n'))]));
+
+echo $counts;
+```
+
+```{.text .output}
+# A tibble: 3 × 2
+  island        n
+  <chr>     <int>
+1 Biscoe      168
+2 Dream       124
+3 Torgersen    52
+```

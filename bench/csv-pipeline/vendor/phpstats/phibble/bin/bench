@@ -1,0 +1,102 @@
+#!/usr/bin/env php
+<?php
+
+/*
+ * Benchmark Table backends on the data from bench/generate.php.
+ *
+ * Usage: bin/bench [--backend=dataframe|sqlite|Some\\Backend\\Class] [--bootstrap=file.php]
+ *                  [--data=dir] [--runs=3] [workload ...]
+ *
+ * Another package can benchmark its own backend: implement
+ * Phibble\Bench\Backend, then run vendor/phpstats/phibble/bin/bench with
+ * --bootstrap pointing at a file that loads it (or its vendor/autoload.php)
+ * and --backend set to the class name.
+ *
+ * Prints one JSON line per workload: backend, workload, rows, median and
+ * min seconds, and peak memory in MB.
+ */
+
+declare(strict_types=1);
+
+// Works from a phibble checkout and from vendor/phpstats/phibble.
+foreach ([dirname(__DIR__).'/vendor/autoload.php', dirname(__DIR__, 3).'/autoload.php'] as $autoload) {
+    if (is_file($autoload)) {
+        require $autoload;
+
+        break;
+    }
+}
+// The bench classes are autoload-dev, so load them directly when installed as a dependency.
+foreach (['Backend', 'DataFrameBackend', 'SqliteBackend', 'Workloads'] as $class) {
+    if (! class_exists("Phibble\\Bench\\{$class}") && ! interface_exists("Phibble\\Bench\\{$class}")) {
+        require_once dirname(__DIR__)."/bench/src/{$class}.php";
+    }
+}
+
+use Phibble\Bench\DataFrameBackend;
+use Phibble\Bench\SqliteBackend;
+use Phibble\Bench\Workloads;
+
+ini_set('memory_limit', '-1');
+
+$options = getopt('', ['backend:', 'runs:', 'bootstrap:', 'data:'], $rest);
+if (isset($options['bootstrap'])) {
+    require $options['bootstrap'];
+}
+$backendName = $options['backend'] ?? 'dataframe';
+$runs = (int) ($options['runs'] ?? 3);
+$only = array_slice($argv, $rest);
+$data = $options['data'] ?? dirname(__DIR__).'/bench/data';
+if (! is_file("{$data}/events.csv")) {
+    fwrite(STDERR, "No data. Run: php bench/generate.php [rows]\n");
+    exit(1);
+}
+
+$time = function (Closure $work) use ($runs): array {
+    $times = [];
+    $result = null;
+    for ($i = 0; $i < $runs; $i++) {
+        gc_collect_cycles();
+        $start = hrtime(true);
+        $result = $work();
+        $times[] = (hrtime(true) - $start) / 1e9;
+    }
+    sort($times);
+
+    return [$times[intdiv(count($times), 2)], $times[0], $result];
+};
+$report = function (string $workload, array $timing) use ($backendName): void {
+    [$median, $min, $rows] = $timing;
+    echo json_encode([
+        'backend' => $backendName,
+        'workload' => $workload,
+        'rows' => $rows,
+        'median_s' => round($median, 3),
+        'min_s' => round($min, 3),
+        'peak_mb' => round(memory_get_peak_usage(true) / 1e6),
+    ]), "\n";
+};
+
+if ($backendName === 'dataframe') {
+    foreach (Workloads::csv() as $name => $work) {
+        if ($only === [] || in_array($name, $only, true)) {
+            $report($name, $time(fn () => $work("{$data}/events.csv")));
+        }
+    }
+}
+
+$backend = match ($backendName) {
+    'dataframe' => new DataFrameBackend(),
+    'sqlite' => new SqliteBackend(),
+    default => class_exists($backendName) && is_subclass_of($backendName, Phibble\Bench\Backend::class)
+        ? new $backendName()
+        : throw new InvalidArgumentException("Unknown backend {$backendName}: use dataframe, sqlite, or a class implementing Phibble\\Bench\\Backend."),
+};
+$events = $backend->load("{$data}/events.csv");
+$dims = $backend->load("{$data}/dims.csv");
+
+foreach (Workloads::all() as $name => $work) {
+    if ($only === [] || in_array($name, $only, true)) {
+        $report($name, $time(fn () => $work($events, $dims)));
+    }
+}

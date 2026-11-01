@@ -1,0 +1,47 @@
+<?php
+
+declare(strict_types=1);
+
+use Phibble\DataFrame;
+
+require_once __DIR__.'/Support/ExprCases.php';
+require_once __DIR__.'/Support/JoinCases.php';
+require_once __DIR__.'/Support/LubridateStringrCases.php';
+require_once __DIR__.'/Support/SqlConnections.php';
+require_once __DIR__.'/Support/Polars.php';
+
+// The Polars backend needs the php_polars extension; without it these tests skip.
+uses()->beforeEach(function () {
+    if (! extension_loaded('php_polars')) {
+        $this->markTestSkipped('The php_polars extension is not loaded.');
+    }
+})->in('Polars');
+
+function penguins(): DataFrame
+{
+    return DataFrame::fromRows([
+        ['species' => 'Adelie', 'island' => 'Torgersen', 'mass' => 3750.0, 'year' => 2007],
+        ['species' => 'Adelie', 'island' => 'Biscoe', 'mass' => 3800.0, 'year' => 2008],
+        ['species' => 'Gentoo', 'island' => 'Biscoe', 'mass' => 5000.0, 'year' => 2007],
+        ['species' => 'Chinstrap', 'island' => 'Dream', 'mass' => null, 'year' => 2009],
+        ['species' => 'Gentoo', 'island' => 'Biscoe', 'mass' => 5400.0, 'year' => 2008],
+    ]);
+}
+
+/** Run $fn with warnings collected instead of thrown. */
+function quietly(Closure $fn): array
+{
+    $warnings = [];
+    set_error_handler(function (int $level, string $message) use (&$warnings) {
+        $warnings[] = $message;
+
+        return true;
+    });
+    try {
+        $result = $fn();
+    } finally {
+        restore_error_handler();
+    }
+
+    return [$result, $warnings];
+}

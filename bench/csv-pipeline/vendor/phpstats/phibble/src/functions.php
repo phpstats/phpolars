@@ -1,0 +1,77 @@
+<?php
+
+declare(strict_types=1);
+
+/*
+ * tibble-style constructors. Each is a thin wrapper over a DataFrame method:
+ *
+ *     $df = tibble(x: [1, 2, 3], y: fn ($t) => array_map(fn ($x) => $x * 2, $t['x']));
+ */
+
+namespace Phibble;
+
+/** tibble(): columns as named arguments. See DataFrame::tibble(). */
+function tibble(mixed ...$columns): DataFrame
+{
+    return DataFrame::tibble($columns);
+}
+
+/** tribble(): column names, then rows. See DataFrame::tribble(). */
+function tribble(array $names, mixed ...$cells): DataFrame
+{
+    return DataFrame::tribble($names, ...$cells);
+}
+
+/** as_tibble(): see DataFrame::asTibble(). */
+function as_tibble(mixed $data, string $nameRepair = 'check_unique'): DataFrame
+{
+    return DataFrame::asTibble($data, $nameRepair);
+}
+
+/** enframe(): see DataFrame::enframe(). */
+function enframe(array $values, ?string $name = 'name', string $value = 'value'): DataFrame
+{
+    return DataFrame::enframe($values, $name, $value);
+}
+
+/** deframe(): see DataFrame::deframe(). */
+function deframe(DataFrame $dataFrame): array
+{
+    return $dataFrame->deframe();
+}
+
+/**
+ * tbl(): a lazy SQL table, as in dbplyr. Pass a table name, or a SELECT
+ * query with bindings.
+ *
+ *     tbl($pdo, 'visits');
+ *     tbl($pdo, 'SELECT * FROM visits WHERE year = ?', [2024]);
+ */
+function tbl(\PDO $pdo, string $from, array $bindings = []): Sql\SqlTable
+{
+    if (preg_match('/^\s*(SELECT|WITH)\b/i', $from)) {
+        return Sql\SqlTable::query($pdo, $from, $bindings);
+    }
+    if ($bindings !== []) {
+        throw new \InvalidArgumentException(
+            "tbl() takes bindings only with a SELECT or WITH query; '{$from}' is read as a table name."
+        );
+    }
+
+    return Sql\SqlTable::table($pdo, $from);
+}
+
+/**
+ * polars(): a table backed by Polars (requires the php_polars extension).
+ * Takes any Table, or anything as_tibble() accepts.
+ *
+ *     polars(DataFrame::fromCsv('sales.csv'))->filter(col('units')->gt(0));
+ */
+function polars(mixed $data): Polars\PolarsTable
+{
+    if (! extension_loaded('php_polars')) {
+        throw new \RuntimeException('polars() needs the php_polars extension (phpstats/phpolars).');
+    }
+
+    return Polars\PolarsTable::fromTable($data instanceof Contracts\Table ? $data : DataFrame::asTibble($data));
+}

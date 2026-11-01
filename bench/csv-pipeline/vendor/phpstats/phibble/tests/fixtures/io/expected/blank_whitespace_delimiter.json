@@ -1,0 +1,18 @@
+{
+  "names": ["a", "b"],
+  "types": {
+    "a": "float",
+    "b": "float"
+  },
+  "levels": {},
+  "values": {
+    "a": [
+      "1"
+    ],
+    "b": [
+      "2"
+    ]
+  },
+  "problems": 0,
+  "problem_rows": []
+}

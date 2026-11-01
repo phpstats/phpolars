@@ -1,0 +1,141 @@
+---
+title: "The Table contract"
+---
+
+`Phibble\Contracts\Table` is the interface that every table backend
+implements. phplyr's verbs call its methods, so a pipeline runs unchanged on
+any backend. phibble ships three implementations: `DataFrame`, which holds data
+in PHP arrays, `Phibble\Sql\SqlTable`, which compiles verbs to SQL, and
+`Phibble\Polars\PolarsTable`, which runs them in Polars through the
+php_polars extension from phpolars.
+
+This page is for authors of backends. It lists the rules that every
+implementation follows and the semantics of each method.
+
+## Rules
+
+- **Immutability.** Every method returns a new table and leaves the original
+  unchanged.
+- **Return types.** Verbs are declared to return `Table`. A backend may return
+  a different implementation. `SqlTable` returns a `DataFrame` when it falls back to
+  memory for a closure. `DataFrame` declares `static`.
+- **NA.** PHP `null` is NA in every column type.
+- **Grouping.** `groupBy()` records grouping columns as metadata. `filter()`,
+  `mutate()`, `mutateGroups()`, `filterGroups()`, `summarise()`, and
+  `eachGroup()` work per group. The other verbs keep the grouping.
+- **Group order.** Groups are visited in sorted key order, as in dplyr:
+  ascending, factors by level order, NA last, and strings in byte order.
+  `filter()`, `mutate()`, and `arrange()` keep the input row order.
+- **Rowwise tables.** `rowwise()` makes every row its own group, in row order.
+  `groups()` returns its id columns.
+- **Row closures.** A row closure receives `(Phibble\Row $row, Table $group)`.
+  `$group` is the row's group, or the whole table when ungrouped.
+- **Expressions.** Wherever a verb accepts a closure, it also accepts a
+  `Phibble\Expr\Expr`, evaluated per group with the semantics in the
+  [expression reference](expr.qmd).
+- **Errors.** An unknown column name throws
+  `Phibble\Exception\ColumnNotFound`.
+- **Countable and iterable.** `count()` equals `nrow()`, and iterating yields
+  one `Phibble\Row` per row.
+
+## Methods
+
+### Shape and data
+
+| Method | Returns |
+| --- | --- |
+| `columns()` | Column names in order. |
+| `types()` | Column name to `Phibble\Type`. |
+| `nrow()`, `ncol()` | Row and column counts. |
+| `column($name)` | One column as a list. Factors return their labels. |
+| `toRows()` | A list of associative arrays. |
+| `toColumns()` | An array of lists by column name. |
+| `collect()` | The rows as an in-memory `DataFrame`. A `DataFrame` returns itself. |
+
+### Verbs
+
+| Method | Semantics |
+| --- | --- |
+| `select($names)` | Keeps the named columns in the given order. Grouping columns are always kept. |
+| `filter($predicate)` | Keeps rows where the closure or expression is true. NA counts as false. |
+| `filterGroups($fn)` | Runs `$fn` once per group with the group's table. It returns one value per row, and truthy values keep the row. |
+| `mutate($columns)` | Adds or replaces columns. A value is a row closure, an expression, a list with one value per row, or a scalar. Later entries see earlier ones. Replaced columns keep their position. |
+| `mutateGroups($columns)` | Like `mutate()`, but a closure runs once per group and returns a list for the group's rows or a scalar. This is the primitive for window functions. |
+| `rename($map)` | Renames columns, with `new => old` entries as in dplyr. |
+| `arrange($keys)` | Sorts stably. Keys are names, <code>[name, &#39;asc&#39;&#124;&#39;desc&#39;]</code> pairs, or expressions, and NA sorts last in both directions. It ignores grouping. |
+| `groupBy($names)`, `ungroup()`, `groups()` | Set, clear, or read the grouping columns. |
+| `groupBy($names, drop: false)`, `dropsEmptyGroups()` | dplyr's `.drop = FALSE`: grouped verbs also visit empty groups. A factor key yields every level; a non-factor key yields its observed values, or NA under an empty group. Row verbs keep the flag; `groupBy()` and `ungroup()` reset it. |
+| `rowwise($idColumns)`, `isRowwise()` | Set or read rowwise mode. `groupBy()` and `ungroup()` clear it. |
+| `eachGroup()` | Yields `['key' => [...], 'table' => Table]` for each group, with ungrouped tables. An ungrouped table yields one group with an empty key. |
+| `groupRows()` | Returns `['key' => [...], 'rows' => [...]]` for each group, in `eachGroup()` order, with the group's 0-based row positions. Empty groups have no rows, and a rowwise table has one group per row. |
+| `summarise($aggregates)` | `DataFrame`, `SqlTable`, and `PolarsTable` also have the alias `summarize()`, which the interface does not declare. Returns one row per group: the keys, then one column per entry. Each entry is a closure given the group's table or an expression of size 1. The result drops the last grouping level, and a rowwise table keeps its id columns. The optional second argument is dplyr's `.groups`: `'drop_last'` (the default), `'drop'`, `'keep'`, or `'rowwise'`. |
+| `distinct($names)` | Keeps the first row of each combination of the named columns (and the grouping columns), and only those columns. An empty list means all columns. |
+| `pivotLongerSpec($spec, dropNa:)` | tidyr's `pivot_longer_spec()`. Spec rows are `['.name' => source, '.value' => value column, ...name parts]`. Output: id columns, name parts, then one column per `.value`; each input row yields one row per name-part combination in spec order. Values combine by vctrs rules. |
+| `pivotWiderSpec($spec, idColumns:, valuesFill:)` | tidyr's `pivot_wider_spec()`. Spec rows are `['.name' => new column, '.value' => values column, ...names_from values]`. New columns follow spec order; rows follow the first appearance of each id combination. Duplicates make every new column a list-column and raise tidyr's warning. |
+| `take($indices)` | Rows by 0-based position, in the given order. A `null` index gives an all-NA row. Keeps types, factor levels, and grouping. |
+| `slice($offset, $length)`, `head($n)` | Rows by position. These ignore grouping. |
+| `join($other, $by, $type, ...)` | Joins with dplyr 1.1 semantics, described below. |
+
+### Joins
+
+`join()` takes the other table, a list of conditions, and the join type:
+`inner`, `left`, `right`, `full`, `semi`, `anti`, or `cross`. A cross join
+takes no conditions. The conditions follow dplyr's `join_by()`, and all of
+them must hold:
+
+- `'k'`, `[$l, $r]`, or `$l => $r`: equality.
+- `[$l, $op, $r]` with `$op` in `==`, `>=`, `>`, `<=`, or `<`: a comparison.
+- `['closest', $l, $op, $r]`, at most one per join: of the y rows that satisfy
+  the other conditions and the comparison, keep only those with the largest
+  `$r` (for `>=` and `>`) or the smallest (for `<=` and `<`). Ties keep every
+  tied row.
+
+dplyr's `between()`, `within()`, and `overlaps()` are expressed as pairs of
+comparisons.
+
+- **Columns.** The result has x's columns, then y's columns. Clashing names get
+  the suffixes, `.x` and `.y` by default.
+- **Keys.** `keep` is `null` by default. Equality keys then come from x only,
+  and for rows that only y has (right and full joins) they are filled from
+  y's keys. Columns used in comparisons are kept from both tables. With
+  `keep: true` every key column is kept from both tables. `keep: false`
+  throws when a comparison or closest condition is present, as in dplyr.
+- **Rows.** Rows follow x's order, and each x row's matches follow y's order.
+  Right and full joins then add y's unmatched rows in y's order. Semi and anti
+  joins keep x's rows and columns and never duplicate rows.
+- **Matching.** NA keys match each other unless `naMatches: false`. In a
+  comparison, NA against NA satisfies `>=` and `<=` but not `>` or `<`, and NA
+  never matches a value. `1` matches `1.0`, and a factor matches text by its
+  label.
+- **Options.** `multiple` picks `all`, `any`, `first`, or `last` match per x
+  row. `relationship` (`one-to-one`, `one-to-many`, `many-to-one`, or
+  `many-to-many`) throws when the data violates it. Without it, an unexpected
+  many-to-many equality join raises a warning, as dplyr does. `unmatched: 'error'`
+  throws when the join would drop rows.
+- **Grouping.** The result keeps x's grouping.
+
+## Errors and allowed differences
+
+`DataFrame` follows R, and other backends match it. The following rules apply
+where R raises an error or where exact agreement is impractical.
+
+- `quantile()` and `iqr()` over values that include NA, without
+  `na_rm: true`, throw an error, as R does. A backend must not return NA.
+- A summary entry that is not size 1 throws `LengthException`, and the message
+  mentions `reframe()`.
+- Aggregates over zero rows may return NA. `DataFrame` returns R's values (`NaN`
+  for `mean()`, `Inf` and `-Inf` for `min()` and `max()`). This case only arises
+  for an ungrouped table with no rows.
+- `as_string()` on doubles with very large or very small magnitudes may
+  differ from R's scientific notation. `Phibble\Column\Infer::formatFloat()`
+  states R's rule: 15 significant digits, in fixed or scientific notation,
+  whichever is shorter.
+
+## Testing a backend
+
+The simplest test of a backend is to run the same operations on the backend
+and on `DataFrame` and compare the results. `tests/SqlTest.php` does this for
+`SqlTable`. It loads the same data into a database, runs each operation both
+ways, and compares the collected rows. It also runs every case in
+`tests/fixtures/expr/expected.json`, the dplyr results that `tests/r/expr.R`
+produces, so each backend is checked against R as well as against `DataFrame`.

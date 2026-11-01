@@ -1,0 +1,81 @@
+---
+title: "Development"
+---
+
+## Tests
+
+The test suite uses Pest and runs on PHP 8.3, 8.4, and 8.5. Tests that use
+the `|>` operator are in `tests/Php85`, which `phpunit.xml` loads only on PHP
+8.5:
+
+```bash
+composer install
+php vendor/bin/pest
+```
+
+CI runs the suite on Ubuntu with PHP 8.3, 8.4, and 8.5, against PostgreSQL 17
+and MySQL 8.0. A second job runs `tests/Polars` on PHP 8.5 with a prebuilt
+php_polars extension, and a third runs `composer lint`. CI does not load the
+phit extension.
+
+The tests that fit models or use the native CSV reader need the phit extension
+and are skipped without it. To run them, load the extension:
+
+```bash
+php -d extension=/path/to/libphit.dylib vendor/bin/pest
+```
+
+## Comparing with R
+
+Many tests compare phibble with R. Scripts in `tests/r/` run the same
+operations in R and write the expected results to `tests/fixtures/`:
+
+| Script | Checks |
+| --- | --- |
+| `tests/r/print.R` | Printing and `glimpse()` against tibble. |
+| `tests/r/io.R` | CSV reading and writing against readr. |
+| `tests/r/expr.R` | Expressions against dplyr. |
+
+The fixtures are committed, so the tests do not need R. After changing a
+script, regenerate its fixtures from the repository root, for example with
+`Rscript tests/r/expr.R`. The scripts need the tibble, readr, dplyr, stringr,
+and jsonlite packages.
+
+## Database tests
+
+`tests/SqlTest.php` runs against an in-memory SQLite database. It also runs
+against PostgreSQL and MySQL when these environment variables hold PDO DSNs:
+
+```bash
+export PHIBBLE_TEST_PGSQL="pgsql:host=127.0.0.1;port=5432;dbname=postgres"
+export PHIBBLE_TEST_PGSQL_USER=postgres
+export PHIBBLE_TEST_MYSQL="mysql:host=127.0.0.1;port=3306"
+export PHIBBLE_TEST_MYSQL_USER=root
+```
+
+`PHIBBLE_TEST_PGSQL_PASSWORD` and `PHIBBLE_TEST_MYSQL_PASSWORD` set
+passwords. The tests only run `SELECT` statements over inline data and create
+no tables.
+
+## Documentation
+
+The site is a Quarto project in `docs/`. Every example is a PHP file in
+`docs/examples/`. `bin/docs-examples` runs each example with `docs/data` as the
+working directory and writes its code and output to
+`docs/examples/_<name>.md`, which the pages include. Quarto never runs PHP.
+
+`bin/render-docs` refreshes the examples, renders the site, and copies the
+result into `docs/`. Commit the rendered HTML, because phpstats.org imports
+it from `docs/` and never runs Quarto:
+
+```bash
+PHP=php85 bin/render-docs
+```
+
+`bin/docs-examples name` refreshes one example. Set `QUARTO` when the `quarto`
+command is not on the path.
+
+The documentation is published at <https://phibble.phpstats.org/docs>.
+GitHub Pages serves only redirects there: the `pages` workflow runs
+`bin/pages-redirects`, which writes one redirect page for each page in
+`docs/`.

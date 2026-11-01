@@ -1,0 +1,40 @@
+project:
+  type: website
+  output-dir: _site
+  render:
+    - "*.qmd"
+  resources:
+    - data/*.csv
+
+website:
+  site-url: "https://phibble.phpstats.org/docs/"
+  title: "phibble"
+  repo-url: "https://github.com/phpstats/phibble"
+  sidebar:
+    style: docked
+    search: true
+    contents:
+      - index.qmd
+      - getting-started.qmd
+      - section: "Guides"
+        contents:
+          - coming-from-tibble.qmd
+          - types.qmd
+          - io.qmd
+          - expr.qmd
+          - sql.qmd
+          - laravel.qmd
+          - backends.qmd
+      - section: "Reference"
+        contents:
+          - contract.qmd
+      - section: "Contributing"
+        contents:
+          - development.qmd
+
+format:
+  html:
+    theme: cosmo
+    toc: true
+    code-copy: true
+    highlight-style: github

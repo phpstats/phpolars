@@ -1,0 +1,11 @@
+{
+    "name": "phpstats/phpolars-csv-bench",
+    "description": "The CSV pipeline benchmark's phibble dependency.",
+    "type": "project",
+    "require": {
+        "php": ">=8.3",
+        "phpstats/phibble": "*"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
