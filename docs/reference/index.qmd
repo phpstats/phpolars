@@ -1,0 +1,19 @@
+---
+title: "Functions and methods"
+---
+
+phpolars provides functions in the `Phpolars` namespace, selectors in `Phpolars\cs`, and classes whose methods build and run queries. Import functions with `use function Phpolars\{col, lit, read_csv};` and selectors with `use Phpolars\cs;`. Each name links to its signature and notes.
+
+## Functions {#functions}
+
+{{< include _api-index-functions.md >}}
+
+## Classes and methods {#classes}
+
+Methods are instance methods unless the signature starts with `static`. Each class links to its full method list, grouped by task.
+
+{{< include _api-index-classes.md >}}
+
+## Errors
+
+Polars errors are thrown as subclasses of `Phpolars\PolarsError` in `Phpolars\Exception`. [Types and values](types.qmd#errors) lists them.

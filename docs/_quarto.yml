@@ -16,29 +16,30 @@ website:
     style: docked
     search: true
     contents:
-      - index.qmd
-      - getting-started.qmd
-      - section: "Examples"
+      - section: "Getting started"
         contents:
-          - examples/expressions.qmd
-          - examples/lazy-csv.qmd
-          - examples/time-series.qmd
+          - index.qmd
+          - getting-started.qmd
       - section: "Guides"
         contents:
           - coming-from-python.qmd
           - phibble.qmd
           - deployment.qmd
-      - section: "Reference"
+          - compatibility.qmd
+          - performance.qmd
+      - section: "Functions and methods"
         contents:
+          - reference/index.qmd
           - reference/dataframe.qmd
           - reference/expressions.qmd
           - reference/series.qmd
           - reference/io.qmd
           - reference/types.qmd
-      - compatibility.qmd
-      - section: "Benchmarks and verification"
+      - section: "Examples"
         contents:
-          - performance.qmd
+          - examples/expressions.qmd
+          - examples/lazy-csv.qmd
+          - examples/time-series.qmd
       - section: "Contributing"
         contents:
           - development.qmd

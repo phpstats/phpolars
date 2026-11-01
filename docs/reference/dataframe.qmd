@@ -2,7 +2,7 @@
 title: "DataFrame and LazyFrame"
 ---
 
-`DataFrame` holds data in memory and runs each operation immediately. `LazyFrame` records operations and runs them, optimized, on `collect()`. Both have the same verbs; a `DataFrame` builds each verb on a lazy query and collects it, as py-polars does.
+`DataFrame` holds data in memory and runs each operation immediately. `LazyFrame` records operations and runs them, optimized, on `collect()`. Both have the same methods; a `DataFrame` method builds a lazy query and collects it, as py-polars does.
 
 ## Creating data frames
 

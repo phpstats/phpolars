@@ -86,7 +86,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./performance.html">Benchmarks and verification</a></li><li class="breadcrumb-item"><a href="./performance.html">Performance</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./coming-from-python.html">Guides</a></li><li class="breadcrumb-item"><a href="./performance.html">Performance</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -111,22 +111,10 @@ ul.task-list li input[type="checkbox"] {
         </div>
     <div class="sidebar-menu-container"> 
     <ul class="list-unstyled mt-1">
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./index.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">phpolars</span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./getting-started.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Getting started</span></a>
-  </div>
-</li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
- <span class="menu-text">Examples</span></a>
+ <span class="menu-text">Getting started</span></a>
           <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
@@ -134,20 +122,14 @@ ul.task-list li input[type="checkbox"] {
       <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./examples/expressions.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Aggregate with expressions</span></a>
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">phpolars</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./examples/lazy-csv.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Query a large CSV file lazily</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./examples/time-series.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Rolling windows and as-of joins</span></a>
+  <a href="./getting-started.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Getting started</span></a>
   </div>
 </li>
       </ul>
@@ -179,17 +161,35 @@ ul.task-list li input[type="checkbox"] {
  <span class="menu-text">Deployment</span></a>
   </div>
 </li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./compatibility.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Compatibility and limitations</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./performance.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Performance</span></a>
+  </div>
+</li>
       </ul>
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
- <span class="menu-text">Reference</span></a>
+ <span class="menu-text">Functions and methods</span></a>
           <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
       <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./reference/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Functions and methods</span></a>
+  </div>
+</li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./reference/dataframe.html" class="sidebar-item-text sidebar-link">
@@ -222,16 +222,10 @@ ul.task-list li input[type="checkbox"] {
 </li>
       </ul>
   </li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./compatibility.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Compatibility and limitations</span></a>
-  </div>
-</li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
- <span class="menu-text">Benchmarks and verification</span></a>
+ <span class="menu-text">Examples</span></a>
           <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
@@ -239,8 +233,20 @@ ul.task-list li input[type="checkbox"] {
       <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./performance.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text">Performance</span></a>
+  <a href="./examples/expressions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aggregate with expressions</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./examples/lazy-csv.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Query a large CSV file lazily</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./examples/time-series.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Rolling windows and as-of joins</span></a>
   </div>
 </li>
       </ul>
@@ -281,7 +287,7 @@ ul.task-list li input[type="checkbox"] {
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./performance.html">Benchmarks and verification</a></li><li class="breadcrumb-item"><a href="./performance.html">Performance</a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./coming-from-python.html">Guides</a></li><li class="breadcrumb-item"><a href="./performance.html">Performance</a></li></ol></nav>
 <div class="quarto-title">
 <h1 class="title">Performance</h1>
 </div>
@@ -306,9 +312,9 @@ ul.task-list li input[type="checkbox"] {
 <li>Polars memory is outside PHP’s memory manager, so <code>memory_limit</code> does not count it. PHP arrays built from a result do count.</li>
 <li><code>rows()</code>, <code>toDicts()</code>, and <code>iterRows()</code> build PHP arrays for every row, which can take far more memory than the data does in Polars. Calling <code>rows()</code> on each slice from <code>iterSlices(10000)</code> keeps PHP’s peak low.</li>
 <li>Collecting rows into PHP costs time in proportion to the rows and columns returned. Datetime columns cost the most, because each value becomes a <code>DateTimeImmutable</code> object.</li>
-<li>A <code>PolarsTable</code> gains the most when a pipeline reduces the data (summaries, filters, or joins followed by summaries) or chains several verbs before collecting.</li>
+<li>A <code>PolarsTable</code> gains the most when a pipeline reduces the data (summaries, filters, or joins followed by summaries) or chains several methods before collecting.</li>
 <li>Reading files with <code>Phpolars\read_csv()</code> or <code>read_parquet()</code> and wrapping the result with <code>PolarsTable::fromPolars()</code> avoids parsing the file in PHP.</li>
-<li>A verb given a PHP closure converts a <code>PolarsTable</code> to a phibble <code>DataFrame</code> and back. Use expressions on large data, or phibble’s in-memory <code>DataFrame</code> for closure-heavy pipelines.</li>
+<li>A method given a PHP closure converts a <code>PolarsTable</code> to a phibble <code>DataFrame</code> and back. Use expressions on large data, or phibble’s in-memory <code>DataFrame</code> for closure-heavy pipelines.</li>
 <li>For a filtered scan of a large file, <code>collect(engine: 'streaming')</code> runs in batches and keeps less in memory.</li>
 </ul>
 </section>

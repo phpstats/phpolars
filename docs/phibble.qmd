@@ -12,7 +12,7 @@ title: "phibble and phplyr"
 | One pipeline on phibble's in-memory `DataFrame`, a SQL table, and Polars | phplyr or phibble |
 | Polars' `null` semantics | the phpolars API |
 | Lazy scans, the streaming engine, sinks, or SQL over data frames | the phpolars API |
-| PHP closures in many verbs | phibble's in-memory `DataFrame`. On a `PolarsTable`, each closure converts the table (see [What runs in Polars](#what-runs-in-polars)). |
+| PHP closures in many methods | phibble's in-memory `DataFrame`. On a `PolarsTable`, each closure converts the table (see [What runs in Polars](#what-runs-in-polars)). |
 
 ## A pipeline on a PolarsTable
 
@@ -70,7 +70,7 @@ Without the adapter, `Phpolars\DataFrame::fromPhibble($table)` reads any phibble
 
 ## What runs in Polars
 
-Verbs given column names or phibble expressions (`Phibble\Expr`, which phplyr's helpers such as `col()`, `mean()`, and `n()` build) run in Polars with dplyr's semantics:
+Methods given column names or phibble expressions (`Phibble\Expr`, which phplyr's helpers such as `col()`, `mean()`, and `n()` build) run in Polars with dplyr's semantics:
 
 - `NA` propagates, and aggregates default to `naRm: false`.
 - Grouped `mutate()` and `filter()` evaluate aggregates and windows per group.
@@ -80,12 +80,12 @@ Verbs given column names or phibble expressions (`Phibble\Expr`, which phplyr's 
 
 Some steps cannot run in Polars, and the adapter runs them on a phibble `DataFrame` and converts the result back:
 
-- a verb given a PHP closure, because PHP code cannot run on Polars threads
-- any verb on a rowwise table
-- grouped verbs on factor keys that keep empty groups (phibble's `groupBy(drop: false)` or phplyr's `group_by(_drop: false)`), because Polars does not see empty groups
+- a method given a PHP closure, because PHP code cannot run on Polars threads
+- any method on a rowwise table
+- grouped operations on factor keys that keep empty groups (phibble's `groupBy(drop: false)` or phplyr's `group_by(_drop: false)`), because Polars does not see empty groups
 - functions that the translator does not support, such as `str_to_title()`
 
-`PolarsTable::$fallbacks` counts these conversions. Set `PolarsTable::$strict = true` to throw `Phibble\Polars\PolarsFallback` instead; its message names the verb and the reason. [Performance](performance.qmd#practical-guidance) describes when a fallback costs time.
+`PolarsTable::$fallbacks` counts these conversions. Set `PolarsTable::$strict = true` to throw `Phibble\Polars\PolarsFallback` instead; its message names the method and the reason. [Performance](performance.qmd#practical-guidance) describes when a fallback costs time.
 
 ## Missing values
 

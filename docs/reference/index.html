@@ -1,0 +1,1519 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.10.18">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Functions and methods – phpolars</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-bb62276ab45c84d9efd712f51ff97b5a.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-f3d0b6f838474b91d97a23e0a7eb39d8.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+</head>
+
+<body class="nav-sidebar docked quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../reference/index.html">Functions and methods</a></li><li class="breadcrumb-item"><a href="../reference/index.html">Functions and methods</a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="../">phpolars</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">Getting started</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">phpolars</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../getting-started.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Getting started</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">Guides</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../coming-from-python.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Coming from py-polars</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../phibble.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">phibble and phplyr</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../deployment.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Deployment</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../compatibility.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Compatibility and limitations</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../performance.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Performance</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
+ <span class="menu-text">Functions and methods</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reference/index.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Functions and methods</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reference/dataframe.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">DataFrame and LazyFrame</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reference/expressions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Expressions</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reference/series.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Series</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reference/io.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Reading and writing</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reference/types.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Types and values</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
+ <span class="menu-text">Examples</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../examples/expressions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aggregate with expressions</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../examples/lazy-csv.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Query a large CSV file lazily</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../examples/time-series.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Rolling windows and as-of joins</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true">
+ <span class="menu-text">Contributing</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../development.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Development</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#functions" id="toc-functions" class="nav-link active" data-scroll-target="#functions">Functions</a>
+  <ul class="collapse">
+  <li><a href="#index-read-files-and-databases" id="toc-index-read-files-and-databases" class="nav-link" data-scroll-target="#index-read-files-and-databases">Read files and databases</a></li>
+  <li><a href="#index-create-and-combine-data-frames" id="toc-index-create-and-combine-data-frames" class="nav-link" data-scroll-target="#index-create-and-combine-data-frames">Create and combine data frames</a></li>
+  <li><a href="#index-columns-and-literals" id="toc-index-columns-and-literals" class="nav-link" data-scroll-target="#index-columns-and-literals">Columns and literals</a></li>
+  <li><a href="#index-conditions" id="toc-index-conditions" class="nav-link" data-scroll-target="#index-conditions">Conditions</a></li>
+  <li><a href="#index-aggregates" id="toc-index-aggregates" class="nav-link" data-scroll-target="#index-aggregates">Aggregates</a></li>
+  <li><a href="#index-across-columns" id="toc-index-across-columns" class="nav-link" data-scroll-target="#index-across-columns">Across columns</a></li>
+  <li><a href="#index-dates-times-and-ranges" id="toc-index-dates-times-and-ranges" class="nav-link" data-scroll-target="#index-dates-times-and-ranges">Dates, times, and ranges</a></li>
+  <li><a href="#index-sorting-and-positions" id="toc-index-sorting-and-positions" class="nav-link" data-scroll-target="#index-sorting-and-positions">Sorting and positions</a></li>
+  <li><a href="#index-runtime" id="toc-index-runtime" class="nav-link" data-scroll-target="#index-runtime">Runtime</a></li>
+  <li><a href="#index-selectors" id="toc-index-selectors" class="nav-link" data-scroll-target="#index-selectors">Selectors</a></li>
+  </ul></li>
+  <li><a href="#classes" id="toc-classes" class="nav-link" data-scroll-target="#classes">Classes and methods</a></li>
+  <li><a href="#errors" id="toc-errors" class="nav-link" data-scroll-target="#errors">Errors</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../reference/index.html">Functions and methods</a></li><li class="breadcrumb-item"><a href="../reference/index.html">Functions and methods</a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title">Functions and methods</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>phpolars provides functions in the <code>Phpolars</code> namespace, selectors in <code>Phpolars\cs</code>, and classes whose methods build and run queries. Import functions with <code>use function Phpolars\{col, lit, read_csv};</code> and selectors with <code>use Phpolars\cs;</code>. Each name links to its signature and notes.</p>
+<section id="functions" class="level2">
+<h2 class="anchored" data-anchor-id="functions">Functions</h2>
+<section id="index-read-files-and-databases" class="level3">
+<h3 class="anchored" data-anchor-id="index-read-files-and-databases">Read files and databases</h3>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Function</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><a href="../reference/io.html#fn-read_csv"><code>read_csv()</code></a></td>
+<td>Read a CSV file into a <code>DataFrame</code>.</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/io.html#fn-scan_csv"><code>scan_csv()</code></a></td>
+<td>Scan a CSV file lazily as a <code>LazyFrame</code>.</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/io.html#fn-read_parquet"><code>read_parquet()</code></a></td>
+<td>Read a Parquet file into a <code>DataFrame</code>.</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/io.html#fn-scan_parquet"><code>scan_parquet()</code></a></td>
+<td>Scan a Parquet file lazily as a <code>LazyFrame</code>.</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/io.html#fn-read_parquet_schema"><code>read_parquet_schema()</code></a></td>
+<td>Read the schema of a Parquet file.</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/io.html#fn-read_ipc"><code>read_ipc()</code></a></td>
+<td>Read an Arrow IPC file into a <code>DataFrame</code>.</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/io.html#fn-scan_ipc"><code>scan_ipc()</code></a></td>
+<td>Scan an Arrow IPC file lazily as a <code>LazyFrame</code>.</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/io.html#fn-read_ipc_schema"><code>read_ipc_schema()</code></a></td>
+<td>Read the schema of an Arrow IPC file.</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/io.html#fn-read_ipc_stream"><code>read_ipc_stream()</code></a></td>
+<td>Read an Arrow IPC stream into a <code>DataFrame</code>.</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/io.html#fn-read_ndjson"><code>read_ndjson()</code></a></td>
+<td>Read newline-delimited JSON into a <code>DataFrame</code>.</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/io.html#fn-scan_ndjson"><code>scan_ndjson()</code></a></td>
+<td>Scan newline-delimited JSON lazily as a <code>LazyFrame</code>.</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/io.html#fn-read_json"><code>read_json()</code></a></td>
+<td>Read a JSON array of rows into a <code>DataFrame</code>.</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/io.html#fn-read_database"><code>read_database()</code></a></td>
+<td>Read the result of a PDO query into a <code>DataFrame</code>.</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="index-create-and-combine-data-frames" class="level3">
+<h3 class="anchored" data-anchor-id="index-create-and-combine-data-frames">Create and combine data frames</h3>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Function</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><a href="../reference/expressions.html#fn-from_dict"><code>from_dict()</code></a></td>
+<td>Build a <code>DataFrame</code> from an array of columns.</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/expressions.html#fn-from_dicts"><code>from_dicts()</code></a></td>
+<td>Build a <code>DataFrame</code> from a list of associative rows.</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/expressions.html#fn-from_records"><code>from_records()</code></a></td>
+<td>Build a <code>DataFrame</code> from a list of rows.</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/expressions.html#fn-json_normalize"><code>json_normalize()</code></a></td>
+<td>Flatten nested arrays into a <code>DataFrame</code> with one column per path.</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/expressions.html#fn-concat"><code>concat()</code></a></td>
+<td>Concatenate frames or series vertically, horizontally, or diagonally.</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/expressions.html#fn-union"><code>union()</code></a></td>
+<td>Concatenate frames without guaranteeing row order.</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/expressions.html#fn-select"><code>select()</code></a></td>
+<td>Evaluate expressions into a <code>DataFrame</code> without an input frame.</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/expressions.html#fn-sql"><code>sql()</code></a></td>
+<td>Run a SQL query against the given frames.</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/expressions.html#fn-collect_all"><code>collect_all()</code></a></td>
+<td>Collect several lazy frames in parallel.</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="index-columns-and-literals" class="level3">
+<h3 class="anchored" data-anchor-id="index-columns-and-literals">Columns and literals</h3>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Function</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><a href="../reference/expressions.html#fn-col"><code>col()</code></a></td>
+<td>Refer to columns by name, by regular expression, or by data type.</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/expressions.html#fn-lit"><code>lit()</code></a></td>
+<td>A literal value, optionally of a given data type.</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/expressions.html#fn-all"><code>all()</code></a></td>
+<td>Every column.</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/expressions.html#fn-exclude"><code>exclude()</code></a></td>
+<td>Every column except the given ones.</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/expressions.html#fn-nth"><code>nth()</code></a></td>
+<td>Columns by position.</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/expressions.html#fn-first"><code>first()</code></a></td>
+<td>The first value of the given columns.</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/expressions.html#fn-last"><code>last()</code></a></td>
+<td>The last value of the given columns.</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/expressions.html#fn-len"><code>len()</code></a></td>
+<td>The number of rows.</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/expressions.html#fn-row_index"><code>row_index()</code></a></td>
+<td>A row index column, starting at 0.</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/expressions.html#fn-element"><code>element()</code></a></td>
+<td>The current element inside <code>list()-&gt;eval()</code> and <code>arr()</code> operations.</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/expressions.html#fn-field"><code>field()</code></a></td>
+<td>A struct field inside <code>struct()-&gt;withFields()</code>.</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/expressions.html#fn-struct_"><code>struct_()</code></a></td>
+<td>Combine expressions into a struct column.</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/expressions.html#fn-repeat"><code>repeat()</code></a></td>
+<td>A value repeated <code>n</code> times.</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/expressions.html#fn-ones"><code>ones()</code></a></td>
+<td>A column of <code>n</code> ones.</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/expressions.html#fn-zeros"><code>zeros()</code></a></td>
+<td>A column of <code>n</code> zeros.</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/expressions.html#fn-sql_expr"><code>sql_expr()</code></a></td>
+<td>Parse a SQL expression into an <code>Expr</code>.</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="index-conditions" class="level3">
+<h3 class="anchored" data-anchor-id="index-conditions">Conditions</h3>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Function</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><a href="../reference/expressions.html#fn-when"><code>when()</code></a></td>
+<td>Start a <code>when()-&gt;then()-&gt;otherwise()</code> conditional expression.</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/expressions.html#fn-coalesce"><code>coalesce()</code></a></td>
+<td>The first non-null value across expressions, row by row.</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="index-aggregates" class="level3">
+<h3 class="anchored" data-anchor-id="index-aggregates">Aggregates</h3>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Function</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><a href="../reference/expressions.html#fn-sum"><code>sum()</code></a></td>
+<td>Sum of the given columns.</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/expressions.html#fn-mean"><code>mean()</code></a></td>
+<td>Mean of the given columns.</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/expressions.html#fn-median"><code>median()</code></a></td>
+<td>Median of the given columns.</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/expressions.html#fn-min"><code>min()</code></a></td>
+<td>Minimum of the given columns.</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/expressions.html#fn-max"><code>max()</code></a></td>
+<td>Maximum of the given columns.</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/expressions.html#fn-count"><code>count()</code></a></td>
+<td>Number of non-null values in the given columns.</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/expressions.html#fn-n_unique"><code>n_unique()</code></a></td>
+<td>Number of distinct values in the given columns.</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/expressions.html#fn-approx_n_unique"><code>approx_n_unique()</code></a></td>
+<td>Approximate number of distinct values (HyperLogLog).</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/expressions.html#fn-std"><code>std()</code></a></td>
+<td>Sample standard deviation of a column.</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/expressions.html#fn-var_"><code>var_()</code></a></td>
+<td>Sample variance of a column.</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/expressions.html#fn-quantile"><code>quantile()</code></a></td>
+<td>A quantile of a column.</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/expressions.html#fn-any"><code>any()</code></a></td>
+<td>Whether any value of the given boolean columns is true.</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/expressions.html#fn-implode"><code>implode()</code></a></td>
+<td>Collect the values of the given columns into one list.</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/expressions.html#fn-head"><code>head()</code></a></td>
+<td>The first <code>n</code> values of the given columns.</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/expressions.html#fn-tail"><code>tail()</code></a></td>
+<td>The last <code>n</code> values of the given columns.</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/expressions.html#fn-corr"><code>corr()</code></a></td>
+<td>Correlation of two columns (Pearson or Spearman).</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/expressions.html#fn-cov"><code>cov()</code></a></td>
+<td>Covariance of two columns.</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/expressions.html#fn-rolling_corr"><code>rolling_corr()</code></a></td>
+<td>Rolling correlation of two columns.</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/expressions.html#fn-rolling_cov"><code>rolling_cov()</code></a></td>
+<td>Rolling covariance of two columns.</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/expressions.html#fn-cum_count"><code>cum_count()</code></a></td>
+<td>Cumulative count of non-null values.</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/expressions.html#fn-cum_sum"><code>cum_sum()</code></a></td>
+<td>Cumulative sum of the given columns.</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="index-across-columns" class="level3">
+<h3 class="anchored" data-anchor-id="index-across-columns">Across columns</h3>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Function</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><a href="../reference/expressions.html#fn-all_horizontal"><code>all_horizontal()</code></a></td>
+<td>Logical AND across expressions, row by row.</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/expressions.html#fn-any_horizontal"><code>any_horizontal()</code></a></td>
+<td>Logical OR across expressions, row by row.</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/expressions.html#fn-sum_horizontal"><code>sum_horizontal()</code></a></td>
+<td>Sum across expressions, row by row.</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/expressions.html#fn-mean_horizontal"><code>mean_horizontal()</code></a></td>
+<td>Mean across expressions, row by row.</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/expressions.html#fn-min_horizontal"><code>min_horizontal()</code></a></td>
+<td>Minimum across expressions, row by row.</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/expressions.html#fn-max_horizontal"><code>max_horizontal()</code></a></td>
+<td>Maximum across expressions, row by row.</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/expressions.html#fn-cum_sum_horizontal"><code>cum_sum_horizontal()</code></a></td>
+<td>Cumulative sum across expressions, as a struct.</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/expressions.html#fn-concat_str"><code>concat_str()</code></a></td>
+<td>Concatenate expressions as strings, row by row.</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/expressions.html#fn-concat_list"><code>concat_list()</code></a></td>
+<td>Combine expressions into a list column, row by row.</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/expressions.html#fn-concat_arr"><code>concat_arr()</code></a></td>
+<td>Combine expressions into a fixed-width array column.</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/expressions.html#fn-format"><code>format()</code></a></td>
+<td>Format expressions into a string with <code>{}</code> placeholders.</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/expressions.html#fn-arctan2"><code>arctan2()</code></a></td>
+<td>Two-argument arctangent of <code>y</code> and <code>x</code>.</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="index-dates-times-and-ranges" class="level3">
+<h3 class="anchored" data-anchor-id="index-dates-times-and-ranges">Dates, times, and ranges</h3>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Function</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><a href="../reference/expressions.html#fn-date"><code>date()</code></a></td>
+<td>A date from year, month, and day expressions.</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/expressions.html#fn-datetime"><code>datetime()</code></a></td>
+<td>A datetime from its component expressions.</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/expressions.html#fn-time"><code>time()</code></a></td>
+<td>A time of day from its component expressions.</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/expressions.html#fn-duration"><code>duration()</code></a></td>
+<td>A duration from weeks, days, hours, and smaller units.</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/expressions.html#fn-from_epoch"><code>from_epoch()</code></a></td>
+<td>Convert Unix timestamps to datetimes or dates.</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/expressions.html#fn-business_day_count"><code>business_day_count()</code></a></td>
+<td>Number of business days between two dates.</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/expressions.html#fn-date_range"><code>date_range()</code></a></td>
+<td>A column of dates at a fixed interval.</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/expressions.html#fn-date_ranges"><code>date_ranges()</code></a></td>
+<td>A list of dates per row, between two date columns.</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/expressions.html#fn-datetime_range"><code>datetime_range()</code></a></td>
+<td>A column of datetimes at a fixed interval.</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/expressions.html#fn-datetime_ranges"><code>datetime_ranges()</code></a></td>
+<td>A list of datetimes per row, between two columns.</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/expressions.html#fn-time_range"><code>time_range()</code></a></td>
+<td>A column of times of day at a fixed interval.</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/expressions.html#fn-time_ranges"><code>time_ranges()</code></a></td>
+<td>A list of times per row, between two columns.</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/expressions.html#fn-int_range"><code>int_range()</code></a></td>
+<td>A column of integers from <code>start</code> to <code>end</code>.</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/expressions.html#fn-int_ranges"><code>int_ranges()</code></a></td>
+<td>A list of integers per row, between two columns.</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/expressions.html#fn-arange"><code>arange()</code></a></td>
+<td>A column of integers from <code>start</code> to <code>end</code>, as <code>int_range()</code>.</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/expressions.html#fn-linear_space"><code>linear_space()</code></a></td>
+<td>Evenly spaced values between two bounds.</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/expressions.html#fn-linear_spaces"><code>linear_spaces()</code></a></td>
+<td>Evenly spaced values per row, as a list or array.</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="index-sorting-and-positions" class="level3">
+<h3 class="anchored" data-anchor-id="index-sorting-and-positions">Sorting and positions</h3>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Function</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><a href="../reference/expressions.html#fn-arg_sort_by"><code>arg_sort_by()</code></a></td>
+<td>Row indices that sort by the given expressions.</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/expressions.html#fn-arg_where"><code>arg_where()</code></a></td>
+<td>Row indices where a condition is true.</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/expressions.html#fn-escape_regex"><code>escape_regex()</code></a></td>
+<td>Escape regular expression metacharacters in a string.</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="index-runtime" class="level3">
+<h3 class="anchored" data-anchor-id="index-runtime">Runtime</h3>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Function</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><a href="../reference/expressions.html#fn-version"><code>version()</code></a></td>
+<td>The phpolars extension version.</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/expressions.html#fn-polars_version"><code>polars_version()</code></a></td>
+<td>The version of the embedded Polars Rust crate.</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/expressions.html#fn-thread_pool_size"><code>thread_pool_size()</code></a></td>
+<td>The number of threads in the Polars thread pool.</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/expressions.html#fn-set_random_seed"><code>set_random_seed()</code></a></td>
+<td>Seed Polars’ random number generator for <code>sample()</code> and <code>shuffle()</code>.</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="index-selectors" class="level3">
+<h3 class="anchored" data-anchor-id="index-selectors">Selectors</h3>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Function</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><a href="../reference/expressions.html#cs-all"><code>cs\all()</code></a></td>
+<td>Every column.</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/expressions.html#cs-array_"><code>cs\array_()</code></a></td>
+<td>Array columns, optionally of an inner type and width.</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/expressions.html#cs-binary"><code>cs\binary()</code></a></td>
+<td>Binary columns.</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/expressions.html#cs-boolean"><code>cs\boolean()</code></a></td>
+<td>Boolean columns.</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/expressions.html#cs-by_dtype"><code>cs\by_dtype()</code></a></td>
+<td>Columns of the given data types.</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/expressions.html#cs-by_index"><code>cs\by_index()</code></a></td>
+<td>Columns at the given positions.</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/expressions.html#cs-by_name"><code>cs\by_name()</code></a></td>
+<td>Columns with the given names.</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/expressions.html#cs-categorical"><code>cs\categorical()</code></a></td>
+<td>Categorical columns.</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/expressions.html#cs-contains"><code>cs\contains()</code></a></td>
+<td>Columns whose names contain a substring.</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/expressions.html#cs-date"><code>cs\date()</code></a></td>
+<td>Date columns.</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/expressions.html#cs-datetime"><code>cs\datetime()</code></a></td>
+<td>Datetime columns, optionally of a time unit and zone.</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/expressions.html#cs-decimal"><code>cs\decimal()</code></a></td>
+<td>Decimal columns.</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/expressions.html#cs-duration"><code>cs\duration()</code></a></td>
+<td>Duration columns, optionally of a time unit.</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/expressions.html#cs-empty_"><code>cs\empty_()</code></a></td>
+<td>No columns.</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/expressions.html#cs-ends_with"><code>cs\ends_with()</code></a></td>
+<td>Columns whose names end with a suffix.</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/expressions.html#cs-enum_"><code>cs\enum_()</code></a></td>
+<td>Enum columns.</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/expressions.html#cs-exclude"><code>cs\exclude()</code></a></td>
+<td>Every column except the given ones.</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/expressions.html#cs-first"><code>cs\first()</code></a></td>
+<td>The first column.</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/expressions.html#cs-float"><code>cs\float()</code></a></td>
+<td>Float columns.</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/expressions.html#cs-integer"><code>cs\integer()</code></a></td>
+<td>Integer columns.</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/expressions.html#cs-last"><code>cs\last()</code></a></td>
+<td>The last column.</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/expressions.html#cs-list_"><code>cs\list_()</code></a></td>
+<td>List columns, optionally of an inner type.</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/expressions.html#cs-matches"><code>cs\matches()</code></a></td>
+<td>Columns whose names match a regular expression.</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/expressions.html#cs-nested"><code>cs\nested()</code></a></td>
+<td>List, array, and struct columns.</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/expressions.html#cs-numeric"><code>cs\numeric()</code></a></td>
+<td>Integer, float, and decimal columns.</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/expressions.html#cs-signed_integer"><code>cs\signed_integer()</code></a></td>
+<td>Signed integer columns.</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/expressions.html#cs-starts_with"><code>cs\starts_with()</code></a></td>
+<td>Columns whose names start with a prefix.</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/expressions.html#cs-string"><code>cs\string()</code></a></td>
+<td>String columns.</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/expressions.html#cs-struct_"><code>cs\struct_()</code></a></td>
+<td>Struct columns.</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/expressions.html#cs-temporal"><code>cs\temporal()</code></a></td>
+<td>Date, datetime, duration, and time columns.</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/expressions.html#cs-time"><code>cs\time()</code></a></td>
+<td>Time columns.</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/expressions.html#cs-unsigned_integer"><code>cs\unsigned_integer()</code></a></td>
+<td>Unsigned integer columns.</td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="classes" class="level2">
+<h2 class="anchored" data-anchor-id="classes">Classes and methods</h2>
+<p>Methods are instance methods unless the signature starts with <code>static</code>. Each class links to its full method list, grouped by task.</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Class</th>
+<th>Purpose</th>
+<th>Methods</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Data frames</strong></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td><a href="../reference/dataframe.html#dataframe"><code>DataFrame</code></a></td>
+<td>Data in memory; each method runs immediately.</td>
+<td><a href="../reference/dataframe.html#dataframe--create-and-convert">Create and convert</a> · <a href="../reference/dataframe.html#dataframe--inspect">Inspect</a> · <a href="../reference/dataframe.html#dataframe--select-and-add-columns">Select and add columns</a> · <a href="../reference/dataframe.html#dataframe--filter-sort-and-slice-rows">Filter, sort, and slice rows</a> · <a href="../reference/dataframe.html#dataframe--missing-values">Missing values</a> · <a href="../reference/dataframe.html#dataframe--group-and-aggregate">Group and aggregate</a> · <a href="../reference/dataframe.html#dataframe--join-and-combine">Join and combine</a> · <a href="../reference/dataframe.html#dataframe--reshape">Reshape</a> · <a href="../reference/dataframe.html#dataframe--sql">SQL</a> · <a href="../reference/dataframe.html#dataframe--write">Write</a></td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/dataframe.html#lazyframe"><code>LazyFrame</code></a></td>
+<td>A query plan that runs, optimized, on <code>collect()</code>.</td>
+<td><a href="../reference/dataframe.html#lazyframe--create-and-convert">Create and convert</a> · <a href="../reference/dataframe.html#lazyframe--inspect">Inspect</a> · <a href="../reference/dataframe.html#lazyframe--select-and-add-columns">Select and add columns</a> · <a href="../reference/dataframe.html#lazyframe--filter-sort-and-slice-rows">Filter, sort, and slice rows</a> · <a href="../reference/dataframe.html#lazyframe--missing-values">Missing values</a> · <a href="../reference/dataframe.html#lazyframe--group-and-aggregate">Group and aggregate</a> · <a href="../reference/dataframe.html#lazyframe--join-and-combine">Join and combine</a> · <a href="../reference/dataframe.html#lazyframe--reshape">Reshape</a> · <a href="../reference/dataframe.html#lazyframe--sql">SQL</a> · <a href="../reference/dataframe.html#lazyframe--write">Write</a></td>
+</tr>
+<tr class="even">
+<td><a href="../reference/dataframe.html#groupby"><code>GroupBy</code></a></td>
+<td>The result of <code>DataFrame::groupBy()</code>: <code>agg()</code> and per-group summaries.</td>
+<td>17 methods</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/dataframe.html#lazygroupby"><code>LazyGroupBy</code></a></td>
+<td>The result of <code>LazyFrame::groupBy()</code>.</td>
+<td>17 methods</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/dataframe.html#groupiterator"><code>GroupIterator</code></a></td>
+<td>Iterates over a <code>GroupBy</code> with <code>foreach</code>: group keys and rows.</td>
+<td>5 methods</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/dataframe.html#sqlcontext"><code>SQLContext</code></a></td>
+<td>Registers frames as tables and runs SQL queries.</td>
+<td>5 methods</td>
+</tr>
+<tr class="even">
+<td><strong>Columns and expressions</strong></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/series.html#series"><code>Series</code></a></td>
+<td>One named column of values.</td>
+<td><a href="../reference/series.html#series--arithmetic-and-comparison">Arithmetic and comparison</a> · <a href="../reference/series.html#series--logic-and-bits">Logic and bits</a> · <a href="../reference/series.html#series--missing-values">Missing values</a> · <a href="../reference/series.html#series--aggregate">Aggregate</a> · <a href="../reference/series.html#series--math">Math</a> · <a href="../reference/series.html#series--windows-cumulative-and-rolling">Windows, cumulative, and rolling</a> · <a href="../reference/series.html#series--sort-select-and-deduplicate">Sort, select, and deduplicate</a> · <a href="../reference/series.html#series--combine-and-reshape">Combine and reshape</a> · <a href="../reference/series.html#series--types-names-and-replacing-values">Types, names, and replacing values</a> · <a href="../reference/series.html#series--namespaces">Namespaces</a> · <a href="../reference/series.html#series--create-and-convert">Create and convert</a></td>
+</tr>
+<tr class="even">
+<td><a href="../reference/expressions.html#expr"><code>Expr</code></a></td>
+<td>A computation on columns, evaluated by <code>select()</code>, <code>withColumns()</code>, <code>filter()</code>, and <code>agg()</code>.</td>
+<td><a href="../reference/expressions.html#expr--arithmetic-and-comparison">Arithmetic and comparison</a> · <a href="../reference/expressions.html#expr--logic-and-bits">Logic and bits</a> · <a href="../reference/expressions.html#expr--missing-values">Missing values</a> · <a href="../reference/expressions.html#expr--aggregate">Aggregate</a> · <a href="../reference/expressions.html#expr--math">Math</a> · <a href="../reference/expressions.html#expr--windows-cumulative-and-rolling">Windows, cumulative, and rolling</a> · <a href="../reference/expressions.html#expr--sort-select-and-deduplicate">Sort, select, and deduplicate</a> · <a href="../reference/expressions.html#expr--combine-and-reshape">Combine and reshape</a> · <a href="../reference/expressions.html#expr--types-names-and-replacing-values">Types, names, and replacing values</a> · <a href="../reference/expressions.html#expr--namespaces">Namespaces</a> · <a href="../reference/expressions.html#expr--create-and-convert">Create and convert</a></td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/expressions.html#when"><code>When</code></a></td>
+<td>A condition from <code>when()</code>, awaiting <code>then()</code>.</td>
+<td>1 method</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/expressions.html#then"><code>Then</code></a></td>
+<td>A conditional expression, continued by <code>when()</code> or <code>otherwise()</code>.</td>
+<td>3 methods</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/expressions.html#str"><code>StrNameSpace</code></a></td>
+<td>String operations: <code>col(...)-&gt;str()</code>.</td>
+<td>46 methods</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/expressions.html#dt"><code>DtNameSpace</code></a></td>
+<td>Date, datetime, and duration operations: <code>col(...)-&gt;dt()</code>.</td>
+<td>47 methods</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/expressions.html#list"><code>ListNameSpace</code></a></td>
+<td>List operations: <code>col(...)-&gt;list()</code>.</td>
+<td>43 methods</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/expressions.html#arr"><code>ArrayNameSpace</code></a></td>
+<td>Fixed-width array operations: <code>col(...)-&gt;arr()</code>.</td>
+<td>31 methods</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/expressions.html#struct"><code>StructNameSpace</code></a></td>
+<td>Struct field operations: <code>col(...)-&gt;struct()</code>.</td>
+<td>5 methods</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/expressions.html#cat"><code>CatNameSpace</code></a></td>
+<td>Categorical operations: <code>col(...)-&gt;cat()</code>.</td>
+<td>6 methods</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/expressions.html#bin"><code>BinaryNameSpace</code></a></td>
+<td>Binary operations: <code>col(...)-&gt;bin()</code>.</td>
+<td>11 methods</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/expressions.html#name"><code>NameNameSpace</code></a></td>
+<td>Output column naming: <code>col(...)-&gt;name()</code>.</td>
+<td>8 methods</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/expressions.html#meta"><code>MetaNameSpace</code></a></td>
+<td>Inspection of an expression itself: <code>col(...)-&gt;meta()</code>.</td>
+<td>9 methods</td>
+</tr>
+<tr class="even">
+<td><strong>Types and settings</strong></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/types.html#datatype"><code>DataType</code></a></td>
+<td>Data type names as constants, and builders for parameterized types.</td>
+<td>3 methods</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/types.html#config"><code>Config</code></a></td>
+<td>Settings for how data frames print.</td>
+<td>20 methods</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="errors" class="level2">
+<h2 class="anchored" data-anchor-id="errors">Errors</h2>
+<p>Polars errors are thrown as subclasses of <code>Phpolars\PolarsError</code> in <code>Phpolars\Exception</code>. <a href="../reference/types.html#errors">Types and values</a> lists them.</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/phpolars\.phpstats\.org\/docs");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

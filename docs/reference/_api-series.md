@@ -1,6 +1,6 @@
-### `Phpolars\Series` {#series}
+## `Series` {#series}
 
-#### Arithmetic and comparison {#series--arithmetic-and-comparison}
+### Arithmetic and comparison {#series--arithmetic-and-comparison}
 
 - []{#series-abs} `abs(): Phpolars\Series`
 - []{#series-add} `add(mixed $other): Phpolars\Series`
@@ -20,13 +20,13 @@
 - []{#series-sub} `sub(mixed $other): Phpolars\Series`
 - []{#series-truediv} `truediv(mixed $other): Phpolars\Series`
 
-#### Logic and bits {#series--logic-and-bits}
+### Logic and bits {#series--logic-and-bits}
 
 - []{#series-and} `and(mixed $other): Phpolars\Series`
 - []{#series-not} `not(): Phpolars\Series`
 - []{#series-or} `or(mixed $other): Phpolars\Series`
 
-#### Missing values {#series--missing-values}
+### Missing values {#series--missing-values}
 
 - []{#series-dropNulls} `dropNulls(): Phpolars\Series`
 - []{#series-fillNan} `fillNan(mixed $value): Phpolars\Series`
@@ -37,7 +37,7 @@
 - []{#series-isNull} `isNull(): Phpolars\Series`
 - []{#series-nullCount} `nullCount(): int`
 
-#### Aggregate {#series--aggregate}
+### Aggregate {#series--aggregate}
 
 - []{#series-all} `all(?bool $ignoreNulls = null): mixed`
 - []{#series-any} `any(?bool $ignoreNulls = null): mixed`
@@ -62,7 +62,7 @@
 - []{#series-valueCounts} `valueCounts(?bool $sort = null, ?string $name = null, ?bool $normalize = null): Phpolars\DataFrame`
 - []{#series-var} `var(?int $ddof = null): mixed`
 
-#### Math {#series--math}
+### Math {#series--math}
 
 - []{#series-clip} `clip(mixed $lowerBound = null, mixed $upperBound = null): Phpolars\Series`
 - []{#series-exp} `exp(): Phpolars\Series`
@@ -70,7 +70,7 @@
 - []{#series-round} `round(?int $decimals = null): Phpolars\Series`
 - []{#series-sqrt} `sqrt(): Phpolars\Series`
 
-#### Windows, cumulative, and rolling {#series--windows-cumulative-and-rolling}
+### Windows, cumulative, and rolling {#series--windows-cumulative-and-rolling}
 
 - []{#series-cumMax} `cumMax(?bool $reverse = null): Phpolars\Series`
 - []{#series-cumMin} `cumMin(?bool $reverse = null): Phpolars\Series`
@@ -81,7 +81,7 @@
 - []{#series-rank} `rank(?string $method = null, ?bool $descending = null, ?int $seed = null): Phpolars\Series`
 - []{#series-shift} `shift(?int $n = null): Phpolars\Series`
 
-#### Sort, select, and deduplicate {#series--sort-select-and-deduplicate}
+### Sort, select, and deduplicate {#series--sort-select-and-deduplicate}
 
 - []{#series-argSort} `argSort(?bool $descending = null, ?bool $nullsLast = null): Phpolars\Series`
 - []{#series-argTrue} `argTrue(): Phpolars\Series`
@@ -99,13 +99,13 @@
 - []{#series-tail} `tail(?int $n = null): Phpolars\Series`
 - []{#series-unique} `unique(?bool $maintainOrder = null): Phpolars\Series`
 
-#### Combine and reshape {#series--combine-and-reshape}
+### Combine and reshape {#series--combine-and-reshape}
 
 - []{#series-append} `append(Phpolars\Series $other): Phpolars\Series`
 - []{#series-extend} `extend(Phpolars\Series $other): Phpolars\Series`
 - []{#series-zipWith} `zipWith(Phpolars\Series $mask, Phpolars\Series $other): Phpolars\Series`
 
-#### Types, names, and replacing values {#series--types-names-and-replacing-values}
+### Types, names, and replacing values {#series--types-names-and-replacing-values}
 
 - []{#series-alias} `alias(string $name): Phpolars\Series`
 - []{#series-cast} `cast(string $dtype, ?bool $strict = null): Phpolars\Series`
@@ -114,7 +114,7 @@
 - []{#series-scatter} `scatter(mixed $indices, mixed $values): Phpolars\Series`
 - []{#series-set} `set(Phpolars\Series $filter, mixed $value): Phpolars\Series`
 
-#### Namespaces {#series--namespaces}
+### Namespaces {#series--namespaces}
 
 - []{#series-arr} `arr(): Phpolars\ArrayNameSpace`
 - []{#series-bin} `bin(): Phpolars\BinaryNameSpace`
@@ -125,7 +125,7 @@
 - []{#series-str} `str(): Phpolars\StrNameSpace`
 - []{#series-struct} `struct(): Phpolars\StructNameSpace`
 
-#### Create and convert {#series--create-and-convert}
+### Create and convert {#series--create-and-convert}
 
 - []{#series-__call} `__call(string $name, array $arguments): mixed`
 - []{#series-__toString} `__toString(): string`

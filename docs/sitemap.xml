@@ -2,63 +2,67 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://phpolars.phpstats.org/docs/reference/types.html</loc>
-    <lastmod>2026-10-31T14:47:46.668Z</lastmod>
+    <lastmod>2026-11-01T23:07:33.368Z</lastmod>
   </url>
   <url>
     <loc>https://phpolars.phpstats.org/docs/reference/io.html</loc>
     <lastmod>2026-11-01T21:20:15.920Z</lastmod>
   </url>
   <url>
-    <loc>https://phpolars.phpstats.org/docs/reference/dataframe.html</loc>
-    <lastmod>2026-11-01T19:01:53.016Z</lastmod>
+    <loc>https://phpolars.phpstats.org/docs/reference/expressions.html</loc>
+    <lastmod>2026-11-01T23:07:33.366Z</lastmod>
   </url>
   <url>
-    <loc>https://phpolars.phpstats.org/docs/performance.html</loc>
-    <lastmod>2026-11-01T21:20:15.920Z</lastmod>
+    <loc>https://phpolars.phpstats.org/docs/phibble.html</loc>
+    <lastmod>2026-11-01T23:07:33.368Z</lastmod>
   </url>
   <url>
-    <loc>https://phpolars.phpstats.org/docs/getting-started.html</loc>
-    <lastmod>2026-11-01T19:00:54.251Z</lastmod>
-  </url>
-  <url>
-    <loc>https://phpolars.phpstats.org/docs/examples/lazy-csv.html</loc>
-    <lastmod>2026-11-01T19:21:57.252Z</lastmod>
-  </url>
-  <url>
-    <loc>https://phpolars.phpstats.org/docs/development.html</loc>
-    <lastmod>2026-11-01T19:21:57.252Z</lastmod>
-  </url>
-  <url>
-    <loc>https://phpolars.phpstats.org/docs/compatibility.html</loc>
-    <lastmod>2026-11-01T19:00:54.251Z</lastmod>
-  </url>
-  <url>
-    <loc>https://phpolars.phpstats.org/docs/coming-from-python.html</loc>
-    <lastmod>2026-11-01T19:02:48.485Z</lastmod>
-  </url>
-  <url>
-    <loc>https://phpolars.phpstats.org/docs/deployment.html</loc>
-    <lastmod>2026-11-01T21:20:15.920Z</lastmod>
-  </url>
-  <url>
-    <loc>https://phpolars.phpstats.org/docs/examples/expressions.html</loc>
-    <lastmod>2026-11-01T18:12:10.810Z</lastmod>
+    <loc>https://phpolars.phpstats.org/docs/index.html</loc>
+    <lastmod>2026-11-01T23:07:42.012Z</lastmod>
   </url>
   <url>
     <loc>https://phpolars.phpstats.org/docs/examples/time-series.html</loc>
     <lastmod>2026-11-01T18:12:10.818Z</lastmod>
   </url>
   <url>
-    <loc>https://phpolars.phpstats.org/docs/index.html</loc>
-    <lastmod>2026-11-01T19:00:54.250Z</lastmod>
+    <loc>https://phpolars.phpstats.org/docs/examples/expressions.html</loc>
+    <lastmod>2026-11-01T18:12:10.810Z</lastmod>
   </url>
   <url>
-    <loc>https://phpolars.phpstats.org/docs/phibble.html</loc>
-    <lastmod>2026-11-01T21:20:15.921Z</lastmod>
+    <loc>https://phpolars.phpstats.org/docs/deployment.html</loc>
+    <lastmod>2026-11-01T21:20:15.920Z</lastmod>
   </url>
   <url>
-    <loc>https://phpolars.phpstats.org/docs/reference/expressions.html</loc>
-    <lastmod>2026-11-01T19:01:53.016Z</lastmod>
+    <loc>https://phpolars.phpstats.org/docs/coming-from-python.html</loc>
+    <lastmod>2026-11-01T19:02:48.485Z</lastmod>
+  </url>
+  <url>
+    <loc>https://phpolars.phpstats.org/docs/compatibility.html</loc>
+    <lastmod>2026-11-01T19:00:54.251Z</lastmod>
+  </url>
+  <url>
+    <loc>https://phpolars.phpstats.org/docs/development.html</loc>
+    <lastmod>2026-11-01T19:21:57.252Z</lastmod>
+  </url>
+  <url>
+    <loc>https://phpolars.phpstats.org/docs/examples/lazy-csv.html</loc>
+    <lastmod>2026-11-01T19:21:57.252Z</lastmod>
+  </url>
+  <url>
+    <loc>https://phpolars.phpstats.org/docs/getting-started.html</loc>
+    <lastmod>2026-11-01T19:00:54.251Z</lastmod>
+  </url>
+  <url>
+    <loc>https://phpolars.phpstats.org/docs/performance.html</loc>
+    <lastmod>2026-11-01T23:07:33.367Z</lastmod>
+  </url>
+  <url>
+    <loc>https://phpolars.phpstats.org/docs/reference/dataframe.html</loc>
+    <lastmod>2026-11-01T23:07:33.366Z</lastmod>
+  </url>
+  <url>
+    <loc>https://phpolars.phpstats.org/docs/reference/index.html</loc>
+    <lastmod>2026-11-01T23:07:33.342Z</lastmod>
   </url>
   <url>
     <loc>https://phpolars.phpstats.org/docs/reference/series.html</loc>

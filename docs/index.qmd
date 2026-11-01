@@ -22,6 +22,8 @@ The example reads `sales.csv`, the docs' example data. [Getting started](getting
 - SQL queries over data frames.
 - A thread-pool cap for PHP-FPM (`php_polars.max_threads`).
 
+[Functions and methods](reference/index.qmd) lists every function, selector, and class, with links to the signatures.
+
 ## The phpolars API or phibble and phplyr
 
 - The phpolars API (`Phpolars\DataFrame`, `LazyFrame`, `Series`, and expressions) follows Polars' semantics. A missing value is `null`, and aggregates skip it.

@@ -50,18 +50,6 @@
         "path": "getting-started.qmd"
       },
       {
-        "title": "Aggregate with expressions",
-        "path": "examples/expressions.qmd"
-      },
-      {
-        "title": "Query a large CSV file lazily",
-        "path": "examples/lazy-csv.qmd"
-      },
-      {
-        "title": "Rolling windows and as-of joins",
-        "path": "examples/time-series.qmd"
-      },
-      {
         "title": "Coming from py-polars",
         "path": "coming-from-python.qmd"
       },
@@ -72,6 +60,18 @@
       {
         "title": "Deployment",
         "path": "deployment.qmd"
+      },
+      {
+        "title": "Compatibility and limitations",
+        "path": "compatibility.qmd"
+      },
+      {
+        "title": "Performance",
+        "path": "performance.qmd"
+      },
+      {
+        "title": "Functions and methods",
+        "path": "reference/index.qmd"
       },
       {
         "title": "DataFrame and LazyFrame",
@@ -94,12 +94,16 @@
         "path": "reference/types.qmd"
       },
       {
-        "title": "Compatibility and limitations",
-        "path": "compatibility.qmd"
+        "title": "Aggregate with expressions",
+        "path": "examples/expressions.qmd"
       },
       {
-        "title": "Performance",
-        "path": "performance.qmd"
+        "title": "Query a large CSV file lazily",
+        "path": "examples/lazy-csv.qmd"
+      },
+      {
+        "title": "Rolling windows and as-of joins",
+        "path": "examples/time-series.qmd"
       },
       {
         "title": "Development",

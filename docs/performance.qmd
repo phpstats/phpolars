@@ -7,9 +7,9 @@ title: "Performance"
 - Polars memory is outside PHP's memory manager, so `memory_limit` does not count it. PHP arrays built from a result do count.
 - `rows()`, `toDicts()`, and `iterRows()` build PHP arrays for every row, which can take far more memory than the data does in Polars. Calling `rows()` on each slice from `iterSlices(10000)` keeps PHP's peak low.
 - Collecting rows into PHP costs time in proportion to the rows and columns returned. Datetime columns cost the most, because each value becomes a `DateTimeImmutable` object.
-- A `PolarsTable` gains the most when a pipeline reduces the data (summaries, filters, or joins followed by summaries) or chains several verbs before collecting.
+- A `PolarsTable` gains the most when a pipeline reduces the data (summaries, filters, or joins followed by summaries) or chains several methods before collecting.
 - Reading files with `Phpolars\read_csv()` or `read_parquet()` and wrapping the result with `PolarsTable::fromPolars()` avoids parsing the file in PHP.
-- A verb given a PHP closure converts a `PolarsTable` to a phibble `DataFrame` and back. Use expressions on large data, or phibble's in-memory `DataFrame` for closure-heavy pipelines.
+- A method given a PHP closure converts a `PolarsTable` to a phibble `DataFrame` and back. Use expressions on large data, or phibble's in-memory `DataFrame` for closure-heavy pipelines.
 - For a filtered scan of a large file, `collect(engine: 'streaming')` runs in batches and keeps less in memory.
 
 ## Benchmark reports

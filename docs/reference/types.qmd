@@ -39,3 +39,5 @@ From PHP, each column gets one inferred type. Integers widen to floats, nulls fi
 Polars errors are thrown as subclasses of `Phpolars\PolarsError`, named after the py-polars exceptions: `ColumnNotFoundError`, `ComputeError`, `DuplicateError`, `InvalidOperationError`, `NoDataError`, `OutOfBoundsError`, `SchemaError`, `SchemaFieldNotFoundError`, `ShapeError`, and `StructFieldNotFoundError`, all in `Phpolars\Exception`. Invalid arguments raise PHP's `ValueError`.
 
 {{< include ../examples/_errors.md >}}
+
+{{< include _api-types.md >}}

@@ -1,4 +1,4 @@
-- [`Phpolars\Series`](#series)
+- [`Series`](#series)
     - [Arithmetic and comparison](#series--arithmetic-and-comparison): [`abs`](#series-abs) · [`add`](#series-add) · [`div`](#series-div) · [`eq`](#series-eq) · [`floordiv`](#series-floordiv) · [`ge`](#series-ge) · [`gt`](#series-gt) · [`isBetween`](#series-isBetween) · [`isIn`](#series-isIn) · [`le`](#series-le) · [`lt`](#series-lt) · [`mod`](#series-mod) · [`mul`](#series-mul) · [`ne`](#series-ne) · [`pow`](#series-pow) · [`sub`](#series-sub) · [`truediv`](#series-truediv)
     - [Logic and bits](#series--logic-and-bits): [`and`](#series-and) · [`not`](#series-not) · [`or`](#series-or)
     - [Missing values](#series--missing-values): [`dropNulls`](#series-dropNulls) · [`fillNan`](#series-fillNan) · [`fillNull`](#series-fillNull) · [`hasNulls`](#series-hasNulls) · [`isNan`](#series-isNan) · [`isNotNull`](#series-isNotNull) · [`isNull`](#series-isNull) · [`nullCount`](#series-nullCount)
