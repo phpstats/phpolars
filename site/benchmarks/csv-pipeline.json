@@ -1,0 +1,86 @@
+{
+    "title": "A 1 GB CSV file: phpolars and plain PHP",
+    "description": "Both scripts read every row of a seeded order-events CSV, keep the completed orders, and compute orders, units, revenue, and the mean amount for each region and month. phpolars scans the file lazily and runs the query with the streaming engine. Plain PHP reads one row at a time with fgetcsv and adds each row to the totals of its group. Each run is a fresh process. Time is measured inside the script, from opening the file to holding the result as PHP values. Memory is the peak resident set size of the process, which includes Polars' native allocations and the pages of the file that the CSV reader maps. The file was in the operating system's page cache in every run. The value is the median of 7 runs after one warm-up run of each.",
+    "measure": "Elapsed time",
+    "unit": "ms",
+    "statistic": "median",
+    "environment": {
+        "cpu": "Apple M5 Ultra",
+        "cores": 30,
+        "memory_gb": 96,
+        "os": "macOS 27.0.1",
+        "php": "8.5.10",
+        "phpolars": "0.2.1",
+        "polars": "0.55.2",
+        "threads": 2,
+        "engine": "streaming",
+        "cache": "warm",
+        "repeats": 7,
+        "date": "2026-11-01",
+        "commit": "bd92c6c4d88f6cf11e15696f71cad55efcfa4381"
+    },
+    "dataset": {
+        "rows": 20000000,
+        "bytes": 1027501930,
+        "sha256": "98a62f75bb66442a6213189ab9f0dcbac3963d9e36e5eda61a592757e8a7871b",
+        "missing_amounts": "about 1%"
+    },
+    "check": {
+        "groups": 192,
+        "max_rel_difference": 4.3098434180282427e-14
+    },
+    "code": {
+        "phpolars": "<?php\n\nuse function Phpolars\\{col, len, scan_csv};\n\n$path = $argv[1];\n$start = hrtime(true);\n\n$summary = scan_csv($path)\n    ->filter(col('status')->eq('completed'))\n    ->groupBy(['region', col('placed_on')->str()->slice(0, 7)->alias('month')])\n    ->agg(\n        len()->alias('orders'),\n        col('quantity')->sum()->alias('units'),\n        col('amount')->sum()->alias('revenue'),\n        col('amount')->mean()->alias('mean_amount'),\n    )\n    ->sort(['region', 'month'])\n    ->collect(engine: 'streaming');\n\n$rows = $summary->rows();\n$ms = (hrtime(true) - $start) / 1e6;\necho json_encode(['ms' => $ms, 'maxrss' => getrusage()['ru_maxrss'], 'rows' => $rows, 'threads' => Phpolars\\thread_pool_size()]), \"\\n\";\n",
+        "plain PHP": "<?php\n\n$path = $argv[1];\n$start = hrtime(true);\n\n$in = fopen($path, 'r');\n$header = fgetcsv($in, escape: '');\n$groups = [];\nwhile (($row = fgetcsv($in, escape: '')) !== false) {\n    [, $placedOn, $region, , $status, $quantity, $amount] = $row;\n    if ($status !== 'completed') {\n        continue;\n    }\n    $key = $region.\"\\0\".substr($placedOn, 0, 7);\n    $g = $groups[$key] ?? ['orders' => 0, 'units' => 0, 'revenue' => 0.0, 'amounts' => 0];\n    $g['orders']++;\n    $g['units'] += (int) $quantity;\n    if ($amount !== '') {\n        $g['revenue'] += (float) $amount;\n        $g['amounts']++;\n    }\n    $groups[$key] = $g;\n}\nfclose($in);\nksort($groups, SORT_STRING);\n$rows = [];\nforeach ($groups as $key => $g) {\n    [$region, $month] = explode(\"\\0\", $key);\n    $rows[] = [$region, $month, $g['orders'], $g['units'], $g['revenue'], $g['amounts'] > 0 ? $g['revenue'] / $g['amounts'] : null];\n}\n\n$ms = (hrtime(true) - $start) / 1e6;\necho json_encode(['ms' => $ms, 'maxrss' => getrusage()['ru_maxrss'], 'rows' => $rows]), \"\\n\";\n"
+    },
+    "rows": [
+        {
+            "case": "Filter, group, and summarize a 1 GB CSV file",
+            "implementation": "phpolars",
+            "value": 1387.8,
+            "reps": [
+                1379.5,
+                1393.6,
+                1393.1,
+                1387.8,
+                1459.8,
+                1373.4,
+                1375.2
+            ],
+            "peak_memory_mib": 1077.3,
+            "reps_peak_memory_mib": [
+                1058.3,
+                1100,
+                1130.9,
+                1067.3,
+                1094.5,
+                1075.6,
+                1077.3
+            ]
+        },
+        {
+            "case": "Filter, group, and summarize a 1 GB CSV file",
+            "implementation": "plain PHP",
+            "value": 13998,
+            "reps": [
+                13963.4,
+                14018.1,
+                14017,
+                13998,
+                13880.9,
+                13887.3,
+                14021.5
+            ],
+            "peak_memory_mib": 32,
+            "reps_peak_memory_mib": [
+                32,
+                32,
+                32,
+                31.9,
+                32.1,
+                31.9,
+                32
+            ]
+        }
+    ]
+}
