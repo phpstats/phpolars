@@ -142,7 +142,7 @@
 
 ### Write {#dataframe--write}
 
-- []{#dataframe-writeCsv} `writeCsv(string $file, ?bool $includeHeader = null, ?string $separator = null, ?string $nullValue = null, ?string $quoteChar = null, ?string $dateFormat = null, ?string $datetimeFormat = null, ?string $timeFormat = null, ?bool $floatScientific = null, ?int $floatPrecision = null, ?bool $decimalComma = null, ?string $lineTerminator = null, ?string $quoteStyle = null, ?bool $includeBom = null): void`: writes the whole frame; `LazyFrame::sinkCsv()` streams a query result instead
+- []{#dataframe-writeCsv} `writeCsv(string $file, ?bool $includeHeader = null, ?string $separator = null, ?string $nullValue = null, ?string $quoteChar = null, ?string $dateFormat = null, ?string $datetimeFormat = null, ?string $timeFormat = null, ?bool $floatScientific = null, ?int $floatPrecision = null, ?bool $decimalComma = null, ?string $lineTerminator = null, ?string $quoteStyle = null, ?bool $includeBom = null): void`: writes the whole data frame; `LazyFrame::sinkCsv()` streams a query result instead
 - []{#dataframe-writeDatabase} `writeDatabase(string $tableName, mixed $connection, ?string $ifTableExists = null): int`
 - []{#dataframe-writeIpc} `writeIpc(string $file): void`
 - []{#dataframe-writeIpcStream} `writeIpcStream(string $file): void`

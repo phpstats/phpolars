@@ -24,11 +24,11 @@
 | [`from_dicts()`](expressions.qmd#fn-from_dicts) | Build a `DataFrame` from a list of associative rows. |
 | [`from_records()`](expressions.qmd#fn-from_records) | Build a `DataFrame` from a list of rows. |
 | [`json_normalize()`](expressions.qmd#fn-json_normalize) | Flatten nested arrays into a `DataFrame` with one column per path. |
-| [`concat()`](expressions.qmd#fn-concat) | Concatenate frames or series vertically, horizontally, or diagonally. |
-| [`union()`](expressions.qmd#fn-union) | Concatenate frames without guaranteeing row order. |
-| [`select()`](expressions.qmd#fn-select) | Evaluate expressions into a `DataFrame` without an input frame. |
-| [`sql()`](expressions.qmd#fn-sql) | Run a SQL query against the given frames. |
-| [`collect_all()`](expressions.qmd#fn-collect_all) | Collect several lazy frames in parallel. |
+| [`concat()`](expressions.qmd#fn-concat) | Concatenate data frames, LazyFrames, or series vertically, horizontally, or diagonally. |
+| [`union()`](expressions.qmd#fn-union) | Concatenate data frames or LazyFrames without guaranteeing row order. |
+| [`select()`](expressions.qmd#fn-select) | Evaluate expressions into a `DataFrame` without an input data frame. |
+| [`sql()`](expressions.qmd#fn-sql) | Run a SQL query against the given data frames. |
+| [`collect_all()`](expressions.qmd#fn-collect_all) | Collect several LazyFrames in parallel. |
 
 ### Columns and literals {#index-columns-and-literals}
 

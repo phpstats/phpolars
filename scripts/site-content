@@ -134,7 +134,7 @@ if (in_array('verifications', $parts, true)) {
             .'phpolars embeds the Polars Rust crate %s; py-polars %s is the release with the closest Rust core. Error statistics cover numeric values only.', $crate, $report['polars_version']),
         'reference' => 'py-polars '.$report['polars_version'],
         'versions' => $versions,
-        'inputs' => 'Fixed data frames built identically in scripts/pyfixtures.py and tests/pyfixtures.php: a 6-row frame of integers, floats, strings, booleans, dates, datetimes, and lists with nulls in every column; lookup tables; a sorted time series; and quotes for as-of joins.',
+        'inputs' => 'Fixed data frames built identically in scripts/pyfixtures.py and tests/pyfixtures.php: a 6-row data frame of integers, floats, strings, booleans, dates, datetimes, and lists with nulls in every column; lookup tables; a sorted time series; and quotes for as-of joins.',
         'comparison' => [
             ['id' => 'exact', 'kind' => 'exact', 'applies_to' => 'Results without floats; column names, data types, integers, strings, booleans, temporal values, and null positions'],
             ['id' => 'float', 'kind' => 'tolerance', 'rtol' => 1e-9, 'applies_to' => 'Finite floats; no absolute term, so a zero reference requires an exact zero, and all other values compare exactly'],

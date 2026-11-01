@@ -10,7 +10,7 @@
         "Polars Rust crate": "0.55.2",
         "PHP": "8.5.10"
     },
-    "inputs": "Fixed data frames built identically in scripts/pyfixtures.py and tests/pyfixtures.php: a 6-row frame of integers, floats, strings, booleans, dates, datetimes, and lists with nulls in every column; lookup tables; a sorted time series; and quotes for as-of joins.",
+    "inputs": "Fixed data frames built identically in scripts/pyfixtures.py and tests/pyfixtures.php: a 6-row data frame of integers, floats, strings, booleans, dates, datetimes, and lists with nulls in every column; lookup tables; a sorted time series; and quotes for as-of joins.",
     "comparison": [
         {
             "id": "exact",
