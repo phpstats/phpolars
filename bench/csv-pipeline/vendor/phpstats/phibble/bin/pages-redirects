@@ -25,10 +25,8 @@ stub() {
 HTML
 }
 
-mkdir -p "$out/examples"
-for page in docs/*.html docs/examples/*.html; do
-    name="${page#docs/}"
-    name="${name%.html}"
+for page in docs/*.html; do
+    name="$(basename "$page" .html)"
     if [ "$name" = index ]; then
         stub "$out/index.html" "$base"
     else

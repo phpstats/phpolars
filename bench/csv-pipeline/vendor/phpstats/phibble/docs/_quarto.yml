@@ -3,7 +3,6 @@ project:
   output-dir: _site
   render:
     - "*.qmd"
-    - "examples/*.qmd"
   resources:
     - data/*.csv
 
@@ -17,10 +16,6 @@ website:
     contents:
       - index.qmd
       - getting-started.qmd
-      - section: "Examples"
-        contents:
-          - examples/read-a-csv.qmd
-          - examples/database-table.qmd
       - section: "Guides"
         contents:
           - coming-from-tibble.qmd

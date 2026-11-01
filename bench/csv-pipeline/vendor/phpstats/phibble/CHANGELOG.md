@@ -7,25 +7,6 @@ change the public API.
 
 ## [Unreleased]
 
-## [0.5.2] - 2026-11-01
-
-### Changed
-
-- The PHP CSV reader packs a column whose values are mostly distinct into
-  one string per 4096 rows while it reads, and parses numbers and dates a
-  block at a time. Reading a 2M-row, 7-column file peaks at 239 MB of PHP
-  heap instead of 378 MB.
-- `filter()` and `mutate()` on an ungrouped table no longer build a list of
-  every row number.
-- Grouping numbers each key column's distinct values and combines the
-  numbers, instead of building a key string for every row.
-- A string function of a column, such as `str_sub()`, computes each
-  repeated value once and shares repeated results, as the CSV reader shares
-  repeated values. Both stop when the values are mostly distinct.
-- On 2M rows, a read, filter, mutate, and grouped summary peaks at 513 MiB
-  RSS instead of 634 MiB and runs in 2.5 s instead of 3.3 s. With the phit
-  reader it runs in 1.1 s instead of 2.1 s. Results are unchanged.
-
 ## [0.5.1] - 2026-10-31
 
 ### Added
@@ -253,8 +234,7 @@ and cmdstanphp.
   query builders and `->phibble()` for lazy SQL tables. Global scopes such as
   soft deletes apply.
 
-[Unreleased]: https://github.com/phpstats/phibble/compare/v0.5.2...HEAD
-[0.5.2]: https://github.com/phpstats/phibble/releases/tag/v0.5.2
+[Unreleased]: https://github.com/phpstats/phibble/compare/v0.5.1...HEAD
 [0.5.1]: https://github.com/phpstats/phibble/releases/tag/v0.5.1
 [0.5.0]: https://github.com/phpstats/phibble/releases/tag/v0.5.0
 [0.4.1]: https://github.com/phpstats/phibble/releases/tag/v0.4.1

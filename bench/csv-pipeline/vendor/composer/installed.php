@@ -3,7 +3,7 @@
         'name' => 'phpstats/phpolars-csv-bench',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => '91ef35464bfbccfa2b2c715ab76a62cea949cedf',
+        'reference' => '067cae1634004ecb5502e24e4689c2f00066f53a',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -11,9 +11,9 @@
     ),
     'versions' => array(
         'phpstats/phibble' => array(
-            'pretty_version' => 'v0.5.2',
-            'version' => '0.5.2.0',
-            'reference' => 'a825efe35cb4cbbec777beb8ff9b5d034aa07f87',
+            'pretty_version' => 'v0.5.1',
+            'version' => '0.5.1.0',
+            'reference' => '36d0f3fde2e115b68341bb972e99e5f47b817dd2',
             'type' => 'library',
             'install_path' => __DIR__ . '/../phpstats/phibble',
             'aliases' => array(),
@@ -22,7 +22,7 @@
         'phpstats/phpolars-csv-bench' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => '91ef35464bfbccfa2b2c715ab76a62cea949cedf',
+            'reference' => '067cae1634004ecb5502e24e4689c2f00066f53a',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),

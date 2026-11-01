@@ -169,7 +169,7 @@
     "href": "index.html",
     "title": "phibble",
     "section": "",
-    "text": "phibble is a data frame library for PHP. A DataFrame is a table of named, typed columns, such as the rows of a CSV file or a database query. phibble reads such tables, filters, sorts, groups, joins, and summarizes them, and writes them back out. Its design and names follow R’s tibble and readr packages, and its verbs follow dplyr.\nThis script reads the Palmer penguins data, penguins.csv, and summarizes it by species and sex. A first script gives the commands that install phibble and download the file.",
+    "text": "phibble is a data frame library for PHP. A DataFrame is a table of named, typed columns, such as the rows of a CSV file or a database query. phibble reads such tables, filters, sorts, groups, joins, and summarizes them, and writes them back out. Its design and names follow R’s tibble and readr packages, and its verbs follow dplyr.",
     "crumbs": [
       "phibble"
     ]
@@ -209,7 +209,7 @@
     "href": "index.html#install",
     "title": "phibble",
     "section": "Install",
-    "text": "Install\ncomposer require phpstats/phibble\nphibble requires PHP 8.3, 8.4, or 8.5, and the mbstring and PDO extensions. The phit extension, the php_polars extension, and illuminate/database enable optional features. Installation lists what each one enables and the versions it needs.\nPipelines can use PHP 8.5’s |&gt; operator. Method chains work on PHP 8.3, 8.4, and 8.5.",
+    "text": "Install\ncomposer require phpstats/phibble\nRequirements:\n\nPHP 8.3, 8.4, or 8.5. CI tests all three.\nThe mbstring extension.\nThe PDO extension.\n\nOptional:\n\nThe phit extension reads CSV natively. fromCsv() uses phit 0.1.1 or later, and the chunked readers use phit 0.2.0 or later.\nThe php_polars extension enables PolarsTable.\nilluminate/database enables the Laravel macros.\n\nPipelines can use PHP 8.5’s |&gt; operator. Method chains work on every supported version.",
     "crumbs": [
       "phibble"
     ]
@@ -278,17 +278,6 @@
     "crumbs": [
       "Guides",
       "Expressions"
-    ]
-  },
-  {
-    "objectID": "examples/database-table.html",
-    "href": "examples/database-table.html",
-    "title": "Query a database table",
-    "section": "",
-    "text": "This example summarizes a database table with phibble’s verbs, which compile to one SQL query that the database runs.\nIt needs phibble and the pdo_sqlite extension. phibble is installed as described in Installation.\nThe script creates an in-memory SQLite database with an orders table of eight rows. It opens the table with tbl(), keeps the orders with at least one unit, computes each order’s revenue, and totals the orders and revenue for each region:\n\nPHP 8.5+PHP 8.3–8.4\n\n\n&lt;?php\n\nrequire __DIR__.'/vendor/autoload.php';\n\nuse Phibble\\Sql\\SqlTable;\n\nuse function Phibble\\tbl;\nuse function Phibble\\Expr\\{col, desc, n, sum};\n\n$pdo = new PDO('sqlite::memory:');\n$pdo-&gt;exec('CREATE TABLE orders (region TEXT, product TEXT, units INTEGER, price REAL)');\n$pdo-&gt;exec(\"INSERT INTO orders VALUES\n    ('east', 'lamp', 3, 24.0), ('east', 'desk', 1, 180.0), ('west', 'lamp', 5, 24.0),\n    ('west', 'chair', 4, 65.0), ('north', 'desk', 2, 180.0), ('north', 'lamp', 1, 24.0),\n    ('west', 'desk', 1, 180.0), ('east', 'chair', 0, 65.0)\");\n\n$orders = tbl($pdo, 'orders');\n\n$revenue = $orders |&gt;\n    (fn (SqlTable $t) =&gt; $t-&gt;filter(col('units')-&gt;gt(0))) |&gt;\n    (fn (SqlTable $t) =&gt; $t-&gt;mutate(['revenue' =&gt; col('units')-&gt;mul(col('price'))])) |&gt;\n    (fn (SqlTable $t) =&gt; $t-&gt;groupBy(['region'])) |&gt;\n    (fn (SqlTable $t) =&gt; $t-&gt;summarize(['orders' =&gt; n(), 'revenue' =&gt; sum(col('revenue'))])) |&gt;\n    (fn (SqlTable $t) =&gt; $t-&gt;arrange([desc(col('revenue'))]));\n\necho $revenue-&gt;showQuery(), \"\\n\\n\";\necho $revenue-&gt;collect(), \"\\n\";\n\n\n&lt;?php\n\nrequire __DIR__.'/vendor/autoload.php';\n\nuse function Phibble\\tbl;\nuse function Phibble\\Expr\\{col, desc, n, sum};\n\n$pdo = new PDO('sqlite::memory:');\n$pdo-&gt;exec('CREATE TABLE orders (region TEXT, product TEXT, units INTEGER, price REAL)');\n$pdo-&gt;exec(\"INSERT INTO orders VALUES\n    ('east', 'lamp', 3, 24.0), ('east', 'desk', 1, 180.0), ('west', 'lamp', 5, 24.0),\n    ('west', 'chair', 4, 65.0), ('north', 'desk', 2, 180.0), ('north', 'lamp', 1, 24.0),\n    ('west', 'desk', 1, 180.0), ('east', 'chair', 0, 65.0)\");\n\n$orders = tbl($pdo, 'orders');\n\n$revenue = $orders\n    -&gt;filter(col('units')-&gt;gt(0))\n    -&gt;mutate(['revenue' =&gt; col('units')-&gt;mul(col('price'))])\n    -&gt;groupBy(['region'])\n    -&gt;summarize(['orders' =&gt; n(), 'revenue' =&gt; sum(col('revenue'))])\n    -&gt;arrange([desc(col('revenue'))]);\n\necho $revenue-&gt;showQuery(), \"\\n\\n\";\necho $revenue-&gt;collect(), \"\\n\";\n\n\n\nSELECT \"region\", \"orders\", \"revenue\" FROM (SELECT \"region\", \"orders\", \"revenue\", ROW_NUMBER() OVER (ORDER BY (\"region\" IS NULL), \"region\") AS \"__phibble_row\" FROM (SELECT \"region\" AS \"region\", COUNT(*) AS \"orders\", (CASE WHEN COUNT(*) &gt; COUNT(\"revenue\") THEN NULL ELSE COALESCE(SUM(\"revenue\"), 0) END) AS \"revenue\" FROM (SELECT \"region\", \"product\", \"units\", \"price\", (\"units\" * \"price\") AS \"revenue\", \"__phibble_row\" FROM (SELECT * FROM (SELECT *, rowid AS \"__phibble_row\" FROM \"orders\") AS q1 WHERE (\"units\" &gt; ?)) AS q2) AS q3 GROUP BY \"region\") AS q4) AS q5 ORDER BY (\"revenue\" IS NULL), \"revenue\" DESC, (\"__phibble_row\" IS NULL), \"__phibble_row\"\n\n# A tibble: 3 × 3\n  region orders revenue\n  &lt;chr&gt;   &lt;int&gt;   &lt;dbl&gt;\n1 west        3     560\n2 north       2     384\n3 east        2     252\ntbl($pdo, 'orders') returns a SqlTable. Each verb adds to its query, and nothing runs until the rows are needed. showQuery() returns the SQL, with ? in place of the bound value 0. collect() runs the query and returns a DataFrame.\nEach verb wraps the previous query in a subquery. The extra conditions keep dplyr’s results: the sum is NA when a group holds a missing value, the groups are sorted, and ties keep the table’s row order.\nThe same code runs against PostgreSQL and MySQL with a different PDO connection. SQL tables lists the verbs and functions that compile to SQL, and what runs in memory instead. phplyr runs its dplyr functions on the same SqlTable.",
-    "crumbs": [
-      "Examples",
-      "Query a database table"
     ]
   },
   {
@@ -501,52 +490,21 @@
     ]
   },
   {
-    "objectID": "examples/read-a-csv.html",
-    "href": "examples/read-a-csv.html",
-    "title": "Read a CSV file into a typed table",
-    "section": "",
-    "text": "This example reads a small CSV file into a DataFrame, with each column’s type guessed from its values and one type declared.\nIt needs phibble, installed as described in Installation.\nThe data is readings.csv, six weather readings from two stations:\ndate,station,temp_c,rain_mm,wind_kmh,windy\n2024-03-01,north,7.5,0.0,12,FALSE\n2024-03-01,south,9.1,1.2,31,TRUE\n2024-03-02,north,6.8,NA,18,FALSE\n2024-03-02,south,8.4,3.5,35,TRUE\n2024-03-03,north,10.2,0.0,9,FALSE\n2024-03-03,south,11.0,0.4,22,FALSE\nSave it next to this script and run the script with php:\n&lt;?php\n\nrequire __DIR__.'/vendor/autoload.php';\n\nuse Phibble\\DataFrame;\n\n$readings = DataFrame::fromCsv('readings.csv', types: ['station' =&gt; 'factor']);\n\necho $readings, \"\\n\";\n# A tibble: 6 × 6\n  date       station temp_c rain_mm wind_kmh windy\n  &lt;date&gt;     &lt;fct&gt;    &lt;dbl&gt;   &lt;dbl&gt;    &lt;int&gt; &lt;lgl&gt;\n1 2024-03-01 north      7.5     0         12 FALSE\n2 2024-03-01 south      9.1     1.2       31 TRUE \n3 2024-03-02 north      6.8    NA         18 FALSE\n4 2024-03-02 south      8.4     3.5       35 TRUE \n5 2024-03-03 north     10.2     0          9 FALSE\n6 2024-03-03 south     11       0.4       22 FALSE\nDataFrame::fromCsv() guesses a type for each column, as readr’s read_csv() does. date holds ISO 8601 dates, so it is a date column. temp_c and rain_mm hold decimals, so they are floats, and wind_kmh holds whole numbers, so it is an int. windy holds TRUE and FALSE, so it is a bool. The NA in rain_mm is a missing value, which phibble stores as null. types declares station a factor, which the guess would have read as a string. The type of each column prints under its name.\nReading and writing data lists the other options of fromCsv(), and Types describes the column types.",
-    "crumbs": [
-      "Examples",
-      "Read a CSV file into a typed table"
-    ]
-  },
-  {
     "objectID": "getting-started.html",
     "href": "getting-started.html",
     "title": "Getting started",
     "section": "",
-    "text": "composer require phpstats/phibble\nRequirements:\n\nPHP 8.3, 8.4, or 8.5.\nThe mbstring extension.\nThe PDO extension.\n\nOptional features:\n\nThe phit extension reads CSV natively. DataFrame::fromCsv() uses it with phit 0.1.1 or later, and DataFrame::fromCsvChunked() and DataFrame::csvChunks() use it with phit 0.2.0 or later. Without it, phibble reads CSV in PHP with the same results.\nThe php_polars extension from phpolars enables PolarsTable and polars(), described on the Backends page.\nilluminate/database enables the -&gt;toDataFrame() and -&gt;phibble() macros, described on the Laravel page. In a Laravel application it is already installed.",
+    "text": "Install phibble with Composer, and load Composer’s autoloader once at the top of a script. Frameworks such as Laravel load it already.\ncomposer require phpstats/phibble\nThe examples on this site import the DataFrame class and phibble’s functions like this:\nrequire __DIR__.'/vendor/autoload.php';\n\nuse Phibble\\DataFrame;\nuse function Phibble\\{tibble, tribble};\nuse function Phibble\\Expr\\{col, desc, mean, n};\nPhibble\\Expr has functions named min, max, sum, round, abs, log, floor, str_pad, str_split, str_replace, and a few others that share names with PHP built-ins. In a file that imports them, a bare round($x) calls phibble’s expression helper. Write \\round($x) for PHP’s function.",
     "crumbs": [
       "Getting started"
     ]
   },
   {
-    "objectID": "getting-started.html#installation",
-    "href": "getting-started.html#installation",
+    "objectID": "getting-started.html#loading-phibble",
+    "href": "getting-started.html#loading-phibble",
     "title": "Getting started",
     "section": "",
-    "text": "composer require phpstats/phibble\nRequirements:\n\nPHP 8.3, 8.4, or 8.5.\nThe mbstring extension.\nThe PDO extension.\n\nOptional features:\n\nThe phit extension reads CSV natively. DataFrame::fromCsv() uses it with phit 0.1.1 or later, and DataFrame::fromCsvChunked() and DataFrame::csvChunks() use it with phit 0.2.0 or later. Without it, phibble reads CSV in PHP with the same results.\nThe php_polars extension from phpolars enables PolarsTable and polars(), described on the Backends page.\nilluminate/database enables the -&gt;toDataFrame() and -&gt;phibble() macros, described on the Laravel page. In a Laravel application it is already installed.",
-    "crumbs": [
-      "Getting started"
-    ]
-  },
-  {
-    "objectID": "getting-started.html#a-first-script",
-    "href": "getting-started.html#a-first-script",
-    "title": "Getting started",
-    "section": "A first script",
-    "text": "A first script\nThe examples on this site use the Palmer penguins data, penguins.csv. In a new directory, install phibble and download the data:\ncomposer require phpstats/phibble\ncurl -LO https://raw.githubusercontent.com/phpstats/phibble/v0.5.1/docs/data/penguins.csv\nSave this script as summary.php in the same directory, and run it with php summary.php. It loads Composer’s autoloader, imports DataFrame and the expression functions it uses, reads the CSV, and prints the number of penguins, their mean body mass, and their median flipper length for each species and sex:\n&lt;?php\n\nrequire __DIR__.'/vendor/autoload.php';\n\nuse Phibble\\DataFrame;\n\nuse function Phibble\\Expr\\{col, mean, median, n};\n\n$penguins = DataFrame::fromCsv('penguins.csv');\n\n$summary = $penguins\n    -&gt;filter(col('body_mass')-&gt;isNa()-&gt;not())\n    -&gt;groupBy(['species', 'sex'])\n    -&gt;summarize([\n        'n' =&gt; n(),\n        'mass' =&gt; mean(col('body_mass')),\n        'flipper' =&gt; median(col('flipper_len')),\n    ]);\n\necho $summary, \"\\n\";\n# A tibble: 8 × 5\n# Groups:   species [3]\n  species   sex        n  mass flipper\n  &lt;chr&gt;     &lt;chr&gt;  &lt;int&gt; &lt;dbl&gt;   &lt;dbl&gt;\n1 Adelie    female    73 3369.    188 \n2 Adelie    male      73 4043.    193 \n3 Adelie    &lt;NA&gt;       5 3540     186 \n4 Chinstrap female    34 3527.    192 \n5 Chinstrap male      34 3939.    200.\n6 Gentoo    female    58 4680.    212 \n7 Gentoo    male      61 5485.    221 \n8 Gentoo    &lt;NA&gt;       4 4588.    216",
-    "crumbs": [
-      "Getting started"
-    ]
-  },
-  {
-    "objectID": "getting-started.html#imports",
-    "href": "getting-started.html#imports",
-    "title": "Getting started",
-    "section": "Imports",
-    "text": "Imports\nThe other examples on this page run in the same directory, after these lines:\n&lt;?php\n\nrequire __DIR__.'/vendor/autoload.php';\n\nuse Phibble\\DataFrame;\n\nuse function Phibble\\{tibble, tribble};\nuse function Phibble\\Expr\\{col, desc, mean, median, n};\nPhibble\\Expr has functions named min, max, sum, round, abs, log, floor, str_pad, str_split, str_replace, and a few others that share names with PHP built-ins. In a file that imports them, a bare round($x) calls phibble’s expression helper. Write \\round($x) for PHP’s function.",
+    "text": "Install phibble with Composer, and load Composer’s autoloader once at the top of a script. Frameworks such as Laravel load it already.\ncomposer require phpstats/phibble\nThe examples on this site import the DataFrame class and phibble’s functions like this:\nrequire __DIR__.'/vendor/autoload.php';\n\nuse Phibble\\DataFrame;\nuse function Phibble\\{tibble, tribble};\nuse function Phibble\\Expr\\{col, desc, mean, n};\nPhibble\\Expr has functions named min, max, sum, round, abs, log, floor, str_pad, str_split, str_replace, and a few others that share names with PHP built-ins. In a file that imports them, a bare round($x) calls phibble’s expression helper. Write \\round($x) for PHP’s function.",
     "crumbs": [
       "Getting started"
     ]
@@ -606,7 +564,7 @@
     "href": "getting-started.html#groups",
     "title": "Getting started",
     "section": "Groups",
-    "text": "Groups\ngroupBy() records grouping columns on the data frame. summarize(), or its alias summarise(), returns one row per group, with groups in sorted order and NA last, as dplyr does. With several grouping columns, the result keeps all but the last, so the first script’s summary stays grouped by species.\nIn a grouped data frame, filter() and mutate() work within each group. An aggregate inside mutate() is computed per group and repeated for each of the group’s rows:\n$penguins = DataFrame::fromCsv('penguins.csv')-&gt;dropNa(['body_mass']);\n\n$centered = $penguins\n    -&gt;groupBy(['species'])\n    -&gt;mutate(['vs_species' =&gt; col('body_mass')-&gt;sub(mean(col('body_mass')))])\n    -&gt;select(['species', 'body_mass', 'vs_species'])\n    -&gt;head(4);\n\necho $centered;\n# A tibble: 4 × 3\n# Groups:   species [1]\n  species body_mass vs_species\n  &lt;chr&gt;       &lt;int&gt;      &lt;dbl&gt;\n1 Adelie       3750       49.3\n2 Adelie       3800       99.3\n3 Adelie       3250     -451. \n4 Adelie       3450     -251.\nA row closure receives the row’s group as its second argument: fn (Row $r, DataFrame $group) =&gt; ....\nBy default, groups are the combinations that occur in the data. With groupBy($names, drop: false), as with dplyr’s .drop = FALSE, a factor key also yields a group for each level that has no rows. Such a group has zero rows, so n() is 0 and sum() is 0.\n$penguins = DataFrame::fromCsv('penguins.csv')\n    -&gt;asFactor('species')\n    -&gt;filter(col('species')-&gt;ne('Chinstrap'));\n\necho $penguins-&gt;groupBy(['species'], drop: false)-&gt;summarize(['n' =&gt; n()]);\n# A tibble: 3 × 2\n  species       n\n  &lt;fct&gt;     &lt;int&gt;\n1 Adelie      152\n2 Chinstrap     0\n3 Gentoo      124",
+    "text": "Groups\ngroupBy() records grouping columns on the data frame. summarize(), or its alias summarise(), returns one row per group, with groups in sorted order and NA last, as dplyr does. With several grouping columns, the result keeps all but the last.\n$penguins = DataFrame::fromCsv('penguins.csv');\n\n$summary = $penguins\n    -&gt;filter(col('body_mass')-&gt;isNa()-&gt;not())\n    -&gt;groupBy(['species', 'sex'])\n    -&gt;summarize([\n        'n' =&gt; n(),\n        'mass' =&gt; mean(col('body_mass')),\n        'flipper' =&gt; median(col('flipper_len')),\n    ]);\n\necho $summary;\n# A tibble: 8 × 5\n# Groups:   species [3]\n  species   sex        n  mass flipper\n  &lt;chr&gt;     &lt;chr&gt;  &lt;int&gt; &lt;dbl&gt;   &lt;dbl&gt;\n1 Adelie    female    73 3369.    188 \n2 Adelie    male      73 4043.    193 \n3 Adelie    &lt;NA&gt;       5 3540     186 \n4 Chinstrap female    34 3527.    192 \n5 Chinstrap male      34 3939.    200.\n6 Gentoo    female    58 4680.    212 \n7 Gentoo    male      61 5485.    221 \n8 Gentoo    &lt;NA&gt;       4 4588.    216\nIn a grouped data frame, filter() and mutate() work within each group. An aggregate inside mutate() is computed per group and repeated for each of the group’s rows:\n$penguins = DataFrame::fromCsv('penguins.csv')-&gt;dropNa(['body_mass']);\n\n$centered = $penguins\n    -&gt;groupBy(['species'])\n    -&gt;mutate(['vs_species' =&gt; col('body_mass')-&gt;sub(mean(col('body_mass')))])\n    -&gt;select(['species', 'body_mass', 'vs_species'])\n    -&gt;head(4);\n\necho $centered;\n# A tibble: 4 × 3\n# Groups:   species [1]\n  species body_mass vs_species\n  &lt;chr&gt;       &lt;int&gt;      &lt;dbl&gt;\n1 Adelie       3750       49.3\n2 Adelie       3800       99.3\n3 Adelie       3250     -451. \n4 Adelie       3450     -251.\nA row closure receives the row’s group as its second argument: fn (Row $r, DataFrame $group) =&gt; ....\nBy default, groups are the combinations that occur in the data. With groupBy($names, drop: false), as with dplyr’s .drop = FALSE, a factor key also yields a group for each level that has no rows. Such a group has zero rows, so n() is 0 and sum() is 0.\n$penguins = DataFrame::fromCsv('penguins.csv')\n    -&gt;asFactor('species')\n    -&gt;filter(col('species')-&gt;ne('Chinstrap'));\n\necho $penguins-&gt;groupBy(['species'], drop: false)-&gt;summarize(['n' =&gt; n()]);\n# A tibble: 3 × 2\n  species       n\n  &lt;fct&gt;     &lt;int&gt;\n1 Adelie      152\n2 Chinstrap     0\n3 Gentoo      124",
     "crumbs": [
       "Getting started"
     ]
