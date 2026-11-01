@@ -12389,6 +12389,70 @@
    ],
    "scalar": true
   },
+  "fn_first_last_columns": {
+   "columns": [
+    "id",
+    "l",
+    "x_first",
+    "g_last"
+   ],
+   "dtypes": [
+    "Int64",
+    "List(Int64)",
+    "Int64",
+    "String"
+   ],
+   "rows": [
+    [
+     1,
+     [
+      1,
+      2,
+      3
+     ],
+     3,
+     "b"
+    ],
+    [
+     2,
+     [],
+     3,
+     "b"
+    ],
+    [
+     3,
+     null,
+     3,
+     "b"
+    ],
+    [
+     4,
+     [
+      4,
+      null
+     ],
+     3,
+     "b"
+    ],
+    [
+     5,
+     [
+      5
+     ],
+     3,
+     "b"
+    ],
+    [
+     6,
+     [
+      6,
+      7
+     ],
+     3,
+     "b"
+    ]
+   ]
+  },
   "json_normalize": {
    "columns": [
     "a",

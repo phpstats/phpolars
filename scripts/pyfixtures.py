@@ -873,6 +873,7 @@ simple("fn_time", lambda: base.select(pl.time(col("k").fill_null(0), 30).alias("
 simple("fn_time_range", lambda: pl.select(pl.time_range(dt.time(9), dt.time(12), "90m").alias("t")))
 simple("fn_rolling_corr_cov", lambda: base.select(pl.rolling_corr("id", "y", window_size=3).alias("c"), pl.rolling_cov("id", "x", window_size=2, ddof=0).alias("v")))
 simple("fn_escape_regex", lambda: {"e": pl.select(pl.lit("a.b*c").str.escape_regex()).item()})
+simple("fn_first_last_columns", lambda: base.select(pl.first(), pl.last(), pl.first("x").alias("x_first"), pl.last("g").alias("g_last")))
 
 
 # json_normalize, sql_expr, melt, arange

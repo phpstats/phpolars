@@ -17,8 +17,8 @@
 - []{#fn-all} `all(): Phpolars\Expr`
 - []{#fn-exclude} `exclude(mixed ...$names): Phpolars\Expr`
 - []{#fn-nth} `nth(mixed ...$indices): Phpolars\Expr`
-- []{#fn-first} `first(mixed ...$names): Phpolars\Expr`
-- []{#fn-last} `last(mixed ...$names): Phpolars\Expr`
+- []{#fn-first} `first(mixed ...$names): Phpolars\Expr`: with no arguments, the first column, as in py-polars; with names, `col(...)->first()`
+- []{#fn-last} `last(mixed ...$names): Phpolars\Expr`: with no arguments, the last column, as in py-polars; with names, `col(...)->last()`
 - []{#fn-len} `len(): Phpolars\Expr`: counts rows, including nulls
 - []{#fn-row_index} `row_index(?string $name = null): Phpolars\Expr`
 - []{#fn-element} `element(): Phpolars\Expr`

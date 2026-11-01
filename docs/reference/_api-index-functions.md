@@ -39,8 +39,8 @@
 | [`all()`](expressions.qmd#fn-all) | Every column. |
 | [`exclude()`](expressions.qmd#fn-exclude) | Every column except the given ones. |
 | [`nth()`](expressions.qmd#fn-nth) | Columns by position. |
-| [`first()`](expressions.qmd#fn-first) | The first value of the given columns. |
-| [`last()`](expressions.qmd#fn-last) | The last value of the given columns. |
+| [`first()`](expressions.qmd#fn-first) | The first column; with column names, the first value of each. |
+| [`last()`](expressions.qmd#fn-last) | The last column; with column names, the last value of each. |
 | [`len()`](expressions.qmd#fn-len) | The number of rows. |
 | [`row_index()`](expressions.qmd#fn-row_index) | A row index column, starting at 0. |
 | [`element()`](expressions.qmd#fn-element) | The current element inside `list()->eval()` and `arr()` operations. |

@@ -812,6 +812,7 @@ $cases = [
     'fn_time_range' => fn () => select(Phpolars\time_range('09:00:00', '12:00:00', '90m')->alias('t')),
     'fn_rolling_corr_cov' => fn () => $S(Phpolars\rolling_corr('id', 'y', windowSize: 3)->alias('c'), Phpolars\rolling_cov('id', 'x', windowSize: 2, ddof: 0)->alias('v')),
     'fn_escape_regex' => fn () => ['e' => Phpolars\escape_regex('a.b*c')],
+    'fn_first_last_columns' => fn () => $base->select(Phpolars\first(), Phpolars\last(), Phpolars\first('x')->alias('x_first'), Phpolars\last('g')->alias('g_last')),
     // json_normalize, sql_expr, melt, arange
     'json_normalize' => fn () => Phpolars\json_normalize($nested),
     'json_normalize_level' => fn () => Phpolars\json_normalize($nested, maxLevel: 1, separator: '_'),

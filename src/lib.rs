@@ -224,8 +224,27 @@ agg_fn!("Phpolars\\mean", mean, mean);
 agg_fn!("Phpolars\\median", median, median);
 agg_fn!("Phpolars\\min", min, min);
 agg_fn!("Phpolars\\max", max, max);
-agg_fn!("Phpolars\\first", first, first);
-agg_fn!("Phpolars\\last", last, last);
+
+/// first() is the first column, as in py-polars; first('a') == col('a')->first().
+#[php_function]
+#[php(name = "Phpolars\\first")]
+pub fn first(names: &[&Zval]) -> PhpResult<PhpExpr> {
+    if names.is_empty() {
+        return Ok(wrap(polars::prelude::nth(0).as_expr()));
+    }
+    Ok(wrap(col(names)?.inner.first()))
+}
+
+/// last() is the last column, as in py-polars; last('a') == col('a')->last().
+#[php_function]
+#[php(name = "Phpolars\\last")]
+pub fn last(names: &[&Zval]) -> PhpResult<PhpExpr> {
+    if names.is_empty() {
+        return Ok(wrap(polars::prelude::nth(-1).as_expr()));
+    }
+    Ok(wrap(col(names)?.inner.last()))
+}
+
 agg_fn!("Phpolars\\n_unique", n_unique, n_unique);
 
 // Ranges, dates, and durations.

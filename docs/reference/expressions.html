@@ -676,8 +676,8 @@ shape: (3, 2)
 <li><span id="fn-all"></span> <code>all(): Phpolars\Expr</code></li>
 <li><span id="fn-exclude"></span> <code>exclude(mixed ...$names): Phpolars\Expr</code></li>
 <li><span id="fn-nth"></span> <code>nth(mixed ...$indices): Phpolars\Expr</code></li>
-<li><span id="fn-first"></span> <code>first(mixed ...$names): Phpolars\Expr</code></li>
-<li><span id="fn-last"></span> <code>last(mixed ...$names): Phpolars\Expr</code></li>
+<li><span id="fn-first"></span> <code>first(mixed ...$names): Phpolars\Expr</code>: with no arguments, the first column, as in py-polars; with names, <code>col(...)-&gt;first()</code></li>
+<li><span id="fn-last"></span> <code>last(mixed ...$names): Phpolars\Expr</code>: with no arguments, the last column, as in py-polars; with names, <code>col(...)-&gt;last()</code></li>
 <li><span id="fn-len"></span> <code>len(): Phpolars\Expr</code>: counts rows, including nulls</li>
 <li><span id="fn-row_index"></span> <code>row_index(?string $name = null): Phpolars\Expr</code></li>
 <li><span id="fn-element"></span> <code>element(): Phpolars\Expr</code></li>
