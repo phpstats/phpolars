@@ -1,30 +1,31 @@
 {
-    "title": "A CSV pipeline: phpolars with 1, 2, and 4 threads, and plain PHP arrays",
+    "title": "Thread count",
     "label": "Thread count",
-    "description": "Each implementation reads a 1M-row CSV, keeps the rows where x > 500, groups them by g, computes the mean of y and the count of x, sorts by g, and returns the result as PHP arrays. bench/make-csv.php generates the CSV with a fixed seed: a string group column with 50 values, an integer column with about 2% missing values, and a float column. The bench VM has 2 cores, so 4 threads compete for them. Plain PHP keeps only running totals, so its memory stays small.",
-    "workload": "read_csv, filter, group, and aggregate a 1,000,000-row, 16 MB CSV, then build PHP arrays",
+    "description": "Reads a CSV, keeps the rows where x > 500, groups them by g, computes the mean of y and the count of x, sorts by g, and returns PHP arrays.",
+    "workload": "1,000,000-row CSV (16 MB)",
     "dataset": {
         "rows": 1000000,
         "bytes": 15733828,
-        "sha256": "34d16490d3fe0b339c9d46d914b39e4c9f5cea8b04ee36dc973ae1a72707e6b7"
+        "sha256": "34d16490d3fe0b339c9d46d914b39e4c9f5cea8b04ee36dc973ae1a72707e6b7",
+        "generator": "bench/make-csv.php, seed 42: g (50 string values), x (integers, about 2% missing), y (floats)"
     },
     "check": {
         "agree_with_plain_php": true,
         "rule": "the same groups and counts, and means within 1e-9"
     },
     "implementations": {
-        "phpolars, 1 thread": "the php_polars extension with php_polars.max_threads=1",
-        "phpolars, 2 threads (default)": "the php_polars extension with php_polars.max_threads=2",
-        "phpolars, 4 threads": "the php_polars extension with php_polars.max_threads=4",
-        "plain PHP arrays (fgetcsv loop)": "PHP with no extensions (php -n): fgetcsv and running totals in an array"
+        "phpolars, 1 thread": "php_polars extension, php_polars.max_threads=1",
+        "phpolars, 2 threads (default)": "php_polars extension, php_polars.max_threads=2",
+        "phpolars, 4 threads": "php_polars extension, php_polars.max_threads=4",
+        "plain PHP arrays (fgetcsv loop)": "PHP without extensions (php -n): fgetcsv and running totals in an array"
     },
     "measure": "Elapsed time",
     "unit": "ms",
     "statistic": "median",
-    "method": "Each implementation runs in its own PHP process: once untimed to warm up, then seven times. The clock (hrtime) runs from reading the file through building the PHP arrays, so it includes parsing and conversion. Starting PHP is excluded.",
+    "method": "Each implementation runs in its own PHP process: one untimed warm-up, then seven timed runs. The clock (hrtime) runs from reading the file through building the PHP arrays, including parsing and conversion; PHP startup excluded.",
     "time_spent_in": "the PHP process",
     "memory_measure": "peak anonymous memory",
-    "memory_method": "RssAnon of the process over all runs, sampled every millisecond by bench/csv-pipeline/peakmem.c; it leaves out the file pages the CSV reader maps.",
+    "memory_method": "RssAnon of the process over all runs, sampled every millisecond by bench/csv-pipeline/peakmem.c; mapped file pages excluded.",
     "environment": {
         "cpu": "AMD Ryzen 9 9955HX 16-Core Processor",
         "cores": 2,
@@ -93,7 +94,8 @@
                 49.6
             ],
             "peak_memory_mib": 145,
-            "peak_rss_mib": 206
+            "peak_rss_mib": 206,
+            "note": "4 threads on 2 cores"
         },
         {
             "case": "1M-row CSV pipeline",
@@ -109,7 +111,8 @@
                 784.9
             ],
             "peak_memory_mib": 3.9,
-            "peak_rss_mib": 17.6
+            "peak_rss_mib": 17.6,
+            "note": "Running totals only"
         }
     ],
     "reproduce": [

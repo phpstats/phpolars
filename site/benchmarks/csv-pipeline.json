@@ -1,6 +1,19 @@
 {
-    "title": "A 1 GB CSV file, whole and streaming: phpolars, phibble, plain PHP, tibble, and pandas",
-    "description": "Each script reads a seeded order-events CSV, keeps the completed orders, and computes orders, units, revenue, and the mean amount for each region and month. In the \"Whole file\" case each library loads the columns it needs into a table and then summarizes it: phpolars with read_csv(), phibble with fromCsv(), tibble with readr's read_csv() and dplyr, and pandas with read_csv(). In the \"Streaming\" case each reads the file in pieces: phpolars with scan_csv() and the streaming engine, phibble with fromCsvChunked() in chunks of 100,000 rows, plain PHP one row at a time with fgetcsv, readr with read_csv_chunked() in chunks of 100,000, and pandas with read_csv(chunksize=100000); the chunked ones add up each chunk's totals. phibble runs once with the phit extension's reader and once with its PHP reader (PHIBBLE_NATIVE_CSV=0). Threads: phpolars uses 2 (its default), readr's read_csv() 2 (num_threads), and the rest one. Each run is a fresh process. Time is measured inside the script, from opening the file to holding the result. Memory is the process's peak anonymous memory (RssAnon in /proc, sampled every millisecond by peakmem.c): the most memory it allocated at once, including native allocations, without the file pages it maps; peak_rss_mib gives the peak resident set size. The file was in the operating system's page cache in every run. Values are medians of 7 runs after one warm-up run of each.",
+    "title": "CSV pipeline",
+    "description": "Reads a seeded order-events CSV, keeps the completed orders, and computes orders, units, revenue, and the mean amount by region and month. Whole file: each implementation loads the needed columns into a table, then summarizes it. Streaming: each reads the file in pieces and combines the totals of each piece.",
+    "label": "CSV pipeline",
+    "workload": "Order-events CSV, 20,000,000 rows, 1 GB",
+    "implementations": {
+        "phpolars": "read_csv(); scan_csv() with the streaming engine; 2 threads",
+        "phibble (phit reader)": "fromCsv(); fromCsvChunked() in 100,000-row chunks; phit extension CSV reader",
+        "phibble (PHP reader)": "fromCsv(); fromCsvChunked() in 100,000-row chunks; PHP CSV reader (PHIBBLE_NATIVE_CSV=0)",
+        "plain PHP": "fgetcsv, one row at a time; Streaming only",
+        "tibble (R)": "readr read_csv() with 2 threads and dplyr; read_csv_chunked() in 100,000-row chunks",
+        "pandas (Python)": "read_csv(); read_csv(chunksize=100000)"
+    },
+    "method": "Each run is a fresh process: one untimed warm-up, then 7 timed runs. The clock runs inside the script, from opening the file to holding the result. The file is in the page cache in every run.",
+    "time_spent_in": "the measured process",
+    "memory_method": "RssAnon from /proc, sampled every millisecond by peakmem.c; mapped file pages excluded.",
     "measure": "Elapsed time",
     "unit": "ms",
     "statistic": "median",

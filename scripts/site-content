@@ -126,26 +126,24 @@ if (in_array('verifications', $parts, true)) {
     }
     $versions = ['py-polars' => $report['polars_version'], 'Polars Rust crate' => $crate, 'PHP' => $phpVersion];
     write($root.'/site/verifications/py-polars-fixtures.json', [
-        'title' => 'Agreement with py-polars',
+        'title' => 'py-polars',
         'label' => 'py-polars',
         'kind' => 'reference',
-        'checked' => sprintf('The same operation runs in phpolars and in py-polars %s on the same small inputs, and the column names, data types, and every value of the results are compared. '
-            .'The %d cases cover data frame methods, functions, joins, grouping, windows, sorting, casts, SQL, and the str, dt, list, struct, and arr namespaces.', $report['polars_version'], count($cases)),
-        'description' => sprintf('phpolars embeds the Polars Rust crate at %s. py-polars %s is the release whose Rust core is closest to it. '
-            .'scripts/pyfixtures.py runs each case in py-polars and saves the results to tests/fixtures/py/expected.json. tests/pyfixtures.php runs the same cases in phpolars and compares them. '
-            .'n_compared counts the values compared, and the errors are over numeric values.', $crate, $report['polars_version']),
+        'checked' => sprintf('Column names, data types, and values of %d results: data frame methods, functions, joins, grouping, windows, sorting, casts, SQL, and the str, dt, list, struct, and arr namespaces. Identical inputs in both implementations.', count($cases)),
+        'description' => sprintf('scripts/pyfixtures.py runs each case in py-polars and writes tests/fixtures/py/expected.json. tests/pyfixtures.php runs the same cases in phpolars and compares the results. '
+            .'phpolars embeds the Polars Rust crate %s; py-polars %s is the release with the closest Rust core. Error statistics cover numeric values only.', $crate, $report['polars_version']),
         'reference' => 'py-polars '.$report['polars_version'],
         'versions' => $versions,
-        'inputs' => 'Small data frames built the same way in scripts/pyfixtures.py and tests/pyfixtures.php, such as a 6-row frame of integers, floats, strings, booleans, dates, datetimes, and lists, with nulls in every column, plus lookup tables, a sorted time series, and quotes for as-of joins.',
+        'inputs' => 'Fixed data frames built identically in scripts/pyfixtures.py and tests/pyfixtures.php: a 6-row frame of integers, floats, strings, booleans, dates, datetimes, and lists with nulls in every column; lookup tables; a sorted time series; and quotes for as-of joins.',
         'comparison' => [
-            ['id' => 'exact', 'kind' => 'exact', 'applies_to' => 'cases without float values: column names, data types, integers, strings, booleans, dates, datetimes, durations, and nulls in the same positions'],
-            ['id' => 'float', 'kind' => 'tolerance', 'rtol' => 1e-9, 'applies_to' => 'finite float values, with no absolute floor, so a zero reference passes only an exact zero. Every other value in the case, the column names, and the data types compare exactly'],
-            ['id' => 'error', 'kind' => 'exact', 'applies_to' => 'cases where py-polars raises: phpolars must raise the exception class of the same name. The message is not compared'],
+            ['id' => 'exact', 'kind' => 'exact', 'applies_to' => 'Results without floats; column names, data types, integers, strings, booleans, temporal values, and null positions'],
+            ['id' => 'float', 'kind' => 'tolerance', 'rtol' => 1e-9, 'applies_to' => 'Finite floats; no absolute term, so a zero reference requires an exact zero, and all other values compare exactly'],
+            ['id' => 'error', 'kind' => 'exact', 'applies_to' => 'Expected exceptions; exception class name, message not compared'],
         ],
         'cases' => $cases,
         'exclusions' => [
-            'NaN, INF, and -INF are saved as {"$float": "NaN"}, {"$float": "INF"}, and {"$float": "-INF"} and compare exactly; they are counted in n_compared but not in the errors.',
-            'Methods and arguments without a case follow py-polars\' names, but their results have not been compared.',
+            'NaN, INF, and -INF are encoded as {"$float": "NaN"}, {"$float": "INF"}, and {"$float": "-INF"} and compared exactly; they count as values compared and are excluded from the error statistics.',
+            'Methods and arguments without a case are not compared.',
         ],
         'reproduce' => [
             "uv run --with 'polars==".$report['polars_version']."' --with numpy python scripts/pyfixtures.py",
@@ -194,15 +192,15 @@ if (in_array('integration', $parts, true)) {
             : 'peak RSS added by a streaming filter that keeps 4% of a CSV, against a limit of half the file',
         'status' => $code === 0 ? 'pass' : 'fail'] + ($code === 0 ? [] : ['reason' => 'tests/memory.php failed: '.strtok($out, "\n")]);
     write($root.'/site/verifications/integration.json', [
-        'title' => 'Installation and runtime checks',
+        'title' => 'Runtime checks',
         'label' => 'Runtime checks',
         'kind' => 'integration',
-        'checked' => 'The built extension loads and runs under the PHP CLI and PHP-FPM, keeps the API of the latest release, and holds less than half of a CSV file in memory when a streaming scan keeps few rows.',
-        'description' => 'tests/deployment.php checks the extension version, a group_by result, and the thread pool size; scripts/check-fpm sends it to a php-fpm worker as a FastCGI request. '
-            .'scripts/api-compat.php reads the latest release tag\'s stubs. tests/memory.php writes a CSV and runs each filter in its own PHP process, comparing their peak resident set sizes. '
-            .'scripts/check runs these checks before a release, and CI runs it on Ubuntu 24.04 and macOS 15 with PHP 8.3, 8.4, and 8.5.',
+        'checked' => 'Extension loading and execution under the PHP CLI and PHP-FPM, API compatibility with the latest release, and the peak resident set size of a selective streaming scan.',
+        'description' => 'tests/deployment.php checks the extension version, a group_by result, and the thread pool size; scripts/check-fpm runs it in a php-fpm worker through FastCGI. '
+            .'scripts/api-compat.php checks the latest release tag\'s stubs against the extension. tests/memory.php runs two streaming filters of a generated CSV in separate processes and compares their peak resident set sizes. '
+            .'scripts/check runs the CLI, API, and memory checks before a release, on Ubuntu 24.04 and macOS 15 with PHP 8.3, 8.4, and 8.5 in CI; the packaging workflow runs the PHP-FPM check in the production container.',
         'versions' => ['phpolars' => $version, 'Polars Rust crate' => $crate, 'PHP' => $phpVersion],
-        'comparison' => [['id' => 'check', 'kind' => 'exact', 'applies_to' => 'each check passes or fails as its script exits']],
+        'comparison' => [['id' => 'check', 'kind' => 'exact', 'applies_to' => 'Each check; exit status of its script']],
         'cases' => $cases,
         'reproduce' => ['cargo build --release', 'scripts/site-content integration'],
         'source' => 'scripts/check',
@@ -212,26 +210,23 @@ if (in_array('integration', $parts, true)) {
 
 // The read, group, and join workload, shared by the benchmark and its description.
 $readGroupJoin = [
-    'title' => 'Read, group, and join: phpolars, py-polars, and plain PHP arrays',
+    'title' => 'Read, group, and join',
     'label' => 'Read, group, and join',
-    'description' => 'Each case reads a 1M-row CSV, groups it by 50 keys, or joins it with a 100,000-row lookup table. '
-        .'phpolars and py-polars both run Polars\' Rust engine: phpolars embeds the Rust crate, built with Cargo\'s release profile, and py-polars ships its own build. '
-        .'The plain PHP code reads rows with fgetcsv, groups with one loop over an associative array, and joins with a hash index of the lookup table. '
-        .'Results stay in Polars or in PHP arrays; converting Polars results to PHP arrays is not timed.',
+    'description' => 'Reads a CSV, groups it by 50 keys with a mean, a sum, and a count, and joins it with a lookup table on an integer key.',
     'workload' => '1,000,000-row CSV (22 MB) and a 100,000-row lookup table',
     'implementations' => [
-        'phpolars' => 'the php_polars extension, Polars Rust crate %crate%',
-        'py-polars' => 'py-polars %pypolars% on Python %python%',
-        'plain PHP arrays' => 'PHP %php% arrays and fgetcsv, in a php -n process that loads php_polars but does not call it',
+        'phpolars' => 'php_polars extension; Polars Rust crate %crate%, release profile',
+        'py-polars' => 'py-polars %pypolars% on Python %python%, with its own build of the Polars engine',
+        'plain PHP arrays' => 'PHP %php% arrays, fgetcsv, one grouping loop, and a hash join; php_polars loaded, not called',
     ],
     'measure' => 'Elapsed time',
     'unit' => 'ms',
     'statistic' => 'median',
-    'method' => 'Each case runs once untimed to warm up, then five times; the clock (hrtime in PHP, perf_counter_ns in Python) covers the case\'s call only. '
-        .'Reading the case\'s input for group and join, and starting the runtime, are excluded. The data files are written just before the runs, so they are in the page cache.',
+    'method' => 'One untimed warm-up, then five timed runs per case. The clock (hrtime in PHP, perf_counter_ns in Python) covers the case\'s call only; '
+        .'loading the inputs of the group and join cases, runtime startup, and conversion of Polars results to PHP arrays are excluded. The data files are written immediately before the runs and are in the page cache.',
     'time_spent_in' => 'the measured process: the PHP process for phpolars and plain PHP, the Python process for py-polars',
     'memory_measure' => 'peak anonymous memory',
-    'memory_method' => 'RssAnon of the process over all three cases, sampled every millisecond by bench/csv-pipeline/peakmem.c; it leaves out the file pages the CSV reader maps. Each implementation runs in its own process.',
+    'memory_method' => 'RssAnon of each implementation\'s process over all three cases, sampled every millisecond by bench/csv-pipeline/peakmem.c; mapped file pages excluded.',
 ];
 
 if (in_array('benchmarks', $parts, true)) {
@@ -309,32 +304,31 @@ if (in_array('thread-count', $parts, true)) {
     $result = json_decode((string) file_get_contents($root.'/bench/results/pipeline-linux.json'), true, flags: JSON_THROW_ON_ERROR);
     $rows = [];
     foreach ($result['results'] as $impl => $r) {
+        $notes = ['phpolars, 4 threads' => '4 threads on 2 cores', 'plain PHP arrays (fgetcsv loop)' => 'Running totals only'];
         $rows[] = ['case' => '1M-row CSV pipeline', 'implementation' => $impl, 'value' => $r['median_ms'], 'reps' => $r['ms'],
-            'peak_memory_mib' => $r['memory_mib'], 'peak_rss_mib' => $r['maxrss_mib']];
+            'peak_memory_mib' => $r['memory_mib'], 'peak_rss_mib' => $r['maxrss_mib']] + (isset($notes[$impl]) ? ['note' => $notes[$impl]] : []);
     }
     $env = $result['environment'];
     write($root.'/site/benchmarks/thread-count.json', [
-        'title' => 'A CSV pipeline: phpolars with 1, 2, and 4 threads, and plain PHP arrays',
+        'title' => 'Thread count',
         'label' => 'Thread count',
-        'description' => 'Each implementation reads a 1M-row CSV, keeps the rows where x > 500, groups them by g, computes the mean of y and the count of x, sorts by g, and returns the result as PHP arrays. '
-            .'bench/make-csv.php generates the CSV with a fixed seed: a string group column with 50 values, an integer column with about 2% missing values, and a float column. '
-            .'The bench VM has 2 cores, so 4 threads compete for them. Plain PHP keeps only running totals, so its memory stays small.',
-        'workload' => sprintf('read_csv, filter, group, and aggregate a %s-row, %d MB CSV, then build PHP arrays', number_format($result['dataset']['rows']), round($result['dataset']['bytes'] / 1e6)),
-        'dataset' => $result['dataset'],
+        'description' => 'Reads a CSV, keeps the rows where x > 500, groups them by g, computes the mean of y and the count of x, sorts by g, and returns PHP arrays.',
+        'workload' => sprintf('%s-row CSV (%d MB)', number_format($result['dataset']['rows']), round($result['dataset']['bytes'] / 1e6)),
+        'dataset' => $result['dataset'] + ['generator' => 'bench/make-csv.php, seed 42: g (50 string values), x (integers, about 2% missing), y (floats)'],
         'check' => ['agree_with_plain_php' => true, 'rule' => 'the same groups and counts, and means within 1e-9'],
         'implementations' => [
-            'phpolars, 1 thread' => 'the php_polars extension with php_polars.max_threads=1',
-            'phpolars, 2 threads (default)' => 'the php_polars extension with php_polars.max_threads=2',
-            'phpolars, 4 threads' => 'the php_polars extension with php_polars.max_threads=4',
-            'plain PHP arrays (fgetcsv loop)' => 'PHP with no extensions (php -n): fgetcsv and running totals in an array',
+            'phpolars, 1 thread' => 'php_polars extension, php_polars.max_threads=1',
+            'phpolars, 2 threads (default)' => 'php_polars extension, php_polars.max_threads=2',
+            'phpolars, 4 threads' => 'php_polars extension, php_polars.max_threads=4',
+            'plain PHP arrays (fgetcsv loop)' => 'PHP without extensions (php -n): fgetcsv and running totals in an array',
         ],
         'measure' => 'Elapsed time',
         'unit' => 'ms',
         'statistic' => 'median',
-        'method' => 'Each implementation runs in its own PHP process: once untimed to warm up, then seven times. The clock (hrtime) runs from reading the file through building the PHP arrays, so it includes parsing and conversion. Starting PHP is excluded.',
+        'method' => 'Each implementation runs in its own PHP process: one untimed warm-up, then seven timed runs. The clock (hrtime) runs from reading the file through building the PHP arrays, including parsing and conversion; PHP startup excluded.',
         'time_spent_in' => 'the PHP process',
         'memory_measure' => 'peak anonymous memory',
-        'memory_method' => 'RssAnon of the process over all runs, sampled every millisecond by bench/csv-pipeline/peakmem.c; it leaves out the file pages the CSV reader maps.',
+        'memory_method' => 'RssAnon of the process over all runs, sampled every millisecond by bench/csv-pipeline/peakmem.c; mapped file pages excluded.',
         'environment' => ['cpu' => $env['cpu'], 'cores' => $env['cores'], 'memory_gb' => 8, 'os' => $env['os'], 'php' => $env['php'],
             'versions' => ['Polars Rust crate' => $crate], 'threads' => array_map(fn ($r) => $r['threads'] ?? 1, $result['results']),
             'cache' => 'warm', 'repeats' => count(reset($result['results'])['ms']), 'warmups' => 1, 'date' => $env['date'], 'commit' => $env['commit']],

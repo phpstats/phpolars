@@ -1,32 +1,32 @@
 {
-    "title": "Agreement with py-polars",
+    "title": "py-polars",
     "label": "py-polars",
     "kind": "reference",
-    "checked": "The same operation runs in phpolars and in py-polars 1.43.2 on the same small inputs, and the column names, data types, and every value of the results are compared. The 314 cases cover data frame methods, functions, joins, grouping, windows, sorting, casts, SQL, and the str, dt, list, struct, and arr namespaces.",
-    "description": "phpolars embeds the Polars Rust crate at 0.55.2. py-polars 1.43.2 is the release whose Rust core is closest to it. scripts/pyfixtures.py runs each case in py-polars and saves the results to tests/fixtures/py/expected.json. tests/pyfixtures.php runs the same cases in phpolars and compares them. n_compared counts the values compared, and the errors are over numeric values.",
+    "checked": "Column names, data types, and values of 314 results: data frame methods, functions, joins, grouping, windows, sorting, casts, SQL, and the str, dt, list, struct, and arr namespaces. Identical inputs in both implementations.",
+    "description": "scripts/pyfixtures.py runs each case in py-polars and writes tests/fixtures/py/expected.json. tests/pyfixtures.php runs the same cases in phpolars and compares the results. phpolars embeds the Polars Rust crate 0.55.2; py-polars 1.43.2 is the release with the closest Rust core. Error statistics cover numeric values only.",
     "reference": "py-polars 1.43.2",
     "versions": {
         "py-polars": "1.43.2",
         "Polars Rust crate": "0.55.2",
         "PHP": "8.5.10"
     },
-    "inputs": "Small data frames built the same way in scripts/pyfixtures.py and tests/pyfixtures.php, such as a 6-row frame of integers, floats, strings, booleans, dates, datetimes, and lists, with nulls in every column, plus lookup tables, a sorted time series, and quotes for as-of joins.",
+    "inputs": "Fixed data frames built identically in scripts/pyfixtures.py and tests/pyfixtures.php: a 6-row frame of integers, floats, strings, booleans, dates, datetimes, and lists with nulls in every column; lookup tables; a sorted time series; and quotes for as-of joins.",
     "comparison": [
         {
             "id": "exact",
             "kind": "exact",
-            "applies_to": "cases without float values: column names, data types, integers, strings, booleans, dates, datetimes, durations, and nulls in the same positions"
+            "applies_to": "Results without floats; column names, data types, integers, strings, booleans, temporal values, and null positions"
         },
         {
             "id": "float",
             "kind": "tolerance",
             "rtol": 1.0e-9,
-            "applies_to": "finite float values, with no absolute floor, so a zero reference passes only an exact zero. Every other value in the case, the column names, and the data types compare exactly"
+            "applies_to": "Finite floats; no absolute term, so a zero reference requires an exact zero, and all other values compare exactly"
         },
         {
             "id": "error",
             "kind": "exact",
-            "applies_to": "cases where py-polars raises: phpolars must raise the exception class of the same name. The message is not compared"
+            "applies_to": "Expected exceptions; exception class name, message not compared"
         }
     ],
     "cases": [
@@ -3170,8 +3170,8 @@
         }
     ],
     "exclusions": [
-        "NaN, INF, and -INF are saved as {\"$float\": \"NaN\"}, {\"$float\": \"INF\"}, and {\"$float\": \"-INF\"} and compare exactly; they are counted in n_compared but not in the errors.",
-        "Methods and arguments without a case follow py-polars' names, but their results have not been compared."
+        "NaN, INF, and -INF are encoded as {\"$float\": \"NaN\"}, {\"$float\": \"INF\"}, and {\"$float\": \"-INF\"} and compared exactly; they count as values compared and are excluded from the error statistics.",
+        "Methods and arguments without a case are not compared."
     ],
     "reproduce": [
         "uv run --with 'polars==1.43.2' --with numpy python scripts/pyfixtures.py",

@@ -1,20 +1,20 @@
 {
-    "title": "Read, group, and join: phpolars, py-polars, and plain PHP arrays",
+    "title": "Read, group, and join",
     "label": "Read, group, and join",
-    "description": "Each case reads a 1M-row CSV, groups it by 50 keys, or joins it with a 100,000-row lookup table. phpolars and py-polars both run Polars' Rust engine: phpolars embeds the Rust crate, built with Cargo's release profile, and py-polars ships its own build. The plain PHP code reads rows with fgetcsv, groups with one loop over an associative array, and joins with a hash index of the lookup table. Results stay in Polars or in PHP arrays; converting Polars results to PHP arrays is not timed.",
+    "description": "Reads a CSV, groups it by 50 keys with a mean, a sum, and a count, and joins it with a lookup table on an integer key.",
     "workload": "1,000,000-row CSV (22 MB) and a 100,000-row lookup table",
     "implementations": {
-        "phpolars": "the php_polars extension, Polars Rust crate 0.55.2",
-        "py-polars": "py-polars 1.43.2 on Python 3.14.10",
-        "plain PHP arrays": "PHP 8.5.12 arrays and fgetcsv, in a php -n process that loads php_polars but does not call it"
+        "phpolars": "php_polars extension; Polars Rust crate 0.55.2, release profile",
+        "py-polars": "py-polars 1.43.2 on Python 3.14.10, with its own build of the Polars engine",
+        "plain PHP arrays": "PHP 8.5.12 arrays, fgetcsv, one grouping loop, and a hash join; php_polars loaded, not called"
     },
     "measure": "Elapsed time",
     "unit": "ms",
     "statistic": "median",
-    "method": "Each case runs once untimed to warm up, then five times; the clock (hrtime in PHP, perf_counter_ns in Python) covers the case's call only. Reading the case's input for group and join, and starting the runtime, are excluded. The data files are written just before the runs, so they are in the page cache.",
+    "method": "One untimed warm-up, then five timed runs per case. The clock (hrtime in PHP, perf_counter_ns in Python) covers the case's call only; loading the inputs of the group and join cases, runtime startup, and conversion of Polars results to PHP arrays are excluded. The data files are written immediately before the runs and are in the page cache.",
     "time_spent_in": "the measured process: the PHP process for phpolars and plain PHP, the Python process for py-polars",
     "memory_measure": "peak anonymous memory",
-    "memory_method": "RssAnon of the process over all three cases, sampled every millisecond by bench/csv-pipeline/peakmem.c; it leaves out the file pages the CSV reader maps. Each implementation runs in its own process.",
+    "memory_method": "RssAnon of each implementation's process over all three cases, sampled every millisecond by bench/csv-pipeline/peakmem.c; mapped file pages excluded.",
     "dataset": {
         "rows": 1000000,
         "bytes": 21621195,

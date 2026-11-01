@@ -1,9 +1,9 @@
 {
-    "title": "Installation and runtime checks",
+    "title": "Runtime checks",
     "label": "Runtime checks",
     "kind": "integration",
-    "checked": "The built extension loads and runs under the PHP CLI and PHP-FPM, keeps the API of the latest release, and holds less than half of a CSV file in memory when a streaming scan keeps few rows.",
-    "description": "tests/deployment.php checks the extension version, a group_by result, and the thread pool size; scripts/check-fpm sends it to a php-fpm worker as a FastCGI request. scripts/api-compat.php reads the latest release tag's stubs. tests/memory.php writes a CSV and runs each filter in its own PHP process, comparing their peak resident set sizes. scripts/check runs these checks before a release, and CI runs it on Ubuntu 24.04 and macOS 15 with PHP 8.3, 8.4, and 8.5.",
+    "checked": "Extension loading and execution under the PHP CLI and PHP-FPM, API compatibility with the latest release, and the peak resident set size of a selective streaming scan.",
+    "description": "tests/deployment.php checks the extension version, a group_by result, and the thread pool size; scripts/check-fpm runs it in a php-fpm worker through FastCGI. scripts/api-compat.php checks the latest release tag's stubs against the extension. tests/memory.php runs two streaming filters of a generated CSV in separate processes and compares their peak resident set sizes. scripts/check runs the CLI, API, and memory checks before a release, on Ubuntu 24.04 and macOS 15 with PHP 8.3, 8.4, and 8.5 in CI; the packaging workflow runs the PHP-FPM check in the production container.",
     "versions": {
         "phpolars": "0.2.1",
         "Polars Rust crate": "0.55.2",
@@ -13,7 +13,7 @@
         {
             "id": "check",
             "kind": "exact",
-            "applies_to": "each check passes or fails as its script exits"
+            "applies_to": "Each check; exit status of its script"
         }
     ],
     "cases": [
