@@ -2,17 +2,17 @@
     "packages": [
         {
             "name": "phpstats/phibble",
-            "version": "v0.5.1",
-            "version_normalized": "0.5.1.0",
+            "version": "v0.5.2",
+            "version_normalized": "0.5.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstats/phibble.git",
-                "reference": "36d0f3fde2e115b68341bb972e99e5f47b817dd2"
+                "reference": "a825efe35cb4cbbec777beb8ff9b5d034aa07f87"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstats/phibble/zipball/36d0f3fde2e115b68341bb972e99e5f47b817dd2",
-                "reference": "36d0f3fde2e115b68341bb972e99e5f47b817dd2",
+                "url": "https://api.github.com/repos/phpstats/phibble/zipball/a825efe35cb4cbbec777beb8ff9b5d034aa07f87",
+                "reference": "a825efe35cb4cbbec777beb8ff9b5d034aa07f87",
                 "shasum": ""
             },
             "require": {
@@ -33,7 +33,7 @@
                 "ext-php_polars": "The Polars backend (Phibble\\Polars\\PolarsTable), from phpstats/phpolars",
                 "illuminate/database": "Laravel integration: Collection::toDataFrame() and query builder ->phibble() / ->toDataFrame() macros (auto-discovered)"
             },
-            "time": "2026-10-31T17:17:23+00:00",
+            "time": "2026-11-01T13:48:23+00:00",
             "type": "library",
             "extra": {
                 "laravel": {
@@ -59,7 +59,7 @@
             "description": "A typed, immutable in-memory data frame for PHP.",
             "support": {
                 "issues": "https://github.com/phpstats/phibble/issues",
-                "source": "https://github.com/phpstats/phibble/tree/v0.5.1"
+                "source": "https://github.com/phpstats/phibble/tree/v0.5.2"
             },
             "install-path": "../phpstats/phibble"
         },
