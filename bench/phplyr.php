@@ -2,6 +2,8 @@
 
 // phplyr pipelines on three phibble backends: the in-memory DataFrame, PolarsTable,
 // and SqlTable over SQLite. Times run through collect(); loading data is not timed.
+// Each pipeline runs once untimed on each backend, then REPEATS timed runs; the
+// last line is a JSON record with every run's time and the median.
 //
 //   php -d memory_limit=-1 -d extension=.../libphp_polars.so bench/phplyr.php PHPLYR_DIR ROWS [REPEATS]
 //
@@ -12,7 +14,7 @@
 
 declare(strict_types=1);
 
-[$_, $phplyr, $rows, $repeats] = $argv + [null, null, '100000', '3'];
+[$_, $phplyr, $rows, $repeats] = $argv + [null, null, '100000', '7'];
 if ($phplyr === null) {
     fwrite(STDERR, "usage: php bench/phplyr.php PHPLYR_DIR ROWS [REPEATS]\n");
     exit(2);
@@ -74,24 +76,24 @@ unset($sales);
 $pipelines = [
     'A: filter, join, grouped summary, ranked window' => fn (Table $s, Table $st) => phplyr($s)
         ->filter(col('units')->gt(0))
-        ->left_join($st, by: 'store')
-        ->group_by('region', 'product')
+        ->leftJoin($st, by: 'store')
+        ->groupBy('region', 'product')
         ->summarise(n: n(), revenue: sum(col('units')->mul(col('price'))), avg_price: mean('price'))
-        ->group_by('region')
+        ->groupBy('region')
         ->mutate(rank: min_rank(desc('revenue')))
         ->filter(col('rank')->le(10))
         ->arrange('region', 'rank')
         ->get(),
     'B: per-group windows over every row' => fn (Table $s, Table $st) => phplyr($s)
-        ->group_by('store')
-        ->mutate(prev: lag('units', order_by: 'day'), running: cumsum('units'), share: col('units')->div(sum('units', na_rm: true)))
+        ->groupBy('store')
+        ->mutate(prev: lag('units', orderBy: 'day'), running: cumsum('units'), share: col('units')->div(sum('units', naRm: true)))
         ->get(),
     'C: as A, with a PHP closure in filter()' => fn (Table $s, Table $st) => phplyr($s)
         ->filter(fn ($r) => $r->units > 0)
-        ->left_join($st, by: 'store')
-        ->group_by('region', 'product')
+        ->leftJoin($st, by: 'store')
+        ->groupBy('region', 'product')
         ->summarise(n: n(), revenue: sum(col('units')->mul(col('price'))), avg_price: mean('price'))
-        ->group_by('region')
+        ->groupBy('region')
         ->mutate(rank: min_rank(desc('revenue')))
         ->filter(col('rank')->le(10))
         ->arrange('region', 'rank')
@@ -108,25 +110,32 @@ function canonical(array $rows): string
     return md5(implode("\n", $lines));
 }
 
-printf("%s rows, best of %d, PHP %s, Polars threads %d\n\n", number_format($rows), $repeats, PHP_VERSION, Phpolars\thread_pool_size());
+function median(array $xs): float
+{
+    sort($xs);
+    $n = count($xs);
+
+    return $n % 2 ? $xs[intdiv($n, 2)] : ($xs[$n / 2 - 1] + $xs[$n / 2]) / 2;
+}
+
+printf("%s rows, median of %d after a warm-up, PHP %s, Polars threads %d\n\n", number_format($rows), $repeats, PHP_VERSION, Phpolars\thread_pool_size());
 $results = [];
 foreach ($pipelines as $name => $pipeline) {
     echo $name, "\n";
     $reference = null;
     foreach ($tables as $backend => [$sales, $stores]) {
-        $best = INF;
-        $out = null;
+        $times = [];
+        try {
+            $out = $pipeline($sales, $stores)->collect();
+        } catch (Throwable $e) {
+            $out = $e;
+        }
         $fallbacks = PolarsTable::$fallbacks;
-        for ($k = 0; $k < $repeats; $k++) {
+        for ($k = 0; $k < $repeats && ! $out instanceof Throwable; $k++) {
             gc_collect_cycles();
             $t = hrtime(true);
-            try {
-                $out = $pipeline($sales, $stores)->collect();
-            } catch (Throwable $e) {
-                $out = $e;
-                break;
-            }
-            $best = min($best, (hrtime(true) - $t) / 1e9);
+            $out = $pipeline($sales, $stores)->collect();
+            $times[] = round((hrtime(true) - $t) / 1e9, 4);
         }
         if ($out instanceof Throwable) {
             printf("  %-12s failed: %s\n", $backend, $out->getMessage());
@@ -135,9 +144,26 @@ foreach ($pipelines as $name => $pipeline) {
         $hash = canonical($out->toRows());
         $reference ??= $hash;
         $note = $backend === 'PolarsTable' ? sprintf(', %d fallbacks per run', (PolarsTable::$fallbacks - $fallbacks) / $repeats) : '';
-        printf("  %-12s %8.3f s  (%d rows%s)%s\n", $backend, $best, $out->nrow(), $note, $hash === $reference ? '' : '  RESULT DIFFERS');
-        $results[$name][$backend] = $best;
+        printf("  %-12s %8.3f s  (%d rows%s)%s\n", $backend, median($times), $out->nrow(), $note, $hash === $reference ? '' : '  RESULT DIFFERS');
+        $results[$name][$backend] = ['median_s' => median($times), 's' => $times, 'agrees' => $hash === $reference];
     }
     echo "\n";
 }
-echo json_encode(['rows' => $rows, 'results' => $results]), "\n";
+$sh = fn (string $cmd) => trim((string) shell_exec($cmd.' 2>/dev/null'));
+$darwin = PHP_OS_FAMILY === 'Darwin';
+echo json_encode([
+    'rows' => $rows,
+    'statistic' => "median of {$repeats} runs in one process, after one untimed warm-up",
+    'environment' => [
+        'cpu' => $darwin ? $sh('sysctl -n machdep.cpu.brand_string') : $sh("lscpu | sed -n 's/^Model name: *//p'"),
+        'cores' => (int) ($darwin ? $sh('sysctl -n hw.ncpu') : $sh('nproc')),
+        'os' => $darwin ? 'macOS '.$sh('sw_vers -productVersion') : $sh('uname -sr'),
+        'php' => PHP_VERSION,
+        'threads' => Phpolars\thread_pool_size(),
+        'phpolars' => $sh('git -C '.escapeshellarg(__DIR__).' rev-parse --short HEAD'),
+        'phibble' => Composer\InstalledVersions::getPrettyVersion('phpstats/phibble').' '.substr((string) Composer\InstalledVersions::getReference('phpstats/phibble'), 0, 7),
+        'phplyr' => $sh('git -C '.escapeshellarg($phplyr).' rev-parse --short HEAD'),
+        'date' => gmdate('Y-m-d'),
+    ],
+    'results' => $results,
+], JSON_UNESCAPED_SLASHES), "\n";
