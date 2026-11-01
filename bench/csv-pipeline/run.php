@@ -75,6 +75,19 @@ foreach ($runs as $name => $rs) {
         'peak_memory_mib' => round($median($memory), 1), 'reps_peak_memory_mib' => $memory,
         'peak_rss_mib' => round($median($rss), 1), 'reps_peak_rss_mib' => $rss];
 }
+// The code a record shows: each script's imports and the lines between
+// starting and stopping its timer, which is exactly the work that is timed.
+$timed = function (string $file): string {
+    $lines = file($file, FILE_IGNORE_NEW_LINES);
+    $imports = array_filter($lines, fn (string $l) => preg_match('/^(use |import |from \S+ import |\s*library\()/', $l));
+    $start = array_key_first(array_filter($lines, fn (string $l) => preg_match('/^\$?start\s*(=|<-)/', $l)));
+    $stop = array_key_first(array_filter($lines, fn (string $l) => preg_match('/^(\$ms|ms|rows)\s*(=|<-)/', $l)));
+    $body = array_slice($lines, $start + 1, $stop - $start - 1);
+    // Imports that only serve the measurement are left out.
+    $imports = array_filter(array_map(fn (string $l) => trim($l), $imports), fn (string $l) => ! preg_match('/^(import (json|resource|sys|time)|library\(jsonlite\))$/', $l));
+
+    return ltrim(trim(implode("\n", $imports))."\n\n".trim(implode("\n", $body)))."\n";
+};
 $sh = fn (string $cmd) => trim((string) shell_exec($cmd.' 2>/dev/null'));
 echo json_encode([
     'title' => 'A '.round(filesize($csv) / 1e9, 1).' GB CSV file: phpolars, phibble, and plain PHP',
@@ -108,11 +121,11 @@ echo json_encode([
         'sha256' => hash_file('sha256', $csv), 'missing_amounts' => 'about 1%'],
     'check' => ['groups' => count($b), 'max_rel_difference' => $worst],
     'code' => [
-        'phpolars' => file_get_contents(__DIR__.'/phpstats.php'),
-        'phibble' => file_get_contents(__DIR__.'/phibble.php'),
-        'plain PHP' => file_get_contents(__DIR__.'/plain.php'),
-        'tibble (R)' => file_get_contents(__DIR__.'/tibble_pipeline.R'),
-        'pandas (Python)' => file_get_contents(__DIR__.'/pandas_pipeline.py'),
+        'phpolars' => $timed(__DIR__.'/phpstats.php'),
+        'phibble' => $timed(__DIR__.'/phibble.php'),
+        'plain PHP' => $timed(__DIR__.'/plain.php'),
+        'tibble (R)' => $timed(__DIR__.'/tibble_pipeline.R'),
+        'pandas (Python)' => $timed(__DIR__.'/pandas_pipeline.py'),
     ],
     'languages' => ['phpolars' => 'php', 'phibble' => 'php', 'plain PHP' => 'php', 'tibble (R)' => 'r', 'pandas (Python)' => 'python'],
     'rows' => $rows,
