@@ -85,7 +85,7 @@ Some steps cannot run in Polars, and the adapter runs them on a phibble `DataFra
 - grouped verbs on factor keys that keep empty groups (phibble's `groupBy(drop: false)` or phplyr's `group_by(_drop: false)`), because Polars does not see empty groups
 - functions that the translator does not support, such as `str_to_title()`
 
-`PolarsTable::$fallbacks` counts these conversions. Set `PolarsTable::$strict = true` to throw `Phibble\Polars\PolarsFallback` instead; its message names the verb and the reason. [Performance](performance.qmd#practical-guidance) measures the cost of a fallback.
+`PolarsTable::$fallbacks` counts these conversions. Set `PolarsTable::$strict = true` to throw `Phibble\Polars\PolarsFallback` instead; its message names the verb and the reason. [Performance](performance.qmd#practical-guidance) describes when a fallback costs time.
 
 ## Missing values
 

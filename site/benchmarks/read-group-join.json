@@ -1,0 +1,186 @@
+{
+    "title": "Read, group, and join: phpolars, py-polars, and plain PHP arrays",
+    "label": "Read, group, and join",
+    "description": "Each case reads a 1M-row CSV, groups it by 50 keys, or joins it with a 100,000-row lookup table. phpolars and py-polars both run Polars' Rust engine: phpolars embeds the Rust crate, built with Cargo's release profile, and py-polars ships its own build. The plain PHP code reads rows with fgetcsv, groups with one loop over an associative array, and joins with a hash index of the lookup table. Results stay in Polars or in PHP arrays; converting Polars results to PHP arrays is not timed.",
+    "workload": "1,000,000-row CSV (22 MB) and a 100,000-row lookup table",
+    "implementations": {
+        "phpolars": "the php_polars extension, Polars Rust crate 0.55.2",
+        "py-polars": "py-polars 1.43.2 on Python 3.14.10",
+        "plain PHP arrays": "PHP 8.5.12 arrays and fgetcsv, in a php -n process that loads php_polars but does not call it"
+    },
+    "measure": "Elapsed time",
+    "unit": "ms",
+    "statistic": "median",
+    "method": "Each case runs once untimed to warm up, then five times; the clock (hrtime in PHP, perf_counter_ns in Python) covers the case's call only. Reading the case's input for group and join, and starting the runtime, are excluded. The data files are written just before the runs, so they are in the page cache.",
+    "time_spent_in": "the measured process: the PHP process for phpolars and plain PHP, the Python process for py-polars",
+    "memory_measure": "peak anonymous memory",
+    "memory_method": "RssAnon of the process over all three cases, sampled every millisecond by bench/csv-pipeline/peakmem.c; it leaves out the file pages the CSV reader maps. Each implementation runs in its own process.",
+    "dataset": {
+        "rows": 1000000,
+        "bytes": 21621195,
+        "sha256": "0fea233817dcbdd08a24df50b02c4e1dc9ef2aa5da28eea67ab9302650f88bb6",
+        "columns": "k: 100,000 keys, g: 50 groups, x: integers with 2% missing, y: floats",
+        "lookup_rows": 100000
+    },
+    "check": {
+        "groups": 50,
+        "joined_rows": 1000000,
+        "agree": true
+    },
+    "environment": {
+        "cpu": "AMD Ryzen 9 9955HX 16-Core Processor",
+        "cores": 2,
+        "memory_gb": 8,
+        "os": "Linux 6.8.0-90-generic",
+        "php": "8.5.12",
+        "versions": {
+            "Polars Rust crate": "0.55.2",
+            "py-polars": "1.43.2",
+            "Python": "3.14.10"
+        },
+        "threads": {
+            "phpolars": 2,
+            "py-polars": 2,
+            "plain PHP arrays": 1
+        },
+        "cache": "warm",
+        "repeats": 5,
+        "warmups": 1,
+        "date": "2026-11-01",
+        "commit": "1b96276"
+    },
+    "rows": [
+        {
+            "case": "Read a 1M-row CSV",
+            "implementation": "phpolars",
+            "value": 47.297,
+            "reps": [
+                59.82,
+                47.054,
+                45.759,
+                47.297,
+                55.093
+            ],
+            "peak_memory_mib": 164.2,
+            "peak_rss_mib": 217.8
+        },
+        {
+            "case": "Read a 1M-row CSV",
+            "implementation": "py-polars",
+            "value": 23.499,
+            "reps": [
+                23.499,
+                25.308,
+                23.945,
+                23.485,
+                23.365
+            ],
+            "peak_memory_mib": 206.2,
+            "peak_rss_mib": 243.0
+        },
+        {
+            "case": "Read a 1M-row CSV",
+            "implementation": "plain PHP arrays",
+            "value": 1027.357,
+            "reps": [
+                1027.357,
+                1022.79,
+                1029.791,
+                1023.516,
+                1037.527
+            ],
+            "peak_memory_mib": 574.3,
+            "peak_rss_mib": 594.1
+        },
+        {
+            "case": "Group 1M rows by 50 keys: mean, sum, count",
+            "implementation": "phpolars",
+            "value": 17.584,
+            "reps": [
+                18.627,
+                14.433,
+                17.584,
+                15.195,
+                18.123
+            ],
+            "peak_memory_mib": 164.2,
+            "peak_rss_mib": 217.8
+        },
+        {
+            "case": "Group 1M rows by 50 keys: mean, sum, count",
+            "implementation": "py-polars",
+            "value": 14.245,
+            "reps": [
+                15.111,
+                14.245,
+                14.544,
+                14.142,
+                13.959
+            ],
+            "peak_memory_mib": 206.2,
+            "peak_rss_mib": 243.0
+        },
+        {
+            "case": "Group 1M rows by 50 keys: mean, sum, count",
+            "implementation": "plain PHP arrays",
+            "value": 67.548,
+            "reps": [
+                67.937,
+                67.548,
+                67.334,
+                67.555,
+                67.162
+            ],
+            "peak_memory_mib": 574.3,
+            "peak_rss_mib": 594.1
+        },
+        {
+            "case": "Inner join 1M rows with a 100k-row table",
+            "implementation": "phpolars",
+            "value": 33.78,
+            "reps": [
+                35.771,
+                35.273,
+                33.78,
+                32.869,
+                33
+            ],
+            "peak_memory_mib": 164.2,
+            "peak_rss_mib": 217.8
+        },
+        {
+            "case": "Inner join 1M rows with a 100k-row table",
+            "implementation": "py-polars",
+            "value": 30.121,
+            "reps": [
+                30.418,
+                29.738,
+                30.121,
+                30.804,
+                29.046
+            ],
+            "peak_memory_mib": 206.2,
+            "peak_rss_mib": 243.0
+        },
+        {
+            "case": "Inner join 1M rows with a 100k-row table",
+            "implementation": "plain PHP arrays",
+            "value": 640.414,
+            "reps": [
+                652.797,
+                640.414,
+                631.484,
+                666.73,
+                610.708
+            ],
+            "peak_memory_mib": 574.3,
+            "peak_rss_mib": 594.1
+        }
+    ],
+    "reproduce": [
+        "cc -O2 -o peakmem bench/csv-pipeline/peakmem.c && export PATH=\"$PWD:$PATH\"",
+        "cargo build --release",
+        "scripts/site-content benchmarks"
+    ],
+    "source": "bench/site.php"
+}

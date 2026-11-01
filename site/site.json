@@ -108,13 +108,17 @@
     ]
   },
   "benchmarks": [
-    "site/benchmarks/py-polars.json",
-    "site/benchmarks/php-arrays.json",
+    "site/benchmarks/read-group-join.json",
+    "site/benchmarks/thread-count.json",
     "site/benchmarks/csv-pipeline.json"
   ],
   "verifications": [
-    "site/verifications/py-polars-fixtures.json"
+    "site/verifications/py-polars-fixtures.json",
+    "site/verifications/integration.json"
   ],
+  "evidence_gaps": {
+    "benchmarks": "No benchmark covers SQL queries or reading and writing Parquet, Arrow IPC, or JSON files."
+  },
   "examples": [
     {
       "path": "examples/expressions",

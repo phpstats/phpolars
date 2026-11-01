@@ -46,6 +46,7 @@ $none = $run('^x');
 $some = $run('[0-3]7$');
 $extra = ($some['rss'] - $none['rss']) / 1048576;
 same('the filter keeps 4% of rows', $some['rows'], 11199);
+printf("a %.0f MB CSV adds %.0f MB of peak RSS under a 4%% streaming filter\n", $mb, $extra);
 check(sprintf('a 4%% streaming filter of a %.0f MB CSV adds %.0f MB of RSS, under half the file', $mb, $extra), $extra < $mb / 2, true);
 
 unlink($file);

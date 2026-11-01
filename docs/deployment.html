@@ -466,7 +466,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="memory" class="level2">
 <h2 class="anchored" data-anchor-id="memory">Memory</h2>
-<p>Polars allocates with its own allocator, outside PHP’s memory manager. <code>memory_get_usage()</code> and <code>memory_limit</code> do not see that memory, so a process can hold far more than <code>memory_get_peak_usage()</code> reports. Size FPM pools and queue workers by process memory, and limit request data with the application’s own checks. PHP arrays built from a result, for example with <code>rows()</code> or <code>toDicts()</code>, do count against <code>memory_limit</code>. <a href="./performance.html#memory-on-large-files">Performance</a> measures memory on large files.</p>
+<p>Polars allocates with its own allocator, outside PHP’s memory manager. <code>memory_get_usage()</code> and <code>memory_limit</code> do not see that memory, so a process can hold far more than <code>memory_get_peak_usage()</code> reports. Size FPM pools and queue workers by process memory, and limit request data with the application’s own checks. PHP arrays built from a result, for example with <code>rows()</code> or <code>toDicts()</code>, do count against <code>memory_limit</code>. <a href="./performance.html#memory-on-large-files">Performance</a> describes memory on large files.</p>
 </section>
 <section id="checking-an-installation" class="level2">
 <h2 class="anchored" data-anchor-id="checking-an-installation">Checking an installation</h2>

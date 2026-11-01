@@ -848,10 +848,13 @@ function normalise(mixed $v, string $dtype): mixed {
     return $v;
 }
 
-/** Strict equality, except floats compare with a 1e-9 relative tolerance. */
+/**
+ * Strict equality, except that a float passes when |actual − expected| ≤ 1e-9·|expected|.
+ * There is no absolute floor, so a zero reference passes only an exact zero.
+ */
 function matches(mixed $expected, mixed $actual): bool {
     if (is_float($expected) && is_float($actual)) {
-        return $expected === $actual || abs($expected - $actual) <= 1e-9 * max(abs($expected), abs($actual));
+        return $expected === $actual || abs($expected - $actual) <= 1e-9 * abs($expected);
     }
     if (is_array($expected) && is_array($actual)) {
         if (count($expected) !== count($actual) || array_keys($expected) !== array_keys($actual)) {
@@ -867,9 +870,13 @@ function matches(mixed $expected, mixed $actual): bool {
     return $expected === $actual;
 }
 
-/** Per-case numbers for the site: values compared and the largest numeric errors. */
+/**
+ * Per-case numbers for the site: values compared, the largest numeric errors, the
+ * comparison rule, and the status. The relative error is |x − r| / |r|; it is 0
+ * when both are 0 and null (undefined) when only the reference is 0.
+ */
 function verification(array $expected, array $actual, bool $ok): array {
-    $stats = ['n' => 0, 'abs' => 0.0, 'rel' => 0.0];
+    $stats = ['n' => 0, 'abs' => 0.0, 'rel' => 0.0, 'undefined' => false, 'floats' => 0, 'leaves' => []];
     $walk = function (mixed $e, mixed $a) use (&$walk, &$stats): void {
         if (is_array($e) && !isset($e['$float'])) {
             foreach ($e as $k => $v) {
@@ -878,23 +885,49 @@ function verification(array $expected, array $actual, bool $ok): array {
             return;
         }
         $stats['n']++;
+        $stats['leaves'][] = [$e, $a];
+        if (is_float($e)) {
+            $stats['floats']++;
+        }
         if ((is_int($e) || is_float($e)) && (is_int($a) || is_float($a))) {
             $d = abs((float) $e - (float) $a);
             $stats['abs'] = max($stats['abs'], $d);
-            $scale = max(abs((float) $e), abs((float) $a));
-            $stats['rel'] = max($stats['rel'], $scale > 0 ? $d / $scale : 0.0);
+            if ((float) $e !== 0.0) {
+                $stats['rel'] = max($stats['rel'], $d / abs((float) $e));
+            } elseif ($d > 0) {
+                $stats['undefined'] = true;
+            }
         }
     };
+    $plural = fn (int $n, string $noun) => $n . ' ' . $noun . ($n === 1 ? '' : 's');
     if (isset($expected['error'])) {
-        $quantity = 'raises ' . $expected['error'];
-        $stats['n'] = 1;
+        $out = ['quantity' => 'raises ' . $expected['error'], 'rule' => 'error', 'n_compared' => 1];
     } else {
         $walk($expected['rows'], $actual['rows'] ?? null);
-        $quantity = isset($expected['scalar'])
-            ? sprintf('%d scalar values', count($expected['columns']))
-            : sprintf('%d rows × %d columns', count($expected['rows']), count($expected['columns']));
+        $out = [
+            'quantity' => isset($expected['scalar'])
+                ? $plural(count($expected['columns']), 'scalar value')
+                : $plural(count($expected['rows']), 'row') . ' × ' . $plural(count($expected['columns']), 'column'),
+            'rule' => $stats['floats'] > 0 ? 'float' : 'exact',
+            'n_compared' => $stats['n'],
+            'max_abs_error' => $stats['abs'],
+            'max_rel_error' => $stats['undefined'] ? null : $stats['rel'],
+        ];
+        [$e, $a] = $stats['leaves'][0] ?? [null, null];
+        if ($stats['n'] === 1 && (is_int($e) || is_float($e))) {
+            $out += ['actual' => $a, 'expected' => $e];
+        }
     }
-    return ['quantity' => $quantity, 'n_compared' => $stats['n'], 'max_abs_error' => $stats['abs'], 'max_rel_error' => $stats['rel'], 'passed' => $ok];
+    $out['status'] = $ok ? 'pass' : 'fail';
+    if (!$ok) {
+        $out['reason'] = match (true) {
+            isset($expected['error']) || isset($actual['error']) => sprintf('py-polars raises %s; phpolars %s.', $expected['error'] ?? 'nothing', isset($actual['error']) ? 'raises ' . $actual['error'] : 'returns a result'),
+            $expected['columns'] !== ($actual['columns'] ?? null) => 'The column names differ.',
+            $expected['dtypes'] !== ($actual['dtypes'] ?? null) => 'The data types differ.',
+            default => 'At least one value differs beyond the rule.',
+        };
+    }
+    return $out;
 }
 
 function shape_of(mixed $out): array {

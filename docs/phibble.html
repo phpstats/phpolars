@@ -437,7 +437,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>grouped verbs on factor keys that keep empty groups (phibble’s <code>groupBy(drop: false)</code> or phplyr’s <code>group_by(_drop: false)</code>), because Polars does not see empty groups</li>
 <li>functions that the translator does not support, such as <code>str_to_title()</code></li>
 </ul>
-<p><code>PolarsTable::$fallbacks</code> counts these conversions. Set <code>PolarsTable::$strict = true</code> to throw <code>Phibble\Polars\PolarsFallback</code> instead; its message names the verb and the reason. <a href="./performance.html#practical-guidance">Performance</a> measures the cost of a fallback.</p>
+<p><code>PolarsTable::$fallbacks</code> counts these conversions. Set <code>PolarsTable::$strict = true</code> to throw <code>Phibble\Polars\PolarsFallback</code> instead; its message names the verb and the reason. <a href="./performance.html#practical-guidance">Performance</a> describes when a fallback costs time.</p>
 </section>
 <section id="missing-values" class="level2">
 <h2 class="anchored" data-anchor-id="missing-values">Missing values</h2>

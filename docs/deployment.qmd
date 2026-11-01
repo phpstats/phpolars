@@ -107,7 +107,7 @@ PHP closures never run on Polars threads. Every phpolars operation is built from
 
 ## Memory
 
-Polars allocates with its own allocator, outside PHP's memory manager. `memory_get_usage()` and `memory_limit` do not see that memory, so a process can hold far more than `memory_get_peak_usage()` reports. Size FPM pools and queue workers by process memory, and limit request data with the application's own checks. PHP arrays built from a result, for example with `rows()` or `toDicts()`, do count against `memory_limit`. [Performance](performance.qmd#memory-on-large-files) measures memory on large files.
+Polars allocates with its own allocator, outside PHP's memory manager. `memory_get_usage()` and `memory_limit` do not see that memory, so a process can hold far more than `memory_get_peak_usage()` reports. Size FPM pools and queue workers by process memory, and limit request data with the application's own checks. PHP arrays built from a result, for example with `rows()` or `toDicts()`, do count against `memory_limit`. [Performance](performance.qmd#memory-on-large-files) describes memory on large files.
 
 ## Checking an installation
 
