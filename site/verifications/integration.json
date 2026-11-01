@@ -1,0 +1,54 @@
+{
+    "title": "Installation and runtime checks",
+    "label": "Runtime checks",
+    "kind": "integration",
+    "checked": "The built extension loads and runs under the PHP CLI and PHP-FPM, keeps the API of the latest release, and holds less than half of a CSV file in memory when a streaming scan keeps few rows.",
+    "description": "tests/deployment.php checks the extension version, a group_by result, and the thread pool size; scripts/check-fpm sends it to a php-fpm worker as a FastCGI request. scripts/api-compat.php reads the latest release tag's stubs. tests/memory.php writes a CSV and runs each filter in its own PHP process, comparing their peak resident set sizes. scripts/check runs these checks before a release, and CI runs it on Ubuntu 24.04 and macOS 15 with PHP 8.3, 8.4, and 8.5.",
+    "versions": {
+        "phpolars": "0.2.1",
+        "Polars Rust crate": "0.55.2",
+        "PHP": "8.5.10"
+    },
+    "comparison": [
+        {
+            "id": "check",
+            "kind": "exact",
+            "applies_to": "each check passes or fails as its script exits"
+        }
+    ],
+    "cases": [
+        {
+            "name": "PHP CLI",
+            "quantity": "version matches Cargo.toml, a group_by result, and the thread pool size",
+            "status": "pass"
+        },
+        {
+            "name": "PHP-FPM",
+            "quantity": "the same assertions through a FastCGI request to a php-fpm worker",
+            "status": "skipped",
+            "reason": "php-fpm or cgi-fcgi is not installed on the machine that made this record; CI runs this check in the packaging workflow."
+        },
+        {
+            "name": "API compatibility with v0.2.1",
+            "quantity": "948 functions and methods of v0.2.1 still exist, with its parameters as a prefix of today's",
+            "status": "pass",
+            "n_compared": 948
+        },
+        {
+            "name": "Streaming filter memory",
+            "quantity": "peak RSS added by a streaming filter that keeps 4% of a 93 MB CSV: 31 MB, against a limit of half the file",
+            "status": "pass"
+        }
+    ],
+    "reproduce": [
+        "cargo build --release",
+        "scripts/site-content integration"
+    ],
+    "source": "scripts/check",
+    "environment": {
+        "date": "2026-11-01",
+        "commit": "f281aaf",
+        "php": "8.5.10",
+        "os": "macOS 27.0.1 (arm64)"
+    }
+}

@@ -1,2520 +1,3189 @@
 {
     "title": "Agreement with py-polars",
-    "description": "Each case runs the same operation in phpolars and in py-polars 1.43.2 on the same input, from scripts/pyfixtures.py and tests/pyfixtures.php. A case passes when the column names, the data types, and every value agree. Integers, strings, booleans, dates, and nulls must be equal; floats may differ by the relative tolerance. Cases that expect an error pass when phpolars raises the same exception class. n_compared counts the values compared, and the errors are over numeric values.",
+    "label": "py-polars",
+    "kind": "reference",
+    "checked": "The same operation runs in phpolars and in py-polars 1.43.2 on the same small inputs, and the column names, data types, and every value of the results are compared. The 314 cases cover data frame methods, functions, joins, grouping, windows, sorting, casts, SQL, and the str, dt, list, struct, and arr namespaces.",
+    "description": "phpolars embeds the Polars Rust crate at 0.55.2. py-polars 1.43.2 is the release whose Rust core is closest to it. scripts/pyfixtures.py runs each case in py-polars and saves the results to tests/fixtures/py/expected.json. tests/pyfixtures.php runs the same cases in phpolars and compares them. n_compared counts the values compared, and the errors are over numeric values.",
     "reference": "py-polars 1.43.2",
-    "tolerance": 1.0e-9,
+    "versions": {
+        "py-polars": "1.43.2",
+        "Polars Rust crate": "0.55.2",
+        "PHP": "8.5.10"
+    },
+    "inputs": "Small data frames built the same way in scripts/pyfixtures.py and tests/pyfixtures.php, such as a 6-row frame of integers, floats, strings, booleans, dates, datetimes, and lists, with nulls in every column, plus lookup tables, a sorted time series, and quotes for as-of joins.",
+    "comparison": [
+        {
+            "id": "exact",
+            "kind": "exact",
+            "applies_to": "cases without float values: column names, data types, integers, strings, booleans, dates, datetimes, durations, and nulls in the same positions"
+        },
+        {
+            "id": "float",
+            "kind": "tolerance",
+            "rtol": 1.0e-9,
+            "applies_to": "finite float values, with no absolute floor, so a zero reference passes only an exact zero. Every other value in the case, the column names, and the data types compare exactly"
+        },
+        {
+            "id": "error",
+            "kind": "exact",
+            "applies_to": "cases where py-polars raises: phpolars must raise the exception class of the same name. The message is not compared"
+        }
+    ],
     "cases": [
         {
             "name": "select_arith",
+            "category": "Expressions",
             "quantity": "6 rows × 9 columns",
+            "rule": "float",
             "n_compared": 54,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "select_float_specials",
+            "category": "Expressions",
             "quantity": "6 rows × 4 columns",
+            "rule": "exact",
             "n_compared": 24,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "select_int_div_neg",
+            "category": "Expressions",
             "quantity": "4 rows × 3 columns",
+            "rule": "float",
             "n_compared": 12,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "select_literals",
-            "quantity": "1 rows × 5 columns",
+            "category": "Expressions",
+            "quantity": "1 row × 5 columns",
+            "rule": "float",
             "n_compared": 5,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "select_literal_broadcast",
+            "category": "Expressions",
             "quantity": "6 rows × 3 columns",
+            "rule": "float",
             "n_compared": 18,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "int32_plus_literal",
+            "category": "Expressions",
             "quantity": "6 rows × 4 columns",
+            "rule": "float",
             "n_compared": 24,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "with_columns_compare",
+            "category": "Expressions",
             "quantity": "6 rows × 13 columns",
+            "rule": "float",
             "n_compared": 78,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "with_columns_overwrite",
+            "category": "Expressions",
             "quantity": "6 rows × 4 columns",
+            "rule": "exact",
             "n_compared": 24,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "bool_logic",
+            "category": "Expressions",
             "quantity": "6 rows × 5 columns",
+            "rule": "exact",
             "n_compared": 30,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "horizontal_fns",
+            "category": "Expressions",
             "quantity": "6 rows × 7 columns",
+            "rule": "float",
             "n_compared": 42,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "filter_gt",
+            "category": "Filtering and sorting",
             "quantity": "3 rows × 2 columns",
+            "rule": "exact",
             "n_compared": 6,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "filter_multi",
-            "quantity": "1 rows × 3 columns",
+            "category": "Filtering and sorting",
+            "quantity": "1 row × 3 columns",
+            "rule": "exact",
             "n_compared": 3,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "filter_or_null",
+            "category": "Filtering and sorting",
             "quantity": "2 rows × 3 columns",
+            "rule": "float",
             "n_compared": 6,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "filter_bool_col",
+            "category": "Filtering and sorting",
             "quantity": "3 rows × 2 columns",
+            "rule": "exact",
             "n_compared": 6,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "filter_date",
+            "category": "Filtering and sorting",
             "quantity": "3 rows × 2 columns",
+            "rule": "exact",
             "n_compared": 6,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "filter_datetime",
+            "category": "Filtering and sorting",
             "quantity": "3 rows × 2 columns",
+            "rule": "exact",
             "n_compared": 6,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "sort_single",
+            "category": "Filtering and sorting",
             "quantity": "6 rows × 2 columns",
+            "rule": "exact",
             "n_compared": 12,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "sort_desc_nulls_last",
+            "category": "Filtering and sorting",
             "quantity": "6 rows × 2 columns",
+            "rule": "float",
             "n_compared": 12,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "sort_multi",
+            "category": "Filtering and sorting",
             "quantity": "6 rows × 3 columns",
+            "rule": "exact",
             "n_compared": 18,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "sort_multi_nulls_last",
+            "category": "Filtering and sorting",
             "quantity": "6 rows × 3 columns",
+            "rule": "exact",
             "n_compared": 18,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "sort_multi_mixed_nulls_last",
+            "category": "Filtering and sorting",
             "quantity": "6 rows × 3 columns",
+            "rule": "exact",
             "n_compared": 18,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "sort_expr",
+            "category": "Filtering and sorting",
             "quantity": "6 rows × 2 columns",
+            "rule": "exact",
             "n_compared": 12,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "sort_date_desc",
+            "category": "Filtering and sorting",
             "quantity": "6 rows × 2 columns",
+            "rule": "exact",
             "n_compared": 12,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "sort_string",
+            "category": "Filtering and sorting",
             "quantity": "6 rows × 2 columns",
+            "rule": "exact",
             "n_compared": 12,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "sort_bool",
+            "category": "Filtering and sorting",
             "quantity": "6 rows × 2 columns",
+            "rule": "exact",
             "n_compared": 12,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "gb_sum_mean",
+            "category": "Grouping and summaries",
             "quantity": "4 rows × 5 columns",
+            "rule": "float",
             "n_compared": 20,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "gb_median_min_max",
+            "category": "Grouping and summaries",
             "quantity": "4 rows × 7 columns",
+            "rule": "float",
             "n_compared": 28,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "gb_std_var",
+            "category": "Grouping and summaries",
             "quantity": "4 rows × 4 columns",
+            "rule": "float",
             "n_compared": 16,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "gb_count_len",
+            "category": "Grouping and summaries",
             "quantity": "4 rows × 4 columns",
+            "rule": "exact",
             "n_compared": 16,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "gb_n_unique_first_last",
+            "category": "Grouping and summaries",
             "quantity": "3 rows × 4 columns",
+            "rule": "exact",
             "n_compared": 12,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "gb_quantile",
+            "category": "Grouping and summaries",
             "quantity": "3 rows × 6 columns",
+            "rule": "float",
             "n_compared": 18,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "gb_multi_key",
+            "category": "Grouping and summaries",
             "quantity": "6 rows × 3 columns",
+            "rule": "exact",
             "n_compared": 18,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "gb_expr_key",
+            "category": "Grouping and summaries",
             "quantity": "3 rows × 3 columns",
+            "rule": "float",
             "n_compared": 12,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "gb_implicit_list",
+            "category": "Grouping and summaries",
             "quantity": "4 rows × 3 columns",
+            "rule": "exact",
             "n_compared": 14,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "gb_filter_sortby",
+            "category": "Grouping and summaries",
             "quantity": "4 rows × 3 columns",
+            "rule": "exact",
             "n_compared": 12,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "gb_len_method",
+            "category": "Grouping and summaries",
             "quantity": "4 rows × 2 columns",
+            "rule": "exact",
             "n_compared": 8,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "gb_sum_method",
+            "category": "Grouping and summaries",
             "quantity": "4 rows × 3 columns",
+            "rule": "float",
             "n_compared": 12,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "gb_mean_method",
+            "category": "Grouping and summaries",
             "quantity": "3 rows × 3 columns",
+            "rule": "float",
             "n_compared": 9,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "gb_head",
+            "category": "Grouping and summaries",
             "quantity": "4 rows × 2 columns",
+            "rule": "exact",
             "n_compared": 8,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "join_inner",
+            "category": "Joins",
             "quantity": "3 rows × 5 columns",
+            "rule": "exact",
             "n_compared": 15,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "join_left",
+            "category": "Joins",
             "quantity": "6 rows × 4 columns",
+            "rule": "exact",
             "n_compared": 24,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "join_full",
+            "category": "Joins",
             "quantity": "8 rows × 5 columns",
+            "rule": "exact",
             "n_compared": 40,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "join_full_coalesce",
+            "category": "Joins",
             "quantity": "8 rows × 4 columns",
+            "rule": "exact",
             "n_compared": 32,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "join_semi",
+            "category": "Joins",
             "quantity": "3 rows × 3 columns",
+            "rule": "exact",
             "n_compared": 9,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "join_anti",
+            "category": "Joins",
             "quantity": "3 rows × 3 columns",
+            "rule": "exact",
             "n_compared": 9,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "join_nulls_equal",
+            "category": "Joins",
             "quantity": "6 rows × 5 columns",
+            "rule": "exact",
             "n_compared": 30,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "join_cross",
+            "category": "Joins",
             "quantity": "6 rows × 4 columns",
+            "rule": "exact",
             "n_compared": 24,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "join_suffix",
+            "category": "Joins",
             "quantity": "3 rows × 5 columns",
+            "rule": "exact",
             "n_compared": 15,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "join_left_on_right_on",
+            "category": "Joins",
             "quantity": "6 rows × 5 columns",
+            "rule": "exact",
             "n_compared": 30,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "join_multi_key",
+            "category": "Joins",
             "quantity": "6 rows × 4 columns",
+            "rule": "float",
             "n_compared": 24,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "unique_subset_first",
+            "category": "Filtering and sorting",
             "quantity": "4 rows × 2 columns",
+            "rule": "exact",
             "n_compared": 8,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "unique_keep_last",
+            "category": "Filtering and sorting",
             "quantity": "4 rows × 2 columns",
+            "rule": "exact",
             "n_compared": 8,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "unique_keep_none",
+            "category": "Filtering and sorting",
             "quantity": "2 rows × 2 columns",
+            "rule": "exact",
             "n_compared": 4,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "unique_rows",
+            "category": "Filtering and sorting",
             "quantity": "5 rows × 2 columns",
+            "rule": "exact",
             "n_compared": 10,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "fill_null_value_dataframe",
+            "category": "Missing values",
             "quantity": "6 rows × 4 columns",
+            "rule": "float",
             "n_compared": 24,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "fill_null_string",
+            "category": "Missing values",
             "quantity": "6 rows × 2 columns",
+            "rule": "exact",
             "n_compared": 12,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "fill_null_strategies",
+            "category": "Missing values",
             "quantity": "6 rows × 8 columns",
+            "rule": "float",
             "n_compared": 48,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "fill_null_limit",
+            "category": "Missing values",
             "quantity": "6 rows × 2 columns",
+            "rule": "exact",
             "n_compared": 12,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "fill_null_dataframe_forward",
+            "category": "Missing values",
             "quantity": "6 rows × 3 columns",
+            "rule": "exact",
             "n_compared": 18,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "drop_nulls_all",
+            "category": "Missing values",
             "quantity": "3 rows × 4 columns",
+            "rule": "float",
             "n_compared": 12,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "drop_nulls_subset",
+            "category": "Missing values",
             "quantity": "4 rows × 4 columns",
+            "rule": "float",
             "n_compared": 16,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "null_count",
-            "quantity": "1 rows × 10 columns",
+            "category": "Missing values",
+            "quantity": "1 row × 10 columns",
+            "rule": "exact",
             "n_compared": 10,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "interpolate",
+            "category": "Missing values",
             "quantity": "5 rows × 2 columns",
+            "rule": "float",
             "n_compared": 10,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "unpivot",
+            "category": "Reshaping and concatenation",
             "quantity": "12 rows × 3 columns",
+            "rule": "exact",
             "n_compared": 36,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "unpivot_mixed_names",
+            "category": "Reshaping and concatenation",
             "quantity": "12 rows × 3 columns",
+            "rule": "float",
             "n_compared": 36,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "pivot_first",
+            "category": "Reshaping and concatenation",
             "quantity": "3 rows × 3 columns",
+            "rule": "exact",
             "n_compared": 9,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "pivot_sum",
+            "category": "Reshaping and concatenation",
             "quantity": "3 rows × 3 columns",
+            "rule": "exact",
             "n_compared": 9,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "pivot_mean",
+            "category": "Reshaping and concatenation",
             "quantity": "3 rows × 3 columns",
+            "rule": "float",
             "n_compared": 9,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "pivot_len",
+            "category": "Reshaping and concatenation",
             "quantity": "3 rows × 3 columns",
+            "rule": "exact",
             "n_compared": 9,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "explode_single",
+            "category": "Reshaping and concatenation",
             "quantity": "10 rows × 2 columns",
+            "rule": "exact",
             "n_compared": 20,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "explode_two",
+            "category": "Reshaping and concatenation",
             "quantity": "3 rows × 3 columns",
+            "rule": "exact",
             "n_compared": 9,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "transpose",
+            "category": "Reshaping and concatenation",
             "quantity": "2 rows × 4 columns",
+            "rule": "exact",
             "n_compared": 8,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "with_row_index",
+            "category": "Expressions",
             "quantity": "6 rows × 2 columns",
+            "rule": "exact",
             "n_compared": 12,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "concat_vertical",
+            "category": "Reshaping and concatenation",
             "quantity": "3 rows × 2 columns",
+            "rule": "exact",
             "n_compared": 6,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "concat_horizontal",
+            "category": "Reshaping and concatenation",
             "quantity": "2 rows × 4 columns",
+            "rule": "float",
             "n_compared": 8,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "concat_diagonal",
+            "category": "Reshaping and concatenation",
             "quantity": "3 rows × 3 columns",
+            "rule": "float",
             "n_compared": 9,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "concat_vertical_relaxed",
+            "category": "Reshaping and concatenation",
             "quantity": "3 rows × 2 columns",
+            "rule": "float",
             "n_compared": 6,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "concat_diagonal_relaxed",
+            "category": "Reshaping and concatenation",
             "quantity": "3 rows × 3 columns",
+            "rule": "float",
             "n_compared": 9,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "describe_numeric",
+            "category": "Grouping and summaries",
             "quantity": "9 rows × 3 columns",
+            "rule": "float",
             "n_compared": 27,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "describe_mixed",
+            "category": "Grouping and summaries",
             "quantity": "9 rows × 5 columns",
+            "rule": "float",
             "n_compared": 45,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "describe_percentiles",
+            "category": "Grouping and summaries",
             "quantity": "8 rows × 2 columns",
+            "rule": "float",
             "n_compared": 16,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "dataframe_sum",
-            "quantity": "1 rows × 4 columns",
+            "category": "DataFrame methods",
+            "quantity": "1 row × 4 columns",
+            "rule": "float",
             "n_compared": 4,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "dataframe_mean",
-            "quantity": "1 rows × 3 columns",
+            "category": "DataFrame methods",
+            "quantity": "1 row × 3 columns",
+            "rule": "float",
             "n_compared": 3,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "dataframe_min_max",
+            "category": "DataFrame methods",
             "quantity": "2 rows × 4 columns",
+            "rule": "float",
             "n_compared": 8,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "dataframe_std_var",
+            "category": "DataFrame methods",
             "quantity": "2 rows × 2 columns",
+            "rule": "float",
             "n_compared": 4,
             "max_abs_error": 8.881784197001252e-16,
-            "max_rel_error": 1.914177628664063e-16,
-            "passed": true
+            "max_rel_error": 1.9141776286640631e-16,
+            "status": "pass"
         },
         {
             "name": "dataframe_median",
-            "quantity": "1 rows × 2 columns",
+            "category": "DataFrame methods",
+            "quantity": "1 row × 2 columns",
+            "rule": "float",
             "n_compared": 2,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "dataframe_n_unique",
-            "quantity": "1 rows × 3 columns",
+            "category": "DataFrame methods",
+            "quantity": "1 row × 3 columns",
+            "rule": "exact",
             "n_compared": 3,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "over_sum",
+            "category": "Windows, rolling, and EWM",
             "quantity": "6 rows × 2 columns",
+            "rule": "exact",
             "n_compared": 12,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "over_multi",
+            "category": "Windows, rolling, and EWM",
             "quantity": "6 rows × 3 columns",
+            "rule": "float",
             "n_compared": 18,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "over_order_by",
+            "category": "Windows, rolling, and EWM",
             "quantity": "6 rows × 2 columns",
+            "rule": "exact",
             "n_compared": 12,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "over_order_by_desc",
+            "category": "Windows, rolling, and EWM",
             "quantity": "6 rows × 2 columns",
+            "rule": "exact",
             "n_compared": 12,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "over_rank",
+            "category": "Windows, rolling, and EWM",
             "quantity": "6 rows × 2 columns",
+            "rule": "exact",
             "n_compared": 12,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "cum_fns",
+            "category": "Expressions",
             "quantity": "6 rows × 6 columns",
+            "rule": "float",
             "n_compared": 36,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "shift",
+            "category": "Expressions",
             "quantity": "6 rows × 4 columns",
+            "rule": "exact",
             "n_compared": 24,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "diff",
+            "category": "Expressions",
             "quantity": "6 rows × 3 columns",
+            "rule": "float",
             "n_compared": 18,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "pct_change",
-            "quantity": "6 rows × 1 columns",
+            "category": "Expressions",
+            "quantity": "6 rows × 1 column",
+            "rule": "float",
             "n_compared": 6,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "rank_methods",
+            "category": "Expressions",
             "quantity": "6 rows × 7 columns",
+            "rule": "float",
             "n_compared": 42,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "rolling",
+            "category": "Windows, rolling, and EWM",
             "quantity": "6 rows × 7 columns",
+            "rule": "float",
             "n_compared": 42,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "when_basic",
+            "category": "Expressions",
             "quantity": "6 rows × 2 columns",
+            "rule": "exact",
             "n_compared": 12,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "when_chain",
+            "category": "Expressions",
             "quantity": "6 rows × 2 columns",
+            "rule": "exact",
             "n_compared": 12,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "when_no_otherwise",
+            "category": "Expressions",
             "quantity": "6 rows × 2 columns",
+            "rule": "float",
             "n_compared": 12,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "when_multi_cond",
+            "category": "Expressions",
             "quantity": "6 rows × 2 columns",
+            "rule": "exact",
             "n_compared": 12,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "when_supertype",
+            "category": "Expressions",
             "quantity": "6 rows × 2 columns",
+            "rule": "float",
             "n_compared": 12,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "str_contains",
+            "category": "Strings",
             "quantity": "6 rows × 5 columns",
+            "rule": "exact",
             "n_compared": 30,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "str_replace",
+            "category": "Strings",
             "quantity": "6 rows × 5 columns",
+            "rule": "exact",
             "n_compared": 30,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "str_slice",
+            "category": "Strings",
             "quantity": "6 rows × 4 columns",
+            "rule": "exact",
             "n_compared": 24,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "str_split",
+            "category": "Strings",
             "quantity": "6 rows × 2 columns",
+            "rule": "exact",
             "n_compared": 19,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "str_strip",
+            "category": "Strings",
             "quantity": "6 rows × 4 columns",
+            "rule": "exact",
             "n_compared": 24,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "str_case",
+            "category": "Strings",
             "quantity": "6 rows × 2 columns",
+            "rule": "exact",
             "n_compared": 12,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "str_len",
+            "category": "Strings",
             "quantity": "6 rows × 2 columns",
+            "rule": "exact",
             "n_compared": 12,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "str_pad",
+            "category": "Strings",
             "quantity": "6 rows × 3 columns",
+            "rule": "exact",
             "n_compared": 18,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "str_extract",
+            "category": "Strings",
             "quantity": "6 rows × 3 columns",
+            "rule": "exact",
             "n_compared": 25,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "str_count_matches",
+            "category": "Strings",
             "quantity": "6 rows × 3 columns",
+            "rule": "exact",
             "n_compared": 18,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "str_starts_ends",
+            "category": "Strings",
             "quantity": "6 rows × 2 columns",
+            "rule": "exact",
             "n_compared": 12,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "str_to_integer",
-            "quantity": "6 rows × 1 columns",
+            "category": "Strings",
+            "quantity": "6 rows × 1 column",
+            "rule": "exact",
             "n_compared": 6,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "str_to_integer_base",
-            "quantity": "3 rows × 1 columns",
+            "category": "Strings",
+            "quantity": "3 rows × 1 column",
+            "rule": "exact",
             "n_compared": 3,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "str_find_reverse",
+            "category": "Strings",
             "quantity": "6 rows × 2 columns",
+            "rule": "exact",
             "n_compared": 12,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "str_join_agg",
-            "quantity": "1 rows × 2 columns",
+            "category": "Strings",
+            "quantity": "1 row × 2 columns",
+            "rule": "exact",
             "n_compared": 2,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "str_to_date_datetime",
+            "category": "Strings",
             "quantity": "2 rows × 2 columns",
+            "rule": "exact",
             "n_compared": 4,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "dt_parts",
+            "category": "Dates and times",
             "quantity": "6 rows × 10 columns",
+            "rule": "exact",
             "n_compared": 60,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "date_parts",
+            "category": "Dates and times",
             "quantity": "6 rows × 5 columns",
+            "rule": "exact",
             "n_compared": 30,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "dt_strftime",
+            "category": "Dates and times",
             "quantity": "6 rows × 3 columns",
+            "rule": "exact",
             "n_compared": 18,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "dt_truncate",
+            "category": "Dates and times",
             "quantity": "6 rows × 5 columns",
+            "rule": "exact",
             "n_compared": 30,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "dt_round",
-            "quantity": "6 rows × 1 columns",
+            "category": "Dates and times",
+            "quantity": "6 rows × 1 column",
+            "rule": "exact",
             "n_compared": 6,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "dt_epoch",
+            "category": "Dates and times",
             "quantity": "6 rows × 5 columns",
+            "rule": "exact",
             "n_compared": 30,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "dt_date_time",
+            "category": "Dates and times",
             "quantity": "6 rows × 4 columns",
+            "rule": "exact",
             "n_compared": 24,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "dt_offset_by",
+            "category": "Dates and times",
             "quantity": "6 rows × 3 columns",
+            "rule": "exact",
             "n_compared": 18,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "dt_duration",
+            "category": "Dates and times",
             "quantity": "6 rows × 3 columns",
+            "rule": "exact",
             "n_compared": 18,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "dt_cast_time_unit",
-            "quantity": "6 rows × 1 columns",
+            "category": "Dates and times",
+            "quantity": "6 rows × 1 column",
+            "rule": "exact",
             "n_compared": 6,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "dt_time_zone",
+            "category": "Dates and times",
             "quantity": "6 rows × 2 columns",
+            "rule": "exact",
             "n_compared": 12,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "list_aggs",
+            "category": "Lists, arrays, and structs",
             "quantity": "6 rows × 5 columns",
+            "rule": "float",
             "n_compared": 30,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "list_get",
+            "category": "Lists, arrays, and structs",
             "quantity": "6 rows × 4 columns",
+            "rule": "exact",
             "n_compared": 24,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "list_contains",
+            "category": "Lists, arrays, and structs",
             "quantity": "6 rows × 2 columns",
+            "rule": "exact",
             "n_compared": 12,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "list_join",
-            "quantity": "6 rows × 1 columns",
+            "category": "Lists, arrays, and structs",
+            "quantity": "6 rows × 1 column",
+            "rule": "exact",
             "n_compared": 6,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "list_eval",
+            "category": "Lists, arrays, and structs",
             "quantity": "6 rows × 2 columns",
+            "rule": "float",
             "n_compared": 18,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "list_sort_unique",
+            "category": "Lists, arrays, and structs",
             "quantity": "6 rows × 4 columns",
+            "rule": "exact",
             "n_compared": 28,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "list_unique",
+            "category": "Lists, arrays, and structs",
             "quantity": "2 rows × 2 columns",
+            "rule": "exact",
             "n_compared": 6,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "list_concat_list",
-            "quantity": "6 rows × 1 columns",
+            "category": "Lists, arrays, and structs",
+            "quantity": "6 rows × 1 column",
+            "rule": "exact",
             "n_compared": 12,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "cast_numeric",
+            "category": "Casts",
             "quantity": "6 rows × 5 columns",
+            "rule": "float",
             "n_compared": 30,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "cast_to_string",
+            "category": "Casts",
             "quantity": "6 rows × 5 columns",
+            "rule": "exact",
             "n_compared": 30,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "cast_temporal",
+            "category": "Casts",
             "quantity": "6 rows × 3 columns",
+            "rule": "exact",
             "n_compared": 18,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "cast_strict_fails",
+            "category": "Casts",
             "quantity": "raises InvalidOperationError",
+            "rule": "error",
             "n_compared": 1,
-            "max_abs_error": 0.0,
-            "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "cast_non_strict",
+            "category": "Casts",
             "quantity": "6 rows × 2 columns",
+            "rule": "exact",
             "n_compared": 12,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "cast_overflow_strict_fails",
+            "category": "Casts",
             "quantity": "raises InvalidOperationError",
+            "rule": "error",
             "n_compared": 1,
-            "max_abs_error": 0.0,
-            "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "cast_string_to_float",
-            "quantity": "5 rows × 1 columns",
+            "category": "Casts",
+            "quantity": "5 rows × 1 column",
+            "rule": "float",
             "n_compared": 5,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "cast_dataframe_map",
+            "category": "Casts",
             "quantity": "6 rows × 3 columns",
+            "rule": "float",
             "n_compared": 18,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "is_in",
+            "category": "Expressions",
             "quantity": "6 rows × 4 columns",
+            "rule": "exact",
             "n_compared": 24,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "is_between",
+            "category": "Expressions",
             "quantity": "6 rows × 5 columns",
+            "rule": "exact",
             "n_compared": 30,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "is_between_dates",
-            "quantity": "6 rows × 1 columns",
+            "category": "Expressions",
+            "quantity": "6 rows × 1 column",
+            "rule": "exact",
             "n_compared": 6,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "clip",
+            "category": "Expressions",
             "quantity": "6 rows × 4 columns",
+            "rule": "float",
             "n_compared": 24,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "round",
+            "category": "Expressions",
             "quantity": "8 rows × 6 columns",
+            "rule": "float",
             "n_compared": 48,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "math",
+            "category": "Expressions",
             "quantity": "6 rows × 6 columns",
+            "rule": "float",
             "n_compared": 36,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "value_counts_expr",
+            "category": "Grouping and summaries",
             "quantity": "4 rows × 2 columns",
+            "rule": "exact",
             "n_compared": 8,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "value_counts_series",
+            "category": "Grouping and summaries",
             "quantity": "4 rows × 2 columns",
+            "rule": "exact",
             "n_compared": 8,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "value_counts_normalize",
+            "category": "Grouping and summaries",
             "quantity": "3 rows × 2 columns",
+            "rule": "float",
             "n_compared": 6,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "series_int_aggs",
+            "category": "Series",
             "quantity": "16 scalar values",
+            "rule": "float",
             "n_compared": 16,
             "max_abs_error": 8.881784197001252e-16,
-            "max_rel_error": 1.5313421029312503e-16,
-            "passed": true
+            "max_rel_error": 1.5313421029312505e-16,
+            "status": "pass"
         },
         {
             "name": "series_float_aggs",
+            "category": "Series",
             "quantity": "14 scalar values",
+            "rule": "float",
             "n_compared": 14,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "series_quantile_int_arg",
+            "category": "Series",
             "quantity": "2 scalar values",
+            "rule": "float",
             "n_compared": 2,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "series_str_aggs",
+            "category": "Series",
             "quantity": "6 scalar values",
+            "rule": "exact",
             "n_compared": 6,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "series_bool_aggs",
+            "category": "Series",
             "quantity": "5 scalar values",
+            "rule": "float",
             "n_compared": 5,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "series_ops",
+            "category": "Series",
             "quantity": "6 rows × 8 columns",
+            "rule": "float",
             "n_compared": 48,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "series_sort",
-            "quantity": "6 rows × 1 columns",
+            "category": "Series",
+            "quantity": "6 rows × 1 column",
+            "rule": "exact",
             "n_compared": 6,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "series_unique",
-            "quantity": "4 rows × 1 columns",
+            "category": "Series",
+            "quantity": "4 rows × 1 column",
+            "rule": "exact",
             "n_compared": 4,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "series_empty_aggs",
+            "category": "Series",
             "quantity": "5 scalar values",
+            "rule": "exact",
             "n_compared": 5,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "head_tail_slice",
-            "quantity": "5 rows × 1 columns",
+            "category": "DataFrame methods",
+            "quantity": "5 rows × 1 column",
+            "rule": "exact",
             "n_compared": 5,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "rename_drop_reverse",
+            "category": "DataFrame methods",
             "quantity": "6 rows × 2 columns",
+            "rule": "exact",
             "n_compared": 12,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "struct_pack_field",
+            "category": "Lists, arrays, and structs",
             "quantity": "6 rows × 2 columns",
+            "rule": "exact",
             "n_compared": 18,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "unique_counts_mode",
-            "quantity": "2 rows × 1 columns",
+            "category": "Filtering and sorting",
+            "quantity": "2 rows × 1 column",
+            "rule": "exact",
             "n_compared": 2,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "top_bottom_k",
+            "category": "Filtering and sorting",
             "quantity": "2 rows × 2 columns",
+            "rule": "float",
             "n_compared": 4,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "join_asof_backward",
+            "category": "Joins",
             "quantity": "6 rows × 6 columns",
+            "rule": "float",
             "n_compared": 36,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "join_asof_forward_by",
+            "category": "Joins",
             "quantity": "6 rows × 5 columns",
+            "rule": "float",
             "n_compared": 30,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "join_asof_nearest_tolerance",
+            "category": "Joins",
             "quantity": "6 rows × 6 columns",
+            "rule": "float",
             "n_compared": 36,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "join_asof_int_tolerance",
+            "category": "Joins",
             "quantity": "3 rows × 2 columns",
+            "rule": "exact",
             "n_compared": 6,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "group_by_dynamic_day",
+            "category": "Grouping and summaries",
             "quantity": "3 rows × 3 columns",
+            "rule": "exact",
             "n_compared": 9,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "group_by_dynamic_by_bounds",
+            "category": "Grouping and summaries",
             "quantity": "9 rows × 5 columns",
+            "rule": "exact",
             "n_compared": 45,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "group_by_dynamic_label_offset",
+            "category": "Grouping and summaries",
             "quantity": "3 rows × 2 columns",
+            "rule": "exact",
             "n_compared": 6,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "rolling_dataframe",
+            "category": "Windows, rolling, and EWM",
             "quantity": "6 rows × 3 columns",
+            "rule": "exact",
             "n_compared": 18,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "rolling_dataframe_by",
+            "category": "Windows, rolling, and EWM",
             "quantity": "6 rows × 3 columns",
+            "rule": "exact",
             "n_compared": 18,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "rolling_by_exprs",
+            "category": "Windows, rolling, and EWM",
             "quantity": "6 rows × 9 columns",
+            "rule": "float",
             "n_compared": 54,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "rolling_quantile_skew",
+            "category": "Windows, rolling, and EWM",
             "quantity": "6 rows × 4 columns",
+            "rule": "float",
             "n_compared": 24,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "ewm",
+            "category": "Windows, rolling, and EWM",
             "quantity": "6 rows × 4 columns",
+            "rule": "float",
             "n_compared": 24,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "ewm_mean_by",
-            "quantity": "6 rows × 1 columns",
+            "category": "Windows, rolling, and EWM",
+            "quantity": "6 rows × 1 column",
+            "rule": "float",
             "n_compared": 6,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "ewm_no_alpha",
+            "category": "Windows, rolling, and EWM",
             "quantity": "raises ValueError",
+            "rule": "error",
             "n_compared": 1,
-            "max_abs_error": 0.0,
-            "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "cut_qcut",
+            "category": "Expressions",
             "quantity": "6 rows × 5 columns",
+            "rule": "float",
             "n_compared": 30,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "cut_include_breaks",
+            "category": "Expressions",
             "quantity": "6 rows × 2 columns",
+            "rule": "float",
             "n_compared": 12,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "rle",
+            "category": "Expressions",
             "quantity": "4 rows × 2 columns",
+            "rule": "exact",
             "n_compared": 8,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "rle_id",
-            "quantity": "8 rows × 1 columns",
+            "category": "Expressions",
+            "quantity": "8 rows × 1 column",
+            "rule": "exact",
             "n_compared": 8,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "search_sorted",
-            "quantity": "1 rows × 4 columns",
+            "category": "Expressions",
+            "quantity": "1 row × 4 columns",
+            "rule": "exact",
             "n_compared": 4,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "search_sorted_many",
-            "quantity": "3 rows × 1 columns",
+            "category": "Expressions",
+            "quantity": "3 rows × 1 column",
+            "rule": "exact",
             "n_compared": 3,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "peaks_entropy",
+            "category": "Expressions",
             "quantity": "6 rows × 4 columns",
+            "rule": "float",
             "n_compared": 24,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "hist_bins",
-            "quantity": "3 rows × 1 columns",
+            "category": "Expressions",
+            "quantity": "3 rows × 1 column",
+            "rule": "exact",
             "n_compared": 3,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "hist_count_breaks",
+            "category": "Expressions",
             "quantity": "2 rows × 3 columns",
+            "rule": "float",
             "n_compared": 6,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "interpolate_by",
-            "quantity": "7 rows × 1 columns",
+            "category": "Missing values",
+            "quantity": "7 rows × 1 column",
+            "rule": "float",
             "n_compared": 7,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "is_close_index_of",
+            "category": "Expressions",
             "quantity": "4 rows × 5 columns",
+            "rule": "exact",
             "n_compared": 20,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "arg_unique_bounds",
-            "quantity": "1 rows × 3 columns",
+            "category": "Expressions",
+            "quantity": "1 row × 3 columns",
+            "rule": "exact",
             "n_compared": 5,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "trig_extra",
+            "category": "Expressions",
             "quantity": "8 rows × 9 columns",
+            "rule": "float",
             "n_compared": 72,
             "max_abs_error": 2.220446049250313e-16,
-            "max_rel_error": 1.4171860675276878e-16,
-            "passed": true
+            "max_rel_error": 1.417186067527688e-16,
+            "status": "pass"
         },
         {
             "name": "dataframe_shift",
+            "category": "DataFrame methods",
             "quantity": "6 rows × 2 columns",
+            "rule": "exact",
             "n_compared": 12,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "dataframe_shift_fill",
+            "category": "DataFrame methods",
             "quantity": "6 rows × 2 columns",
+            "rule": "exact",
             "n_compared": 12,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "dataframe_interpolate",
+            "category": "DataFrame methods",
             "quantity": "6 rows × 2 columns",
+            "rule": "float",
             "n_compared": 12,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "dataframe_quantile_product",
+            "category": "DataFrame methods",
             "quantity": "2 rows × 3 columns",
+            "rule": "float",
             "n_compared": 6,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "dataframe_top_bottom_k",
+            "category": "DataFrame methods",
             "quantity": "7 rows × 4 columns",
+            "rule": "float",
             "n_compared": 28,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "dataframe_gather_every",
+            "category": "DataFrame methods",
             "quantity": "3 rows × 2 columns",
+            "rule": "exact",
             "n_compared": 6,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "dataframe_drop_nans",
+            "category": "DataFrame methods",
             "quantity": "5 rows × 4 columns",
+            "rule": "float",
             "n_compared": 20,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "dataframe_drop_nans_subset",
+            "category": "DataFrame methods",
             "quantity": "5 rows × 5 columns",
+            "rule": "float",
             "n_compared": 25,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "dataframe_is_duplicated",
+            "category": "DataFrame methods",
             "quantity": "6 rows × 2 columns",
+            "rule": "exact",
             "n_compared": 12,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "dataframe_upsample",
+            "category": "DataFrame methods",
             "quantity": "6 rows × 3 columns",
+            "rule": "exact",
             "n_compared": 18,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "dataframe_corr",
+            "category": "DataFrame methods",
             "quantity": "3 rows × 3 columns",
+            "rule": "float",
             "n_compared": 9,
             "max_abs_error": 4.996003610813204e-16,
             "max_rel_error": 2.3931036924107328e-15,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "dataframe_insert_to_struct",
+            "category": "DataFrame methods",
             "quantity": "3 rows × 3 columns",
+            "rule": "exact",
             "n_compared": 9,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "dataframe_approx_n_unique",
-            "quantity": "1 rows × 2 columns",
+            "category": "DataFrame methods",
+            "quantity": "1 row × 2 columns",
+            "rule": "exact",
             "n_compared": 2,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "fn_date_range",
-            "quantity": "4 rows × 1 columns",
+            "category": "Functions",
+            "quantity": "4 rows × 1 column",
+            "rule": "exact",
             "n_compared": 4,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "fn_date_range_closed",
-            "quantity": "3 rows × 1 columns",
+            "category": "Functions",
+            "quantity": "3 rows × 1 column",
+            "rule": "exact",
             "n_compared": 3,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "fn_datetime_range",
-            "quantity": "5 rows × 1 columns",
+            "category": "Functions",
+            "quantity": "5 rows × 1 column",
+            "rule": "exact",
             "n_compared": 5,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "fn_date_ranges",
-            "quantity": "2 rows × 1 columns",
+            "category": "Functions",
+            "quantity": "2 rows × 1 column",
+            "rule": "exact",
             "n_compared": 6,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "fn_int_ranges",
+            "category": "Functions",
             "quantity": "5 rows × 2 columns",
+            "rule": "exact",
             "n_compared": 17,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "fn_date_datetime",
+            "category": "Functions",
             "quantity": "5 rows × 2 columns",
+            "rule": "exact",
             "n_compared": 10,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "fn_duration",
+            "category": "Functions",
             "quantity": "5 rows × 2 columns",
+            "rule": "exact",
             "n_compared": 10,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "fn_from_epoch",
+            "category": "Functions",
             "quantity": "2 rows × 3 columns",
+            "rule": "exact",
             "n_compared": 6,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "fn_arg_where",
-            "quantity": "3 rows × 1 columns",
+            "category": "Functions",
+            "quantity": "3 rows × 1 column",
+            "rule": "exact",
             "n_compared": 3,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "fn_corr_cov",
-            "quantity": "1 rows × 4 columns",
+            "category": "Functions",
+            "quantity": "1 row × 4 columns",
+            "rule": "float",
             "n_compared": 4,
             "max_abs_error": 2.220446049250313e-16,
             "max_rel_error": 1.982541115402065e-16,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "fn_nth",
+            "category": "Functions",
             "quantity": "6 rows × 2 columns",
+            "rule": "exact",
             "n_compared": 12,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "fn_repeat_linear_space",
+            "category": "Functions",
             "quantity": "3 rows × 2 columns",
+            "rule": "float",
             "n_compared": 6,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "fn_select",
-            "quantity": "1 rows × 2 columns",
+            "category": "Functions",
+            "quantity": "1 row × 2 columns",
+            "rule": "exact",
             "n_compared": 2,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "fn_stat_shorthands",
-            "quantity": "1 rows × 5 columns",
+            "category": "Functions",
+            "quantity": "1 row × 5 columns",
+            "rule": "float",
             "n_compared": 10,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "str_many",
+            "category": "Strings",
             "quantity": "6 rows × 6 columns",
+            "rule": "exact",
             "n_compared": 36,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "str_extract_groups",
+            "category": "Strings",
             "quantity": "3 rows × 2 columns",
+            "rule": "exact",
             "n_compared": 6,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "str_split_exact",
+            "category": "Strings",
             "quantity": "3 rows × 4 columns",
+            "rule": "exact",
             "n_compared": 12,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "str_encode_decode",
+            "category": "Strings",
             "quantity": "3 rows × 3 columns",
+            "rule": "exact",
             "n_compared": 9,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "str_to_decimal",
-            "quantity": "3 rows × 1 columns",
+            "category": "Strings",
+            "quantity": "3 rows × 1 column",
+            "rule": "float",
             "n_compared": 3,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "str_normalize_escape",
+            "category": "Strings",
             "quantity": "6 rows × 2 columns",
+            "rule": "exact",
             "n_compared": 12,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "str_json",
+            "category": "Strings",
             "quantity": "3 rows × 3 columns",
+            "rule": "exact",
             "n_compared": 9,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "dt_parts_extra",
+            "category": "Dates and times",
             "quantity": "4 rows × 3 columns",
+            "rule": "exact",
             "n_compared": 12,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "dt_business",
+            "category": "Dates and times",
             "quantity": "4 rows × 5 columns",
+            "rule": "exact",
             "n_compared": 20,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "dt_combine_replace",
+            "category": "Dates and times",
             "quantity": "4 rows × 3 columns",
+            "rule": "exact",
             "n_compared": 12,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "dt_time_unit",
+            "category": "Dates and times",
             "quantity": "6 rows × 2 columns",
+            "rule": "exact",
             "n_compared": 12,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "list_more",
+            "category": "Lists, arrays, and structs",
             "quantity": "6 rows × 5 columns",
+            "rule": "exact",
             "n_compared": 30,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "list_to_array",
+            "category": "Lists, arrays, and structs",
             "quantity": "2 rows × 3 columns",
+            "rule": "exact",
             "n_compared": 8,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "arr_aggs",
+            "category": "Lists, arrays, and structs",
             "quantity": "3 rows × 9 columns",
+            "rule": "float",
             "n_compared": 27,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "arr_ops",
+            "category": "Lists, arrays, and structs",
             "quantity": "3 rows × 13 columns",
+            "rule": "exact",
             "n_compared": 62,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "arr_explode_struct",
+            "category": "Lists, arrays, and structs",
             "quantity": "2 rows × 3 columns",
+            "rule": "exact",
             "n_compared": 6,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "cat_ns",
+            "category": "Categoricals and binary",
             "quantity": "4 rows × 5 columns",
+            "rule": "exact",
             "n_compared": 20,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "cat_categories",
-            "quantity": "9 rows × 1 columns",
+            "category": "Categoricals and binary",
+            "quantity": "9 rows × 1 column",
+            "rule": "exact",
             "n_compared": 9,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "bin_ns",
+            "category": "Categoricals and binary",
             "quantity": "3 rows × 8 columns",
+            "rule": "float",
             "n_compared": 24,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "series_mirrors_expr",
+            "category": "Series",
             "quantity": "6 rows × 5 columns",
+            "rule": "float",
             "n_compared": 30,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "series_scalar_reductions",
+            "category": "Series",
             "quantity": "7 scalar values",
+            "rule": "float",
             "n_compared": 7,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "selectors",
+            "category": "Selectors",
             "quantity": "40 scalar values",
+            "rule": "exact",
             "n_compared": 40,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "multi_col_logic_is_boolean",
+            "category": "Expressions",
             "quantity": "8 rows × 2 columns",
+            "rule": "exact",
             "n_compared": 16,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "selectors_in_ops",
+            "category": "Selectors",
             "quantity": "6 rows × 4 columns",
+            "rule": "float",
             "n_compared": 24,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "sql_dataframe",
+            "category": "SQL",
             "quantity": "4 rows × 3 columns",
+            "rule": "exact",
             "n_compared": 12,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "sql_context_join",
+            "category": "SQL",
             "quantity": "6 rows × 3 columns",
+            "rule": "exact",
             "n_compared": 18,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "sql_expressions",
+            "category": "SQL",
             "quantity": "6 rows × 6 columns",
+            "rule": "float",
             "n_compared": 36,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "sql_window_cte",
+            "category": "SQL",
             "quantity": "5 rows × 4 columns",
+            "rule": "exact",
             "n_compared": 20,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "sql_table_name",
-            "quantity": "1 rows × 1 columns",
+            "category": "SQL",
+            "quantity": "1 row × 1 column",
+            "rule": "exact",
             "n_compared": 1,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "actual": 7,
+            "expected": 7,
+            "status": "pass"
         },
         {
             "name": "sql_function",
+            "category": "SQL",
             "quantity": "2 rows × 2 columns",
+            "rule": "exact",
             "n_compared": 4,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "sql_error",
+            "category": "SQL",
             "quantity": "raises ColumnNotFoundError",
+            "rule": "error",
             "n_compared": 1,
-            "max_abs_error": 0.0,
-            "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "dataframe_to_dummies",
+            "category": "DataFrame methods",
             "quantity": "6 rows × 9 columns",
+            "rule": "exact",
             "n_compared": 54,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "dataframe_to_dummies_opts",
+            "category": "DataFrame methods",
             "quantity": "6 rows × 2 columns",
+            "rule": "exact",
             "n_compared": 12,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "series_to_dummies",
+            "category": "Series",
             "quantity": "6 rows × 4 columns",
+            "rule": "exact",
             "n_compared": 24,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "dataframe_horizontal",
+            "category": "DataFrame methods",
             "quantity": "6 rows × 4 columns",
+            "rule": "float",
             "n_compared": 24,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "dataframe_clear",
+            "category": "DataFrame methods",
             "quantity": "2 rows × 2 columns",
+            "rule": "exact",
             "n_compared": 4,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "dataframe_replace_column",
+            "category": "DataFrame methods",
             "quantity": "2 rows × 2 columns",
+            "rule": "exact",
             "n_compared": 4,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "dataframe_column_index",
-            "quantity": "1 scalar values",
+            "category": "DataFrame methods",
+            "quantity": "1 scalar value",
+            "rule": "exact",
             "n_compared": 1,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "actual": 4,
+            "expected": 4,
+            "status": "pass"
         },
         {
             "name": "group_by_quantile",
+            "category": "Grouping and summaries",
             "quantity": "4 rows × 3 columns",
+            "rule": "float",
             "n_compared": 12,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "min_max_by",
-            "quantity": "1 rows × 2 columns",
+            "category": "Expressions",
+            "quantity": "1 row × 2 columns",
+            "rule": "exact",
             "n_compared": 2,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "first_last_non_null",
-            "quantity": "1 rows × 2 columns",
+            "category": "Expressions",
+            "quantity": "1 row × 2 columns",
+            "rule": "exact",
             "n_compared": 2,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "expr_item",
-            "quantity": "1 rows × 1 columns",
+            "category": "Expressions",
+            "quantity": "1 row × 1 column",
+            "rule": "exact",
             "n_compared": 1,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "actual": 7,
+            "expected": 7,
+            "status": "pass"
         },
         {
             "name": "cumulative_eval",
-            "quantity": "6 rows × 1 columns",
+            "category": "Expressions",
+            "quantity": "6 rows × 1 column",
+            "rule": "exact",
             "n_compared": 6,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "bitwise",
+            "category": "Expressions",
             "quantity": "3 rows × 6 columns",
+            "rule": "exact",
             "n_compared": 18,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "struct_with_fields",
+            "category": "Lists, arrays, and structs",
             "quantity": "6 rows × 4 columns",
+            "rule": "exact",
             "n_compared": 24,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "fn_business_day_count",
-            "quantity": "4 rows × 1 columns",
+            "category": "Functions",
+            "quantity": "4 rows × 1 column",
+            "rule": "exact",
             "n_compared": 4,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "fn_format",
-            "quantity": "6 rows × 1 columns",
+            "category": "Functions",
+            "quantity": "6 rows × 1 column",
+            "rule": "exact",
             "n_compared": 6,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "fn_arg_sort_by",
-            "quantity": "6 rows × 1 columns",
+            "category": "Functions",
+            "quantity": "6 rows × 1 column",
+            "rule": "exact",
             "n_compared": 6,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "fn_concat_arr",
-            "quantity": "6 rows × 1 columns",
+            "category": "Functions",
+            "quantity": "6 rows × 1 column",
+            "rule": "exact",
             "n_compared": 6,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "group_by_iter",
+            "category": "Grouping and summaries",
             "quantity": "6 rows × 4 columns",
+            "rule": "exact",
             "n_compared": 24,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "top_k_by",
+            "category": "Filtering and sorting",
             "quantity": "3 rows × 2 columns",
+            "rule": "exact",
             "n_compared": 6,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "ewm_sum",
+            "category": "Windows, rolling, and EWM",
             "quantity": "6 rows × 2 columns",
+            "rule": "float",
             "n_compared": 12,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "ewm_sum_by",
-            "quantity": "6 rows × 1 columns",
+            "category": "Windows, rolling, and EWM",
+            "quantity": "6 rows × 1 column",
+            "rule": "float",
             "n_compared": 6,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "extend_constant",
-            "quantity": "8 rows × 1 columns",
+            "category": "Expressions",
+            "quantity": "8 rows × 1 column",
+            "rule": "exact",
             "n_compared": 8,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "reshape",
-            "quantity": "2 rows × 1 columns",
+            "category": "Expressions",
+            "quantity": "2 rows × 1 column",
+            "rule": "exact",
             "n_compared": 2,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "rolling_rank",
+            "category": "Windows, rolling, and EWM",
             "quantity": "6 rows × 2 columns",
+            "rule": "exact",
             "n_compared": 12,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "rolling_rank_by",
-            "quantity": "6 rows × 1 columns",
+            "category": "Windows, rolling, and EWM",
+            "quantity": "6 rows × 1 column",
+            "rule": "exact",
             "n_compared": 6,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "expr_rolling",
+            "category": "Expressions",
             "quantity": "6 rows × 3 columns",
+            "rule": "exact",
             "n_compared": 18,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "reinterpret",
-            "quantity": "2 rows × 1 columns",
+            "category": "Expressions",
+            "quantity": "2 rows × 1 column",
+            "rule": "float",
             "n_compared": 2,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "is_empty_arg_true",
-            "quantity": "1 rows × 4 columns",
+            "category": "Expressions",
+            "quantity": "1 row × 4 columns",
+            "rule": "exact",
             "n_compared": 15,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "meta",
+            "category": "Expressions",
             "quantity": "8 scalar values",
+            "rule": "exact",
             "n_compared": 8,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "ns_extras",
+            "category": "Expressions",
             "quantity": "6 rows × 3 columns",
+            "rule": "exact",
             "n_compared": 18,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "list_item",
-            "quantity": "3 rows × 1 columns",
+            "category": "Lists, arrays, and structs",
+            "quantity": "3 rows × 1 column",
+            "rule": "exact",
             "n_compared": 3,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "struct_unnest",
+            "category": "Lists, arrays, and structs",
             "quantity": "6 rows × 2 columns",
+            "rule": "exact",
             "n_compared": 12,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "bin_reinterpret",
+            "category": "Categoricals and binary",
             "quantity": "2 rows × 2 columns",
+            "rule": "exact",
             "n_compared": 4,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "dataframe_remove",
+            "category": "DataFrame methods",
             "quantity": "3 rows × 2 columns",
+            "rule": "exact",
             "n_compared": 6,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "dataframe_gather",
+            "category": "DataFrame methods",
             "quantity": "3 rows × 2 columns",
+            "rule": "exact",
             "n_compared": 6,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "dataframe_merge_sorted",
+            "category": "DataFrame methods",
             "quantity": "6 rows × 2 columns",
+            "rule": "exact",
             "n_compared": 12,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "dataframe_update",
+            "category": "DataFrame methods",
             "quantity": "6 rows × 3 columns",
+            "rule": "exact",
             "n_compared": 18,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "dataframe_update_nulls_full",
+            "category": "DataFrame methods",
             "quantity": "7 rows × 3 columns",
+            "rule": "exact",
             "n_compared": 21,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "dataframe_update_by_row",
+            "category": "DataFrame methods",
             "quantity": "6 rows × 2 columns",
+            "rule": "exact",
             "n_compared": 12,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "dataframe_iter_slices",
+            "category": "DataFrame methods",
             "quantity": "6 rows × 2 columns",
+            "rule": "exact",
             "n_compared": 12,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "dataframe_map_rows",
+            "category": "DataFrame methods",
             "quantity": "6 rows × 2 columns",
+            "rule": "exact",
             "n_compared": 12,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "dataframe_map_rows_scalar",
-            "quantity": "6 rows × 1 columns",
+            "category": "DataFrame methods",
+            "quantity": "6 rows × 1 column",
+            "rule": "exact",
             "n_compared": 6,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "group_by_having",
+            "category": "Grouping and summaries",
             "quantity": "2 rows × 2 columns",
+            "rule": "exact",
             "n_compared": 4,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "series_describe",
+            "category": "Series",
             "quantity": "9 rows × 2 columns",
+            "rule": "float",
             "n_compared": 18,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "series_scatter",
+            "category": "Series",
             "quantity": "6 rows × 2 columns",
+            "rule": "exact",
             "n_compared": 12,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "series_set",
-            "quantity": "6 rows × 1 columns",
+            "category": "Series",
+            "quantity": "6 rows × 1 column",
+            "rule": "exact",
             "n_compared": 6,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "fn_more",
+            "category": "Functions",
             "quantity": "6 rows × 7 columns",
+            "rule": "float",
             "n_compared": 42,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "fn_cum_sum_horizontal",
+            "category": "Functions",
             "quantity": "6 rows × 3 columns",
+            "rule": "exact",
             "n_compared": 18,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "fn_head_tail",
+            "category": "Functions",
             "quantity": "2 rows × 2 columns",
+            "rule": "exact",
             "n_compared": 4,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "fn_linear_spaces",
+            "category": "Functions",
             "quantity": "2 rows × 2 columns",
+            "rule": "float",
             "n_compared": 10,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "fn_time",
-            "quantity": "6 rows × 1 columns",
+            "category": "Functions",
+            "quantity": "6 rows × 1 column",
+            "rule": "exact",
             "n_compared": 6,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "fn_time_range",
-            "quantity": "3 rows × 1 columns",
+            "category": "Functions",
+            "quantity": "3 rows × 1 column",
+            "rule": "exact",
             "n_compared": 3,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "fn_rolling_corr_cov",
+            "category": "Functions",
             "quantity": "6 rows × 2 columns",
+            "rule": "float",
             "n_compared": 12,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "fn_escape_regex",
-            "quantity": "1 scalar values",
+            "category": "Functions",
+            "quantity": "1 scalar value",
+            "rule": "exact",
             "n_compared": 1,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "json_normalize",
+            "category": "Reshaping and concatenation",
             "quantity": "3 rows × 6 columns",
+            "rule": "exact",
             "n_compared": 19,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "json_normalize_level",
+            "category": "Reshaping and concatenation",
             "quantity": "3 rows × 5 columns",
+            "rule": "exact",
             "n_compared": 16,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "sql_expr",
+            "category": "SQL",
             "quantity": "6 rows × 2 columns",
+            "rule": "exact",
             "n_compared": 12,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "melt",
+            "category": "Reshaping and concatenation",
             "quantity": "6 rows × 3 columns",
+            "rule": "exact",
             "n_compared": 18,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         },
         {
             "name": "arange",
-            "quantity": "3 rows × 1 columns",
+            "category": "Functions",
+            "quantity": "3 rows × 1 column",
+            "rule": "exact",
             "n_compared": 3,
             "max_abs_error": 0.0,
             "max_rel_error": 0.0,
-            "passed": true
+            "status": "pass"
         }
-    ]
+    ],
+    "exclusions": [
+        "NaN, INF, and -INF are saved as {\"$float\": \"NaN\"}, {\"$float\": \"INF\"}, and {\"$float\": \"-INF\"} and compare exactly; they are counted in n_compared but not in the errors.",
+        "Methods and arguments without a case follow py-polars' names, but their results have not been compared."
+    ],
+    "reproduce": [
+        "uv run --with 'polars==1.43.2' --with numpy python scripts/pyfixtures.py",
+        "cargo build --release",
+        "scripts/site-content verifications"
+    ],
+    "source": "tests/fixtures/py/expected.json",
+    "data": "scripts/pyfixtures.py",
+    "environment": {
+        "date": "2026-11-01",
+        "commit": "f281aaf",
+        "php": "8.5.10",
+        "os": "macOS 27.0.1 (arm64)"
+    }
 }
