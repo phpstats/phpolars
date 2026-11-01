@@ -1,8 +1,0 @@
-# A tibble: 5 × 1
-  s          
-  <chr>      
-1 " leading" 
-2 "trailing "
-3 ""         
-4 "quote\"s" 
-5  <NA>      

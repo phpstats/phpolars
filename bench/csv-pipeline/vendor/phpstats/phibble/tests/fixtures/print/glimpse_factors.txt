@@ -1,4 +1,0 @@
-Rows: 3
-Columns: 2
-$ f <fct> a, b, NA
-$ o <ord> lo, hi, mid

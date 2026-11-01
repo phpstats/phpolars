@@ -1,8 +1,0 @@
-/vendor/
-/.phpunit.cache/
-composer.lock
-/tests/fixtures/*.dylib
-/.claude/
-/docs/_site/
-/docs/.quarto/
-/bench/data/
