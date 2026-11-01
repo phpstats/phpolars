@@ -1,6 +1,6 @@
 {
-    "title": "A 1 GB CSV file: phpolars, phibble, plain PHP, tibble, and pandas",
-    "description": "Each script reads every row of a seeded order-events CSV, keeps the completed orders, and computes orders, units, revenue, and the mean amount for each region and month. phpolars scans the file lazily and runs the query with the streaming engine. phibble reads the file in chunks of 100,000 rows with fromCsvChunked(), filters, groups, and summarizes each chunk, and adds the chunk totals together; with the phit extension loaded, the chunks are parsed by Phit\\CsvReader (phibble (phit reader)), and with PHIBBLE_NATIVE_CSV=0 by phibble's PHP reader (phibble (PHP reader)). Plain PHP reads one row at a time with fgetcsv and adds each row to the totals of its group. tibble (R) reads the file with readr and summarizes it with dplyr, and pandas reads it with read_csv and groupby; both read the whole file, as is usual for them. Each run is a fresh process. Time is measured inside the script, from opening the file to holding the result as PHP values. Memory is the process's peak memory footprint as macOS reports it (/usr/bin/time -l): its own allocations, including Polars' native ones, without the clean pages of the file that a CSV reader maps, which the system can drop at any time. peak_rss_mib gives the peak resident set size, which counts those pages. The file was in the operating system's page cache in every run. The value is the median of 7 runs after one warm-up run of each. The R script did not record its peak resident set size in this run, so that figure is absent for tibble (R).",
+    "title": "A 1 GB CSV file, whole and streaming: phpolars, phibble, plain PHP, tibble, and pandas",
+    "description": "Each script reads a seeded order-events CSV, keeps the completed orders, and computes orders, units, revenue, and the mean amount for each region and month. In the \"Whole file\" case each library loads the columns it needs into a table and then summarizes it: phpolars with read_csv(), phibble with fromCsv(), tibble with readr's read_csv() and dplyr, and pandas with read_csv(). In the \"Streaming\" case each reads the file in pieces: phpolars with scan_csv() and the streaming engine, phibble with fromCsvChunked() in chunks of 100,000 rows, plain PHP one row at a time with fgetcsv, readr with read_csv_chunked() in chunks of 100,000, and pandas with read_csv(chunksize=100000); the chunked ones add up each chunk's totals. phibble runs once with the phit extension's reader and once with its PHP reader (PHIBBLE_NATIVE_CSV=0). Threads: phpolars uses 2 (its default), readr's read_csv() 2 (num_threads), and the rest one. Each run is a fresh process. Time is measured inside the script, from opening the file to holding the result. Memory is the process's peak memory footprint as macOS reports it (/usr/bin/time -l): the most memory it held at once, including native allocations, without file pages the system can drop; peak_rss_mib gives the peak resident set size. The file was in the operating system's page cache in every run. Values are medians of 7 runs after one warm-up run of each.",
     "measure": "Elapsed time",
     "unit": "ms",
     "statistic": "median",
@@ -19,12 +19,15 @@
         "dplyr": "1.2.1",
         "pandas": "3.1.0",
         "polars": "0.55.2",
-        "threads": 2,
-        "engine": "streaming",
+        "threads": {
+            "phpolars": 2,
+            "readr read_csv": 2,
+            "others": 1
+        },
         "cache": "warm",
         "repeats": 7,
         "date": "2026-11-01",
-        "commit": "dca0b18c7c4fbff60c9a742f6529f0660e592ae7"
+        "commit": "e2dc66343ddb736f20155f3f3f942aca5f05f08d"
     },
     "dataset": {
         "rows": 20000000,
@@ -37,214 +40,400 @@
         "max_rel_difference": 4.3098434180282427e-14
     },
     "code": {
-        "phpolars": "use function Phpolars\\{col, len, scan_csv};\n\n$summary = scan_csv($path)\n    ->filter(col('status')->eq('completed'))\n    ->groupBy(['region', col('placed_on')->str()->slice(0, 7)->alias('month')])\n    ->agg(\n        len()->alias('orders'),\n        col('quantity')->sum()->alias('units'),\n        col('amount')->sum()->alias('revenue'),\n        col('amount')->mean()->alias('mean_amount'),\n    )\n    ->sort(['region', 'month'])\n    ->collect(engine: 'streaming');\n\n$rows = $summary->rows();\n",
-        "phibble": "use Phibble\\DataFrame;\nuse function Phibble\\Expr\\{col, is_na, n, str_sub, sum};\n\n$totals = [];\nDataFrame::fromCsvChunked($path, function (DataFrame $chunk) use (&$totals) {\n    $part = $chunk\n        ->filter(col('status')->eq('completed'))\n        ->mutate(['month' => str_sub(col('placed_on'), 1, 7)])\n        ->groupBy(['region', 'month'])\n        ->summarize([\n            'orders' => n(),\n            'units' => sum(col('quantity')),\n            'revenue' => sum(col('amount'), na_rm: true),\n            'amounts' => sum(is_na(col('amount'))->not()),\n        ]);\n    foreach ($part->toRows() as $r) {\n        $key = $r['region'].\"\\0\".$r['month'];\n        $t = $totals[$key] ?? ['orders' => 0, 'units' => 0, 'revenue' => 0.0, 'amounts' => 0];\n        $totals[$key] = ['orders' => $t['orders'] + $r['orders'], 'units' => $t['units'] + $r['units'],\n            'revenue' => $t['revenue'] + $r['revenue'], 'amounts' => $t['amounts'] + $r['amounts']];\n    }\n}, chunkSize: 100_000, types: ['placed_on' => 'c']);\nksort($totals, SORT_STRING);\n$rows = [];\nforeach ($totals as $key => $t) {\n    [$region, $month] = explode(\"\\0\", $key);\n    $rows[] = [$region, $month, $t['orders'], $t['units'], $t['revenue'], $t['amounts'] > 0 ? $t['revenue'] / $t['amounts'] : null];\n}\n",
-        "plain PHP": "$in = fopen($path, 'r');\n$header = fgetcsv($in, escape: '');\n$groups = [];\nwhile (($row = fgetcsv($in, escape: '')) !== false) {\n    [, $placedOn, $region, , $status, $quantity, $amount] = $row;\n    if ($status !== 'completed') {\n        continue;\n    }\n    $key = $region.\"\\0\".substr($placedOn, 0, 7);\n    $g = $groups[$key] ?? ['orders' => 0, 'units' => 0, 'revenue' => 0.0, 'amounts' => 0];\n    $g['orders']++;\n    $g['units'] += (int) $quantity;\n    if ($amount !== '') {\n        $g['revenue'] += (float) $amount;\n        $g['amounts']++;\n    }\n    $groups[$key] = $g;\n}\nfclose($in);\nksort($groups, SORT_STRING);\n$rows = [];\nforeach ($groups as $key => $g) {\n    [$region, $month] = explode(\"\\0\", $key);\n    $rows[] = [$region, $month, $g['orders'], $g['units'], $g['revenue'], $g['amounts'] > 0 ? $g['revenue'] / $g['amounts'] : null];\n}\n",
-        "tibble (R)": "library(readr)\nlibrary(dplyr)\n\nsummary <- read_csv(path, col_types = cols(placed_on = col_character()), progress = FALSE) |>\n  filter(status == \"completed\") |>\n  group_by(region, month = substr(placed_on, 1, 7)) |>\n  summarise(\n    orders = n(),\n    units = sum(quantity),\n    revenue = sum(amount, na.rm = TRUE),\n    mean_amount = mean(amount, na.rm = TRUE),\n    .groups = \"drop\"\n  ) |>\n  arrange(region, month)\n",
-        "pandas (Python)": "import pandas\n\norders = pandas.read_csv(path, usecols=[\"placed_on\", \"region\", \"status\", \"quantity\", \"amount\"])\ncompleted = orders[orders[\"status\"] == \"completed\"]\nsummary = (\n    completed.assign(month=completed[\"placed_on\"].str.slice(0, 7))\n    .groupby([\"region\", \"month\"], sort=True)\n    .agg(orders=(\"status\", \"size\"), units=(\"quantity\", \"sum\"), revenue=(\"amount\", \"sum\"), mean_amount=(\"amount\", \"mean\"))\n    .reset_index()\n)\n"
+        "Whole file": {
+            "phpolars": "use function Phpolars\\{col, len, read_csv};\n\n$summary = read_csv($path, columns: ['placed_on', 'region', 'status', 'quantity', 'amount'])\n    ->filter(col('status')->eq('completed'))\n    ->groupBy(['region', col('placed_on')->str()->slice(0, 7)->alias('month')])\n    ->agg(\n        len()->alias('orders'),\n        col('quantity')->sum()->alias('units'),\n        col('amount')->sum()->alias('revenue'),\n        col('amount')->mean()->alias('mean_amount'),\n    )\n    ->sort(['region', 'month']);\n\n$rows = $summary->rows();\n",
+            "phibble": "use Phibble\\DataFrame;\nuse function Phibble\\Expr\\{col, mean, n, str_sub, sum};\n\n$summary = DataFrame::fromCsv($path, types: ['placed_on' => 'c'])\n    ->filter(col('status')->eq('completed'))\n    ->mutate(['month' => str_sub(col('placed_on'), 1, 7)])\n    ->groupBy(['region', 'month'])\n    ->summarize([\n        'orders' => n(),\n        'units' => sum(col('quantity')),\n        'revenue' => sum(col('amount'), na_rm: true),\n        'mean_amount' => mean(col('amount'), na_rm: true),\n    ])\n    ->arrange(['region', 'month']);\n\n$rows = array_map(array_values(...), $summary->toRows());\n",
+            "tibble (R)": "library(readr)\nlibrary(dplyr)\n\nsummary <- read_csv(\n  path,\n  col_select = c(placed_on, region, status, quantity, amount),\n  col_types = cols(placed_on = col_character()),\n  progress = FALSE,\n  num_threads = 2\n) |>\n  filter(status == \"completed\") |>\n  group_by(region, month = substr(placed_on, 1, 7)) |>\n  summarise(\n    orders = n(),\n    units = sum(quantity),\n    revenue = sum(amount, na.rm = TRUE),\n    mean_amount = mean(amount, na.rm = TRUE),\n    .groups = \"drop\"\n  ) |>\n  arrange(region, month)\n",
+            "pandas (Python)": "import pandas\n\norders = pandas.read_csv(path, usecols=[\"placed_on\", \"region\", \"status\", \"quantity\", \"amount\"])\ncompleted = orders[orders[\"status\"] == \"completed\"]\nsummary = (\n    completed.assign(month=completed[\"placed_on\"].str.slice(0, 7))\n    .groupby([\"region\", \"month\"], sort=True)\n    .agg(orders=(\"status\", \"size\"), units=(\"quantity\", \"sum\"), revenue=(\"amount\", \"sum\"), mean_amount=(\"amount\", \"mean\"))\n    .reset_index()\n)\n"
+        },
+        "Streaming": {
+            "phpolars": "use function Phpolars\\{col, len, scan_csv};\n\n$summary = scan_csv($path)\n    ->filter(col('status')->eq('completed'))\n    ->groupBy(['region', col('placed_on')->str()->slice(0, 7)->alias('month')])\n    ->agg(\n        len()->alias('orders'),\n        col('quantity')->sum()->alias('units'),\n        col('amount')->sum()->alias('revenue'),\n        col('amount')->mean()->alias('mean_amount'),\n    )\n    ->sort(['region', 'month'])\n    ->collect(engine: 'streaming');\n\n$rows = $summary->rows();\n",
+            "phibble": "use Phibble\\DataFrame;\nuse function Phibble\\Expr\\{col, is_na, n, str_sub, sum};\n\n$totals = [];\nDataFrame::fromCsvChunked($path, function (DataFrame $chunk) use (&$totals) {\n    $part = $chunk\n        ->filter(col('status')->eq('completed'))\n        ->mutate(['month' => str_sub(col('placed_on'), 1, 7)])\n        ->groupBy(['region', 'month'])\n        ->summarize([\n            'orders' => n(),\n            'units' => sum(col('quantity')),\n            'revenue' => sum(col('amount'), na_rm: true),\n            'amounts' => sum(is_na(col('amount'))->not()),\n        ]);\n    foreach ($part->toRows() as $r) {\n        $key = $r['region'].\"\\0\".$r['month'];\n        $t = $totals[$key] ?? ['orders' => 0, 'units' => 0, 'revenue' => 0.0, 'amounts' => 0];\n        $totals[$key] = ['orders' => $t['orders'] + $r['orders'], 'units' => $t['units'] + $r['units'],\n            'revenue' => $t['revenue'] + $r['revenue'], 'amounts' => $t['amounts'] + $r['amounts']];\n    }\n}, chunkSize: 100_000, types: ['placed_on' => 'c']);\nksort($totals, SORT_STRING);\n$rows = [];\nforeach ($totals as $key => $t) {\n    [$region, $month] = explode(\"\\0\", $key);\n    $rows[] = [$region, $month, $t['orders'], $t['units'], $t['revenue'], $t['amounts'] > 0 ? $t['revenue'] / $t['amounts'] : null];\n}\n",
+            "plain PHP": "$in = fopen($path, 'r');\n$header = fgetcsv($in, escape: '');\n$groups = [];\nwhile (($row = fgetcsv($in, escape: '')) !== false) {\n    [, $placedOn, $region, , $status, $quantity, $amount] = $row;\n    if ($status !== 'completed') {\n        continue;\n    }\n    $key = $region.\"\\0\".substr($placedOn, 0, 7);\n    $g = $groups[$key] ?? ['orders' => 0, 'units' => 0, 'revenue' => 0.0, 'amounts' => 0];\n    $g['orders']++;\n    $g['units'] += (int) $quantity;\n    if ($amount !== '') {\n        $g['revenue'] += (float) $amount;\n        $g['amounts']++;\n    }\n    $groups[$key] = $g;\n}\nfclose($in);\nksort($groups, SORT_STRING);\n$rows = [];\nforeach ($groups as $key => $g) {\n    [$region, $month] = explode(\"\\0\", $key);\n    $rows[] = [$region, $month, $g['orders'], $g['units'], $g['revenue'], $g['amounts'] > 0 ? $g['revenue'] / $g['amounts'] : null];\n}\n",
+            "tibble (R)": "library(readr)\nlibrary(dplyr)\n\nparts <- read_csv_chunked(\n  path,\n  DataFrameCallback$new(function(chunk, pos) {\n    chunk |>\n      filter(status == \"completed\") |>\n      group_by(region, month = substr(placed_on, 1, 7)) |>\n      summarise(\n        orders = n(),\n        units = sum(quantity),\n        revenue = sum(amount, na.rm = TRUE),\n        amounts = sum(!is.na(amount)),\n        .groups = \"drop\"\n      )\n  }),\n  chunk_size = 100000,\n  col_types = cols_only(\n    placed_on = col_character(),\n    region = col_character(),\n    status = col_character(),\n    quantity = col_integer(),\n    amount = col_double()\n  ),\n  progress = FALSE\n)\nsummary <- parts |>\n  group_by(region, month) |>\n  summarise(\n    orders = sum(orders),\n    units = sum(units),\n    revenue = sum(revenue),\n    mean_amount = sum(revenue) / sum(amounts),\n    .groups = \"drop\"\n  ) |>\n  arrange(region, month)\n",
+            "pandas (Python)": "import pandas\n\nparts = []\nfor chunk in pandas.read_csv(path, usecols=[\"placed_on\", \"region\", \"status\", \"quantity\", \"amount\"], chunksize=100_000):\n    completed = chunk[chunk[\"status\"] == \"completed\"]\n    parts.append(\n        completed.assign(month=completed[\"placed_on\"].str.slice(0, 7), amounts=completed[\"amount\"].notna())\n        .groupby([\"region\", \"month\"])\n        .agg(orders=(\"status\", \"size\"), units=(\"quantity\", \"sum\"), revenue=(\"amount\", \"sum\"), amounts=(\"amounts\", \"sum\"))\n    )\ntotals = pandas.concat(parts).groupby(level=[\"region\", \"month\"]).sum()\nsummary = totals.assign(mean_amount=totals[\"revenue\"] / totals[\"amounts\"]).reset_index().sort_values([\"region\", \"month\"])\n"
+        }
     },
     "languages": {
         "phpolars": "php",
         "phibble": "php",
-        "plain PHP": "php",
         "tibble (R)": "r",
-        "pandas (Python)": "python"
+        "pandas (Python)": "python",
+        "plain PHP": "php"
     },
     "rows": [
         {
-            "case": "Filter, group, and summarize a 1 GB CSV file",
+            "case": "Whole file",
             "implementation": "phpolars",
-            "value": 1407.5,
+            "value": 2154.8,
             "reps": [
-                1407.5,
-                1400,
-                1403.9,
-                1434.2,
-                1402.1,
-                1411.5,
-                1504.8
+                2161.5,
+                2212.2,
+                1938.6,
+                2190.2,
+                2127.2,
+                2154.8,
+                2021
             ],
-            "peak_memory_mib": 86.2,
+            "peak_memory_mib": 4626.6,
             "reps_peak_memory_mib": [
-                59.8,
-                82.8,
-                86.2,
-                102.3,
-                77.4,
-                88.2,
-                113.1
+                4617.9,
+                4701.9,
+                4614.3,
+                4626.6,
+                4762.3,
+                4688.2,
+                4624.8
             ],
-            "peak_rss_mib": 1090,
+            "peak_rss_mib": 4949.7,
             "reps_peak_rss_mib": [
-                1063.8,
-                1086.8,
-                1090,
-                1106,
-                1081.6,
-                1092,
-                1116.7
+                4946.7,
+                5024.8,
+                4946.3,
+                4949.7,
+                5088.3,
+                5020.8,
+                4945.4
             ]
         },
         {
-            "case": "Filter, group, and summarize a 1 GB CSV file",
+            "case": "Whole file",
             "implementation": "phibble (phit reader)",
-            "value": 13528.4,
+            "value": 15292.4,
             "reps": [
-                13480.7,
-                13195.1,
-                13550.8,
-                13542.7,
-                13571.3,
-                13464.3,
-                13528.4
+                15696.7,
+                15154.6,
+                15113.6,
+                15504.8,
+                15082.5,
+                15292.4,
+                15601.6
             ],
-            "peak_memory_mib": 127.9,
+            "peak_memory_mib": 4679.5,
             "reps_peak_memory_mib": [
-                134.9,
-                123.5,
-                127.9,
-                113.7,
-                131.7,
-                125.8,
-                135.3
+                4684,
+                4681.4,
+                4658.4,
+                4679.5,
+                4674.3,
+                4660.4,
+                4686.4
             ],
-            "peak_rss_mib": 146.2,
+            "peak_rss_mib": 4695.3,
             "reps_peak_rss_mib": [
-                153.2,
-                141.8,
-                146.2,
-                132.1,
-                150,
-                144.1,
-                153.6
+                4699.9,
+                4697.2,
+                4674.3,
+                4695.3,
+                4690.2,
+                4676.2,
+                4702.2
             ]
         },
         {
-            "case": "Filter, group, and summarize a 1 GB CSV file",
+            "case": "Whole file",
             "implementation": "phibble (PHP reader)",
-            "value": 26541.2,
+            "value": 27596.2,
             "reps": [
-                26264.6,
-                26068,
-                26756.3,
-                27036.7,
-                26655.4,
-                26388,
-                26541.2
+                27959.7,
+                27853.2,
+                27362.9,
+                27589.4,
+                27596.2,
+                28249.7,
+                27505.1
+            ],
+            "peak_memory_mib": 4931.7,
+            "reps_peak_memory_mib": [
+                4931.8,
+                4931.8,
+                4931.7,
+                4931.7,
+                4931.8,
+                4931.7,
+                4931.7
+            ],
+            "peak_rss_mib": 4946.5,
+            "reps_peak_rss_mib": [
+                4946.6,
+                4946.5,
+                4946.5,
+                4946.5,
+                4946.6,
+                4946.4,
+                4946.4
+            ]
+        },
+        {
+            "case": "Whole file",
+            "implementation": "tibble (R)",
+            "value": 5898.3,
+            "reps": [
+                5978.6,
+                5490.7,
+                5898.3,
+                6142.6,
+                5528.9,
+                5993.1,
+                5824.2
+            ],
+            "peak_memory_mib": 5094.8,
+            "reps_peak_memory_mib": [
+                5093.9,
+                5095.6,
+                5092.9,
+                5107.1,
+                5096.5,
+                5094.8,
+                5093.9
+            ],
+            "peak_rss_mib": 5106,
+            "reps_peak_rss_mib": [
+                5105.2,
+                5106.9,
+                5104.1,
+                5118.4,
+                5107.7,
+                5106,
+                5105.2
+            ]
+        },
+        {
+            "case": "Whole file",
+            "implementation": "pandas (Python)",
+            "value": 4772.4,
+            "reps": [
+                4785.4,
+                4733.7,
+                4759.3,
+                4794.5,
+                4828.2,
+                4772.4,
+                4742.7
+            ],
+            "peak_memory_mib": 4482.9,
+            "reps_peak_memory_mib": [
+                4482.3,
+                4482.9,
+                4482.3,
+                4482.6,
+                4483.3,
+                4483.1,
+                4483.3
+            ],
+            "peak_rss_mib": 4502.4,
+            "reps_peak_rss_mib": [
+                4501.8,
+                4502.4,
+                4501.8,
+                4502.1,
+                4502.8,
+                4502.6,
+                4502.8
+            ]
+        },
+        {
+            "case": "Streaming",
+            "implementation": "phpolars",
+            "value": 1398.9,
+            "reps": [
+                1449.5,
+                1405.2,
+                1391.6,
+                1395.3,
+                1398.9,
+                1440.2,
+                1395.2
+            ],
+            "peak_memory_mib": 93.4,
+            "reps_peak_memory_mib": [
+                104.5,
+                93.6,
+                93.4,
+                78.7,
+                83,
+                103.2,
+                70.9
+            ],
+            "peak_rss_mib": 1097.8,
+            "reps_peak_rss_mib": [
+                1108.3,
+                1097.8,
+                1107.7,
+                1082.3,
+                1086.9,
+                1106.9,
+                1074.9
+            ]
+        },
+        {
+            "case": "Streaming",
+            "implementation": "phibble (phit reader)",
+            "value": 13487.2,
+            "reps": [
+                13504.7,
+                14278.8,
+                13389.2,
+                13207.7,
+                14206.5,
+                13180.8,
+                13487.2
+            ],
+            "peak_memory_mib": 135.4,
+            "reps_peak_memory_mib": [
+                146.5,
+                132.6,
+                135.4,
+                114.5,
+                138.5,
+                117,
+                140
+            ],
+            "peak_rss_mib": 153.7,
+            "reps_peak_rss_mib": [
+                164.8,
+                151,
+                153.7,
+                132.8,
+                156.8,
+                135.4,
+                158.3
+            ]
+        },
+        {
+            "case": "Streaming",
+            "implementation": "phibble (PHP reader)",
+            "value": 26113.6,
+            "reps": [
+                26520.8,
+                28730.7,
+                26056.4,
+                26113.6,
+                26939.1,
+                25927.6,
+                25800.9
             ],
             "peak_memory_mib": 64.5,
             "reps_peak_memory_mib": [
                 64.5,
-                64.3,
+                64.8,
                 64.5,
                 64.5,
                 64.5,
                 64.5,
-                64.5
+                65.3
             ],
-            "peak_rss_mib": 81.8,
+            "peak_rss_mib": 81.9,
             "reps_peak_rss_mib": [
+                81.8,
+                82.1,
+                81.8,
+                81.8,
                 81.9,
-                81.7,
-                81.8,
-                81.8,
-                81.8,
                 81.9,
-                81.9
+                82.6
             ]
         },
         {
-            "case": "Filter, group, and summarize a 1 GB CSV file",
+            "case": "Streaming",
             "implementation": "plain PHP",
-            "value": 14166.2,
+            "value": 14228.3,
             "reps": [
-                14033.9,
-                14094.5,
-                14489.1,
-                14316.4,
-                14173.5,
-                14166.2,
-                14120.7
+                14228.3,
+                15251.9,
+                14259.4,
+                14196.5,
+                14270.8,
+                14184.7,
+                14037.3
             ],
-            "peak_memory_mib": 14.8,
+            "peak_memory_mib": 14.9,
             "reps_peak_memory_mib": [
                 14.8,
-                14.7,
                 14.9,
-                14.7,
                 14.9,
-                14.7,
-                14.8
+                14.8,
+                14.8,
+                14.9,
+                15
             ],
             "peak_rss_mib": 32,
             "reps_peak_rss_mib": [
                 32,
-                31.9,
+                32.1,
                 32,
                 31.9,
-                32.1,
-                31.9,
-                32
+                32,
+                32,
+                32.1
             ]
         },
         {
-            "case": "Filter, group, and summarize a 1 GB CSV file",
+            "case": "Streaming",
             "implementation": "tibble (R)",
-            "value": 5718.8,
+            "value": 5581.3,
             "reps": [
-                5592.8,
-                5702.4,
-                5915.8,
-                5718.8,
-                5812,
-                5581.7,
-                5729.7
+                5617,
+                5785.8,
+                5581.3,
+                5734.2,
+                5498.4,
+                5458,
+                5402
             ],
-            "peak_memory_mib": 5650.5,
+            "peak_memory_mib": 269.2,
             "reps_peak_memory_mib": [
-                5651.4,
-                5650.4,
-                5651,
-                5649.6,
-                5650.5,
-                5650.7,
-                5650.1
+                247.5,
+                282.2,
+                273.9,
+                253.9,
+                270.2,
+                269.2,
+                247.7
             ],
-            "peak_rss_mib": null,
-            "reps_peak_rss_mib": null
+            "peak_rss_mib": 1254.3,
+            "reps_peak_rss_mib": [
+                1232.5,
+                1267.1,
+                1259,
+                1238.9,
+                1255.2,
+                1254.3,
+                1232.7
+            ]
         },
         {
-            "case": "Filter, group, and summarize a 1 GB CSV file",
+            "case": "Streaming",
             "implementation": "pandas (Python)",
-            "value": 4750,
+            "value": 4984.6,
             "reps": [
-                4660.6,
-                4710.5,
-                4750,
-                4753,
-                4877.1,
-                4923.1,
-                4745.1
+                4971.3,
+                4984.6,
+                4944.2,
+                4999.6,
+                5366.1,
+                5079.8,
+                4898.8
             ],
-            "peak_memory_mib": 4483.3,
+            "peak_memory_mib": 439.3,
             "reps_peak_memory_mib": [
-                4483,
-                4483.5,
-                4483.3,
-                4482.2,
-                4483.2,
-                4483.7,
-                4483.5
+                432.5,
+                435.2,
+                439.3,
+                443.9,
+                470.2,
+                440.4,
+                426.2
             ],
-            "peak_rss_mib": 4502.8,
+            "peak_rss_mib": 461.5,
             "reps_peak_rss_mib": [
-                4502.5,
-                4503,
-                4502.8,
-                4501.7,
-                4502.7,
-                4503.2,
-                4503
+                454.6,
+                457.3,
+                461.5,
+                466,
+                492.4,
+                462.6,
+                448.3
             ]
         }
     ]
