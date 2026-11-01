@@ -11,7 +11,8 @@ summary <- read_csv(
   path,
   col_select = c(placed_on, region, status, quantity, amount),
   col_types = cols(placed_on = col_character()),
-  progress = FALSE
+  progress = FALSE,
+  num_threads = 2
 ) |>
   filter(status == "completed") |>
   group_by(region, month = substr(placed_on, 1, 7)) |>
