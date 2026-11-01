@@ -8,7 +8,8 @@
 //
 // Each script times its own work, from opening the file to holding the
 // result. Memory is the process's peak memory footprint from /usr/bin/time -l
-// on macOS, with the peak resident set size beside it. The file is read from
+// on macOS, and its peak anonymous memory from peakmem.c (cc -O2 -o peakmem
+// peakmem.c, on the PATH) on Linux, with the peak resident set size beside it. The file is read from
 // the OS page cache: the warm-up runs load it, and no run reads it from disk.
 require __DIR__.'/vendor/autoload.php';
 
@@ -45,14 +46,15 @@ $cases = [
 $darwin = PHP_OS_FAMILY === 'Darwin';
 $once = function (array $spec) use ($darwin): array {
     [, $cmd, $env] = $spec;
-    $p = proc_open($darwin ? ['/usr/bin/time', '-l', ...$cmd] : $cmd, [1 => ['pipe', 'w'], 2 => ['pipe', 'w']], $pipes, null, $env + getenv());
+    $p = proc_open([$darwin ? '/usr/bin/time' : 'peakmem', '-l', ...$cmd], [1 => ['pipe', 'w'], 2 => ['pipe', 'w']], $pipes, null, $env + getenv());
     $out = stream_get_contents($pipes[1]);
     $err = stream_get_contents($pipes[2]);
     if (proc_close($p) !== 0) { throw new RuntimeException($err); }
     $run = json_decode($out, true, flags: JSON_THROW_ON_ERROR);
     $run['footprint'] = preg_match('/(\d+)\s+peak memory footprint/', $err, $m) ? (int) $m[1] : null;
-    // R can't report its own peak RSS, so it comes from /usr/bin/time like the footprint.
-    if (($run['maxrss'] ?? null) === null && preg_match('/(\d+)\s+maximum resident set size/', $err, $m)) {
+    // The peak RSS comes from /usr/bin/time or peakmem, in bytes, like the footprint. A script's own
+    // getrusage() figure is bytes on macOS but KiB on Linux, and R can't report one at all.
+    if (preg_match('/(\d+)\s+maximum resident set size/', $err, $m)) {
         $run['maxrss'] = (int) $m[1];
     }
     return $run;
@@ -131,16 +133,18 @@ foreach ($cases as $case => $scripts) {
 $sh = fn (string $cmd) => trim((string) shell_exec($cmd.' 2>/dev/null'));
 echo json_encode([
     'title' => 'A '.round(filesize($csv) / 1e9, 1).' GB CSV file, whole and streaming: phpolars, phibble, plain PHP, tibble, and pandas',
-    'description' => 'Each script reads a seeded order-events CSV, keeps the completed orders, and computes orders, units, revenue, and the mean amount for each region and month. In the "Whole file" case each library loads the columns it needs into a table and then summarizes it: phpolars with read_csv(), phibble with fromCsv(), tibble with readr\'s read_csv() and dplyr, and pandas with read_csv(). In the "Streaming" case each reads the file in pieces: phpolars with scan_csv() and the streaming engine, phibble with fromCsvChunked() in chunks of 100,000 rows, plain PHP one row at a time with fgetcsv, readr with read_csv_chunked() in chunks of 100,000, and pandas with read_csv(chunksize=100000); the chunked ones add up each chunk\'s totals. phibble runs once with the phit extension\'s reader and once with its PHP reader (PHIBBLE_NATIVE_CSV=0). Threads: phpolars uses 2 (its default), readr\'s read_csv() 2 (num_threads), and the rest one. Each run is a fresh process. Time is measured inside the script, from opening the file to holding the result. Memory is the process\'s peak memory footprint as macOS reports it (/usr/bin/time -l): the most memory it held at once, including native allocations, without file pages the system can drop; peak_rss_mib gives the peak resident set size. The file was in the operating system\'s page cache in every run. Values are medians of '.$reps.' runs after one warm-up run of each.',
+    'description' => 'Each script reads a seeded order-events CSV, keeps the completed orders, and computes orders, units, revenue, and the mean amount for each region and month. In the "Whole file" case each library loads the columns it needs into a table and then summarizes it: phpolars with read_csv(), phibble with fromCsv(), tibble with readr\'s read_csv() and dplyr, and pandas with read_csv(). In the "Streaming" case each reads the file in pieces: phpolars with scan_csv() and the streaming engine, phibble with fromCsvChunked() in chunks of 100,000 rows, plain PHP one row at a time with fgetcsv, readr with read_csv_chunked() in chunks of 100,000, and pandas with read_csv(chunksize=100000); the chunked ones add up each chunk\'s totals. phibble runs once with the phit extension\'s reader and once with its PHP reader (PHIBBLE_NATIVE_CSV=0). Threads: phpolars uses 2 (its default), readr\'s read_csv() 2 (num_threads), and the rest one. Each run is a fresh process. Time is measured inside the script, from opening the file to holding the result. '.($darwin
+        ? 'Memory is the process\'s peak memory footprint as macOS reports it (/usr/bin/time -l): the most memory it held at once, including native allocations, without file pages the system can drop; peak_rss_mib gives the peak resident set size.'
+        : 'Memory is the process\'s peak anonymous memory (RssAnon in /proc, sampled every millisecond by peakmem.c): the most memory it allocated at once, including native allocations, without the file pages it maps; peak_rss_mib gives the peak resident set size.').' The file was in the operating system\'s page cache in every run. Values are medians of '.$reps.' runs after one warm-up run of each.',
     'measure' => 'Elapsed time',
     'unit' => 'ms',
     'statistic' => 'median',
-    'memory_measure' => $darwin ? 'peak memory footprint' : 'peak resident set size',
+    'memory_measure' => $darwin ? 'peak memory footprint' : 'peak anonymous memory',
     'environment' => [
         'cpu' => $darwin ? $sh('sysctl -n machdep.cpu.brand_string') : $sh("lscpu | sed -n 's/^Model name: *//p'"),
         'cores' => (int) ($darwin ? $sh('sysctl -n hw.ncpu') : $sh('nproc')),
         'memory_gb' => round((int) ($darwin ? $sh('sysctl -n hw.memsize') : 1024 * (int) $sh("awk '/MemTotal/ {print $2}' /proc/meminfo")) / 2 ** 30),
-        'os' => $darwin ? 'macOS '.$sh('sw_vers -productVersion') : $sh('uname -sr'),
+        'os' => $darwin ? 'macOS '.$sh('sw_vers -productVersion') : 'Linux, '.$sh('. /etc/os-release && echo $PRETTY_NAME').' ('.php_uname('m').')',
         'php' => PHP_VERSION,
         'phpolars' => phpversion('php_polars'),
         'phibble' => \Composer\InstalledVersions::getPrettyVersion('phpstats/phibble'),

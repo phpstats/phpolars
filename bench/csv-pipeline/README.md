@@ -15,5 +15,9 @@ PHPOLARS_EXTENSION=$PWD/target/release/libphp_polars.dylib \
 
 On Linux the extension is `php_polars.so`. The record keeps the default
 `php_polars.max_threads` (2), measures time inside each script from opening the
-file to holding the result as PHP values, and reports the peak resident set
-size of each process. The file stays in the page cache between runs.
+file to holding the result as PHP values. Memory is each process's peak
+memory footprint from `/usr/bin/time -l` on macOS, and its peak anonymous
+memory from `peakmem`, built from `peakmem.c`, on Linux
+(`cc -O2 -o ~/.local/bin/peakmem bench/csv-pipeline/peakmem.c`). Both leave
+out the file pages a process maps. The record gives the peak resident set
+size beside it. The file stays in the page cache between runs.
