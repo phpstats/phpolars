@@ -2,15 +2,16 @@
 title: "Rolling windows and as-of joins"
 ---
 
-Give each day of sales the price in force on that date and the mean of its units over the last three calendar days, on dates with gaps.
+Give each day of sales the price in force on that date and a mean of units over the last three calendar days, on dates with gaps.
 
-Requires the phpolars extension ([Getting started](../getting-started.qmd)). Script: [time-series.php](https://raw.githubusercontent.com/phpstats/phpolars/main/docs/examples/time-series.php).
+Requires the phpolars extension ([Getting started](../getting-started.qmd)). Runnable script: [time-series.php](https://raw.githubusercontent.com/phpstats/phpolars/main/docs/examples/time-series.php).
 
 {{< include _time-series.md >}}
 
-- `joinAsof()` matches backward by default. Each row of `$sales` gets the last row of `$prices` whose `from` is on or before its `date`. Both inputs must be sorted by their join columns, and unsorted input raises an `InvalidOperationError`. The [reference](../reference/dataframe.qmd#dataframe-joinAsof) covers `strategy: 'forward'` and `'nearest'`, `tolerance`, and `by` groups.
-- `rollingMeanBy('date', '3d')` uses the window `(date - 3d, date]`, so it excludes the date three days earlier and includes the row's own date. This is the default `closed: 'right'`. `closed` also accepts `'left'`, `'both'`, and `'none'`.
-- The window keeps its three-day duration when dates are missing, and it holds fewer rows. The window for March 4 holds March 2 and March 4, because March 3 has no row and March 1 is the excluded endpoint.
-- `rollingMean(3)` would average the last three rows instead, whatever their dates.
+- `joinAsof()` takes the last price whose `from` is on or before each `date`.
+- Both inputs must be sorted by their join columns. Unsorted input raises an `InvalidOperationError`.
+- The `'3d'` window is `(date - 3d, date]`: it includes the row's own date and excludes the date three days earlier.
+- A missing day leaves the window three days long, with fewer rows in it. For March 4, the window holds only March 2 and March 4.
+- `rollingMean(3)` would average the last three rows, whatever their dates.
 
-Reference: [joinAsof()](../reference/dataframe.qmd#dataframe-joinAsof) · [rollingMeanBy()](../reference/expressions.qmd#expr-rollingMeanBy) · [Time series](../reference/dataframe.qmd#time-series) · [Dates and times](../reference/expressions.qmd#dates-and-times)
+Reference: [joinAsof()](../reference/dataframe.qmd#dataframe-joinAsof) · [rollingMeanBy()](../reference/expressions.qmd#expr-rollingMeanBy) · [Time series](../reference/dataframe.qmd#time-series)

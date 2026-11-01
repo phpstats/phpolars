@@ -4,12 +4,12 @@ title: "Aggregate with expressions"
 
 Summarize each group of a DataFrame with several expressions in one `agg()` call.
 
-Requires the phpolars extension ([Getting started](../getting-started.qmd)). Script: [expressions.php](https://raw.githubusercontent.com/phpstats/phpolars/main/docs/examples/expressions.php).
+Requires the phpolars extension ([Getting started](../getting-started.qmd)). Runnable script: [expressions.php](https://raw.githubusercontent.com/phpstats/phpolars/main/docs/examples/expressions.php).
 
 {{< include _expressions.md >}}
 
-- `col('amount')->filter(col('returned')->not())->sum()` filters inside the aggregate. It sums only the group's orders that were not returned, while `orders` and `total` still include every order.
-- `col('customer')->sortBy('amount', descending: true)->first()` orders each group's customers by another column, `amount`, and takes the first. The result is the customer of the group's largest order.
-- `maintainOrder: true` keeps the groups in the order they first appear. Without it, the order of the groups in the result is not guaranteed and can change between runs.
+- `filter()` inside an aggregate limits only that aggregate. `kept` leaves out returned orders, and `orders` and `total` still count them.
+- `sortBy('amount', ...)->first()` picks a value by another column's order. `top` is the customer with the group's largest order.
+- Without `maintainOrder: true`, the order of the groups can change between runs.
 
-Reference: [groupBy()](../reference/dataframe.qmd#dataframe-groupBy) · [agg()](../reference/dataframe.qmd#groupby-agg) · [len()](../reference/expressions.qmd#fn-len) · [Expressions](../reference/expressions.qmd)
+Reference: [groupBy()](../reference/dataframe.qmd#dataframe-groupBy) · [agg()](../reference/dataframe.qmd#groupby-agg) · [Expressions](../reference/expressions.qmd)

@@ -4,31 +4,23 @@ title: "Query a large CSV file lazily"
 
 Filter and aggregate a CSV file with a lazy query, so that Polars can push the column selection and the filter into the CSV reader.
 
-Requires the phpolars extension ([Getting started](../getting-started.qmd)). Scripts: [lazy-csv.setup.php](https://raw.githubusercontent.com/phpstats/phpolars/main/docs/examples/lazy-csv.setup.php) and [lazy-csv.php](https://raw.githubusercontent.com/phpstats/phpolars/main/docs/examples/lazy-csv.php).
+Requires the phpolars extension ([Getting started](../getting-started.qmd)). Runnable scripts: [lazy-csv.setup.php](https://raw.githubusercontent.com/phpstats/phpolars/main/docs/examples/lazy-csv.setup.php) and [lazy-csv.php](https://raw.githubusercontent.com/phpstats/phpolars/main/docs/examples/lazy-csv.php).
 
 ::: {.callout-note collapse="true"}
 ## Make the input file
 
-`lazy-csv.setup.php` writes `orders.csv` to the current directory: one million orders with six columns, about 53 MB. It stops without writing if `orders.csv` already exists.
+The setup script writes `orders.csv`, one million orders in six columns (53 MB), to the current directory. It stops if the file already exists.
 
 {{< include _lazy-csv.setup.md >}}
 :::
 
 {{< include _lazy-csv.md >}}
 
-The plan that `explain()` prints shows what the scan does:
+- `PROJECT 3/6 COLUMNS`: the reader converts only three columns to values. It still reads and splits every line of the file.
+- `SELECTION`: the filter runs during the scan, so rejected rows never reach the aggregation.
+- `ESTIMATED ROWS` is the planner's estimate, not a count.
+- `scan_csv()` doesn't open the file. A missing file raises an error at `explain()` or `collect()`.
+- `read_csv()` would parse all six columns of every row before filtering.
+- `collect(engine: 'streaming')` runs the query in batches. On a 276 MB version of this file, it peaked at 71 MB, against 217 MB with the default engine (one run each, macOS).
 
-- `PROJECT 3/6 COLUMNS`: the reader converts only `region`, `amount`, and `returned` into values. It still reads the whole file and splits every line into fields.
-- `SELECTION`: the filter runs inside the scan on each chunk as it is parsed. Rows that fail it are dropped there, so they never reach the aggregation or form one large table in memory.
-- `simple π 2/2`: only `region` and `amount` go on from the scan to the aggregation.
-- `ESTIMATED ROWS`: the planner's estimate from the file size and a sample of lines. It is not a count.
-
-Work happens only when the query needs it:
-
-- `scan_csv()` returns without opening the file, so a missing file raises a `ComputeError` later, at `explain()` or `collect()`.
-- Polars infers the schema from the header and the first rows when the plan first needs it, for example in `explain()`, `collectSchema()`, or `collect()`.
-- `collect()` runs the optimized plan and returns a DataFrame. `read_csv()` would instead parse all six columns of every row before the filter runs.
-
-`collect(engine: 'streaming')` runs the same query in batches. On a five-million-row version of this file (276 MB), its peak memory footprint was 71 MB, against 217 MB with the default engine (macOS, measured on 2026-11-01). The saving depends on the query. [Performance](../performance.qmd#memory-on-large-files) measures a filtered scan.
-
-Reference: [scan_csv()](../reference/io.qmd#fn-scan_csv) · [explain()](../reference/dataframe.qmd#lazyframe-explain) · [collect()](../reference/dataframe.qmd#lazyframe-collect) · [Lazy queries](../getting-started.qmd#lazy-queries) · [Input and output](../reference/io.qmd)
+Reference: [scan_csv()](../reference/io.qmd#fn-scan_csv) · [explain()](../reference/dataframe.qmd#lazyframe-explain) · [collect()](../reference/dataframe.qmd#lazyframe-collect) · [Lazy queries](../getting-started.qmd#lazy-queries) · [Memory on large files](../performance.qmd#memory-on-large-files)

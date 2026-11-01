@@ -119,17 +119,17 @@
     {
       "path": "examples/expressions",
       "title": "Aggregate with expressions",
-      "description": "Computes counts, sums, a filtered sum, distinct counts, and a value picked by another column's sort order for each group in one groupBy()->agg() call."
+      "description": "Combine several column expressions in one grouped summary."
     },
     {
       "path": "examples/lazy-csv",
       "title": "Query a large CSV file lazily",
-      "description": "Builds a scan_csv() query whose plan pushes the column selection and the filter into the CSV reader, and runs it with collect()."
+      "description": "Filter and aggregate a large CSV file with a lazy query plan."
     },
     {
       "path": "examples/time-series",
       "title": "Rolling windows and as-of joins",
-      "description": "Matches each sale to the price in force with joinAsof() and averages units over three calendar days with rollingMeanBy() on dates with gaps."
+      "description": "Match dated records and calculate time-based rolling averages across irregular observations."
     }
   ]
 }

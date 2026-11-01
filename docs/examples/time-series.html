@@ -327,51 +327,56 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<p>Give each day of sales the price in force on that date and the mean of its units over the last three calendar days, on dates with gaps.</p>
-<p>Requires the phpolars extension (<a href="../getting-started.html">Getting started</a>). Script: <a href="https://raw.githubusercontent.com/phpstats/phpolars/main/docs/examples/time-series.php">time-series.php</a>.</p>
+<p>Give each day of sales the price in force on that date and a mean of units over the last three calendar days, on dates with gaps.</p>
+<p>Requires the phpolars extension (<a href="../getting-started.html">Getting started</a>). Runnable script: <a href="https://raw.githubusercontent.com/phpstats/phpolars/main/docs/examples/time-series.php">time-series.php</a>.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode php code-with-copy"><code class="sourceCode php"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">use</span> Phpolars\DataFrame<span class="ot">;</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="kw">use</span> <span class="kw">function</span> Phpolars\col<span class="ot">;</span></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co">// Daily unit sales, with no rows for March 3 and March 7.</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co">// Daily unit sales, with no rows for March 3 and 7.</span></span>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="va">$sales</span> <span class="op">=</span> (<span class="kw">new</span> DataFrame([</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">'date'</span> =&gt; [<span class="st">'2024-03-01'</span><span class="ot">,</span> <span class="st">'2024-03-02'</span><span class="ot">,</span> <span class="st">'2024-03-04'</span><span class="ot">,</span> <span class="st">'2024-03-05'</span><span class="ot">,</span> <span class="st">'2024-03-06'</span><span class="ot">,</span> <span class="st">'2024-03-08'</span>]<span class="ot">,</span></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">'units'</span> =&gt; [<span class="dv">12</span><span class="ot">,</span> <span class="dv">15</span><span class="ot">,</span> <span class="dv">9</span><span class="ot">,</span> <span class="dv">20</span><span class="ot">,</span> <span class="dv">14</span><span class="ot">,</span> <span class="dv">18</span>]<span class="ot">,</span></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>]))-&gt;withColumns(col(<span class="st">'date'</span>)-&gt;str()-&gt;toDate())<span class="ot">;</span></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="co">// List prices, each in force from its date until the next change.</span></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="va">$prices</span> <span class="op">=</span> (<span class="kw">new</span> DataFrame([</span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>    <span class="st">'from'</span> =&gt; [<span class="st">'2024-03-01'</span><span class="ot">,</span> <span class="st">'2024-03-05'</span>]<span class="ot">,</span></span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>    <span class="st">'price'</span> =&gt; [<span class="fl">4.50</span><span class="ot">,</span> <span class="fl">4.95</span>]<span class="ot">,</span></span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>]))-&gt;withColumns(col(<span class="st">'from'</span>)-&gt;str()-&gt;toDate())<span class="ot">;</span></span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="va">$priced</span> <span class="op">=</span> <span class="va">$sales</span></span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>    -&gt;joinAsof(<span class="va">$prices</span><span class="ot">,</span> leftOn<span class="ot">:</span> <span class="st">'date'</span><span class="ot">,</span> rightOn<span class="ot">:</span> <span class="st">'from'</span>)</span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>    -&gt;withColumns(</span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>        col(<span class="st">'units'</span>)-&gt;mul(col(<span class="st">'price'</span>))-&gt;alias(<span class="st">'revenue'</span>)<span class="ot">,</span></span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>        col(<span class="st">'units'</span>)-&gt;rollingMeanBy(<span class="st">'date'</span><span class="ot">,</span> <span class="st">'3d'</span>)-&gt;<span class="fu">round</span>(<span class="dv">2</span>)-&gt;alias(<span class="st">'units_3d'</span>)<span class="ot">,</span></span>
-<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>    )<span class="ot">;</span></span>
-<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a><span class="kw">echo</span> <span class="va">$priced</span><span class="ot">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<pre class="text output"><code>shape: (6, 6)
-┌────────────┬───────┬────────────┬───────┬─────────┬──────────┐
-│ date       ┆ units ┆ from       ┆ price ┆ revenue ┆ units_3d │
-│ ---        ┆ ---   ┆ ---        ┆ ---   ┆ ---     ┆ ---      │
-│ date       ┆ i64   ┆ date       ┆ f64   ┆ f64     ┆ f64      │
-╞════════════╪═══════╪════════════╪═══════╪═════════╪══════════╡
-│ 2024-03-01 ┆ 12    ┆ 2024-03-01 ┆ 4.5   ┆ 54.0    ┆ 12.0     │
-│ 2024-03-02 ┆ 15    ┆ 2024-03-01 ┆ 4.5   ┆ 67.5    ┆ 13.5     │
-│ 2024-03-04 ┆ 9     ┆ 2024-03-01 ┆ 4.5   ┆ 40.5    ┆ 12.0     │
-│ 2024-03-05 ┆ 20    ┆ 2024-03-05 ┆ 4.95  ┆ 99.0    ┆ 14.5     │
-│ 2024-03-06 ┆ 14    ┆ 2024-03-05 ┆ 4.95  ┆ 69.3    ┆ 14.33    │
-│ 2024-03-08 ┆ 18    ┆ 2024-03-05 ┆ 4.95  ┆ 89.1    ┆ 16.0     │
-└────────────┴───────┴────────────┴───────┴─────────┴──────────┘</code></pre>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">'date'</span> =&gt; [</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>        <span class="st">'2024-03-01'</span><span class="ot">,</span> <span class="st">'2024-03-02'</span><span class="ot">,</span> <span class="st">'2024-03-04'</span><span class="ot">,</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>        <span class="st">'2024-03-05'</span><span class="ot">,</span> <span class="st">'2024-03-06'</span><span class="ot">,</span> <span class="st">'2024-03-08'</span><span class="ot">,</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    ]<span class="ot">,</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    <span class="st">'units'</span> =&gt; [<span class="dv">12</span><span class="ot">,</span> <span class="dv">15</span><span class="ot">,</span> <span class="dv">9</span><span class="ot">,</span> <span class="dv">20</span><span class="ot">,</span> <span class="dv">14</span><span class="ot">,</span> <span class="dv">18</span>]<span class="ot">,</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>]))-&gt;withColumns(col(<span class="st">'date'</span>)-&gt;str()-&gt;toDate())<span class="ot">;</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="co">// List prices, each in force until the next change.</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="va">$prices</span> <span class="op">=</span> (<span class="kw">new</span> DataFrame([</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>    <span class="st">'from'</span> =&gt; [<span class="st">'2024-03-01'</span><span class="ot">,</span> <span class="st">'2024-03-05'</span>]<span class="ot">,</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>    <span class="st">'price'</span> =&gt; [<span class="fl">4.50</span><span class="ot">,</span> <span class="fl">4.95</span>]<span class="ot">,</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>]))-&gt;withColumns(col(<span class="st">'from'</span>)-&gt;str()-&gt;toDate())<span class="ot">;</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="va">$priced</span> <span class="op">=</span> <span class="va">$sales</span></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>    -&gt;joinAsof(<span class="va">$prices</span><span class="ot">,</span> leftOn<span class="ot">:</span> <span class="st">'date'</span><span class="ot">,</span> rightOn<span class="ot">:</span> <span class="st">'from'</span>)</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>    -&gt;withColumns(</span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>        col(<span class="st">'units'</span>)-&gt;rollingMeanBy(<span class="st">'date'</span><span class="ot">,</span> <span class="st">'3d'</span>)</span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>            -&gt;<span class="fu">round</span>(<span class="dv">2</span>)</span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>            -&gt;alias(<span class="st">'units_3d'</span>)<span class="ot">,</span></span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>    )<span class="ot">;</span></span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a><span class="kw">echo</span> <span class="va">$priced</span><span class="ot">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<pre class="text output"><code>shape: (6, 5)
+┌────────────┬───────┬────────────┬───────┬──────────┐
+│ date       ┆ units ┆ from       ┆ price ┆ units_3d │
+│ ---        ┆ ---   ┆ ---        ┆ ---   ┆ ---      │
+│ date       ┆ i64   ┆ date       ┆ f64   ┆ f64      │
+╞════════════╪═══════╪════════════╪═══════╪══════════╡
+│ 2024-03-01 ┆ 12    ┆ 2024-03-01 ┆ 4.5   ┆ 12.0     │
+│ 2024-03-02 ┆ 15    ┆ 2024-03-01 ┆ 4.5   ┆ 13.5     │
+│ 2024-03-04 ┆ 9     ┆ 2024-03-01 ┆ 4.5   ┆ 12.0     │
+│ 2024-03-05 ┆ 20    ┆ 2024-03-05 ┆ 4.95  ┆ 14.5     │
+│ 2024-03-06 ┆ 14    ┆ 2024-03-05 ┆ 4.95  ┆ 14.33    │
+│ 2024-03-08 ┆ 18    ┆ 2024-03-05 ┆ 4.95  ┆ 16.0     │
+└────────────┴───────┴────────────┴───────┴──────────┘</code></pre>
 <ul>
-<li><code>joinAsof()</code> matches backward by default. Each row of <code>$sales</code> gets the last row of <code>$prices</code> whose <code>from</code> is on or before its <code>date</code>. Both inputs must be sorted by their join columns, and unsorted input raises an <code>InvalidOperationError</code>. The <a href="../reference/dataframe.html#dataframe-joinAsof">reference</a> covers <code>strategy: 'forward'</code> and <code>'nearest'</code>, <code>tolerance</code>, and <code>by</code> groups.</li>
-<li><code>rollingMeanBy('date', '3d')</code> uses the window <code>(date - 3d, date]</code>, so it excludes the date three days earlier and includes the row’s own date. This is the default <code>closed: 'right'</code>. <code>closed</code> also accepts <code>'left'</code>, <code>'both'</code>, and <code>'none'</code>.</li>
-<li>The window keeps its three-day duration when dates are missing, and it holds fewer rows. The window for March 4 holds March 2 and March 4, because March 3 has no row and March 1 is the excluded endpoint.</li>
-<li><code>rollingMean(3)</code> would average the last three rows instead, whatever their dates.</li>
+<li><code>joinAsof()</code> takes the last price whose <code>from</code> is on or before each <code>date</code>.</li>
+<li>Both inputs must be sorted by their join columns. Unsorted input raises an <code>InvalidOperationError</code>.</li>
+<li>The <code>'3d'</code> window is <code>(date - 3d, date]</code>: it includes the row’s own date and excludes the date three days earlier.</li>
+<li>A missing day leaves the window three days long, with fewer rows in it. For March 4, the window holds only March 2 and March 4.</li>
+<li><code>rollingMean(3)</code> would average the last three rows, whatever their dates.</li>
 </ul>
-<p>Reference: <a href="../reference/dataframe.html#dataframe-joinAsof">joinAsof()</a> · <a href="../reference/expressions.html#expr-rollingMeanBy">rollingMeanBy()</a> · <a href="../reference/dataframe.html#time-series">Time series</a> · <a href="../reference/expressions.html#dates-and-times">Dates and times</a></p>
+<p>Reference: <a href="../reference/dataframe.html#dataframe-joinAsof">joinAsof()</a> · <a href="../reference/expressions.html#expr-rollingMeanBy">rollingMeanBy()</a> · <a href="../reference/dataframe.html#time-series">Time series</a></p>
 
 
 
