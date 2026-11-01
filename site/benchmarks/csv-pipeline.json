@@ -17,7 +17,7 @@
         "cache": "warm",
         "repeats": 7,
         "date": "2026-11-01",
-        "commit": "bd92c6c4d88f6cf11e15696f71cad55efcfa4381"
+        "commit": "1dffbf0b8f5b76b2b74b596d04d29da3cd756c80"
     },
     "dataset": {
         "rows": 20000000,
@@ -37,49 +37,49 @@
         {
             "case": "Filter, group, and summarize a 1 GB CSV file",
             "implementation": "phpolars",
-            "value": 1387.8,
+            "value": 1533.2,
             "reps": [
-                1379.5,
-                1393.6,
-                1393.1,
-                1387.8,
-                1459.8,
-                1373.4,
-                1375.2
+                1470.7,
+                1535.4,
+                1596.8,
+                1497,
+                1528.3,
+                1533.2,
+                1558.6
             ],
-            "peak_memory_mib": 1077.3,
+            "peak_memory_mib": 1123.3,
             "reps_peak_memory_mib": [
-                1058.3,
-                1100,
-                1130.9,
-                1067.3,
-                1094.5,
-                1075.6,
-                1077.3
+                1106.3,
+                1123.3,
+                1147.2,
+                1120.2,
+                1137.5,
+                1139.4,
+                1111.9
             ]
         },
         {
             "case": "Filter, group, and summarize a 1 GB CSV file",
             "implementation": "plain PHP",
-            "value": 13998,
+            "value": 16625.6,
             "reps": [
-                13963.4,
-                14018.1,
-                14017,
-                13998,
-                13880.9,
-                13887.3,
-                14021.5
+                16780,
+                17492.9,
+                16586.6,
+                15981.9,
+                16625.6,
+                16481.3,
+                17983.8
             ],
-            "peak_memory_mib": 32,
+            "peak_memory_mib": 28.3,
             "reps_peak_memory_mib": [
-                32,
-                32,
-                32,
-                31.9,
-                32.1,
-                31.9,
-                32
+                28.4,
+                28.4,
+                28.3,
+                28.2,
+                28.2,
+                28.3,
+                28
             ]
         }
     ]
