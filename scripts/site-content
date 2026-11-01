@@ -142,7 +142,7 @@ if (in_array('benchmarks', $parts, true)) {
         'memory' => $darwin ? 'peak memory footprint (/usr/bin/time -l)' : 'peak anonymous memory (peakmem)'];
     $data = 'The data are a 1M-row CSV (k: 100,000 keys, g: 50 groups, x: integers with 2% missing, y: floats; 22 MB) and a 100,000-row lookup table on k. '
         .'Each case runs once to warm up and then five times; the value is the median. '
-        .'Each implementation runs all three cases in its own process, and its peak memory is that process\'s peak over the three cases.';
+        .'Each implementation runs all three cases in its own process. Its peak memory is that process\'s peak anonymous memory over the three cases, which leaves out the file pages the CSV reader maps.';
     write($root.'/site/benchmarks/py-polars.json', [
         'title' => 'phpolars and py-polars',
         'description' => "phpolars and py-polars both run Polars' Rust engine. phpolars embeds the Rust crate at version 0.55.2, built with Cargo's release profile; py-polars ships its own build of the engine. $data "
