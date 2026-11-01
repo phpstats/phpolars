@@ -7,7 +7,10 @@ use function Phibble\Expr\{col, mean, n, str_sub, sum};
 $path = $argv[1];
 $start = hrtime(true);
 
-$summary = DataFrame::fromCsv($path, types: ['placed_on' => 'c'])
+$summary = DataFrame::fromCsv(
+    $path,
+    types: ['placed_on' => 'c'],
+)
     ->filter(col('status')->eq('completed'))
     ->mutate(['month' => str_sub(col('placed_on'), 1, 7)])
     ->groupBy(['region', 'month'])

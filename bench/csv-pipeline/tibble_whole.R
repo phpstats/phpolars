@@ -9,7 +9,9 @@ start <- Sys.time()
 
 summary <- read_csv(
   path,
-  col_select = c(placed_on, region, status, quantity, amount),
+  col_select = c(
+    placed_on, region, status, quantity, amount
+  ),
   col_types = cols(placed_on = col_character()),
   progress = FALSE,
   num_threads = 2

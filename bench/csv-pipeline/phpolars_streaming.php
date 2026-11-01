@@ -7,7 +7,10 @@ $start = hrtime(true);
 
 $summary = scan_csv($path)
     ->filter(col('status')->eq('completed'))
-    ->groupBy(['region', col('placed_on')->str()->slice(0, 7)->alias('month')])
+    ->groupBy([
+        'region',
+        col('placed_on')->str()->slice(0, 7)->alias('month'),
+    ])
     ->agg(
         len()->alias('orders'),
         col('quantity')->sum()->alias('units'),

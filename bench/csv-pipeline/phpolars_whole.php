@@ -5,9 +5,17 @@ use function Phpolars\{col, len, read_csv};
 $path = $argv[1];
 $start = hrtime(true);
 
-$summary = read_csv($path, columns: ['placed_on', 'region', 'status', 'quantity', 'amount'])
+$summary = read_csv(
+    $path,
+    columns: [
+        'placed_on', 'region', 'status', 'quantity', 'amount',
+    ],
+)
     ->filter(col('status')->eq('completed'))
-    ->groupBy(['region', col('placed_on')->str()->slice(0, 7)->alias('month')])
+    ->groupBy([
+        'region',
+        col('placed_on')->str()->slice(0, 7)->alias('month'),
+    ])
     ->agg(
         len()->alias('orders'),
         col('quantity')->sum()->alias('units'),
