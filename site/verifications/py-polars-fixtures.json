@@ -2,7 +2,7 @@
     "title": "py-polars",
     "label": "py-polars",
     "kind": "reference",
-    "checked": "Column names, data types, and values of 314 results: data frame methods, functions, joins, grouping, windows, sorting, casts, SQL, and the str, dt, list, struct, and arr namespaces. Identical inputs in both implementations.",
+    "checked": "Column names, data types, and values of 315 results: data frame methods, functions, joins, grouping, windows, sorting, casts, SQL, and the str, dt, list, struct, and arr namespaces. Identical inputs in both implementations.",
     "description": "scripts/pyfixtures.py runs each case in py-polars and writes tests/fixtures/py/expected.json. tests/pyfixtures.php runs the same cases in phpolars and compares the results. phpolars embeds the Polars Rust crate 0.55.2; py-polars 1.43.2 is the release with the closest Rust core. Error statistics cover numeric values only.",
     "reference": "py-polars 1.43.2",
     "versions": {
@@ -3119,6 +3119,16 @@
             "status": "pass"
         },
         {
+            "name": "fn_first_last_columns",
+            "category": "Functions",
+            "quantity": "6 rows × 4 columns",
+            "rule": "exact",
+            "n_compared": 27,
+            "max_abs_error": 0.0,
+            "max_rel_error": 0.0,
+            "status": "pass"
+        },
+        {
             "name": "json_normalize",
             "category": "Reshaping and concatenation",
             "quantity": "3 rows × 6 columns",
@@ -3182,7 +3192,7 @@
     "data": "scripts/pyfixtures.py",
     "environment": {
         "date": "2026-11-01",
-        "commit": "f281aaf",
+        "commit": "ae60888",
         "php": "8.5.10",
         "os": "macOS 27.0.1 (arm64)"
     }
