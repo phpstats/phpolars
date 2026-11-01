@@ -22,6 +22,8 @@ $scripts = [
     'phibble (phit reader)' => [[$php, '-dmemory_limit=-1', $autoload, $phit, __DIR__.'/phibble.php', $csv], []],
     'phibble (PHP reader)' => [[$php, '-dmemory_limit=-1', $autoload, __DIR__.'/phibble.php', $csv], ['PHIBBLE_NATIVE_CSV' => '0']],
     'plain PHP' => [[$php, '-dmemory_limit=-1', __DIR__.'/plain.php', $csv], []],
+    'tibble (R)' => [['Rscript', __DIR__.'/tibble_pipeline.R', $csv], []],
+    'pandas (Python)' => [[getenv('PYTHON') ?: 'python3', __DIR__.'/pandas_pipeline.py', $csv], []],
 ];
 // On macOS each run goes through /usr/bin/time -l, which reports the
 // process's peak memory footprint: its own memory, without the clean file
@@ -76,7 +78,7 @@ foreach ($runs as $name => $rs) {
 $sh = fn (string $cmd) => trim((string) shell_exec($cmd.' 2>/dev/null'));
 echo json_encode([
     'title' => 'A '.round(filesize($csv) / 1e9, 1).' GB CSV file: phpolars, phibble, and plain PHP',
-    'description' => 'Each script reads every row of a seeded order-events CSV, keeps the completed orders, and computes orders, units, revenue, and the mean amount for each region and month. phpolars scans the file lazily and runs the query with the streaming engine. phibble reads the file in chunks of 100,000 rows with fromCsvChunked(), filters, groups, and summarizes each chunk, and adds the chunk totals together; with the phit extension loaded, the chunks are parsed by Phit\\CsvReader (phibble (phit reader)), and with PHIBBLE_NATIVE_CSV=0 by phibble\'s PHP reader (phibble (PHP reader)). Plain PHP reads one row at a time with fgetcsv and adds each row to the totals of its group. Each run is a fresh process. Time is measured inside the script, from opening the file to holding the result as PHP values. Memory is the process\'s peak memory footprint as macOS reports it (/usr/bin/time -l): its own allocations, including Polars\' native ones, without the clean pages of the file that a CSV reader maps, which the system can drop at any time. peak_rss_mib gives the peak resident set size, which counts those pages. The file was in the operating system\'s page cache in every run. The value is the median of '.$reps.' runs after one warm-up run of each.',
+    'description' => 'Each script reads every row of a seeded order-events CSV, keeps the completed orders, and computes orders, units, revenue, and the mean amount for each region and month. phpolars scans the file lazily and runs the query with the streaming engine. phibble reads the file in chunks of 100,000 rows with fromCsvChunked(), filters, groups, and summarizes each chunk, and adds the chunk totals together; with the phit extension loaded, the chunks are parsed by Phit\\CsvReader (phibble (phit reader)), and with PHIBBLE_NATIVE_CSV=0 by phibble\'s PHP reader (phibble (PHP reader)). Plain PHP reads one row at a time with fgetcsv and adds each row to the totals of its group. tibble (R) reads the file with readr and summarizes it with dplyr, and pandas reads it with read_csv and groupby; both read the whole file, as is usual for them. Each run is a fresh process. Time is measured inside the script, from opening the file to holding the result as PHP values. Memory is the process\'s peak memory footprint as macOS reports it (/usr/bin/time -l): its own allocations, including Polars\' native ones, without the clean pages of the file that a CSV reader maps, which the system can drop at any time. peak_rss_mib gives the peak resident set size, which counts those pages. The file was in the operating system\'s page cache in every run. The value is the median of '.$reps.' runs after one warm-up run of each.',
     'measure' => 'Elapsed time',
     'unit' => 'ms',
     'statistic' => 'median',
@@ -90,6 +92,10 @@ echo json_encode([
         'phpolars' => phpversion('php_polars'),
         'phibble' => \Composer\InstalledVersions::getPrettyVersion('phpstats/phibble'),
         'phit' => trim((string) shell_exec(escapeshellarg($php).' '.escapeshellarg($phit).' -r "echo phpversion(\'phit\');"')),
+        'R' => $sh("Rscript -e 'cat(R.version\$major, R.version\$minor, sep=\".\")'"),
+        'readr' => $sh("Rscript -e 'cat(as.character(packageVersion(\"readr\")))'"),
+        'dplyr' => $sh("Rscript -e 'cat(as.character(packageVersion(\"dplyr\")))'"),
+        'pandas' => $sh(escapeshellarg(getenv('PYTHON') ?: 'python3').' -c "import pandas; print(pandas.__version__)"'),
         'polars' => Phpolars\polars_version(),
         'threads' => $last['phpolars']['threads'],
         'engine' => 'streaming',
@@ -101,6 +107,13 @@ echo json_encode([
     'dataset' => ['rows' => (int) $sh('tail -n +2 '.escapeshellarg($csv).' | wc -l'), 'bytes' => filesize($csv),
         'sha256' => hash_file('sha256', $csv), 'missing_amounts' => 'about 1%'],
     'check' => ['groups' => count($b), 'max_rel_difference' => $worst],
-    'code' => ['phpolars' => file_get_contents(__DIR__.'/phpstats.php'), 'phibble' => file_get_contents(__DIR__.'/phibble.php'), 'plain PHP' => file_get_contents(__DIR__.'/plain.php')],
+    'code' => [
+        'phpolars' => file_get_contents(__DIR__.'/phpstats.php'),
+        'phibble' => file_get_contents(__DIR__.'/phibble.php'),
+        'plain PHP' => file_get_contents(__DIR__.'/plain.php'),
+        'tibble (R)' => file_get_contents(__DIR__.'/tibble_pipeline.R'),
+        'pandas (Python)' => file_get_contents(__DIR__.'/pandas_pipeline.py'),
+    ],
+    'languages' => ['phpolars' => 'php', 'phibble' => 'php', 'plain PHP' => 'php', 'tibble (R)' => 'r', 'pandas (Python)' => 'python'],
     'rows' => $rows,
 ], JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES), "\n";
