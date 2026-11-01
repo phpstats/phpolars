@@ -1,0 +1,18 @@
+100,000 rows, median of 7 after a warm-up, PHP 8.5.12, Polars threads 2
+
+A: filter, join, grouped summary, ranked window
+  DataFrame       0.094 s  (50 rows)
+  PolarsTable     0.011 s  (50 rows, 0 fallbacks per run)
+  SqlTable        0.058 s  (50 rows)
+
+B: per-group windows over every row
+  DataFrame       0.130 s  (100000 rows)
+  PolarsTable     0.055 s  (100000 rows, 0 fallbacks per run)
+  SqlTable        0.384 s  (100000 rows)
+
+C: as A, with a PHP closure in filter()
+  DataFrame       0.138 s  (50 rows)
+  PolarsTable     0.111 s  (50 rows, 1 fallbacks per run)
+  SqlTable        0.233 s  (50 rows)
+
+{"rows":100000,"statistic":"median of 7 runs in one process, after one untimed warm-up","environment":{"cpu":"AMD Ryzen 9 9955HX 16-Core Processor","cores":2,"os":"Linux 6.8.0-90-generic","php":"8.5.12","threads":2,"phpolars":"1b96276","phibble":"v0.6.0 6b9f06a","phplyr":"42b2ae0","date":"2026-11-01"},"results":{"A: filter, join, grouped summary, ranked window":{"DataFrame":{"median_s":0.0939,"s":[0.0958,0.0946,0.0938,0.094,0.0938,0.0939,0.0938],"agrees":true},"PolarsTable":{"median_s":0.0109,"s":[0.0105,0.0117,0.0104,0.0135,0.0139,0.0109,0.0095],"agrees":true},"SqlTable":{"median_s":0.0576,"s":[0.058,0.0577,0.0576,0.0576,0.0577,0.0575,0.0576],"agrees":true}},"B: per-group windows over every row":{"DataFrame":{"median_s":0.1298,"s":[0.1297,0.1296,0.1298,0.1307,0.1301,0.1298,0.1306],"agrees":true},"PolarsTable":{"median_s":0.055,"s":[0.055,0.0551,0.0547,0.0544,0.055,0.0559,0.0549],"agrees":true},"SqlTable":{"median_s":0.384,"s":[0.3829,0.3843,0.384,0.3849,0.3834,0.3892,0.3825],"agrees":true}},"C: as A, with a PHP closure in filter()":{"DataFrame":{"median_s":0.1378,"s":[0.134,0.1378,0.1375,0.1385,0.1382,0.1392,0.1369],"agrees":true},"PolarsTable":{"median_s":0.1113,"s":[0.1104,0.1115,0.1093,0.1133,0.1113,0.1122,0.1101],"agrees":true},"SqlTable":{"median_s":0.2334,"s":[0.2331,0.2352,0.2327,0.2367,0.2345,0.2334,0.2331],"agrees":true}}}}
