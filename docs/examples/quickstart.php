@@ -1,11 +1,18 @@
 <?php
-$sales = read_csv('sales.csv', tryParseDates: true);
+$penguins = read_csv('penguins.csv', nullValues: 'NA');
 
-$top = $sales
-    ->filter(col('units')->gt(0))
-    ->withColumns(col('units')->mul(col('price'))->alias('revenue'))
-    ->groupBy('product', maintainOrder: true)
-    ->agg(col('revenue')->sum()->round(2), ['orders' => len()], col('price')->mean()->round(2)->alias('avg_price'))
-    ->sort('revenue', descending: true);
+$bySpecies = $penguins
+    ->filter(col('body_mass_g')->isNotNull())
+    ->withColumns(
+        col('body_mass_g')->truediv(1000)->alias('mass_kg'),
+    )
+    ->groupBy('species', maintainOrder: true)
+    ->agg(
+        ['penguins' => len()],
+        col('mass_kg')->mean()->round(2),
+        col('flipper_length_mm')->mean()->round(1)
+            ->alias('flipper_mm'),
+    )
+    ->sort('mass_kg', descending: true);
 
-echo $top;
+echo $bySpecies;

@@ -23,12 +23,12 @@ title: "phibble and phplyr"
 use Phibble\Polars\PolarsTable;
 use function Phplyr\{col, filter, group_by, mean, n, summarize};
 
-$table = PolarsTable::fromPolars(Phpolars\read_csv('sales.csv'));
+$table = PolarsTable::fromPolars(Phpolars\read_csv('penguins.csv', nullValues: 'NA'));
 
 $out = $table |>
-    group_by('store') |>
-    filter(col('units')->gt(mean('units', naRm: true))) |>
-    summarize(orders: n(), avg_units: mean('units'));
+    group_by('species') |>
+    filter(col('body_mass_g')->gt(mean('body_mass_g', naRm: true))) |>
+    summarize(penguins: n(), mass_g: mean('body_mass_g'));
 ```
 
 ## PHP 8.3–8.4
@@ -37,12 +37,12 @@ $out = $table |>
 use Phibble\Polars\PolarsTable;
 use function Phplyr\{col, mean, n, phplyr};
 
-$table = PolarsTable::fromPolars(Phpolars\read_csv('sales.csv'));
+$table = PolarsTable::fromPolars(Phpolars\read_csv('penguins.csv', nullValues: 'NA'));
 
 $out = phplyr($table)
-    ->groupBy('store')
-    ->filter(col('units')->gt(mean('units', naRm: true)))
-    ->summarize(orders: n(), avg_units: mean('units'))
+    ->groupBy('species')
+    ->filter(col('body_mass_g')->gt(mean('body_mass_g', naRm: true)))
+    ->summarize(penguins: n(), mass_g: mean('body_mass_g'))
     ->get();
 ```
 :::

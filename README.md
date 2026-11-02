@@ -3,17 +3,19 @@
 phpolars brings [Polars](https://pola.rs) data frames to PHP as a native extension written in Rust with [ext-php-rs](https://github.com/davidcole1340/ext-php-rs). The API follows py-polars: the same classes and methods, with camelCase method names and snake_case functions.
 
 ```php
-use Phpolars\DataFrame;
-use function Phpolars\{col, lit, when};
+use function Phpolars\{col, len, read_csv};
 
-$df = Phpolars\read_csv('sales.csv');
+// Palmer penguins: https://github.com/phpstats/datasets#penguins
+$penguins = read_csv(
+    'https://raw.githubusercontent.com/phpstats/datasets/main/csv/penguins.csv',
+    nullValues: 'NA',
+);
 
-$summary = $df
-    ->filter(col('amount')->gt(0))
-    ->withColumns(when(col('region')->isIn(['N', 'S']))->then(lit('core'))->otherwise(lit('other'))->alias('tier'))
-    ->groupBy(['tier', 'region'], maintainOrder: true)
-    ->agg(col('amount')->sum()->alias('total'), ['orders' => Phpolars\len()])
-    ->sort('total', descending: true);
+$summary = $penguins
+    ->filter(col('body_mass_g')->isNotNull())
+    ->groupBy(['species', 'island'], maintainOrder: true)
+    ->agg(len()->alias('penguins'), col('body_mass_g')->mean()->round()->alias('mass_g'))
+    ->sort('mass_g', descending: true);
 
 print_r($summary->toDicts());
 ```

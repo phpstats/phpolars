@@ -1,12 +1,25 @@
 <?php
-$sales = read_csv('sales.csv', tryParseDates: true)->filter(col('store')->eq('S1'))->head(8);
+$data = 'https://raw.githubusercontent.com'
+    .'/phpstats/datasets/main/csv';
+$weather = read_csv("$data/weather.csv", columns: [
+    'origin', 'month', 'day', 'hour', 'temp',
+])
+    ->filter(
+        col('month')->eq(1),
+        col('day')->eq(1),
+        col('hour')->le(3),
+    );
 
-echo $sales->select(
-    'date',
-    'product',
-    'units',
-    col('units')->sum()->over('product')->alias('product_total'),
-    col('units')->cumSum()->over('product', orderBy: 'date')->alias('running'),
-    col('units')->shift()->over('product', orderBy: 'date')->alias('previous'),
-    col('units')->rank('dense', descending: true)->alias('rank'),
+$temp = col('temp');
+echo $weather->select(
+    'origin',
+    'hour',
+    'temp',
+    $temp->mean()->over('origin')->round(1)
+        ->alias('origin_mean'),
+    $temp->diff()->over('origin', orderBy: 'hour')
+        ->alias('change'),
+    $temp->shift()->over('origin', orderBy: 'hour')
+        ->alias('previous'),
+    $temp->rank('dense', descending: true)->alias('rank'),
 );

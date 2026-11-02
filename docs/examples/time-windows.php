@@ -1,15 +1,22 @@
 <?php
-$daily = read_csv('sales.csv', tryParseDates: true)
-    ->groupBy('date')->agg(col('units')->sum())
-    ->sort('date');
+$data = 'https://raw.githubusercontent.com'
+    .'/phpstats/datasets/main/csv';
+$jfk = read_csv(
+    "$data/weather.csv",
+    columns: ['origin', 'time_hour', 'temp'],
+    tryParseDates: true,
+)
+    ->filter(col('origin')->eq('JFK'))
+    ->select('time_hour', 'temp')
+    ->sort('time_hour');
 
-// Weeks starting on Monday.
-echo $daily->groupByDynamic('date', every: '1w')->agg(col('units')->sum()->alias('week_units'))->head(3), "\n";
+// Calendar days, in UTC.
+echo $jfk->groupByDynamic('time_hour', every: '1d')
+    ->agg(col('temp')->mean()->round(1)->alias('mean_temp'))
+    ->head(3), "\n";
 
-// The seven days ending at each row.
-echo $daily->withColumns(col('units')->rollingSumBy('date', '7d')->alias('last_7d'))->head(4), "\n";
-
-// The list price in force on each day.
-$prices = (new DataFrame(['from' => [new DateTimeImmutable('2024-01-01'), new DateTimeImmutable('2024-01-05')], 'list_price' => [5.0, 5.5]]))
-    ->cast(['from' => 'Date']);
-echo $daily->head(4)->joinAsof($prices, leftOn: 'date', rightOn: 'from');
+// The 24 hours ending at each reading.
+echo $jfk->withColumns(
+    col('temp')->rollingMeanBy('time_hour', '24h')->round(1)
+        ->alias('last_24h'),
+)->head(4);

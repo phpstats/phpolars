@@ -1,14 +1,19 @@
 <?php
 use function Phpolars\{col, len, read_csv};
 
-$sales = read_csv('sales.csv', tryParseDates: true);
+$penguins = read_csv('penguins.csv', nullValues: 'NA');
 
-$byProduct = $sales
-    ->filter(col('units')->gt(0))
-    ->withColumns(col('units')->mul(col('price'))->alias('revenue'))
-    ->groupBy('product', maintainOrder: true)
-    ->agg(col('revenue')->sum()->round(2), ['orders' => len()])
-    ->sort('revenue', descending: true);
+$bySpecies = $penguins
+    ->filter(col('body_mass_g')->isNotNull())
+    ->withColumns(
+        col('body_mass_g')->truediv(1000)->alias('mass_kg'),
+    )
+    ->groupBy('species', maintainOrder: true)
+    ->agg(
+        ['penguins' => len()],
+        col('mass_kg')->mean()->round(2),
+    )
+    ->sort('mass_kg', descending: true);
 
-echo $byProduct, "\n";
-print_r($byProduct->row(0, named: true));
+echo $bySpecies, "\n";
+print_r($bySpecies->row(0, named: true));

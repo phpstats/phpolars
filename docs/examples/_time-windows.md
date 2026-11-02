@@ -1,51 +1,47 @@
 ```php
-$daily = read_csv('sales.csv', tryParseDates: true)
-    ->groupBy('date')->agg(col('units')->sum())
-    ->sort('date');
+$data = 'https://raw.githubusercontent.com'
+    .'/phpstats/datasets/main/csv';
+$jfk = read_csv(
+    "$data/weather.csv",
+    columns: ['origin', 'time_hour', 'temp'],
+    tryParseDates: true,
+)
+    ->filter(col('origin')->eq('JFK'))
+    ->select('time_hour', 'temp')
+    ->sort('time_hour');
 
-// Weeks starting on Monday.
-echo $daily->groupByDynamic('date', every: '1w')->agg(col('units')->sum()->alias('week_units'))->head(3), "\n";
+// Calendar days, in UTC.
+echo $jfk->groupByDynamic('time_hour', every: '1d')
+    ->agg(col('temp')->mean()->round(1)->alias('mean_temp'))
+    ->head(3), "\n";
 
-// The seven days ending at each row.
-echo $daily->withColumns(col('units')->rollingSumBy('date', '7d')->alias('last_7d'))->head(4), "\n";
-
-// The list price in force on each day.
-$prices = (new DataFrame(['from' => [new DateTimeImmutable('2024-01-01'), new DateTimeImmutable('2024-01-05')], 'list_price' => [5.0, 5.5]]))
-    ->cast(['from' => 'Date']);
-echo $daily->head(4)->joinAsof($prices, leftOn: 'date', rightOn: 'from');
+// The 24 hours ending at each reading.
+echo $jfk->withColumns(
+    col('temp')->rollingMeanBy('time_hour', '24h')->round(1)
+        ->alias('last_24h'),
+)->head(4);
 ```
 
 ```{.text .output}
 shape: (3, 2)
-┌────────────┬────────────┐
-│ date       ┆ week_units │
-│ ---        ┆ ---        │
-│ date       ┆ i64        │
-╞════════════╪════════════╡
-│ 2024-01-01 ┆ 109        │
-│ 2024-01-08 ┆ 30         │
-│ 2024-01-15 ┆ 71         │
-└────────────┴────────────┘
+┌─────────────────────────┬───────────┐
+│ time_hour               ┆ mean_temp │
+│ ---                     ┆ ---       │
+│ datetime[μs, UTC]       ┆ f64       │
+╞═════════════════════════╪═══════════╡
+│ 2013-01-01 00:00:00 UTC ┆ 38.9      │
+│ 2013-01-02 00:00:00 UTC ┆ 28.5      │
+│ 2013-01-03 00:00:00 UTC ┆ 29.8      │
+└─────────────────────────┴───────────┘
 shape: (4, 3)
-┌────────────┬───────┬─────────┐
-│ date       ┆ units ┆ last_7d │
-│ ---        ┆ ---   ┆ ---     │
-│ date       ┆ i64   ┆ i64     │
-╞════════════╪═══════╪═════════╡
-│ 2024-01-01 ┆ 15    ┆ 15      │
-│ 2024-01-02 ┆ 23    ┆ 38      │
-│ 2024-01-03 ┆ 6     ┆ 44      │
-│ 2024-01-04 ┆ 19    ┆ 63      │
-└────────────┴───────┴─────────┘
-shape: (4, 4)
-┌────────────┬───────┬────────────┬────────────┐
-│ date       ┆ units ┆ from       ┆ list_price │
-│ ---        ┆ ---   ┆ ---        ┆ ---        │
-│ date       ┆ i64   ┆ date       ┆ f64        │
-╞════════════╪═══════╪════════════╪════════════╡
-│ 2024-01-01 ┆ 15    ┆ 2024-01-01 ┆ 5.0        │
-│ 2024-01-02 ┆ 23    ┆ 2024-01-01 ┆ 5.0        │
-│ 2024-01-03 ┆ 6     ┆ 2024-01-01 ┆ 5.0        │
-│ 2024-01-04 ┆ 19    ┆ 2024-01-01 ┆ 5.0        │
-└────────────┴───────┴────────────┴────────────┘
+┌─────────────────────────┬───────┬──────────┐
+│ time_hour               ┆ temp  ┆ last_24h │
+│ ---                     ┆ ---   ┆ ---      │
+│ datetime[μs, UTC]       ┆ f64   ┆ f64      │
+╞═════════════════════════╪═══════╪══════════╡
+│ 2013-01-01 06:00:00 UTC ┆ 39.02 ┆ 39.0     │
+│ 2013-01-01 07:00:00 UTC ┆ 39.02 ┆ 39.0     │
+│ 2013-01-01 08:00:00 UTC ┆ 39.92 ┆ 39.3     │
+│ 2013-01-01 09:00:00 UTC ┆ 39.92 ┆ 39.5     │
+└─────────────────────────┴───────┴──────────┘
 ```

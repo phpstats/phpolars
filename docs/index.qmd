@@ -5,13 +5,13 @@ subtitle: "Polars data frames for PHP"
 
 Query and transform data with [Polars](https://pola.rs) from PHP. Use eager data frames, or build lazy queries with expressions.
 
-The Composer package is `phpstats/phpolars`. PIE installs it as the `php_polars` extension, which is the name that `extension=` and `phpversion()` use. Polars runs inside the PHP process: expressions such as `col('units')->mul(col('price'))` run on Polars' own threads, and PHP values are created only when code asks for them, for example with `toDicts()`.
+The Composer package is `phpstats/phpolars`. PIE installs it as the `php_polars` extension, which is the name that `extension=` and `phpversion()` use. Polars runs inside the PHP process: expressions such as `col('body_mass_g')->truediv(1000)` run on Polars' own threads, and PHP values are created only when code asks for them, for example with `toDicts()`.
 
 The API follows py-polars, Polars' Python package, with camelCase method names and snake_case functions. [Compatibility and limitations](compatibility.qmd) covers the differences and how agreement with py-polars is tested.
 
 {{< include examples/_quickstart.md >}}
 
-The example reads `sales.csv`, the docs' example data. [Getting started](getting-started.qmd#a-starter-script) has a complete script and the command that downloads the data.
+The example reads `penguins.csv`, body measurements of 344 penguins from the R `palmerpenguins` package ([penguins](https://github.com/phpstats/datasets#penguins)). [Getting started](getting-started.qmd#a-starter-script) has a complete script and the command that downloads the data.
 
 ## What it includes
 

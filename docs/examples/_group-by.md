@@ -1,43 +1,47 @@
 ```php
-$sales = read_csv('sales.csv');
+$penguins = read_csv('penguins.csv', nullValues: 'NA');
 
-echo $sales->groupBy(['store', 'product'], maintainOrder: true)
+echo $penguins
+    ->groupBy(['species', 'island'], maintainOrder: true)
     ->agg(
         len()->alias('rows'),
-        col('units')->sum(),
-        col('units')->nullCount()->alias('missing_units'),
-        col('price')->max()->alias('top_price'),
+        col('body_mass_g')->mean()->round()
+            ->alias('mass_g'),
+        col('sex')->nullCount()->alias('missing_sex'),
+        col('flipper_length_mm')->max()
+            ->alias('max_flipper'),
     )
-    ->sort(['store', 'product'])
-    ->head(6), "\n";
+    ->sort(['species', 'island']), "\n";
 
 // Shorthands aggregate every non-key column.
-echo $sales->select('store', 'units', 'price')->groupBy('store')->mean()->sort('store');
+echo $penguins
+    ->select('species', 'bill_length_mm', 'body_mass_g')
+    ->groupBy('species')
+    ->mean()
+    ->sort('species');
 ```
 
 ```{.text .output}
-shape: (6, 6)
-┌───────┬─────────┬──────┬───────┬───────────────┬───────────┐
-│ store ┆ product ┆ rows ┆ units ┆ missing_units ┆ top_price │
-│ ---   ┆ ---     ┆ ---  ┆ ---   ┆ ---           ┆ ---       │
-│ str   ┆ str     ┆ u32  ┆ i64   ┆ u32           ┆ f64       │
-╞═══════╪═════════╪══════╪═══════╪═══════════════╪═══════════╡
-│ S1    ┆ apple   ┆ 17   ┆ 98    ┆ 0             ┆ 7.23      │
-│ S1    ┆ banana  ┆ 15   ┆ 81    ┆ 0             ┆ 8.98      │
-│ S1    ┆ cherry  ┆ 12   ┆ 90    ┆ 0             ┆ 8.07      │
-│ S1    ┆ date    ┆ 13   ┆ 109   ┆ 0             ┆ 8.57      │
-│ S2    ┆ apple   ┆ 11   ┆ 47    ┆ 0             ┆ 8.23      │
-│ S2    ┆ banana  ┆ 14   ┆ 69    ┆ 1             ┆ 6.92      │
-└───────┴─────────┴──────┴───────┴───────────────┴───────────┘
-shape: (4, 3)
-┌───────┬──────────┬──────────┐
-│ store ┆ units    ┆ price    │
-│ ---   ┆ ---      ┆ ---      │
-│ str   ┆ f64      ┆ f64      │
-╞═══════╪══════════╪══════════╡
-│ S1    ┆ 6.631579 ┆ 4.010702 │
-│ S2    ┆ 5.282609 ┆ 4.237843 │
-│ S3    ┆ 6.282609 ┆ 4.877347 │
-│ S4    ┆ 4.883721 ┆ 4.074186 │
-└───────┴──────────┴──────────┘
+shape: (5, 6)
+┌───────────┬───────────┬──────┬────────┬─────────────┬─────────────┐
+│ species   ┆ island    ┆ rows ┆ mass_g ┆ missing_sex ┆ max_flipper │
+│ ---       ┆ ---       ┆ ---  ┆ ---    ┆ ---         ┆ ---         │
+│ str       ┆ str       ┆ u32  ┆ f64    ┆ u32         ┆ i64         │
+╞═══════════╪═══════════╪══════╪════════╪═════════════╪═════════════╡
+│ Adelie    ┆ Biscoe    ┆ 44   ┆ 3710.0 ┆ 0           ┆ 203         │
+│ Adelie    ┆ Dream     ┆ 56   ┆ 3688.0 ┆ 1           ┆ 208         │
+│ Adelie    ┆ Torgersen ┆ 52   ┆ 3706.0 ┆ 5           ┆ 210         │
+│ Chinstrap ┆ Dream     ┆ 68   ┆ 3733.0 ┆ 0           ┆ 212         │
+│ Gentoo    ┆ Biscoe    ┆ 124  ┆ 5076.0 ┆ 5           ┆ 231         │
+└───────────┴───────────┴──────┴────────┴─────────────┴─────────────┘
+shape: (3, 3)
+┌───────────┬────────────────┬─────────────┐
+│ species   ┆ bill_length_mm ┆ body_mass_g │
+│ ---       ┆ ---            ┆ ---         │
+│ str       ┆ f64            ┆ f64         │
+╞═══════════╪════════════════╪═════════════╡
+│ Adelie    ┆ 38.791391      ┆ 3700.662252 │
+│ Chinstrap ┆ 48.833824      ┆ 3733.088235 │
+│ Gentoo    ┆ 47.504878      ┆ 5076.01626  │
+└───────────┴────────────────┴─────────────┘
 ```

@@ -1,30 +1,36 @@
 ```php
-$sales = read_csv('sales.csv', tryParseDates: true)->select('date')->head(4);
+$data = 'https://raw.githubusercontent.com'
+    .'/phpstats/datasets/main/csv';
+$weather = read_csv(
+    "$data/weather.csv",
+    columns: ['time_hour'],
+    tryParseDates: true,
+)->head(3);
 
-echo $sales->withColumns(
-    col('date')->dt()->year()->alias('year'),
-    col('date')->dt()->month()->alias('month'),
-    col('date')->dt()->weekday()->alias('weekday'),
-    col('date')->dt()->strftime('%b %d')->alias('label'),
-    col('date')->dt()->truncate('1mo')->alias('month_start'),
+$t = col('time_hour');
+echo $weather->withColumns(
+    $t->dt()->weekday()->alias('weekday'),
+    $t->dt()->hour()->alias('hour'),
+    $t->dt()->convertTimeZone('America/New_York')
+        ->dt()->strftime('%b %d %H:%M')->alias('new_york'),
+    $t->dt()->truncate('1d')->alias('day'),
 ), "\n";
 
 // Date and Datetime values come back as DateTimeImmutable.
-$first = $sales->item(0, 'date');
-echo get_class($first), ' ', $first->format('Y-m-d'), "\n";
+$first = $weather->item(0, 'time_hour');
+echo get_class($first), ' ', $first->format('c'), "\n";
 ```
 
 ```{.text .output}
-shape: (4, 6)
-┌────────────┬──────┬───────┬─────────┬────────┬─────────────┐
-│ date       ┆ year ┆ month ┆ weekday ┆ label  ┆ month_start │
-│ ---        ┆ ---  ┆ ---   ┆ ---     ┆ ---    ┆ ---         │
-│ date       ┆ i32  ┆ i8    ┆ i8      ┆ str    ┆ date        │
-╞════════════╪══════╪═══════╪═════════╪════════╪═════════════╡
-│ 2024-03-22 ┆ 2024 ┆ 3     ┆ 5       ┆ Mar 22 ┆ 2024-03-01  │
-│ 2024-02-11 ┆ 2024 ┆ 2     ┆ 7       ┆ Feb 11 ┆ 2024-02-01  │
-│ 2024-01-06 ┆ 2024 ┆ 1     ┆ 6       ┆ Jan 06 ┆ 2024-01-01  │
-│ 2024-03-29 ┆ 2024 ┆ 3     ┆ 5       ┆ Mar 29 ┆ 2024-03-01  │
-└────────────┴──────┴───────┴─────────┴────────┴─────────────┘
-DateTimeImmutable 2024-03-22
+shape: (3, 5)
+┌─────────────────────────┬─────────┬──────┬──────────────┬─────────────────────────┐
+│ time_hour               ┆ weekday ┆ hour ┆ new_york     ┆ day                     │
+│ ---                     ┆ ---     ┆ ---  ┆ ---          ┆ ---                     │
+│ datetime[μs, UTC]       ┆ i8      ┆ i8   ┆ str          ┆ datetime[μs, UTC]       │
+╞═════════════════════════╪═════════╪══════╪══════════════╪═════════════════════════╡
+│ 2013-01-01 06:00:00 UTC ┆ 2       ┆ 6    ┆ Jan 01 01:00 ┆ 2013-01-01 00:00:00 UTC │
+│ 2013-01-01 07:00:00 UTC ┆ 2       ┆ 7    ┆ Jan 01 02:00 ┆ 2013-01-01 00:00:00 UTC │
+│ 2013-01-01 08:00:00 UTC ┆ 2       ┆ 8    ┆ Jan 01 03:00 ┆ 2013-01-01 00:00:00 UTC │
+└─────────────────────────┴─────────┴──────┴──────────────┴─────────────────────────┘
+DateTimeImmutable 2013-01-01T06:00:00+00:00
 ```

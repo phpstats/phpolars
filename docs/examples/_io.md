@@ -1,21 +1,29 @@
 ```php
 $dir = sys_get_temp_dir().'/phpolars-docs';
 @mkdir($dir);
-$sales = read_csv('sales.csv', tryParseDates: true);
+$penguins = read_csv('penguins.csv', nullValues: 'NA');
 
-$sales->writeParquet("$dir/sales.parquet");
-$sales->writeNdjson("$dir/sales.ndjson");
-$sales->lazy()->filter(col('store')->eq('S2'))->sinkCsv("$dir/s2.csv");
+$penguins->writeParquet("$dir/penguins.parquet");
+$penguins->writeNdjson("$dir/penguins.ndjson");
+$penguins->lazy()
+    ->filter(col('island')->eq('Biscoe'))
+    ->sinkCsv("$dir/biscoe.csv");
 
-echo read_parquet("$dir/sales.parquet")->equals($sales) ? "parquet round-trip ok\n" : "parquet differs\n";
-echo scan_parquet("$dir/sales.parquet")->select(col('units')->sum())->collect()->item(), " units\n";
-echo read_csv("$dir/s2.csv")->height(), " rows for S2\n";
-echo read_ndjson("$dir/sales.ndjson")->schema()['date'], "\n";
+$back = read_parquet("$dir/penguins.parquet");
+echo $back->equals($penguins)
+    ? "parquet round-trip ok\n" : "parquet differs\n";
+echo scan_parquet("$dir/penguins.parquet")
+    ->select(col('body_mass_g')->mean()->round())
+    ->collect()->item(), " g mean body mass\n";
+echo read_csv("$dir/biscoe.csv")->height(),
+    " penguins on Biscoe\n";
+echo read_ndjson("$dir/penguins.ndjson")
+    ->schema()['body_mass_g'], "\n";
 ```
 
 ```{.text .output}
 parquet round-trip ok
-1120 units
-51 rows for S2
-String
+4202 g mean body mass
+168 penguins on Biscoe
+Int64
 ```

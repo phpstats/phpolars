@@ -1,12 +1,16 @@
 <?php
-$sales = read_csv('sales.csv');
+$penguins = read_csv('penguins.csv', nullValues: 'NA');
 
-echo $sales
+$mass = col('body_mass_g');
+echo $penguins
     ->select(
-        'id',
-        'product',
-        col('units')->fillNull(0),
-        ['revenue' => col('units')->mul(col('price'))->round(2)],
-        when(col('price')->ge(5))->then(lit('premium'))->otherwise(lit('standard'))->alias('tier'),
+        'species',
+        'island',
+        col('sex')->fillNull('unknown'),
+        ['bill_ratio' => col('bill_length_mm')
+            ->truediv(col('bill_depth_mm'))->round(2)],
+        when($mass->ge(4000))->then(lit('large'))
+            ->when($mass->lt(4000))->then(lit('small'))
+            ->alias('size'),
     )
     ->head(5);

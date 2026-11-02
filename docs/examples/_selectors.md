@@ -1,42 +1,49 @@
 ```php
 use Phpolars\cs;
 
-$sales = read_csv('sales.csv', tryParseDates: true)->head(3);
+$penguins = read_csv('penguins.csv', nullValues: 'NA')
+    ->head(3);
 
-echo $sales->select(cs\numeric()->sub(cs\by_name('id'))), "\n";
-echo $sales->select(cs\string()->or(cs\date())), "\n";
-echo $sales->withColumns(cs\float()->round(0)->name()->suffix('_rounded'))->select(cs\ends_with('price', '_rounded'));
+echo $penguins->select(
+    cs\numeric()->sub(cs\by_name('rownames', 'year')),
+), "\n";
+echo $penguins->select(cs\string()), "\n";
+echo $penguins
+    ->withColumns(
+        cs\float()->round(0)->name()->suffix('_rounded'),
+    )
+    ->select(cs\ends_with('_rounded'));
 ```
 
 ```{.text .output}
-shape: (3, 2)
-┌───────┬───────┐
-│ units ┆ price │
-│ ---   ┆ ---   │
-│ i64   ┆ f64   │
-╞═══════╪═══════╡
-│ 10    ┆ 7.03  │
-│ 0     ┆ 2.46  │
-│ 2     ┆ 3.84  │
-└───────┴───────┘
+shape: (3, 5)
+┌────────────────┬───────────────┬───────────────────┬─────────────┬──────┐
+│ bill_length_mm ┆ bill_depth_mm ┆ flipper_length_mm ┆ body_mass_g ┆ year │
+│ ---            ┆ ---           ┆ ---               ┆ ---         ┆ ---  │
+│ f64            ┆ f64           ┆ i64               ┆ i64         ┆ i64  │
+╞════════════════╪═══════════════╪═══════════════════╪═════════════╪══════╡
+│ 39.1           ┆ 18.7          ┆ 181               ┆ 3750        ┆ 2007 │
+│ 39.5           ┆ 17.4          ┆ 186               ┆ 3800        ┆ 2007 │
+│ 40.3           ┆ 18.0          ┆ 195               ┆ 3250        ┆ 2007 │
+└────────────────┴───────────────┴───────────────────┴─────────────┴──────┘
 shape: (3, 3)
-┌────────────┬───────┬─────────┐
-│ date       ┆ store ┆ product │
-│ ---        ┆ ---   ┆ ---     │
-│ date       ┆ str   ┆ str     │
-╞════════════╪═══════╪═════════╡
-│ 2024-03-22 ┆ S4    ┆ banana  │
-│ 2024-02-11 ┆ S4    ┆ cherry  │
-│ 2024-01-06 ┆ S2    ┆ apple   │
-└────────────┴───────┴─────────┘
+┌─────────┬───────────┬────────┐
+│ species ┆ island    ┆ sex    │
+│ ---     ┆ ---       ┆ ---    │
+│ str     ┆ str       ┆ str    │
+╞═════════╪═══════════╪════════╡
+│ Adelie  ┆ Torgersen ┆ male   │
+│ Adelie  ┆ Torgersen ┆ female │
+│ Adelie  ┆ Torgersen ┆ female │
+└─────────┴───────────┴────────┘
 shape: (3, 2)
-┌───────┬───────────────┐
-│ price ┆ price_rounded │
-│ ---   ┆ ---           │
-│ f64   ┆ f64           │
-╞═══════╪═══════════════╡
-│ 7.03  ┆ 7.0           │
-│ 2.46  ┆ 2.0           │
-│ 3.84  ┆ 4.0           │
-└───────┴───────────────┘
+┌────────────────────────┬───────────────────────┐
+│ bill_length_mm_rounded ┆ bill_depth_mm_rounded │
+│ ---                    ┆ ---                   │
+│ f64                    ┆ f64                   │
+╞════════════════════════╪═══════════════════════╡
+│ 39.0                   ┆ 19.0                  │
+│ 40.0                   ┆ 17.0                  │
+│ 40.0                   ┆ 18.0                  │
+└────────────────────────┴───────────────────────┘
 ```

@@ -22,11 +22,11 @@ The command prints the installed version, such as `0.2.2`. It checks the CLI. PH
 
 ## A starter script
 
-phpolars needs no Composer packages. Download the example data, `sales.csv` (200 rows of sales by store and product):
+phpolars needs no Composer packages. Download the example data, `penguins.csv`: body measurements of 344 penguins near Palmer Station, Antarctica, from the R `palmerpenguins` package ([penguins](https://github.com/phpstats/datasets#penguins)). Missing values are written `NA`.
 
 ```sh
 mkdir phpolars-start && cd phpolars-start
-curl -fsSLO https://raw.githubusercontent.com/phpstats/phpolars/v0.2.2/docs/data/sales.csv
+curl -fsSLO https://raw.githubusercontent.com/phpstats/datasets/main/csv/penguins.csv
 ```
 
 Runnable script: [starter.php](https://raw.githubusercontent.com/phpstats/phpolars/main/docs/examples/starter.php).
@@ -41,13 +41,13 @@ Classes such as `Phpolars\DataFrame` live in the `Phpolars` namespace, and so do
 use function Phpolars\{col, len, lit, read_csv, scan_csv, when};
 ```
 
-The examples below read the same `sales.csv`.
+The examples below read the same `penguins.csv`, with `nullValues: 'NA'` so that `NA` entries become nulls.
 
 ## A first query
 
 {{< include examples/_select.md >}}
 
-Strings passed where py-polars expects an expression input, such as `select()`, name columns. Use `lit()` for a string value there. In comparisons and arithmetic, strings are literals: `col('store')->ne('S1')`.
+Strings passed where py-polars expects an expression input, such as `select()`, name columns. Use `lit()` for a string value there. In comparisons and arithmetic, strings are literals: `col('island')->ne('Torgersen')`. A `when()` chain without `otherwise()` gives null where no condition holds, as for the penguin without a body mass.
 
 ## Filtering
 

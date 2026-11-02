@@ -1,25 +1,26 @@
 ```php
-$sales = read_csv('sales.csv');
+$penguins = read_csv('penguins.csv', nullValues: 'NA');
 
-// Several predicates are combined with and; null counts as false.
-echo $sales->filter(
-    col('product')->isIn(['apple', 'cherry']),
-    col('units')->isBetween(5, 8),
-    col('store')->ne('S1'),
-)->head(5);
+// The predicates combine with and; null counts as false.
+echo $penguins->filter(
+    col('species')->isIn(['Adelie', 'Chinstrap']),
+    col('flipper_length_mm')->isBetween(195, 200),
+    col('island')->ne('Torgersen'),
+)->select('species', 'island', 'flipper_length_mm', 'sex')
+    ->head(5);
 ```
 
 ```{.text .output}
-shape: (5, 6)
-┌─────┬────────────┬───────┬─────────┬───────┬───────┐
-│ id  ┆ date       ┆ store ┆ product ┆ units ┆ price │
-│ --- ┆ ---        ┆ ---   ┆ ---     ┆ ---   ┆ ---   │
-│ i64 ┆ str        ┆ str   ┆ str     ┆ i64   ┆ f64   │
-╞═════╪════════════╪═══════╪═════════╪═══════╪═══════╡
-│ 12  ┆ 2024-03-17 ┆ S2    ┆ apple   ┆ 8     ┆ 3.85  │
-│ 16  ┆ 2024-02-24 ┆ S3    ┆ apple   ┆ 8     ┆ 5.07  │
-│ 20  ┆ 2024-03-26 ┆ S4    ┆ cherry  ┆ 7     ┆ 5.72  │
-│ 22  ┆ 2024-03-05 ┆ S2    ┆ apple   ┆ 5     ┆ 8.23  │
-│ 24  ┆ 2024-03-26 ┆ S3    ┆ cherry  ┆ 6     ┆ 2.2   │
-└─────┴────────────┴───────┴─────────┴───────┴───────┘
+shape: (5, 4)
+┌─────────┬────────┬───────────────────┬────────┐
+│ species ┆ island ┆ flipper_length_mm ┆ sex    │
+│ ---     ┆ ---    ┆ ---               ┆ ---    │
+│ str     ┆ str    ┆ i64               ┆ str    │
+╞═════════╪════════╪═══════════════════╪════════╡
+│ Adelie  ┆ Dream  ┆ 195               ┆ female │
+│ Adelie  ┆ Dream  ┆ 196               ┆ male   │
+│ Adelie  ┆ Dream  ┆ 195               ┆ male   │
+│ Adelie  ┆ Dream  ┆ 196               ┆ male   │
+│ Adelie  ┆ Biscoe ┆ 200               ┆ male   │
+└─────────┴────────┴───────────────────┴────────┘
 ```

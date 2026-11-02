@@ -389,92 +389,108 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="joins" class="level2">
 <h2 class="anchored" data-anchor-id="joins">Joins</h2>
 <p><code>join()</code> takes <code>on</code>, or <code>leftOn</code> and <code>rightOn</code>, and <code>how</code>: <code>inner</code>, <code>left</code>, <code>right</code>, <code>full</code>, <code>semi</code>, <code>anti</code>, or <code>cross</code>. <code>suffix</code> names clashing right-hand columns, <code>coalesce</code> merges key columns, <code>nullsEqual</code> lets null keys match, and <code>maintainOrder</code> (<code>none</code>, <code>left</code>, <code>right</code>, <code>left_right</code>, <code>right_left</code>) fixes the row order.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode php code-with-copy"><code class="sourceCode php"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="va">$sales</span> <span class="op">=</span> read_csv(<span class="st">'sales.csv'</span>)-&gt;select(<span class="st">'id'</span><span class="ot">,</span> <span class="st">'store'</span><span class="ot">,</span> <span class="st">'units'</span>)-&gt;head(<span class="dv">6</span>)<span class="ot">;</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="va">$stores</span> <span class="op">=</span> read_csv(<span class="st">'stores.csv'</span>)-&gt;filter(col(<span class="st">'store'</span>)-&gt;ne(<span class="st">'S2'</span>))<span class="ot">;</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="kw">echo</span> <span class="va">$sales</span>-&gt;<span class="fu">join</span>(<span class="va">$stores</span><span class="ot">,</span> on<span class="ot">:</span> <span class="st">'store'</span><span class="ot">,</span> how<span class="ot">:</span> <span class="st">'left'</span><span class="ot">,</span> maintainOrder<span class="ot">:</span> <span class="st">'left'</span>)<span class="ot">,</span> <span class="st">"</span><span class="sc">\n</span><span class="st">"</span><span class="ot">;</span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="kw">echo</span> <span class="va">$sales</span>-&gt;<span class="fu">join</span>(<span class="va">$stores</span><span class="ot">,</span> on<span class="ot">:</span> <span class="st">'store'</span><span class="ot">,</span> how<span class="ot">:</span> <span class="st">'anti'</span>)<span class="ot">,</span> <span class="st">"</span><span class="sc">\n</span><span class="st">"</span><span class="ot">;</span></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="kw">echo</span> <span class="va">$stores</span>-&gt;<span class="fu">rename</span>([<span class="st">'store'</span> =&gt; <span class="st">'shop'</span>])-&gt;<span class="fu">join</span>(<span class="va">$sales</span><span class="ot">,</span> leftOn<span class="ot">:</span> <span class="st">'shop'</span><span class="ot">,</span> rightOn<span class="ot">:</span> <span class="st">'store'</span><span class="ot">,</span> how<span class="ot">:</span> <span class="st">'inner'</span>)-&gt;height()<span class="ot">,</span> <span class="st">" matched rows</span><span class="sc">\n</span><span class="st">"</span><span class="ot">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<pre class="text output"><code>shape: (6, 5)
-┌─────┬───────┬───────┬──────────┬────────┐
-│ id  ┆ store ┆ units ┆ city     ┆ region │
-│ --- ┆ ---   ┆ ---   ┆ ---      ┆ ---    │
-│ i64 ┆ str   ┆ i64   ┆ str      ┆ str    │
-╞═════╪═══════╪═══════╪══════════╪════════╡
-│ 1   ┆ S4    ┆ 10    ┆ Portland ┆ West   │
-│ 2   ┆ S4    ┆ 0     ┆ Portland ┆ West   │
-│ 3   ┆ S2    ┆ 2     ┆ null     ┆ null   │
-│ 4   ┆ S3    ┆ 12    ┆ Atlanta  ┆ East   │
-│ 5   ┆ S4    ┆ 1     ┆ Portland ┆ West   │
-│ 6   ┆ S2    ┆ 6     ┆ null     ┆ null   │
-└─────┴───────┴───────┴──────────┴────────┘
-shape: (2, 3)
-┌─────┬───────┬───────┐
-│ id  ┆ store ┆ units │
-│ --- ┆ ---   ┆ ---   │
-│ i64 ┆ str   ┆ i64   │
-╞═════╪═══════╪═══════╡
-│ 3   ┆ S2    ┆ 2     │
-│ 6   ┆ S2    ┆ 6     │
-└─────┴───────┴───────┘
-4 matched rows</code></pre>
+<p>The example joins JFK departures on January 1, 2013, to airport names, from the R <code>nycflights13</code> package (<a href="https://github.com/phpstats/datasets#flights">flights</a> and <a href="https://github.com/phpstats/datasets#airports">airports</a>). Four destinations, in Puerto Rico and the US Virgin Islands, are not in <code>airports</code>.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode php code-with-copy"><code class="sourceCode php"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="va">$data</span> <span class="op">=</span> <span class="st">'https://raw.githubusercontent.com'</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="st">'/phpstats/datasets/main/csv'</span><span class="ot">;</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="va">$flights</span> <span class="op">=</span> scan_csv(<span class="st">"</span><span class="va">$data</span><span class="st">/flights.csv"</span><span class="ot">,</span> nullValues<span class="ot">:</span> <span class="st">'NA'</span>)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    -&gt;filter(</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>        col(<span class="st">'origin'</span>)-&gt;eq(<span class="st">'JFK'</span>)<span class="ot">,</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>        col(<span class="st">'month'</span>)-&gt;eq(<span class="dv">1</span>)<span class="ot">,</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>        col(<span class="st">'day'</span>)-&gt;eq(<span class="dv">1</span>)<span class="ot">,</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>    -&gt;select(<span class="st">'carrier'</span><span class="ot">,</span> <span class="st">'flight'</span><span class="ot">,</span> <span class="st">'dest'</span>)</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>    -&gt;collect()<span class="ot">;</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="va">$airports</span> <span class="op">=</span> read_csv(<span class="st">"</span><span class="va">$data</span><span class="st">/airports.csv"</span>)</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>    -&gt;select(<span class="st">'faa'</span><span class="ot">,</span> <span class="st">'name'</span>)<span class="ot">;</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a><span class="kw">echo</span> <span class="va">$flights</span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>    -&gt;<span class="fu">join</span>(<span class="va">$airports</span><span class="ot">,</span> leftOn<span class="ot">:</span> <span class="st">'dest'</span><span class="ot">,</span> rightOn<span class="ot">:</span> <span class="st">'faa'</span><span class="ot">,</span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>        how<span class="ot">:</span> <span class="st">'left'</span><span class="ot">,</span> maintainOrder<span class="ot">:</span> <span class="st">'left'</span>)</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>    -&gt;head(<span class="dv">4</span>)<span class="ot">,</span> <span class="st">"</span><span class="sc">\n</span><span class="st">"</span><span class="ot">;</span></span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a><span class="kw">echo</span> <span class="va">$flights</span></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>    -&gt;<span class="fu">join</span>(<span class="va">$airports</span><span class="ot">,</span> leftOn<span class="ot">:</span> <span class="st">'dest'</span><span class="ot">,</span> rightOn<span class="ot">:</span> <span class="st">'faa'</span><span class="ot">,</span></span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>        how<span class="ot">:</span> <span class="st">'anti'</span>)</span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>    -&gt;select(<span class="st">'dest'</span>)-&gt;unique()-&gt;<span class="fu">sort</span>(<span class="st">'dest'</span>)<span class="ot">,</span> <span class="st">"</span><span class="sc">\n</span><span class="st">"</span><span class="ot">;</span></span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a><span class="kw">echo</span> <span class="va">$flights</span></span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>    -&gt;<span class="fu">join</span>(<span class="va">$airports</span><span class="ot">,</span> leftOn<span class="ot">:</span> <span class="st">'dest'</span><span class="ot">,</span> rightOn<span class="ot">:</span> <span class="st">'faa'</span>)</span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>    -&gt;height()<span class="ot">,</span> <span class="st">" of "</span><span class="ot">,</span> <span class="va">$flights</span>-&gt;height()<span class="ot">,</span></span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>    <span class="st">" flights matched</span><span class="sc">\n</span><span class="st">"</span><span class="ot">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<pre class="text output"><code>shape: (4, 4)
+┌─────────┬────────┬──────┬─────────────────┐
+│ carrier ┆ flight ┆ dest ┆ name            │
+│ ---     ┆ ---    ┆ ---  ┆ ---             │
+│ str     ┆ i64    ┆ str  ┆ str             │
+╞═════════╪════════╪══════╪═════════════════╡
+│ AA      ┆ 1141   ┆ MIA  ┆ Miami Intl      │
+│ B6      ┆ 725    ┆ BQN  ┆ null            │
+│ B6      ┆ 79     ┆ MCO  ┆ Orlando Intl    │
+│ B6      ┆ 49     ┆ PBI  ┆ Palm Beach Intl │
+└─────────┴────────┴──────┴─────────────────┘
+shape: (4, 1)
+┌──────┐
+│ dest │
+│ ---  │
+│ str  │
+╞══════╡
+│ BQN  │
+│ PSE  │
+│ SJU  │
+│ STT  │
+└──────┘
+277 of 297 flights matched</code></pre>
 </section>
 <section id="iterating-over-groups" class="level2">
 <h2 class="anchored" data-anchor-id="iterating-over-groups">Iterating over groups</h2>
 <p>A <code>GroupBy</code> works with <code>foreach</code>, as py-polars’ does. The key is a list of the group’s key values, and the value is the group’s rows as a <code>DataFrame</code>:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode php code-with-copy"><code class="sourceCode php"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="cf">foreach</span> (<span class="va">$sales</span>-&gt;groupBy(<span class="st">'store'</span><span class="ot">,</span> maintainOrder<span class="ot">:</span> <span class="kw">true</span>) <span class="kw">as</span> <span class="va">$key</span> =&gt; <span class="va">$rows</span>) {</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode php code-with-copy"><code class="sourceCode php"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="cf">foreach</span> (<span class="va">$penguins</span>-&gt;groupBy(<span class="st">'species'</span><span class="ot">,</span> maintainOrder<span class="ot">:</span> <span class="kw">true</span>) <span class="kw">as</span> <span class="va">$key</span> =&gt; <span class="va">$rows</span>) {</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">echo</span> <span class="va">$key</span>[<span class="dv">0</span>]<span class="ot">,</span> <span class="st">': '</span><span class="ot">,</span> <span class="va">$rows</span>-&gt;height()<span class="ot">,</span> <span class="st">"</span><span class="sc">\n</span><span class="st">"</span><span class="ot">;</span></span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="time-series" class="level2">
 <h2 class="anchored" data-anchor-id="time-series">Time series</h2>
-<p><code>groupByDynamic()</code> groups rows into fixed time windows, and <code>rolling()</code> gives each row a window that ends at it. <code>joinAsof()</code> matches each row to the nearest earlier (or later, or nearest) row of another data frame, optionally within <code>by</code> groups and a <code>tolerance</code>. Durations are py-polars strings such as <code>'1d'</code>, <code>'2h30m'</code>, <code>'1w'</code>, and <code>'1mo'</code>. Expressions add the <code>rolling*By()</code> family and <code>ewmMean()</code>. The functions <code>date_range()</code> and <code>datetime_range()</code> build calendars.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode php code-with-copy"><code class="sourceCode php"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="va">$daily</span> <span class="op">=</span> read_csv(<span class="st">'sales.csv'</span><span class="ot">,</span> tryParseDates<span class="ot">:</span> <span class="kw">true</span>)</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    -&gt;groupBy(<span class="st">'date'</span>)-&gt;agg(col(<span class="st">'units'</span>)-&gt;sum())</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    -&gt;<span class="fu">sort</span>(<span class="st">'date'</span>)<span class="ot">;</span></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="co">// Weeks starting on Monday.</span></span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="kw">echo</span> <span class="va">$daily</span>-&gt;groupByDynamic(<span class="st">'date'</span><span class="ot">,</span> every<span class="ot">:</span> <span class="st">'1w'</span>)-&gt;agg(col(<span class="st">'units'</span>)-&gt;sum()-&gt;alias(<span class="st">'week_units'</span>))-&gt;head(<span class="dv">3</span>)<span class="ot">,</span> <span class="st">"</span><span class="sc">\n</span><span class="st">"</span><span class="ot">;</span></span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="co">// The seven days ending at each row.</span></span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="kw">echo</span> <span class="va">$daily</span>-&gt;withColumns(col(<span class="st">'units'</span>)-&gt;rollingSumBy(<span class="st">'date'</span><span class="ot">,</span> <span class="st">'7d'</span>)-&gt;alias(<span class="st">'last_7d'</span>))-&gt;head(<span class="dv">4</span>)<span class="ot">,</span> <span class="st">"</span><span class="sc">\n</span><span class="st">"</span><span class="ot">;</span></span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="co">// The list price in force on each day.</span></span>
-<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a><span class="va">$prices</span> <span class="op">=</span> (<span class="kw">new</span> DataFrame([<span class="st">'from'</span> =&gt; [<span class="kw">new</span> <span class="bu">DateTimeImmutable</span>(<span class="st">'2024-01-01'</span>)<span class="ot">,</span> <span class="kw">new</span> <span class="bu">DateTimeImmutable</span>(<span class="st">'2024-01-05'</span>)]<span class="ot">,</span> <span class="st">'list_price'</span> =&gt; [<span class="fl">5.0</span><span class="ot">,</span> <span class="fl">5.5</span>]]))</span>
-<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>    -&gt;cast([<span class="st">'from'</span> =&gt; <span class="st">'Date'</span>])<span class="ot">;</span></span>
-<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a><span class="kw">echo</span> <span class="va">$daily</span>-&gt;head(<span class="dv">4</span>)-&gt;joinAsof(<span class="va">$prices</span><span class="ot">,</span> leftOn<span class="ot">:</span> <span class="st">'date'</span><span class="ot">,</span> rightOn<span class="ot">:</span> <span class="st">'from'</span>)<span class="ot">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><code>groupByDynamic()</code> groups rows into fixed time windows, and <code>rolling()</code> gives each row a window that ends at it. <code>joinAsof()</code> matches each row to the nearest earlier (or later, or nearest) row of another data frame, optionally within <code>by</code> groups and a <code>tolerance</code>. Durations are py-polars strings such as <code>'1d'</code>, <code>'2h30m'</code>, <code>'1w'</code>, and <code>'1mo'</code>. Expressions add the <code>rolling*By()</code> family and <code>ewmMean()</code>. The functions <code>date_range()</code> and <code>datetime_range()</code> build calendars. The examples below use hourly weather at JFK in 2013 from the R <code>nycflights13</code> package (<a href="https://github.com/phpstats/datasets#weather">weather</a>), read by URL. <a href="../examples/time-series.html">Rolling windows and as-of joins</a> shows <code>joinAsof()</code>.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode php code-with-copy"><code class="sourceCode php"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="va">$data</span> <span class="op">=</span> <span class="st">'https://raw.githubusercontent.com'</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="st">'/phpstats/datasets/main/csv'</span><span class="ot">;</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="va">$jfk</span> <span class="op">=</span> read_csv(</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">"</span><span class="va">$data</span><span class="st">/weather.csv"</span><span class="ot">,</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    columns<span class="ot">:</span> [<span class="st">'origin'</span><span class="ot">,</span> <span class="st">'time_hour'</span><span class="ot">,</span> <span class="st">'temp'</span>]<span class="ot">,</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>    tryParseDates<span class="ot">:</span> <span class="kw">true</span><span class="ot">,</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>    -&gt;filter(col(<span class="st">'origin'</span>)-&gt;eq(<span class="st">'JFK'</span>))</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>    -&gt;select(<span class="st">'time_hour'</span><span class="ot">,</span> <span class="st">'temp'</span>)</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>    -&gt;<span class="fu">sort</span>(<span class="st">'time_hour'</span>)<span class="ot">;</span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a><span class="co">// Calendar days, in UTC.</span></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a><span class="kw">echo</span> <span class="va">$jfk</span>-&gt;groupByDynamic(<span class="st">'time_hour'</span><span class="ot">,</span> every<span class="ot">:</span> <span class="st">'1d'</span>)</span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>    -&gt;agg(col(<span class="st">'temp'</span>)-&gt;mean()-&gt;<span class="fu">round</span>(<span class="dv">1</span>)-&gt;alias(<span class="st">'mean_temp'</span>))</span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>    -&gt;head(<span class="dv">3</span>)<span class="ot">,</span> <span class="st">"</span><span class="sc">\n</span><span class="st">"</span><span class="ot">;</span></span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a><span class="co">// The 24 hours ending at each reading.</span></span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a><span class="kw">echo</span> <span class="va">$jfk</span>-&gt;withColumns(</span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>    col(<span class="st">'temp'</span>)-&gt;rollingMeanBy(<span class="st">'time_hour'</span><span class="ot">,</span> <span class="st">'24h'</span>)-&gt;<span class="fu">round</span>(<span class="dv">1</span>)</span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>        -&gt;alias(<span class="st">'last_24h'</span>)<span class="ot">,</span></span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>)-&gt;head(<span class="dv">4</span>)<span class="ot">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <pre class="text output"><code>shape: (3, 2)
-┌────────────┬────────────┐
-│ date       ┆ week_units │
-│ ---        ┆ ---        │
-│ date       ┆ i64        │
-╞════════════╪════════════╡
-│ 2024-01-01 ┆ 109        │
-│ 2024-01-08 ┆ 30         │
-│ 2024-01-15 ┆ 71         │
-└────────────┴────────────┘
+┌─────────────────────────┬───────────┐
+│ time_hour               ┆ mean_temp │
+│ ---                     ┆ ---       │
+│ datetime[μs, UTC]       ┆ f64       │
+╞═════════════════════════╪═══════════╡
+│ 2013-01-01 00:00:00 UTC ┆ 38.9      │
+│ 2013-01-02 00:00:00 UTC ┆ 28.5      │
+│ 2013-01-03 00:00:00 UTC ┆ 29.8      │
+└─────────────────────────┴───────────┘
 shape: (4, 3)
-┌────────────┬───────┬─────────┐
-│ date       ┆ units ┆ last_7d │
-│ ---        ┆ ---   ┆ ---     │
-│ date       ┆ i64   ┆ i64     │
-╞════════════╪═══════╪═════════╡
-│ 2024-01-01 ┆ 15    ┆ 15      │
-│ 2024-01-02 ┆ 23    ┆ 38      │
-│ 2024-01-03 ┆ 6     ┆ 44      │
-│ 2024-01-04 ┆ 19    ┆ 63      │
-└────────────┴───────┴─────────┘
-shape: (4, 4)
-┌────────────┬───────┬────────────┬────────────┐
-│ date       ┆ units ┆ from       ┆ list_price │
-│ ---        ┆ ---   ┆ ---        ┆ ---        │
-│ date       ┆ i64   ┆ date       ┆ f64        │
-╞════════════╪═══════╪════════════╪════════════╡
-│ 2024-01-01 ┆ 15    ┆ 2024-01-01 ┆ 5.0        │
-│ 2024-01-02 ┆ 23    ┆ 2024-01-01 ┆ 5.0        │
-│ 2024-01-03 ┆ 6     ┆ 2024-01-01 ┆ 5.0        │
-│ 2024-01-04 ┆ 19    ┆ 2024-01-01 ┆ 5.0        │
-└────────────┴───────┴────────────┴────────────┘</code></pre>
+┌─────────────────────────┬───────┬──────────┐
+│ time_hour               ┆ temp  ┆ last_24h │
+│ ---                     ┆ ---   ┆ ---      │
+│ datetime[μs, UTC]       ┆ f64   ┆ f64      │
+╞═════════════════════════╪═══════╪══════════╡
+│ 2013-01-01 06:00:00 UTC ┆ 39.02 ┆ 39.0     │
+│ 2013-01-01 07:00:00 UTC ┆ 39.02 ┆ 39.0     │
+│ 2013-01-01 08:00:00 UTC ┆ 39.92 ┆ 39.3     │
+│ 2013-01-01 09:00:00 UTC ┆ 39.92 ┆ 39.5     │
+└─────────────────────────┴───────┴──────────┘</code></pre>
 </section>
 <section id="reshaping" class="level2">
 <h2 class="anchored" data-anchor-id="reshaping">Reshaping</h2>

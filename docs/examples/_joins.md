@@ -1,34 +1,53 @@
 ```php
-$sales = read_csv('sales.csv')->select('id', 'store', 'units')->head(6);
-$stores = read_csv('stores.csv')->filter(col('store')->ne('S2'));
+$data = 'https://raw.githubusercontent.com'
+    .'/phpstats/datasets/main/csv';
+$flights = scan_csv("$data/flights.csv", nullValues: 'NA')
+    ->filter(
+        col('origin')->eq('JFK'),
+        col('month')->eq(1),
+        col('day')->eq(1),
+    )
+    ->select('carrier', 'flight', 'dest')
+    ->collect();
+$airports = read_csv("$data/airports.csv")
+    ->select('faa', 'name');
 
-echo $sales->join($stores, on: 'store', how: 'left', maintainOrder: 'left'), "\n";
-echo $sales->join($stores, on: 'store', how: 'anti'), "\n";
-echo $stores->rename(['store' => 'shop'])->join($sales, leftOn: 'shop', rightOn: 'store', how: 'inner')->height(), " matched rows\n";
+echo $flights
+    ->join($airports, leftOn: 'dest', rightOn: 'faa',
+        how: 'left', maintainOrder: 'left')
+    ->head(4), "\n";
+echo $flights
+    ->join($airports, leftOn: 'dest', rightOn: 'faa',
+        how: 'anti')
+    ->select('dest')->unique()->sort('dest'), "\n";
+echo $flights
+    ->join($airports, leftOn: 'dest', rightOn: 'faa')
+    ->height(), " of ", $flights->height(),
+    " flights matched\n";
 ```
 
 ```{.text .output}
-shape: (6, 5)
-┌─────┬───────┬───────┬──────────┬────────┐
-│ id  ┆ store ┆ units ┆ city     ┆ region │
-│ --- ┆ ---   ┆ ---   ┆ ---      ┆ ---    │
-│ i64 ┆ str   ┆ i64   ┆ str      ┆ str    │
-╞═════╪═══════╪═══════╪══════════╪════════╡
-│ 1   ┆ S4    ┆ 10    ┆ Portland ┆ West   │
-│ 2   ┆ S4    ┆ 0     ┆ Portland ┆ West   │
-│ 3   ┆ S2    ┆ 2     ┆ null     ┆ null   │
-│ 4   ┆ S3    ┆ 12    ┆ Atlanta  ┆ East   │
-│ 5   ┆ S4    ┆ 1     ┆ Portland ┆ West   │
-│ 6   ┆ S2    ┆ 6     ┆ null     ┆ null   │
-└─────┴───────┴───────┴──────────┴────────┘
-shape: (2, 3)
-┌─────┬───────┬───────┐
-│ id  ┆ store ┆ units │
-│ --- ┆ ---   ┆ ---   │
-│ i64 ┆ str   ┆ i64   │
-╞═════╪═══════╪═══════╡
-│ 3   ┆ S2    ┆ 2     │
-│ 6   ┆ S2    ┆ 6     │
-└─────┴───────┴───────┘
-4 matched rows
+shape: (4, 4)
+┌─────────┬────────┬──────┬─────────────────┐
+│ carrier ┆ flight ┆ dest ┆ name            │
+│ ---     ┆ ---    ┆ ---  ┆ ---             │
+│ str     ┆ i64    ┆ str  ┆ str             │
+╞═════════╪════════╪══════╪═════════════════╡
+│ AA      ┆ 1141   ┆ MIA  ┆ Miami Intl      │
+│ B6      ┆ 725    ┆ BQN  ┆ null            │
+│ B6      ┆ 79     ┆ MCO  ┆ Orlando Intl    │
+│ B6      ┆ 49     ┆ PBI  ┆ Palm Beach Intl │
+└─────────┴────────┴──────┴─────────────────┘
+shape: (4, 1)
+┌──────┐
+│ dest │
+│ ---  │
+│ str  │
+╞══════╡
+│ BQN  │
+│ PSE  │
+│ SJU  │
+│ STT  │
+└──────┘
+277 of 297 flights matched
 ```

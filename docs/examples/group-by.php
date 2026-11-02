@@ -1,15 +1,21 @@
 <?php
-$sales = read_csv('sales.csv');
+$penguins = read_csv('penguins.csv', nullValues: 'NA');
 
-echo $sales->groupBy(['store', 'product'], maintainOrder: true)
+echo $penguins
+    ->groupBy(['species', 'island'], maintainOrder: true)
     ->agg(
         len()->alias('rows'),
-        col('units')->sum(),
-        col('units')->nullCount()->alias('missing_units'),
-        col('price')->max()->alias('top_price'),
+        col('body_mass_g')->mean()->round()
+            ->alias('mass_g'),
+        col('sex')->nullCount()->alias('missing_sex'),
+        col('flipper_length_mm')->max()
+            ->alias('max_flipper'),
     )
-    ->sort(['store', 'product'])
-    ->head(6), "\n";
+    ->sort(['species', 'island']), "\n";
 
 // Shorthands aggregate every non-key column.
-echo $sales->select('store', 'units', 'price')->groupBy('store')->mean()->sort('store');
+echo $penguins
+    ->select('species', 'bill_length_mm', 'body_mass_g')
+    ->groupBy('species')
+    ->mean()
+    ->sort('species');

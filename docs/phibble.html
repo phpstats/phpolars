@@ -386,23 +386,23 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode php code-with-copy"><code class="sourceCode php"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">use</span> Phibble\Polars\PolarsTable<span class="ot">;</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="kw">use</span> <span class="kw">function</span> Phplyr\{col<span class="ot">,</span> filter<span class="ot">,</span> group_by<span class="ot">,</span> mean<span class="ot">,</span> n<span class="ot">,</span> summarize}<span class="ot">;</span></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="va">$table</span> <span class="op">=</span> PolarsTable::fromPolars(Phpolars\read_csv(<span class="st">'sales.csv'</span>))<span class="ot">;</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="va">$table</span> <span class="op">=</span> PolarsTable::fromPolars(Phpolars\read_csv(<span class="st">'penguins.csv'</span><span class="ot">,</span> nullValues<span class="ot">:</span> <span class="st">'NA'</span>))<span class="ot">;</span></span>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="va">$out</span> <span class="op">=</span> <span class="va">$table</span> <span class="op">|&gt;</span></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    group_by(<span class="st">'store'</span>) <span class="op">|&gt;</span></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    filter(col(<span class="st">'units'</span>)-&gt;gt(mean(<span class="st">'units'</span><span class="ot">,</span> naRm<span class="ot">:</span> <span class="kw">true</span>))) <span class="op">|&gt;</span></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    summarize(orders<span class="ot">:</span> n()<span class="ot">,</span> avg_units<span class="ot">:</span> mean(<span class="st">'units'</span>))<span class="ot">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    group_by(<span class="st">'species'</span>) <span class="op">|&gt;</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    filter(col(<span class="st">'body_mass_g'</span>)-&gt;gt(mean(<span class="st">'body_mass_g'</span><span class="ot">,</span> naRm<span class="ot">:</span> <span class="kw">true</span>))) <span class="op">|&gt;</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    summarize(penguins<span class="ot">:</span> n()<span class="ot">,</span> mass_g<span class="ot">:</span> mean(<span class="st">'body_mass_g'</span>))<span class="ot">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode php code-with-copy"><code class="sourceCode php"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">use</span> Phibble\Polars\PolarsTable<span class="ot">;</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="kw">use</span> <span class="kw">function</span> Phplyr\{col<span class="ot">,</span> mean<span class="ot">,</span> n<span class="ot">,</span> phplyr}<span class="ot">;</span></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="va">$table</span> <span class="op">=</span> PolarsTable::fromPolars(Phpolars\read_csv(<span class="st">'sales.csv'</span>))<span class="ot">;</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="va">$table</span> <span class="op">=</span> PolarsTable::fromPolars(Phpolars\read_csv(<span class="st">'penguins.csv'</span><span class="ot">,</span> nullValues<span class="ot">:</span> <span class="st">'NA'</span>))<span class="ot">;</span></span>
 <span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="va">$out</span> <span class="op">=</span> phplyr(<span class="va">$table</span>)</span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    -&gt;groupBy(<span class="st">'store'</span>)</span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    -&gt;filter(col(<span class="st">'units'</span>)-&gt;gt(mean(<span class="st">'units'</span><span class="ot">,</span> naRm<span class="ot">:</span> <span class="kw">true</span>)))</span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>    -&gt;summarize(orders<span class="ot">:</span> n()<span class="ot">,</span> avg_units<span class="ot">:</span> mean(<span class="st">'units'</span>))</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    -&gt;groupBy(<span class="st">'species'</span>)</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    -&gt;filter(col(<span class="st">'body_mass_g'</span>)-&gt;gt(mean(<span class="st">'body_mass_g'</span><span class="ot">,</span> naRm<span class="ot">:</span> <span class="kw">true</span>)))</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>    -&gt;summarize(penguins<span class="ot">:</span> n()<span class="ot">,</span> mass_g<span class="ot">:</span> mean(<span class="st">'body_mass_g'</span>))</span>
 <span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>    -&gt;get()<span class="ot">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>

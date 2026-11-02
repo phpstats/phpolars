@@ -1,26 +1,32 @@
 ```php
-$sales = read_csv('sales.csv', tryParseDates: true);
+$penguins = read_csv('penguins.csv', nullValues: 'NA');
 
-$top = $sales
-    ->filter(col('units')->gt(0))
-    ->withColumns(col('units')->mul(col('price'))->alias('revenue'))
-    ->groupBy('product', maintainOrder: true)
-    ->agg(col('revenue')->sum()->round(2), ['orders' => len()], col('price')->mean()->round(2)->alias('avg_price'))
-    ->sort('revenue', descending: true);
+$bySpecies = $penguins
+    ->filter(col('body_mass_g')->isNotNull())
+    ->withColumns(
+        col('body_mass_g')->truediv(1000)->alias('mass_kg'),
+    )
+    ->groupBy('species', maintainOrder: true)
+    ->agg(
+        ['penguins' => len()],
+        col('mass_kg')->mean()->round(2),
+        col('flipper_length_mm')->mean()->round(1)
+            ->alias('flipper_mm'),
+    )
+    ->sort('mass_kg', descending: true);
 
-echo $top;
+echo $bySpecies;
 ```
 
 ```{.text .output}
-shape: (4, 4)
-┌─────────┬─────────┬────────┬───────────┐
-│ product ┆ revenue ┆ orders ┆ avg_price │
-│ ---     ┆ ---     ┆ ---    ┆ ---       │
-│ str     ┆ f64     ┆ u32    ┆ f64       │
-╞═════════╪═════════╪════════╪═══════════╡
-│ cherry  ┆ 1307.38 ┆ 44     ┆ 4.09      │
-│ banana  ┆ 1285.76 ┆ 48     ┆ 4.35      │
-│ apple   ┆ 1227.68 ┆ 42     ┆ 4.38      │
-│ date    ┆ 1153.58 ┆ 41     ┆ 4.46      │
-└─────────┴─────────┴────────┴───────────┘
+shape: (3, 4)
+┌───────────┬──────────┬─────────┬────────────┐
+│ species   ┆ penguins ┆ mass_kg ┆ flipper_mm │
+│ ---       ┆ ---      ┆ ---     ┆ ---        │
+│ str       ┆ u32      ┆ f64     ┆ f64        │
+╞═══════════╪══════════╪═════════╪════════════╡
+│ Gentoo    ┆ 123      ┆ 5.08    ┆ 217.2      │
+│ Chinstrap ┆ 68       ┆ 3.73    ┆ 195.8      │
+│ Adelie    ┆ 151      ┆ 3.7     ┆ 190.0      │
+└───────────┴──────────┴─────────┴────────────┘
 ```

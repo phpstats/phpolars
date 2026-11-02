@@ -342,30 +342,36 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 <p>Query and transform data with <a href="https://pola.rs">Polars</a> from PHP. Use eager data frames, or build lazy queries with expressions.</p>
-<p>The Composer package is <code>phpstats/phpolars</code>. PIE installs it as the <code>php_polars</code> extension, which is the name that <code>extension=</code> and <code>phpversion()</code> use. Polars runs inside the PHP process: expressions such as <code>col('units')-&gt;mul(col('price'))</code> run on Polars’ own threads, and PHP values are created only when code asks for them, for example with <code>toDicts()</code>.</p>
+<p>The Composer package is <code>phpstats/phpolars</code>. PIE installs it as the <code>php_polars</code> extension, which is the name that <code>extension=</code> and <code>phpversion()</code> use. Polars runs inside the PHP process: expressions such as <code>col('body_mass_g')-&gt;truediv(1000)</code> run on Polars’ own threads, and PHP values are created only when code asks for them, for example with <code>toDicts()</code>.</p>
 <p>The API follows py-polars, Polars’ Python package, with camelCase method names and snake_case functions. <a href="./compatibility.html">Compatibility and limitations</a> covers the differences and how agreement with py-polars is tested.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode php code-with-copy"><code class="sourceCode php"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="va">$sales</span> <span class="op">=</span> read_csv(<span class="st">'sales.csv'</span><span class="ot">,</span> tryParseDates<span class="ot">:</span> <span class="kw">true</span>)<span class="ot">;</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode php code-with-copy"><code class="sourceCode php"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="va">$penguins</span> <span class="op">=</span> read_csv(<span class="st">'penguins.csv'</span><span class="ot">,</span> nullValues<span class="ot">:</span> <span class="st">'NA'</span>)<span class="ot">;</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="va">$top</span> <span class="op">=</span> <span class="va">$sales</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    -&gt;filter(col(<span class="st">'units'</span>)-&gt;gt(<span class="dv">0</span>))</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    -&gt;withColumns(col(<span class="st">'units'</span>)-&gt;mul(col(<span class="st">'price'</span>))-&gt;alias(<span class="st">'revenue'</span>))</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    -&gt;groupBy(<span class="st">'product'</span><span class="ot">,</span> maintainOrder<span class="ot">:</span> <span class="kw">true</span>)</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    -&gt;agg(col(<span class="st">'revenue'</span>)-&gt;sum()-&gt;<span class="fu">round</span>(<span class="dv">2</span>)<span class="ot">,</span> [<span class="st">'orders'</span> =&gt; len()]<span class="ot">,</span> col(<span class="st">'price'</span>)-&gt;mean()-&gt;<span class="fu">round</span>(<span class="dv">2</span>)-&gt;alias(<span class="st">'avg_price'</span>))</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    -&gt;<span class="fu">sort</span>(<span class="st">'revenue'</span><span class="ot">,</span> descending<span class="ot">:</span> <span class="kw">true</span>)<span class="ot">;</span></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="kw">echo</span> <span class="va">$top</span><span class="ot">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<pre class="text output"><code>shape: (4, 4)
-┌─────────┬─────────┬────────┬───────────┐
-│ product ┆ revenue ┆ orders ┆ avg_price │
-│ ---     ┆ ---     ┆ ---    ┆ ---       │
-│ str     ┆ f64     ┆ u32    ┆ f64       │
-╞═════════╪═════════╪════════╪═══════════╡
-│ cherry  ┆ 1307.38 ┆ 44     ┆ 4.09      │
-│ banana  ┆ 1285.76 ┆ 48     ┆ 4.35      │
-│ apple   ┆ 1227.68 ┆ 42     ┆ 4.38      │
-│ date    ┆ 1153.58 ┆ 41     ┆ 4.46      │
-└─────────┴─────────┴────────┴───────────┘</code></pre>
-<p>The example reads <code>sales.csv</code>, the docs’ example data. <a href="./getting-started.html#a-starter-script">Getting started</a> has a complete script and the command that downloads the data.</p>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="va">$bySpecies</span> <span class="op">=</span> <span class="va">$penguins</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    -&gt;filter(col(<span class="st">'body_mass_g'</span>)-&gt;isNotNull())</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    -&gt;withColumns(</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>        col(<span class="st">'body_mass_g'</span>)-&gt;truediv(<span class="dv">1000</span>)-&gt;alias(<span class="st">'mass_kg'</span>)<span class="ot">,</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    -&gt;groupBy(<span class="st">'species'</span><span class="ot">,</span> maintainOrder<span class="ot">:</span> <span class="kw">true</span>)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    -&gt;agg(</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>        [<span class="st">'penguins'</span> =&gt; len()]<span class="ot">,</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>        col(<span class="st">'mass_kg'</span>)-&gt;mean()-&gt;<span class="fu">round</span>(<span class="dv">2</span>)<span class="ot">,</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>        col(<span class="st">'flipper_length_mm'</span>)-&gt;mean()-&gt;<span class="fu">round</span>(<span class="dv">1</span>)</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>            -&gt;alias(<span class="st">'flipper_mm'</span>)<span class="ot">,</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>    -&gt;<span class="fu">sort</span>(<span class="st">'mass_kg'</span><span class="ot">,</span> descending<span class="ot">:</span> <span class="kw">true</span>)<span class="ot">;</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="kw">echo</span> <span class="va">$bySpecies</span><span class="ot">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<pre class="text output"><code>shape: (3, 4)
+┌───────────┬──────────┬─────────┬────────────┐
+│ species   ┆ penguins ┆ mass_kg ┆ flipper_mm │
+│ ---       ┆ ---      ┆ ---     ┆ ---        │
+│ str       ┆ u32      ┆ f64     ┆ f64        │
+╞═══════════╪══════════╪═════════╪════════════╡
+│ Gentoo    ┆ 123      ┆ 5.08    ┆ 217.2      │
+│ Chinstrap ┆ 68       ┆ 3.73    ┆ 195.8      │
+│ Adelie    ┆ 151      ┆ 3.7     ┆ 190.0      │
+└───────────┴──────────┴─────────┴────────────┘</code></pre>
+<p>The example reads <code>penguins.csv</code>, body measurements of 344 penguins from the R <code>palmerpenguins</code> package (<a href="https://github.com/phpstats/datasets#penguins">penguins</a>). <a href="./getting-started.html#a-starter-script">Getting started</a> has a complete script and the command that downloads the data.</p>
 <section id="what-it-includes" class="level2">
 <h2 class="anchored" data-anchor-id="what-it-includes">What it includes</h2>
 <ul>

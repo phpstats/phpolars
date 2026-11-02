@@ -1,9 +1,10 @@
 <?php
-$sales = read_csv('sales.csv');
+$penguins = read_csv('penguins.csv', nullValues: 'NA');
 
-// Several predicates are combined with and; null counts as false.
-echo $sales->filter(
-    col('product')->isIn(['apple', 'cherry']),
-    col('units')->isBetween(5, 8),
-    col('store')->ne('S1'),
-)->head(5);
+// The predicates combine with and; null counts as false.
+echo $penguins->filter(
+    col('species')->isIn(['Adelie', 'Chinstrap']),
+    col('flipper_length_mm')->isBetween(195, 200),
+    col('island')->ne('Torgersen'),
+)->select('species', 'island', 'flipper_length_mm', 'sex')
+    ->head(5);

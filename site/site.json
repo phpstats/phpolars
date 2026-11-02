@@ -33,9 +33,9 @@
   "installation": "deployment",
   "repository": "https://github.com/phpstats/phpolars",
   "example": {
-    "chain": "use function Phpolars\\{col, len, read_csv};\n\n$sales = read_csv('sales.csv', tryParseDates: true);\n\n$top = $sales\n    ->filter(col('units')->gt(0))\n    ->withColumns(col('units')->mul(col('price'))->alias('revenue'))\n    ->groupBy('product', maintainOrder: true)\n    ->agg(col('revenue')->sum()->round(2), ['orders' => len()], col('price')->mean()->round(2)->alias('avg_price'))\n    ->sort('revenue', descending: true);\n\necho $top;\n",
+    "chain": "use function Phpolars\\{col, len, read_csv};\n\n$penguins = read_csv('penguins.csv', nullValues: 'NA');\n\n$bySpecies = $penguins\n    ->filter(col('body_mass_g')->isNotNull())\n    ->withColumns(\n        col('body_mass_g')->truediv(1000)->alias('mass_kg'),\n    )\n    ->groupBy('species', maintainOrder: true)\n    ->agg(\n        ['penguins' => len()],\n        col('mass_kg')->mean()->round(2),\n        col('flipper_length_mm')->mean()->round(1)\n            ->alias('flipper_mm'),\n    )\n    ->sort('mass_kg', descending: true);\n\necho $bySpecies;\n",
     "pipe": null,
-    "output": "shape: (4, 4)\n┌─────────┬─────────┬────────┬───────────┐\n│ product ┆ revenue ┆ orders ┆ avg_price │\n│ ---     ┆ ---     ┆ ---    ┆ ---       │\n│ str     ┆ f64     ┆ u32    ┆ f64       │\n╞═════════╪═════════╪════════╪═══════════╡\n│ cherry  ┆ 1307.38 ┆ 44     ┆ 4.09      │\n│ banana  ┆ 1285.76 ┆ 48     ┆ 4.35      │\n│ apple   ┆ 1227.68 ┆ 42     ┆ 4.38      │\n│ date    ┆ 1153.58 ┆ 41     ┆ 4.46      │\n└─────────┴─────────┴────────┴───────────┘\n"
+    "output": "shape: (3, 4)\n┌───────────┬──────────┬─────────┬────────────┐\n│ species   ┆ penguins ┆ mass_kg ┆ flipper_mm │\n│ ---       ┆ ---      ┆ ---     ┆ ---        │\n│ str       ┆ u32      ┆ f64     ┆ f64        │\n╞═══════════╪══════════╪═════════╪════════════╡\n│ Gentoo    ┆ 123      ┆ 5.08    ┆ 217.2      │\n│ Chinstrap ┆ 68       ┆ 3.73    ┆ 195.8      │\n│ Adelie    ┆ 151      ┆ 3.7     ┆ 190.0      │\n└───────────┴──────────┴─────────┴────────────┘\n"
   },
   "docs": {
     "root": "docs",

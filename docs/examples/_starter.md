@@ -1,35 +1,39 @@
 ```php
 use function Phpolars\{col, len, read_csv};
 
-$sales = read_csv('sales.csv', tryParseDates: true);
+$penguins = read_csv('penguins.csv', nullValues: 'NA');
 
-$byProduct = $sales
-    ->filter(col('units')->gt(0))
-    ->withColumns(col('units')->mul(col('price'))->alias('revenue'))
-    ->groupBy('product', maintainOrder: true)
-    ->agg(col('revenue')->sum()->round(2), ['orders' => len()])
-    ->sort('revenue', descending: true);
+$bySpecies = $penguins
+    ->filter(col('body_mass_g')->isNotNull())
+    ->withColumns(
+        col('body_mass_g')->truediv(1000)->alias('mass_kg'),
+    )
+    ->groupBy('species', maintainOrder: true)
+    ->agg(
+        ['penguins' => len()],
+        col('mass_kg')->mean()->round(2),
+    )
+    ->sort('mass_kg', descending: true);
 
-echo $byProduct, "\n";
-print_r($byProduct->row(0, named: true));
+echo $bySpecies, "\n";
+print_r($bySpecies->row(0, named: true));
 ```
 
 ```{.text .output}
-shape: (4, 3)
-┌─────────┬─────────┬────────┐
-│ product ┆ revenue ┆ orders │
-│ ---     ┆ ---     ┆ ---    │
-│ str     ┆ f64     ┆ u32    │
-╞═════════╪═════════╪════════╡
-│ cherry  ┆ 1307.38 ┆ 44     │
-│ banana  ┆ 1285.76 ┆ 48     │
-│ apple   ┆ 1227.68 ┆ 42     │
-│ date    ┆ 1153.58 ┆ 41     │
-└─────────┴─────────┴────────┘
+shape: (3, 3)
+┌───────────┬──────────┬─────────┐
+│ species   ┆ penguins ┆ mass_kg │
+│ ---       ┆ ---      ┆ ---     │
+│ str       ┆ u32      ┆ f64     │
+╞═══════════╪══════════╪═════════╡
+│ Gentoo    ┆ 123      ┆ 5.08    │
+│ Chinstrap ┆ 68       ┆ 3.73    │
+│ Adelie    ┆ 151      ┆ 3.7     │
+└───────────┴──────────┴─────────┘
 Array
 (
-    [product] => cherry
-    [revenue] => 1307.38
-    [orders] => 44
+    [species] => Gentoo
+    [penguins] => 123
+    [mass_kg] => 5.08
 )
 ```

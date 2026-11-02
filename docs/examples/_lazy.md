@@ -1,33 +1,33 @@
 ```php
-$query = scan_csv('sales.csv')
-    ->filter(col('units')->gt(5))
-    ->groupBy('store')
-    ->agg(col('units')->sum())
-    ->sort('store');
+$query = scan_csv('penguins.csv', nullValues: 'NA')
+    ->filter(col('body_mass_g')->gt(4500))
+    ->groupBy('species')
+    ->agg(len()->alias('penguins'))
+    ->sort('species');
 
 echo $query->explain(), "\n\n";
 echo $query->collect();
 ```
 
 ```{.text .output}
-SORT BY [col("store")]
+SORT BY [col("species")]
   AGGREGATE[maintain_order: false]
-    [col("units").sum()] BY [col("store")]
+    [len().alias("penguins")] BY [col("species")]
     FROM
-    Csv SCAN [sales.csv]
-    PROJECT 2/6 COLUMNS
-    SELECTION: col("units") > 5
-    ESTIMATED ROWS: 201
+    simple π 1/1 ["species"]
+      Csv SCAN [penguins.csv]
+      PROJECT 2/9 COLUMNS
+      SELECTION: col("body_mass_g") > 4500
+      ESTIMATED ROWS: 343
 
-shape: (4, 2)
-┌───────┬───────┐
-│ store ┆ units │
-│ ---   ┆ ---   │
-│ str   ┆ i64   │
-╞═══════╪═══════╡
-│ S1    ┆ 335   │
-│ S2    ┆ 199   │
-│ S3    ┆ 230   │
-│ S4    ┆ 136   │
-└───────┴───────┘
+shape: (3, 2)
+┌───────────┬──────────┐
+│ species   ┆ penguins │
+│ ---       ┆ ---      │
+│ str       ┆ u32      │
+╞═══════════╪══════════╡
+│ Adelie    ┆ 7        │
+│ Chinstrap ┆ 2        │
+│ Gentoo    ┆ 106      │
+└───────────┴──────────┘
 ```
