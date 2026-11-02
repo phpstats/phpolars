@@ -2,14 +2,17 @@
 title: "Aggregate with expressions"
 ---
 
-Summarize each group of a DataFrame with several expressions in one `agg()` call.
+Summarize each penguin species with several expressions in one `agg()` call.
+
+The data are body measurements of 344 penguins near Palmer Station, Antarctica, from the R `palmerpenguins` package ([penguins](https://github.com/phpstats/datasets#penguins)), read by URL.
 
 Requires the phpolars extension ([Getting started](../getting-started.qmd)). Runnable script: [expressions.php](https://raw.githubusercontent.com/phpstats/phpolars/main/docs/examples/expressions.php).
 
 {{< include _expressions.md >}}
 
-- `filter()` inside an aggregate limits only that aggregate. `kept` leaves out returned orders, and `orders` and `total` still count them.
-- `sortBy('amount', ...)->first()` picks a value by another column's order. `top` is the customer with the group's largest order.
+- `nullValues: 'NA'` reads the file's `NA` entries as nulls. `mean()` skips them, so `mass_g` averages the penguins with a recorded body mass.
+- `filter()` inside an aggregate limits only that aggregate. `female_g` averages female penguins, and `penguins` still counts every penguin of the species.
+- `sortBy('body_mass_g', ...)->first()` picks a value by another column's order. `heaviest_on` is the island of the species' heaviest penguin. `nullsLast: true` keeps penguins without a body mass out of first place.
 - Without `maintainOrder: true`, the order of the groups can change between runs.
 
 Reference: [groupBy()](../reference/dataframe.qmd#dataframe-groupBy) · [agg()](../reference/dataframe.qmd#groupby-agg) · [Expressions](../reference/expressions.qmd)

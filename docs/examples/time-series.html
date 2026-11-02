@@ -333,54 +333,71 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<p>Give each day of sales the price in force on that date and a mean of units over the last three calendar days, on dates with gaps.</p>
+<p>Give each departure from JFK the latest temperature reading at or before its scheduled time, with a mean of the readings over the previous three hours.</p>
+<p>The data are hourly weather and all departures at New York City airports in 2013, from the R <code>nycflights13</code> package (<a href="https://github.com/phpstats/datasets#weather">weather</a> and <a href="https://github.com/phpstats/datasets#flights">flights</a>), read by URL. Temperatures are in degrees Fahrenheit.</p>
 <p>Requires the phpolars extension (<a href="../getting-started.html">Getting started</a>). Runnable script: <a href="https://raw.githubusercontent.com/phpstats/phpolars/main/docs/examples/time-series.php">time-series.php</a>.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode php code-with-copy"><code class="sourceCode php"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">use</span> Phpolars\DataFrame<span class="ot">;</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="kw">use</span> <span class="kw">function</span> Phpolars\col<span class="ot">;</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co">// Daily unit sales, with no rows for March 3 and 7.</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="va">$sales</span> <span class="op">=</span> (<span class="kw">new</span> DataFrame([</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">'date'</span> =&gt; [</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>        <span class="st">'2024-03-01'</span><span class="ot">,</span> <span class="st">'2024-03-02'</span><span class="ot">,</span> <span class="st">'2024-03-04'</span><span class="ot">,</span></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>        <span class="st">'2024-03-05'</span><span class="ot">,</span> <span class="st">'2024-03-06'</span><span class="ot">,</span> <span class="st">'2024-03-08'</span><span class="ot">,</span></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    ]<span class="ot">,</span></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    <span class="st">'units'</span> =&gt; [<span class="dv">12</span><span class="ot">,</span> <span class="dv">15</span><span class="ot">,</span> <span class="dv">9</span><span class="ot">,</span> <span class="dv">20</span><span class="ot">,</span> <span class="dv">14</span><span class="ot">,</span> <span class="dv">18</span>]<span class="ot">,</span></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>]))-&gt;withColumns(col(<span class="st">'date'</span>)-&gt;str()-&gt;toDate())<span class="ot">;</span></span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="co">// List prices, each in force until the next change.</span></span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="va">$prices</span> <span class="op">=</span> (<span class="kw">new</span> DataFrame([</span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>    <span class="st">'from'</span> =&gt; [<span class="st">'2024-03-01'</span><span class="ot">,</span> <span class="st">'2024-03-05'</span>]<span class="ot">,</span></span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>    <span class="st">'price'</span> =&gt; [<span class="fl">4.50</span><span class="ot">,</span> <span class="fl">4.95</span>]<span class="ot">,</span></span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>]))-&gt;withColumns(col(<span class="st">'from'</span>)-&gt;str()-&gt;toDate())<span class="ot">;</span></span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="va">$priced</span> <span class="op">=</span> <span class="va">$sales</span></span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>    -&gt;joinAsof(<span class="va">$prices</span><span class="ot">,</span> leftOn<span class="ot">:</span> <span class="st">'date'</span><span class="ot">,</span> rightOn<span class="ot">:</span> <span class="st">'from'</span>)</span>
-<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>    -&gt;withColumns(</span>
-<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>        col(<span class="st">'units'</span>)-&gt;rollingMeanBy(<span class="st">'date'</span><span class="ot">,</span> <span class="st">'3d'</span>)</span>
-<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>            -&gt;<span class="fu">round</span>(<span class="dv">2</span>)</span>
-<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>            -&gt;alias(<span class="st">'units_3d'</span>)<span class="ot">,</span></span>
-<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>    )<span class="ot">;</span></span>
-<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a><span class="kw">echo</span> <span class="va">$priced</span><span class="ot">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<pre class="text output"><code>shape: (6, 5)
-┌────────────┬───────┬────────────┬───────┬──────────┐
-│ date       ┆ units ┆ from       ┆ price ┆ units_3d │
-│ ---        ┆ ---   ┆ ---        ┆ ---   ┆ ---      │
-│ date       ┆ i64   ┆ date       ┆ f64   ┆ f64      │
-╞════════════╪═══════╪════════════╪═══════╪══════════╡
-│ 2024-03-01 ┆ 12    ┆ 2024-03-01 ┆ 4.5   ┆ 12.0     │
-│ 2024-03-02 ┆ 15    ┆ 2024-03-01 ┆ 4.5   ┆ 13.5     │
-│ 2024-03-04 ┆ 9     ┆ 2024-03-01 ┆ 4.5   ┆ 12.0     │
-│ 2024-03-05 ┆ 20    ┆ 2024-03-05 ┆ 4.95  ┆ 14.5     │
-│ 2024-03-06 ┆ 14    ┆ 2024-03-05 ┆ 4.95  ┆ 14.33    │
-│ 2024-03-08 ┆ 18    ┆ 2024-03-05 ┆ 4.95  ┆ 16.0     │
-└────────────┴───────┴────────────┴───────┴──────────┘</code></pre>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode php code-with-copy"><code class="sourceCode php"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">use</span> <span class="kw">function</span> Phpolars\{col<span class="ot">,</span> <span class="bu">datetime</span><span class="ot">,</span> read_csv<span class="ot">,</span> scan_csv}<span class="ot">;</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="va">$data</span> <span class="op">=</span> <span class="st">'https://raw.githubusercontent.com'</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="st">'/phpstats/datasets/main/csv'</span><span class="ot">;</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="va">$jfkJan1</span> <span class="op">=</span> [</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    col(<span class="st">'origin'</span>)-&gt;eq(<span class="st">'JFK'</span>)<span class="ot">,</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    col(<span class="st">'month'</span>)-&gt;eq(<span class="dv">1</span>)<span class="ot">,</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    col(<span class="st">'day'</span>)-&gt;eq(<span class="dv">1</span>)<span class="ot">,</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>]<span class="ot">;</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="va">$at</span> <span class="op">=</span> <span class="kw">fn</span> (<span class="dt">string</span> ...<span class="va">$parts</span>) =&gt; <span class="bu">datetime</span>(</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    ...<span class="fu">array_map</span>(<span class="kw">fn</span> (<span class="va">$p</span>) =&gt; col(<span class="va">$p</span>)<span class="ot">,</span> <span class="va">$parts</span>)<span class="ot">,</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>)<span class="ot">;</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="co">// Hourly temperature at JFK, with a 3-hour rolling mean.</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="va">$weather</span> <span class="op">=</span> read_csv(<span class="st">"</span><span class="va">$data</span><span class="st">/weather.csv"</span><span class="ot">,</span> columns<span class="ot">:</span> [</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>    <span class="st">'origin'</span><span class="ot">,</span> <span class="st">'year'</span><span class="ot">,</span> <span class="st">'month'</span><span class="ot">,</span> <span class="st">'day'</span><span class="ot">,</span> <span class="st">'hour'</span><span class="ot">,</span> <span class="st">'temp'</span><span class="ot">,</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>])</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>    -&gt;filter(...<span class="va">$jfkJan1</span>)</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>    -&gt;select(<span class="va">$at</span>(<span class="st">'year'</span><span class="ot">,</span> <span class="st">'month'</span><span class="ot">,</span> <span class="st">'day'</span><span class="ot">,</span> <span class="st">'hour'</span>)</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>        -&gt;alias(<span class="st">'time'</span>)<span class="ot">,</span> <span class="st">'temp'</span>)</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>    -&gt;<span class="fu">sort</span>(<span class="st">'time'</span>)</span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>    -&gt;withColumns(</span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>        col(<span class="st">'temp'</span>)-&gt;rollingMeanBy(<span class="st">'time'</span><span class="ot">,</span> <span class="st">'3h'</span>)</span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>            -&gt;<span class="fu">round</span>(<span class="dv">1</span>)</span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>            -&gt;alias(<span class="st">'temp_3h'</span>)<span class="ot">,</span></span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>    )<span class="ot">;</span></span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a><span class="co">// Departures scheduled from 12:55 to 13:10.</span></span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a><span class="va">$flights</span> <span class="op">=</span> scan_csv(<span class="st">"</span><span class="va">$data</span><span class="st">/flights.csv"</span><span class="ot">,</span> nullValues<span class="ot">:</span> <span class="st">'NA'</span>)</span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>    -&gt;filter(...<span class="va">$jfkJan1</span>)</span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>    -&gt;select(<span class="st">'carrier'</span><span class="ot">,</span> <span class="st">'flight'</span><span class="ot">,</span> <span class="va">$at</span>(</span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>        <span class="st">'year'</span><span class="ot">,</span> <span class="st">'month'</span><span class="ot">,</span> <span class="st">'day'</span><span class="ot">,</span> <span class="st">'hour'</span><span class="ot">,</span> <span class="st">'minute'</span><span class="ot">,</span></span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>    )-&gt;alias(<span class="st">'scheduled'</span>))</span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>    -&gt;filter(col(<span class="st">'scheduled'</span>)-&gt;dt()-&gt;<span class="fu">strftime</span>(<span class="st">'%H:%M'</span>)</span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a>        -&gt;isBetween(<span class="st">'12:55'</span><span class="ot">,</span> <span class="st">'13:10'</span>))</span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a>    -&gt;<span class="fu">sort</span>(<span class="st">'scheduled'</span>)</span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a>    -&gt;collect()<span class="ot">;</span></span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a><span class="kw">echo</span> <span class="va">$flights</span>-&gt;joinAsof(</span>
+<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a>    <span class="va">$weather</span><span class="ot">,</span></span>
+<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a>    leftOn<span class="ot">:</span> <span class="st">'scheduled'</span><span class="ot">,</span></span>
+<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a>    rightOn<span class="ot">:</span> <span class="st">'time'</span><span class="ot">,</span></span>
+<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a>)<span class="ot">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<pre class="text output"><code>shape: (4, 6)
+┌─────────┬────────┬─────────────────────┬─────────────────────┬───────┬─────────┐
+│ carrier ┆ flight ┆ scheduled           ┆ time                ┆ temp  ┆ temp_3h │
+│ ---     ┆ ---    ┆ ---                 ┆ ---                 ┆ ---   ┆ ---     │
+│ str     ┆ i64    ┆ datetime[μs]        ┆ datetime[μs]        ┆ f64   ┆ f64     │
+╞═════════╪════════╪═════════════════════╪═════════════════════╪═══════╪═════════╡
+│ B6      ┆ 209    ┆ 2013-01-01 12:58:00 ┆ 2013-01-01 11:00:00 ┆ 41.0  ┆ 40.6    │
+│ B6      ┆ 1006   ┆ 2013-01-01 12:59:00 ┆ 2013-01-01 11:00:00 ┆ 41.0  ┆ 40.6    │
+│ B6      ┆ 32     ┆ 2013-01-01 12:59:00 ┆ 2013-01-01 11:00:00 ┆ 41.0  ┆ 40.6    │
+│ B6      ┆ 991    ┆ 2013-01-01 13:00:00 ┆ 2013-01-01 13:00:00 ┆ 37.94 ┆ 39.5    │
+└─────────┴────────┴─────────────────────┴─────────────────────┴───────┴─────────┘</code></pre>
 <ul>
-<li><code>joinAsof()</code> takes the last price whose <code>from</code> is on or before each <code>date</code>.</li>
+<li><code>joinAsof()</code> takes the last reading whose <code>time</code> is on or before each <code>scheduled</code> time.</li>
+<li>JFK has no reading at 12:00 on January 1, so the departures before 13:00 get the 11:00 reading.</li>
 <li>Both inputs must be sorted by their join columns. Unsorted input raises an <code>InvalidOperationError</code>.</li>
-<li>The <code>'3d'</code> window is <code>(date - 3d, date]</code>: it includes the row’s own date and excludes the date three days earlier.</li>
-<li>A missing day leaves the window three days long, with fewer rows in it. For March 4, the window holds only March 2 and March 4.</li>
-<li><code>rollingMean(3)</code> would average the last three rows, whatever their dates.</li>
+<li>The <code>'3h'</code> window is <code>(time - 3h, time]</code>: it includes the row’s own reading and excludes the one three hours earlier.</li>
+<li>A missing reading leaves the window three hours long, with fewer readings in it. At 13:00 the window holds only the 11:00 and 13:00 readings.</li>
+<li><code>rollingMean(3)</code> would average the last three readings, whatever their times.</li>
+<li><code>scan_csv()</code> filters the flights while reading them, and <code>collect()</code> returns a <code>DataFrame</code> for the join.</li>
 </ul>
 <p>Reference: <a href="../reference/dataframe.html#dataframe-joinAsof">joinAsof()</a> · <a href="../reference/expressions.html#expr-rollingMeanBy">rollingMeanBy()</a> · <a href="../reference/dataframe.html#time-series">Time series</a></p>
 

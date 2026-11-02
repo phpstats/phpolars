@@ -127,17 +127,17 @@
     {
       "path": "examples/expressions",
       "title": "Aggregate with expressions",
-      "description": "Combine several column expressions in one grouped summary."
+      "description": "Summarize the Palmer penguins by species with several expressions in one grouped aggregation."
     },
     {
       "path": "examples/lazy-csv",
       "title": "Query a large CSV file lazily",
-      "description": "Filter and aggregate a large CSV file with a lazy query plan."
+      "description": "Count late departures from each New York City airport in the 33 MB nycflights13 flights file with a lazy query plan."
     },
     {
       "path": "examples/time-series",
       "title": "Rolling windows and as-of joins",
-      "description": "Match dated records and calculate time-based rolling averages across irregular observations."
+      "description": "Match JFK departures to the latest weather reading and a 3-hour rolling mean of temperature."
     }
   ]
 }

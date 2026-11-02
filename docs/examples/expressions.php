@@ -1,30 +1,33 @@
 <?php
-use Phpolars\DataFrame;
-use function Phpolars\{col, len};
+use function Phpolars\{col, len, read_csv};
 
-$orders = new DataFrame([
-    'region' => [
-        'north', 'north', 'south', 'south', 'south', 'west',
-    ],
-    'customer' => ['ana', 'ben', 'ana', 'cy', 'cy', 'di'],
-    'amount' => [120.0, 80.0, 45.5, 300.0, 60.0, 95.0],
-    'returned' => [false, true, false, false, true, false],
-]);
+$data = 'https://raw.githubusercontent.com'
+    .'/phpstats/datasets/main/csv';
+$penguins = read_csv(
+    "$data/penguins.csv",
+    nullValues: 'NA',
+);
 
-$byRegion = $orders
-    ->groupBy('region', maintainOrder: true)
+$bySpecies = $penguins
+    ->groupBy('species', maintainOrder: true)
     ->agg(
-        len()->alias('orders'),
-        col('amount')->sum()->alias('total'),
-        col('amount')
-            ->filter(col('returned')->not())
-            ->sum()
-            ->alias('kept'),
-        col('customer')->nUnique()->alias('buyers'),
-        col('customer')
-            ->sortBy('amount', descending: true)
+        len()->alias('penguins'),
+        col('body_mass_g')->mean()->round()
+            ->alias('mass_g'),
+        col('body_mass_g')
+            ->filter(col('sex')->eq('female'))
+            ->mean()
+            ->round()
+            ->alias('female_g'),
+        col('island')->nUnique()->alias('islands'),
+        col('island')
+            ->sortBy(
+                'body_mass_g',
+                descending: true,
+                nullsLast: true,
+            )
             ->first()
-            ->alias('top'),
+            ->alias('heaviest_on'),
     );
 
-echo $byRegion;
+echo $bySpecies;

@@ -1,45 +1,59 @@
 ```php
-use Phpolars\DataFrame;
-use function Phpolars\col;
+use function Phpolars\{col, datetime, read_csv, scan_csv};
 
-// Daily unit sales, with no rows for March 3 and 7.
-$sales = (new DataFrame([
-    'date' => [
-        '2024-03-01', '2024-03-02', '2024-03-04',
-        '2024-03-05', '2024-03-06', '2024-03-08',
-    ],
-    'units' => [12, 15, 9, 20, 14, 18],
-]))->withColumns(col('date')->str()->toDate());
+$data = 'https://raw.githubusercontent.com'
+    .'/phpstats/datasets/main/csv';
+$jfkJan1 = [
+    col('origin')->eq('JFK'),
+    col('month')->eq(1),
+    col('day')->eq(1),
+];
+$at = fn (string ...$parts) => datetime(
+    ...array_map(fn ($p) => col($p), $parts),
+);
 
-// List prices, each in force until the next change.
-$prices = (new DataFrame([
-    'from' => ['2024-03-01', '2024-03-05'],
-    'price' => [4.50, 4.95],
-]))->withColumns(col('from')->str()->toDate());
-
-$priced = $sales
-    ->joinAsof($prices, leftOn: 'date', rightOn: 'from')
+// Hourly temperature at JFK, with a 3-hour rolling mean.
+$weather = read_csv("$data/weather.csv", columns: [
+    'origin', 'year', 'month', 'day', 'hour', 'temp',
+])
+    ->filter(...$jfkJan1)
+    ->select($at('year', 'month', 'day', 'hour')
+        ->alias('time'), 'temp')
+    ->sort('time')
     ->withColumns(
-        col('units')->rollingMeanBy('date', '3d')
-            ->round(2)
-            ->alias('units_3d'),
+        col('temp')->rollingMeanBy('time', '3h')
+            ->round(1)
+            ->alias('temp_3h'),
     );
 
-echo $priced;
+// Departures scheduled from 12:55 to 13:10.
+$flights = scan_csv("$data/flights.csv", nullValues: 'NA')
+    ->filter(...$jfkJan1)
+    ->select('carrier', 'flight', $at(
+        'year', 'month', 'day', 'hour', 'minute',
+    )->alias('scheduled'))
+    ->filter(col('scheduled')->dt()->strftime('%H:%M')
+        ->isBetween('12:55', '13:10'))
+    ->sort('scheduled')
+    ->collect();
+
+echo $flights->joinAsof(
+    $weather,
+    leftOn: 'scheduled',
+    rightOn: 'time',
+);
 ```
 
 ```{.text .output}
-shape: (6, 5)
-┌────────────┬───────┬────────────┬───────┬──────────┐
-│ date       ┆ units ┆ from       ┆ price ┆ units_3d │
-│ ---        ┆ ---   ┆ ---        ┆ ---   ┆ ---      │
-│ date       ┆ i64   ┆ date       ┆ f64   ┆ f64      │
-╞════════════╪═══════╪════════════╪═══════╪══════════╡
-│ 2024-03-01 ┆ 12    ┆ 2024-03-01 ┆ 4.5   ┆ 12.0     │
-│ 2024-03-02 ┆ 15    ┆ 2024-03-01 ┆ 4.5   ┆ 13.5     │
-│ 2024-03-04 ┆ 9     ┆ 2024-03-01 ┆ 4.5   ┆ 12.0     │
-│ 2024-03-05 ┆ 20    ┆ 2024-03-05 ┆ 4.95  ┆ 14.5     │
-│ 2024-03-06 ┆ 14    ┆ 2024-03-05 ┆ 4.95  ┆ 14.33    │
-│ 2024-03-08 ┆ 18    ┆ 2024-03-05 ┆ 4.95  ┆ 16.0     │
-└────────────┴───────┴────────────┴───────┴──────────┘
+shape: (4, 6)
+┌─────────┬────────┬─────────────────────┬─────────────────────┬───────┬─────────┐
+│ carrier ┆ flight ┆ scheduled           ┆ time                ┆ temp  ┆ temp_3h │
+│ ---     ┆ ---    ┆ ---                 ┆ ---                 ┆ ---   ┆ ---     │
+│ str     ┆ i64    ┆ datetime[μs]        ┆ datetime[μs]        ┆ f64   ┆ f64     │
+╞═════════╪════════╪═════════════════════╪═════════════════════╪═══════╪═════════╡
+│ B6      ┆ 209    ┆ 2013-01-01 12:58:00 ┆ 2013-01-01 11:00:00 ┆ 41.0  ┆ 40.6    │
+│ B6      ┆ 1006   ┆ 2013-01-01 12:59:00 ┆ 2013-01-01 11:00:00 ┆ 41.0  ┆ 40.6    │
+│ B6      ┆ 32     ┆ 2013-01-01 12:59:00 ┆ 2013-01-01 11:00:00 ┆ 41.0  ┆ 40.6    │
+│ B6      ┆ 991    ┆ 2013-01-01 13:00:00 ┆ 2013-01-01 13:00:00 ┆ 37.94 ┆ 39.5    │
+└─────────┴────────┴─────────────────────┴─────────────────────┴───────┴─────────┘
 ```

@@ -333,50 +333,55 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<p>Summarize each group of a DataFrame with several expressions in one <code>agg()</code> call.</p>
+<p>Summarize each penguin species with several expressions in one <code>agg()</code> call.</p>
+<p>The data are body measurements of 344 penguins near Palmer Station, Antarctica, from the R <code>palmerpenguins</code> package (<a href="https://github.com/phpstats/datasets#penguins">penguins</a>), read by URL.</p>
 <p>Requires the phpolars extension (<a href="../getting-started.html">Getting started</a>). Runnable script: <a href="https://raw.githubusercontent.com/phpstats/phpolars/main/docs/examples/expressions.php">expressions.php</a>.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode php code-with-copy"><code class="sourceCode php"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">use</span> Phpolars\DataFrame<span class="ot">;</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="kw">use</span> <span class="kw">function</span> Phpolars\{col<span class="ot">,</span> len}<span class="ot">;</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="va">$orders</span> <span class="op">=</span> <span class="kw">new</span> DataFrame([</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">'region'</span> =&gt; [</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>        <span class="st">'north'</span><span class="ot">,</span> <span class="st">'north'</span><span class="ot">,</span> <span class="st">'south'</span><span class="ot">,</span> <span class="st">'south'</span><span class="ot">,</span> <span class="st">'south'</span><span class="ot">,</span> <span class="st">'west'</span><span class="ot">,</span></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    ]<span class="ot">,</span></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    <span class="st">'customer'</span> =&gt; [<span class="st">'ana'</span><span class="ot">,</span> <span class="st">'ben'</span><span class="ot">,</span> <span class="st">'ana'</span><span class="ot">,</span> <span class="st">'cy'</span><span class="ot">,</span> <span class="st">'cy'</span><span class="ot">,</span> <span class="st">'di'</span>]<span class="ot">,</span></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    <span class="st">'amount'</span> =&gt; [<span class="fl">120.0</span><span class="ot">,</span> <span class="fl">80.0</span><span class="ot">,</span> <span class="fl">45.5</span><span class="ot">,</span> <span class="fl">300.0</span><span class="ot">,</span> <span class="fl">60.0</span><span class="ot">,</span> <span class="fl">95.0</span>]<span class="ot">,</span></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    <span class="st">'returned'</span> =&gt; [<span class="kw">false</span><span class="ot">,</span> <span class="kw">true</span><span class="ot">,</span> <span class="kw">false</span><span class="ot">,</span> <span class="kw">false</span><span class="ot">,</span> <span class="kw">true</span><span class="ot">,</span> <span class="kw">false</span>]<span class="ot">,</span></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>])<span class="ot">;</span></span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="va">$byRegion</span> <span class="op">=</span> <span class="va">$orders</span></span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>    -&gt;groupBy(<span class="st">'region'</span><span class="ot">,</span> maintainOrder<span class="ot">:</span> <span class="kw">true</span>)</span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>    -&gt;agg(</span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>        len()-&gt;alias(<span class="st">'orders'</span>)<span class="ot">,</span></span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>        col(<span class="st">'amount'</span>)-&gt;sum()-&gt;alias(<span class="st">'total'</span>)<span class="ot">,</span></span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>        col(<span class="st">'amount'</span>)</span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>            -&gt;filter(col(<span class="st">'returned'</span>)-&gt;not())</span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>            -&gt;sum()</span>
-<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>            -&gt;alias(<span class="st">'kept'</span>)<span class="ot">,</span></span>
-<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>        col(<span class="st">'customer'</span>)-&gt;nUnique()-&gt;alias(<span class="st">'buyers'</span>)<span class="ot">,</span></span>
-<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>        col(<span class="st">'customer'</span>)</span>
-<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>            -&gt;sortBy(<span class="st">'amount'</span><span class="ot">,</span> descending<span class="ot">:</span> <span class="kw">true</span>)</span>
-<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>            -&gt;first()</span>
-<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>            -&gt;alias(<span class="st">'top'</span>)<span class="ot">,</span></span>
-<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>    )<span class="ot">;</span></span>
-<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a><span class="kw">echo</span> <span class="va">$byRegion</span><span class="ot">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode php code-with-copy"><code class="sourceCode php"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">use</span> <span class="kw">function</span> Phpolars\{col<span class="ot">,</span> len<span class="ot">,</span> read_csv}<span class="ot">;</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="va">$data</span> <span class="op">=</span> <span class="st">'https://raw.githubusercontent.com'</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="st">'/phpstats/datasets/main/csv'</span><span class="ot">;</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="va">$penguins</span> <span class="op">=</span> read_csv(</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">"</span><span class="va">$data</span><span class="st">/penguins.csv"</span><span class="ot">,</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    nullValues<span class="ot">:</span> <span class="st">'NA'</span><span class="ot">,</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>)<span class="ot">;</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="va">$bySpecies</span> <span class="op">=</span> <span class="va">$penguins</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    -&gt;groupBy(<span class="st">'species'</span><span class="ot">,</span> maintainOrder<span class="ot">:</span> <span class="kw">true</span>)</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>    -&gt;agg(</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>        len()-&gt;alias(<span class="st">'penguins'</span>)<span class="ot">,</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>        col(<span class="st">'body_mass_g'</span>)-&gt;mean()-&gt;<span class="fu">round</span>()</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>            -&gt;alias(<span class="st">'mass_g'</span>)<span class="ot">,</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>        col(<span class="st">'body_mass_g'</span>)</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>            -&gt;filter(col(<span class="st">'sex'</span>)-&gt;eq(<span class="st">'female'</span>))</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>            -&gt;mean()</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>            -&gt;<span class="fu">round</span>()</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>            -&gt;alias(<span class="st">'female_g'</span>)<span class="ot">,</span></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>        col(<span class="st">'island'</span>)-&gt;nUnique()-&gt;alias(<span class="st">'islands'</span>)<span class="ot">,</span></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>        col(<span class="st">'island'</span>)</span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>            -&gt;sortBy(</span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>                <span class="st">'body_mass_g'</span><span class="ot">,</span></span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>                descending<span class="ot">:</span> <span class="kw">true</span><span class="ot">,</span></span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>                nullsLast<span class="ot">:</span> <span class="kw">true</span><span class="ot">,</span></span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>            )</span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>            -&gt;first()</span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>            -&gt;alias(<span class="st">'heaviest_on'</span>)<span class="ot">,</span></span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>    )<span class="ot">;</span></span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a><span class="kw">echo</span> <span class="va">$bySpecies</span><span class="ot">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <pre class="text output"><code>shape: (3, 6)
-┌────────┬────────┬───────┬───────┬────────┬─────┐
-│ region ┆ orders ┆ total ┆ kept  ┆ buyers ┆ top │
-│ ---    ┆ ---    ┆ ---   ┆ ---   ┆ ---    ┆ --- │
-│ str    ┆ u32    ┆ f64   ┆ f64   ┆ u32    ┆ str │
-╞════════╪════════╪═══════╪═══════╪════════╪═════╡
-│ north  ┆ 2      ┆ 200.0 ┆ 120.0 ┆ 2      ┆ ana │
-│ south  ┆ 3      ┆ 405.5 ┆ 345.5 ┆ 2      ┆ cy  │
-│ west   ┆ 1      ┆ 95.0  ┆ 95.0  ┆ 1      ┆ di  │
-└────────┴────────┴───────┴───────┴────────┴─────┘</code></pre>
+┌───────────┬──────────┬────────┬──────────┬─────────┬─────────────┐
+│ species   ┆ penguins ┆ mass_g ┆ female_g ┆ islands ┆ heaviest_on │
+│ ---       ┆ ---      ┆ ---    ┆ ---      ┆ ---     ┆ ---         │
+│ str       ┆ u32      ┆ f64    ┆ f64      ┆ u32     ┆ str         │
+╞═══════════╪══════════╪════════╪══════════╪═════════╪═════════════╡
+│ Adelie    ┆ 152      ┆ 3701.0 ┆ 3369.0   ┆ 3       ┆ Biscoe      │
+│ Gentoo    ┆ 124      ┆ 5076.0 ┆ 4680.0   ┆ 1       ┆ Biscoe      │
+│ Chinstrap ┆ 68       ┆ 3733.0 ┆ 3527.0   ┆ 1       ┆ Dream       │
+└───────────┴──────────┴────────┴──────────┴─────────┴─────────────┘</code></pre>
 <ul>
-<li><code>filter()</code> inside an aggregate limits only that aggregate. <code>kept</code> leaves out returned orders, and <code>orders</code> and <code>total</code> still count them.</li>
-<li><code>sortBy('amount', ...)-&gt;first()</code> picks a value by another column’s order. <code>top</code> is the customer with the group’s largest order.</li>
+<li><code>nullValues: 'NA'</code> reads the file’s <code>NA</code> entries as nulls. <code>mean()</code> skips them, so <code>mass_g</code> averages the penguins with a recorded body mass.</li>
+<li><code>filter()</code> inside an aggregate limits only that aggregate. <code>female_g</code> averages female penguins, and <code>penguins</code> still counts every penguin of the species.</li>
+<li><code>sortBy('body_mass_g', ...)-&gt;first()</code> picks a value by another column’s order. <code>heaviest_on</code> is the island of the species’ heaviest penguin. <code>nullsLast: true</code> keeps penguins without a body mass out of first place.</li>
 <li>Without <code>maintainOrder: true</code>, the order of the groups can change between runs.</li>
 </ul>
 <p>Reference: <a href="../reference/dataframe.html#dataframe-groupBy">groupBy()</a> · <a href="../reference/dataframe.html#groupby-agg">agg()</a> · <a href="../reference/expressions.html">Expressions</a></p>

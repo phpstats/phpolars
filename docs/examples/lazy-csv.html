@@ -333,7 +333,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<p>Filter and aggregate a CSV file with a lazy query, so that Polars can push the column selection and the filter into the CSV reader.</p>
+<p>Count the flights that left more than an hour late from each New York City airport, with a lazy query, so that Polars can push the column selection and the filter into the CSV reader.</p>
+<p>The data are all 336,776 departures from New York City airports in 2013, from the R <code>nycflights13</code> package (<a href="https://github.com/phpstats/datasets#flights">flights</a>).</p>
 <p>Requires the phpolars extension (<a href="../getting-started.html">Getting started</a>). Runnable scripts: <a href="https://raw.githubusercontent.com/phpstats/phpolars/main/docs/examples/lazy-csv.setup.php">lazy-csv.setup.php</a> and <a href="https://raw.githubusercontent.com/phpstats/phpolars/main/docs/examples/lazy-csv.php">lazy-csv.php</a>.</p>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
@@ -341,87 +342,68 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Note</span>Make the input file
+<span class="screen-reader-only">Note</span>Download the input file
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
 <div id="callout-1" class="callout-1-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<p>The setup script writes <code>orders.csv</code>, one million orders in six columns (53 MB), to the current directory. It stops if the file already exists.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode php code-with-copy"><code class="sourceCode php"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">use</span> Phpolars\DataFrame<span class="ot">;</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="kw">use</span> <span class="kw">function</span> Phpolars\{col<span class="ot">,</span> int_range}<span class="ot">;</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="fu">file_exists</span>(<span class="st">'orders.csv'</span>)) {</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">fwrite</span>(<span class="cn">STDERR</span><span class="ot">,</span> <span class="st">"orders.csv already exists.</span><span class="sc">\n</span><span class="st">"</span>)<span class="ot">;</span></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">exit</span>(<span class="dv">1</span>)<span class="ot">;</span></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="va">$id</span> <span class="op">=</span> col(<span class="st">'order_id'</span>)<span class="ot">;</span></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>(<span class="kw">new</span> DataFrame([<span class="st">'i'</span> =&gt; [<span class="dv">0</span>]]))</span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    -&gt;select(int_range(<span class="dv">0</span><span class="ot">,</span> <span class="dv">1_000_000</span>)-&gt;alias(<span class="st">'order_id'</span>))</span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>    -&gt;withColumns(</span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>        <span class="va">$id</span>-&gt;mod(<span class="dv">4</span>)</span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>            -&gt;replaceStrict(</span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>                [<span class="dv">0</span><span class="ot">,</span> <span class="dv">1</span><span class="ot">,</span> <span class="dv">2</span><span class="ot">,</span> <span class="dv">3</span>]<span class="ot">,</span></span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>                [<span class="st">'north'</span><span class="ot">,</span> <span class="st">'south'</span><span class="ot">,</span> <span class="st">'east'</span><span class="ot">,</span> <span class="st">'west'</span>]<span class="ot">,</span></span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>                returnDtype<span class="ot">:</span> <span class="st">'String'</span><span class="ot">,</span></span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>            )</span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>            -&gt;alias(<span class="st">'region'</span>)<span class="ot">,</span></span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>        <span class="va">$id</span>-&gt;mul(<span class="dv">7919</span>)-&gt;mod(<span class="dv">5000</span>)-&gt;alias(<span class="st">'customer_id'</span>)<span class="ot">,</span></span>
-<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>        <span class="va">$id</span>-&gt;mul(<span class="dv">104729</span>)-&gt;mod(<span class="dv">100_000</span>)-&gt;truediv(<span class="dv">100</span>)</span>
-<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>            -&gt;alias(<span class="st">'amount'</span>)<span class="ot">,</span></span>
-<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>        <span class="va">$id</span>-&gt;mul(<span class="dv">31</span>)-&gt;mod(<span class="dv">7</span>)-&gt;eq(<span class="dv">0</span>)-&gt;alias(<span class="st">'returned'</span>)<span class="ot">,</span></span>
-<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>        <span class="va">$id</span>-&gt;cast(<span class="st">'String'</span>)-&gt;str()</span>
-<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>            -&gt;<span class="cn">replace</span>(<span class="st">'^'</span><span class="ot">,</span> <span class="st">'note for order '</span>)</span>
-<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>            -&gt;alias(<span class="st">'note'</span>)<span class="ot">,</span></span>
-<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>    -&gt;writeCsv(<span class="st">'orders.csv'</span>)<span class="ot">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>The setup script downloads <code>flights.csv</code> (33 MB, 20 columns) to the current directory. It stops if the file already exists.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode php code-with-copy"><code class="sourceCode php"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">// nycflights13's flights table: 336,776 rows, 33 MB.</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="va">$url</span> <span class="op">=</span> <span class="st">'https://raw.githubusercontent.com/phpstats/datasets'</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="st">'/main/csv/flights.csv'</span><span class="ot">;</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="fu">file_exists</span>(<span class="st">'flights.csv'</span>)) {</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">fwrite</span>(<span class="cn">STDERR</span><span class="ot">,</span> <span class="st">"flights.csv already exists.</span><span class="sc">\n</span><span class="st">"</span>)<span class="ot">;</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">exit</span>(<span class="dv">1</span>)<span class="ot">;</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">copy</span>(<span class="va">$url</span><span class="ot">,</span> <span class="st">'flights.csv'</span>)<span class="ot">;</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="kw">echo</span> <span class="fu">filesize</span>(<span class="st">'flights.csv'</span>)<span class="ot">,</span> <span class="st">" bytes</span><span class="sc">\n</span><span class="st">"</span><span class="ot">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<pre class="text output"><code>33206996 bytes</code></pre>
 </div>
 </div>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode php code-with-copy"><code class="sourceCode php"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">use</span> <span class="kw">function</span> Phpolars\{col<span class="ot">,</span> len<span class="ot">,</span> scan_csv}<span class="ot">;</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="va">$query</span> <span class="op">=</span> scan_csv(<span class="st">'orders.csv'</span>)</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    -&gt;filter(</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>        col(<span class="st">'amount'</span>)-&gt;gt(<span class="dv">500</span>)</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>            -&gt;<span class="op">and</span>(col(<span class="st">'returned'</span>)-&gt;not())<span class="ot">,</span></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    -&gt;groupBy(<span class="st">'region'</span>)</span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>    -&gt;agg(</span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>        len()-&gt;alias(<span class="st">'orders'</span>)<span class="ot">,</span></span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>        col(<span class="st">'amount'</span>)-&gt;mean()-&gt;<span class="fu">round</span>(<span class="dv">2</span>)-&gt;alias(<span class="st">'mean'</span>)<span class="ot">,</span></span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>    -&gt;<span class="fu">sort</span>(<span class="st">'region'</span>)<span class="ot">;</span></span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a><span class="kw">echo</span> <span class="va">$query</span>-&gt;explain()<span class="ot">,</span> <span class="st">"</span><span class="sc">\n\n</span><span class="st">"</span><span class="ot">;</span></span>
-<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a><span class="kw">echo</span> <span class="va">$query</span>-&gt;collect()<span class="ot">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<pre class="text output"><code>SORT BY [col("region")]
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode php code-with-copy"><code class="sourceCode php"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">use</span> <span class="kw">function</span> Phpolars\{col<span class="ot">,</span> len<span class="ot">,</span> scan_csv}<span class="ot">;</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="va">$query</span> <span class="op">=</span> scan_csv(<span class="st">'flights.csv'</span><span class="ot">,</span> nullValues<span class="ot">:</span> <span class="st">'NA'</span>)</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    -&gt;filter(col(<span class="st">'dep_delay'</span>)-&gt;gt(<span class="dv">60</span>))</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    -&gt;groupBy(<span class="st">'origin'</span>)</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    -&gt;agg(</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>        len()-&gt;alias(<span class="st">'flights'</span>)<span class="ot">,</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>        col(<span class="st">'arr_delay'</span>)-&gt;mean()-&gt;<span class="fu">round</span>(<span class="dv">1</span>)</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>            -&gt;alias(<span class="st">'arr_delay'</span>)<span class="ot">,</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>    -&gt;<span class="fu">sort</span>(<span class="st">'origin'</span>)<span class="ot">;</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="kw">echo</span> <span class="va">$query</span>-&gt;explain()<span class="ot">,</span> <span class="st">"</span><span class="sc">\n\n</span><span class="st">"</span><span class="ot">;</span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="kw">echo</span> <span class="va">$query</span>-&gt;collect()<span class="ot">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<pre class="text output"><code>SORT BY [col("origin")]
   AGGREGATE[maintain_order: false]
-    [len().alias("orders"), col("amount").mean().round().alias("mean")] BY [col("region")]
+    [len().alias("flights"), col("arr_delay").mean().round()] BY [col("origin")]
     FROM
-    simple π 2/2 ["region", "amount"]
-      Csv SCAN [orders.csv]
-      PROJECT 3/6 COLUMNS
-      SELECTION: (col("amount") &gt; 500.0) &amp; col("returned").not()
-      ESTIMATED ROWS: 1481549
+    simple π 2/2 ["origin", "arr_delay"]
+      Csv SCAN [flights.csv]
+      PROJECT 3/20 COLUMNS
+      SELECTION: col("dep_delay") &gt; 60
+      ESTIMATED ROWS: 368967
 
-shape: (4, 3)
-┌────────┬────────┬────────┐
-│ region ┆ orders ┆ mean   │
-│ ---    ┆ ---    ┆ ---    │
-│ str    ┆ u32    ┆ f64    │
-╞════════╪════════╪════════╡
-│ east   ┆ 107143 ┆ 750.0  │
-│ north  ┆ 107133 ┆ 750.0  │
-│ south  ┆ 107142 ┆ 749.99 │
-│ west   ┆ 107141 ┆ 750.01 │
-└────────┴────────┴────────┘</code></pre>
+shape: (3, 3)
+┌────────┬─────────┬───────────┐
+│ origin ┆ flights ┆ arr_delay │
+│ ---    ┆ ---     ┆ ---       │
+│ str    ┆ u32     ┆ f64       │
+╞════════╪═════════╪═══════════╡
+│ EWR    ┆ 10940   ┆ 117.5     │
+│ JFK    ┆ 8401    ┆ 117.8     │
+│ LGA    ┆ 7240    ┆ 122.8     │
+└────────┴─────────┴───────────┘</code></pre>
 <ul>
-<li><code>PROJECT 3/6 COLUMNS</code>: the reader converts only three columns to values. It still reads and splits every line of the file.</li>
+<li><code>PROJECT 3/20 COLUMNS</code>: the reader converts only three columns to values. It still reads and splits every line of the file.</li>
 <li><code>SELECTION</code>: the filter runs during the scan, so rejected rows never reach the aggregation.</li>
 <li><code>ESTIMATED ROWS</code> is the planner’s estimate, not a count.</li>
+<li><code>flights</code> counts every delayed departure. <code>arr_delay</code>, in minutes, averages the flights with a recorded arrival, because <code>mean()</code> skips nulls.</li>
 <li><code>scan_csv()</code> doesn’t open the file. A missing file raises an error at <code>explain()</code> or <code>collect()</code>.</li>
-<li><code>read_csv()</code> would parse all six columns of every row before filtering.</li>
+<li><code>read_csv()</code> would parse all 20 columns of every row before filtering.</li>
 <li><code>collect(engine: 'streaming')</code> runs the query in batches, which can lower peak memory on large files.</li>
 </ul>
 <p>Reference: <a href="../reference/io.html#fn-scan_csv">scan_csv()</a> · <a href="../reference/dataframe.html#lazyframe-explain">explain()</a> · <a href="../reference/dataframe.html#lazyframe-collect">collect()</a> · <a href="../getting-started.html#lazy-queries">Lazy queries</a> · <a href="../performance.html#memory-on-large-files">Memory on large files</a></p>

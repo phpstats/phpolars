@@ -2,16 +2,20 @@
 title: "Rolling windows and as-of joins"
 ---
 
-Give each day of sales the price in force on that date and a mean of units over the last three calendar days, on dates with gaps.
+Give each departure from JFK the latest temperature reading at or before its scheduled time, with a mean of the readings over the previous three hours.
+
+The data are hourly weather and all departures at New York City airports in 2013, from the R `nycflights13` package ([weather](https://github.com/phpstats/datasets#weather) and [flights](https://github.com/phpstats/datasets#flights)), read by URL. Temperatures are in degrees Fahrenheit.
 
 Requires the phpolars extension ([Getting started](../getting-started.qmd)). Runnable script: [time-series.php](https://raw.githubusercontent.com/phpstats/phpolars/main/docs/examples/time-series.php).
 
 {{< include _time-series.md >}}
 
-- `joinAsof()` takes the last price whose `from` is on or before each `date`.
+- `joinAsof()` takes the last reading whose `time` is on or before each `scheduled` time.
+- JFK has no reading at 12:00 on January 1, so the departures before 13:00 get the 11:00 reading.
 - Both inputs must be sorted by their join columns. Unsorted input raises an `InvalidOperationError`.
-- The `'3d'` window is `(date - 3d, date]`: it includes the row's own date and excludes the date three days earlier.
-- A missing day leaves the window three days long, with fewer rows in it. For March 4, the window holds only March 2 and March 4.
-- `rollingMean(3)` would average the last three rows, whatever their dates.
+- The `'3h'` window is `(time - 3h, time]`: it includes the row's own reading and excludes the one three hours earlier.
+- A missing reading leaves the window three hours long, with fewer readings in it. At 13:00 the window holds only the 11:00 and 13:00 readings.
+- `rollingMean(3)` would average the last three readings, whatever their times.
+- `scan_csv()` filters the flights while reading them, and `collect()` returns a `DataFrame` for the join.
 
 Reference: [joinAsof()](../reference/dataframe.qmd#dataframe-joinAsof) · [rollingMeanBy()](../reference/expressions.qmd#expr-rollingMeanBy) · [Time series](../reference/dataframe.qmd#time-series)

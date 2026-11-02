@@ -2,25 +2,28 @@
 title: "Query a large CSV file lazily"
 ---
 
-Filter and aggregate a CSV file with a lazy query, so that Polars can push the column selection and the filter into the CSV reader.
+Count the flights that left more than an hour late from each New York City airport, with a lazy query, so that Polars can push the column selection and the filter into the CSV reader.
+
+The data are all 336,776 departures from New York City airports in 2013, from the R `nycflights13` package ([flights](https://github.com/phpstats/datasets#flights)).
 
 Requires the phpolars extension ([Getting started](../getting-started.qmd)). Runnable scripts: [lazy-csv.setup.php](https://raw.githubusercontent.com/phpstats/phpolars/main/docs/examples/lazy-csv.setup.php) and [lazy-csv.php](https://raw.githubusercontent.com/phpstats/phpolars/main/docs/examples/lazy-csv.php).
 
 ::: {.callout-note collapse="true"}
-## Make the input file
+## Download the input file
 
-The setup script writes `orders.csv`, one million orders in six columns (53 MB), to the current directory. It stops if the file already exists.
+The setup script downloads `flights.csv` (33 MB, 20 columns) to the current directory. It stops if the file already exists.
 
 {{< include _lazy-csv.setup.md >}}
 :::
 
 {{< include _lazy-csv.md >}}
 
-- `PROJECT 3/6 COLUMNS`: the reader converts only three columns to values. It still reads and splits every line of the file.
+- `PROJECT 3/20 COLUMNS`: the reader converts only three columns to values. It still reads and splits every line of the file.
 - `SELECTION`: the filter runs during the scan, so rejected rows never reach the aggregation.
 - `ESTIMATED ROWS` is the planner's estimate, not a count.
+- `flights` counts every delayed departure. `arr_delay`, in minutes, averages the flights with a recorded arrival, because `mean()` skips nulls.
 - `scan_csv()` doesn't open the file. A missing file raises an error at `explain()` or `collect()`.
-- `read_csv()` would parse all six columns of every row before filtering.
+- `read_csv()` would parse all 20 columns of every row before filtering.
 - `collect(engine: 'streaming')` runs the query in batches, which can lower peak memory on large files.
 
 Reference: [scan_csv()](../reference/io.qmd#fn-scan_csv) · [explain()](../reference/dataframe.qmd#lazyframe-explain) · [collect()](../reference/dataframe.qmd#lazyframe-collect) · [Lazy queries](../getting-started.qmd#lazy-queries) · [Memory on large files](../performance.qmd#memory-on-large-files)
