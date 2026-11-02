@@ -5,6 +5,7 @@ workspace_root="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd -P)"
 php_runtime="${PHP:-$(command -v php)}"
 fpm_runtime="${PHP_FPM:-$(command -v php-fpm)}"
 fcgi_client="${CGI_FCGI:-$(command -v cgi-fcgi)}"
+# PHPOLARS_EXT loads a built extension into the workers; without it, php.ini must enable php_polars.
 check_directory="$(mktemp -d "${TMPDIR:-/tmp}/php-polars-fpm.XXXXXX")"
 fpm_pid=''
 cleanup() {
@@ -27,7 +28,7 @@ clear_env = yes
 EOF
 # Non-root FPM ignores user/group; --allow-to-run-as-root is needed only in CI
 # containers, and never changes the production pool configuration.
-"$fpm_runtime" --nodaemonize --allow-to-run-as-root --fpm-config "$check_directory/fpm.conf" > "$check_directory/startup.log" 2>&1 &
+"$fpm_runtime" --nodaemonize --allow-to-run-as-root --fpm-config "$check_directory/fpm.conf" ${PHPOLARS_EXT:+-d "extension=$PHPOLARS_EXT"} > "$check_directory/startup.log" 2>&1 &
 fpm_pid=$!
 for attempt in {1..100}; do
     [[ -S "$check_directory/fpm.sock" ]] && break

@@ -13,6 +13,7 @@
  * Records are published from the Linux bench VM only.
  *
  * Usage: scripts/site-content [verifications|integration|benchmarks|thread-count ...]
+ * The integration part needs php-fpm and cgi-fcgi; PHP_FPM and CGI_FCGI override their paths.
  * PHP and PHPOLARS_EXT select the PHP binary and the extension (the release build by default).
  */
 
@@ -167,8 +168,9 @@ if (in_array('integration', $parts, true)) {
     [$code, $out] = $capture([$php, '-n', '-d', 'extension='.$ext, $root.'/tests/deployment.php']);
     $cases[] = ['name' => 'PHP CLI', 'quantity' => 'version matches Cargo.toml, a group_by result, and the thread pool size',
         'status' => $code === 0 ? 'pass' : 'fail'] + ($code === 0 ? [] : ['reason' => 'tests/deployment.php failed under the CLI: '.strtok($out, "\n")]);
-    $fpm = trim((string) shell_exec('command -v php-fpm'));
-    $fcgi = trim((string) shell_exec('command -v cgi-fcgi'));
+    // PHP_FPM and CGI_FCGI name the binaries where they are not php-fpm and cgi-fcgi on the PATH, such as Ubuntu's php-fpm8.5.
+    $fpm = getenv('PHP_FPM') ?: trim((string) shell_exec('command -v php-fpm'));
+    $fcgi = getenv('CGI_FCGI') ?: trim((string) shell_exec('command -v cgi-fcgi'));
     if ($fpm === '' || $fcgi === '') {
         $cases[] = ['name' => 'PHP-FPM', 'quantity' => 'the same assertions through a FastCGI request to a php-fpm worker', 'status' => 'skipped',
             'reason' => 'php-fpm or cgi-fcgi is not installed on the machine that made this record; CI runs this check in the packaging workflow.'];
@@ -177,7 +179,8 @@ if (in_array('integration', $parts, true)) {
         $cases[] = ['name' => 'PHP-FPM', 'quantity' => 'the same assertions through a FastCGI request to a php-fpm worker',
             'status' => $code === 0 ? 'pass' : 'fail'] + ($code === 0 ? [] : ['reason' => 'scripts/check-fpm failed: '.strtok($out, "\n")]);
     }
-    $tag = trim((string) shell_exec('git -C '.escapeshellarg($root).' describe --tags --abbrev=0 2>/dev/null'));
+    // The latest release before this version, so a release commit is not compared with itself.
+    $tag = trim((string) shell_exec('git -C '.escapeshellarg($root).' describe --tags --abbrev=0 --exclude '.escapeshellarg('v'.$version).' 2>/dev/null'));
     $old = tempnam(sys_get_temp_dir(), 'phpolars-stubs');
     file_put_contents($old, (string) shell_exec('git -C '.escapeshellarg($root).' show '.escapeshellarg("$tag:stubs/phpolars.php")));
     [$code, $out] = $capture([$php, '-n', '-d', 'extension='.$ext, $root.'/scripts/api-compat.php', $old]);
@@ -195,9 +198,9 @@ if (in_array('integration', $parts, true)) {
         'title' => 'Runtime checks',
         'label' => 'Runtime checks',
         'kind' => 'integration',
-        'checked' => 'Extension loading and execution under the PHP CLI and PHP-FPM, API compatibility with the latest release, and the peak resident set size of a selective streaming scan.',
+        'checked' => 'Extension loading and execution under the PHP CLI and PHP-FPM, API compatibility with the previous release, and the peak resident set size of a selective streaming scan.',
         'description' => 'tests/deployment.php checks the extension version, a group_by result, and the thread pool size; scripts/check-fpm runs it in a php-fpm worker through FastCGI. '
-            .'scripts/api-compat.php checks the latest release tag\'s stubs against the extension. tests/memory.php runs two streaming filters of a generated CSV in separate processes and compares their peak resident set sizes. '
+            .'scripts/api-compat.php checks the previous release tag\'s stubs against the extension. tests/memory.php runs two streaming filters of a generated CSV in separate processes and compares their peak resident set sizes. '
             .'scripts/check runs the CLI, API, and memory checks before a release, on Ubuntu 24.04 and macOS 15 with PHP 8.3, 8.4, and 8.5 in CI; the packaging workflow runs the PHP-FPM check in the production container.',
         'versions' => ['phpolars' => $version, 'Polars Rust crate' => $crate, 'PHP' => $phpVersion],
         'comparison' => [['id' => 'check', 'kind' => 'exact', 'applies_to' => 'Each check; exit status of its script']],
