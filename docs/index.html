@@ -313,8 +313,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#what-it-includes" id="toc-what-it-includes" class="nav-link active" data-scroll-target="#what-it-includes">What it includes</a></li>
-  <li><a href="#the-phpolars-api-or-phibble-and-phplyr" id="toc-the-phpolars-api-or-phibble-and-phplyr" class="nav-link" data-scroll-target="#the-phpolars-api-or-phibble-and-phplyr">The phpolars API or phibble and phplyr</a></li>
+  <li><a href="#what-it-includes" id="toc-what-it-includes" class="nav-link active" data-scroll-target="#what-it-includes">Features</a></li>
+  <li><a href="#the-phpolars-api-or-phibble-and-phplyr" id="toc-the-phpolars-api-or-phibble-and-phplyr" class="nav-link" data-scroll-target="#the-phpolars-api-or-phibble-and-phplyr">API choice</a></li>
   </ul>
 </nav>
     </div>
@@ -373,7 +373,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 └───────────┴──────────┴─────────┴────────────┘</code></pre>
 <p>The example reads <code>penguins.csv</code>, body measurements of 344 penguins from the R <code>palmerpenguins</code> package (<a href="https://github.com/phpstats/datasets#penguins">penguins</a>). <a href="./getting-started.html#a-starter-script">Getting started</a> has a complete script and the command that downloads the data.</p>
 <section id="what-it-includes" class="level2">
-<h2 class="anchored" data-anchor-id="what-it-includes">What it includes</h2>
+<h2 class="anchored" data-anchor-id="what-it-includes">Features</h2>
 <ul>
 <li><code>DataFrame</code> and <code>LazyFrame</code> with py-polars’ methods: <code>select</code>, <code>withColumns</code>, <code>filter</code>, <code>sort</code>, <code>groupBy</code>/<code>agg</code>, <code>join</code>, <code>unique</code>, <code>pivot</code>, <code>unpivot</code>, <code>explode</code>, <code>describe</code>, and more.</li>
 <li>Expressions with arithmetic, three-valued logic, aggregations, window functions (<code>over</code>), <code>when</code>/<code>then</code>/<code>otherwise</code>, and the <code>str</code>, <code>dt</code>, <code>list</code>, <code>struct</code>, and <code>name</code> namespaces.</li>
@@ -385,7 +385,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p><a href="./reference/index.html">Functions and methods</a> lists every function, selector, and class, with links to the signatures.</p>
 </section>
 <section id="the-phpolars-api-or-phibble-and-phplyr" class="level2">
-<h2 class="anchored" data-anchor-id="the-phpolars-api-or-phibble-and-phplyr">The phpolars API or phibble and phplyr</h2>
+<h2 class="anchored" data-anchor-id="the-phpolars-api-or-phibble-and-phplyr">API choice</h2>
 <ul>
 <li>The phpolars API (<code>Phpolars\DataFrame</code>, <code>LazyFrame</code>, <code>Series</code>, and expressions) follows Polars’ semantics. A missing value is <code>null</code>, and aggregates skip it.</li>
 <li><a href="https://phibble.phpstats.org">phibble</a>’s <code>Phibble\Polars\PolarsTable</code> runs phibble tables and <a href="https://phplyr.phpstats.org">phplyr</a> pipelines in Polars with dplyr’s semantics, in which <code>null</code> is R’s <code>NA</code>. The adapter belongs to phibble and runs on this extension.</li>

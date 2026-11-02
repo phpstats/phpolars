@@ -345,7 +345,7 @@
     "href": "phibble.html#choosing-an-api",
     "title": "phibble and phplyr",
     "section": "Choosing an API",
-    "text": "Choosing an API\n\n\n\nNeed\nUse\n\n\n\n\ndplyr semantics: NA, naRm, and groups in sorted key order\nphplyr or phibble on a PolarsTable\n\n\nOne pipeline on phibble’s in-memory DataFrame, a SQL table, and Polars\nphplyr or phibble\n\n\nPolars’ null semantics\nthe phpolars API\n\n\nLazy scans, the streaming engine, sinks, or SQL over data frames\nthe phpolars API\n\n\nPHP closures in many methods\nphibble’s in-memory DataFrame. On a PolarsTable, each closure converts the table (see What runs in Polars).",
+    "text": "Choosing an API\n\n\n\nNeed\nUse\n\n\n\n\ndplyr semantics: NA, naRm, and groups in sorted key order\nphplyr or phibble on a PolarsTable\n\n\nOne pipeline on phibble’s in-memory DataFrame, a SQL table, and Polars\nphplyr or phibble\n\n\nPolars’ null semantics\nthe phpolars API\n\n\nLazy scans, the streaming engine, sinks, or SQL over data frames\nthe phpolars API\n\n\nPHP closures in many methods\nphibble’s in-memory DataFrame. On a PolarsTable, each closure converts the table (see Operations in Polars).",
     "crumbs": [
       "Guides",
       "phibble and phplyr"
@@ -355,8 +355,8 @@
     "objectID": "phibble.html#a-pipeline-on-a-polarstable",
     "href": "phibble.html#a-pipeline-on-a-polarstable",
     "title": "phibble and phplyr",
-    "section": "A pipeline on a PolarsTable",
-    "text": "A pipeline on a PolarsTable\n\nPHP 8.5+PHP 8.3–8.4\n\n\nuse Phibble\\Polars\\PolarsTable;\nuse function Phplyr\\{col, filter, group_by, mean, n, summarize};\n\n$table = PolarsTable::fromPolars(Phpolars\\read_csv('penguins.csv', nullValues: 'NA'));\n\n$out = $table |&gt;\n    group_by('species') |&gt;\n    filter(col('body_mass_g')-&gt;gt(mean('body_mass_g', naRm: true))) |&gt;\n    summarize(penguins: n(), mass_g: mean('body_mass_g'));\n\n\nuse Phibble\\Polars\\PolarsTable;\nuse function Phplyr\\{col, mean, n, phplyr};\n\n$table = PolarsTable::fromPolars(Phpolars\\read_csv('penguins.csv', nullValues: 'NA'));\n\n$out = phplyr($table)\n    -&gt;groupBy('species')\n    -&gt;filter(col('body_mass_g')-&gt;gt(mean('body_mass_g', naRm: true)))\n    -&gt;summarize(penguins: n(), mass_g: mean('body_mass_g'))\n    -&gt;get();\n\n\n\n$out is a PolarsTable. $out-&gt;collect() copies it into a Phibble\\DataFrame:\n# A tibble: 4 × 3\n  store orders avg_units\n  &lt;chr&gt;  &lt;int&gt;     &lt;dbl&gt;\n1 S1        32      9.72\n2 S2        23      8.65\n3 S3        22      9.36\n4 S4        17      8.88",
+    "section": "PolarsTable pipeline",
+    "text": "PolarsTable pipeline\n\nPHP 8.5+PHP 8.3–8.4\n\n\nuse Phibble\\Polars\\PolarsTable;\nuse function Phplyr\\{col, filter, group_by, mean, n, summarize};\n\n$table = PolarsTable::fromPolars(Phpolars\\read_csv('penguins.csv', nullValues: 'NA'));\n\n$out = $table |&gt;\n    group_by('species') |&gt;\n    filter(col('body_mass_g')-&gt;gt(mean('body_mass_g', naRm: true))) |&gt;\n    summarize(penguins: n(), mass_g: mean('body_mass_g'));\n\n\nuse Phibble\\Polars\\PolarsTable;\nuse function Phplyr\\{col, mean, n, phplyr};\n\n$table = PolarsTable::fromPolars(Phpolars\\read_csv('penguins.csv', nullValues: 'NA'));\n\n$out = phplyr($table)\n    -&gt;groupBy('species')\n    -&gt;filter(col('body_mass_g')-&gt;gt(mean('body_mass_g', naRm: true)))\n    -&gt;summarize(penguins: n(), mass_g: mean('body_mass_g'))\n    -&gt;get();\n\n\n\n$out is a PolarsTable. $out-&gt;collect() copies it into a Phibble\\DataFrame:\n# A tibble: 4 × 3\n  store orders avg_units\n  &lt;chr&gt;  &lt;int&gt;     &lt;dbl&gt;\n1 S1        32      9.72\n2 S2        23      8.65\n3 S3        22      9.36\n4 S4        17      8.88",
     "crumbs": [
       "Guides",
       "phibble and phplyr"
@@ -366,8 +366,8 @@
     "objectID": "phibble.html#moving-data-in-and-out",
     "href": "phibble.html#moving-data-in-and-out",
     "title": "phibble and phplyr",
-    "section": "Moving data in and out",
-    "text": "Moving data in and out\n\nPolarsTable::fromPolars($df) wraps a phpolars DataFrame without copying it. A LazyFrame is collected first.\nPolarsTable::fromTable($table) copies any phibble table into Polars and keeps types, groups, and factor levels. It throws when a list column would not round-trip exactly, for example when named arrays with different keys would become structs.\n$table-&gt;polars() returns the underlying phpolars DataFrame.\n$table-&gt;collect() copies the data into a Phibble\\DataFrame.\n\nWithout the adapter, Phpolars\\DataFrame::fromPhibble($table) reads any phibble table through toColumns(), and $df-&gt;toPhibble() returns a Phibble\\DataFrame. toPhibble() needs phibble v0.2 or later.",
+    "section": "Conversion",
+    "text": "Conversion\n\nPolarsTable::fromPolars($df) wraps a phpolars DataFrame without copying it. A LazyFrame is collected first.\nPolarsTable::fromTable($table) copies any phibble table into Polars and keeps types, groups, and factor levels. It throws when a list column would not round-trip exactly, for example when named arrays with different keys would become structs.\n$table-&gt;polars() returns the underlying phpolars DataFrame.\n$table-&gt;collect() copies the data into a Phibble\\DataFrame.\n\nWithout the adapter, Phpolars\\DataFrame::fromPhibble($table) reads any phibble table through toColumns(), and $df-&gt;toPhibble() returns a Phibble\\DataFrame. toPhibble() needs phibble v0.2 or later.",
     "crumbs": [
       "Guides",
       "phibble and phplyr"
@@ -377,8 +377,8 @@
     "objectID": "phibble.html#what-runs-in-polars",
     "href": "phibble.html#what-runs-in-polars",
     "title": "phibble and phplyr",
-    "section": "What runs in Polars",
-    "text": "What runs in Polars\nMethods given column names or phibble expressions (Phibble\\Expr, which phplyr’s helpers such as col(), mean(), and n() build) run in Polars with dplyr’s semantics:\n\nNA propagates, and aggregates default to naRm: false.\nGrouped mutate() and filter() evaluate aggregates and windows per group.\nGroups follow sorted key order.\nJoins follow dplyr 1.2, including join_by() inequality and rolling joins.\nPivots and most stringr and lubridate functions also run in Polars.\n\nSome steps cannot run in Polars, and the adapter runs them on a phibble DataFrame and converts the result back:\n\na method given a PHP closure, because PHP code cannot run on Polars threads\nany method on a rowwise table\ngrouped operations on factor keys that keep empty groups (phibble’s groupBy(drop: false) or phplyr’s group_by(_drop: false)), because Polars does not see empty groups\nfunctions that the translator does not support, such as str_to_title()\n\nPolarsTable::$fallbacks counts these conversions. Set PolarsTable::$strict = true to throw Phibble\\Polars\\PolarsFallback instead; its message names the method and the reason. Performance describes when a fallback costs time.",
+    "section": "Operations in Polars",
+    "text": "Operations in Polars\nMethods given column names or phibble expressions (Phibble\\Expr, which phplyr’s helpers such as col(), mean(), and n() build) run in Polars with dplyr’s semantics:\n\nNA propagates, and aggregates default to naRm: false.\nGrouped mutate() and filter() evaluate aggregates and windows per group.\nGroups follow sorted key order.\nJoins follow dplyr 1.2, including join_by() inequality and rolling joins.\nPivots and most stringr and lubridate functions also run in Polars.\n\nSome steps cannot run in Polars, and the adapter runs them on a phibble DataFrame and converts the result back:\n\na method given a PHP closure, because PHP code cannot run on Polars threads\nany method on a rowwise table\ngrouped operations on factor keys that keep empty groups (phibble’s groupBy(drop: false) or phplyr’s group_by(_drop: false)), because Polars does not see empty groups\nfunctions that the translator does not support, such as str_to_title()\n\nPolarsTable::$fallbacks counts these conversions. Set PolarsTable::$strict = true to throw Phibble\\Polars\\PolarsFallback instead; its message names the method and the reason. Performance describes when a fallback costs time.",
     "crumbs": [
       "Guides",
       "phibble and phplyr"
@@ -410,8 +410,8 @@
     "objectID": "index.html#what-it-includes",
     "href": "index.html#what-it-includes",
     "title": "phpolars",
-    "section": "What it includes",
-    "text": "What it includes\n\nDataFrame and LazyFrame with py-polars’ methods: select, withColumns, filter, sort, groupBy/agg, join, unique, pivot, unpivot, explode, describe, and more.\nExpressions with arithmetic, three-valued logic, aggregations, window functions (over), when/then/otherwise, and the str, dt, list, struct, and name namespaces.\nSeries, with the same expression methods.\nCSV, Parquet, JSON, NDJSON, and Arrow IPC reading and writing, with lazy scans and streaming sinks, and reading and writing through PDO.\nSQL queries over data frames.\nA thread-pool cap for PHP-FPM (php_polars.max_threads).\n\nFunctions and methods lists every function, selector, and class, with links to the signatures.",
+    "section": "Features",
+    "text": "Features\n\nDataFrame and LazyFrame with py-polars’ methods: select, withColumns, filter, sort, groupBy/agg, join, unique, pivot, unpivot, explode, describe, and more.\nExpressions with arithmetic, three-valued logic, aggregations, window functions (over), when/then/otherwise, and the str, dt, list, struct, and name namespaces.\nSeries, with the same expression methods.\nCSV, Parquet, JSON, NDJSON, and Arrow IPC reading and writing, with lazy scans and streaming sinks, and reading and writing through PDO.\nSQL queries over data frames.\nA thread-pool cap for PHP-FPM (php_polars.max_threads).\n\nFunctions and methods lists every function, selector, and class, with links to the signatures.",
     "crumbs": [
       "Getting started",
       "phpolars"
@@ -421,8 +421,8 @@
     "objectID": "index.html#the-phpolars-api-or-phibble-and-phplyr",
     "href": "index.html#the-phpolars-api-or-phibble-and-phplyr",
     "title": "phpolars",
-    "section": "The phpolars API or phibble and phplyr",
-    "text": "The phpolars API or phibble and phplyr\n\nThe phpolars API (Phpolars\\DataFrame, LazyFrame, Series, and expressions) follows Polars’ semantics. A missing value is null, and aggregates skip it.\nphibble’s Phibble\\Polars\\PolarsTable runs phibble tables and phplyr pipelines in Polars with dplyr’s semantics, in which null is R’s NA. The adapter belongs to phibble and runs on this extension.\n\nphibble and phplyr covers the choice and the differences in semantics.",
+    "section": "API choice",
+    "text": "API choice\n\nThe phpolars API (Phpolars\\DataFrame, LazyFrame, Series, and expressions) follows Polars’ semantics. A missing value is null, and aggregates skip it.\nphibble’s Phibble\\Polars\\PolarsTable runs phibble tables and phplyr pipelines in Polars with dplyr’s semantics, in which null is R’s NA. The adapter belongs to phibble and runs on this extension.\n\nphibble and phplyr covers the choice and the differences in semantics.",
     "crumbs": [
       "Getting started",
       "phpolars"
@@ -663,8 +663,8 @@
     "objectID": "compatibility.html#not-available",
     "href": "compatibility.html#not-available",
     "title": "Compatibility and limitations",
-    "section": "Not available",
-    "text": "Not available\n\nPython callables. py-polars methods that run a Python function per value or per batch, such as map_elements, map_batches, fold, and map_groups, have no equivalent, because PHP code cannot run on Polars threads. DataFrame::mapRows() runs a PHP callable per row on the PHP thread, after collecting.\nThe GPU engine. collect(engine: 'gpu') throws a ValueError.\nConversion to pandas, NumPy, or PyArrow objects. Data leaves phpolars as PHP values, as files, or through PDO.\nFormats left out of a build. Parquet, IPC, JSON, SQL, and table formatting are Cargo features, and an extension built without one raises a ComputeError from that format’s functions. The release binaries include all of them.",
+    "section": "Unsupported features",
+    "text": "Unsupported features\n\nPython callables. py-polars methods that run a Python function per value or per batch, such as map_elements, map_batches, fold, and map_groups, have no equivalent, because PHP code cannot run on Polars threads. DataFrame::mapRows() runs a PHP callable per row on the PHP thread, after collecting.\nThe GPU engine. collect(engine: 'gpu') throws a ValueError.\nConversion to pandas, NumPy, or PyArrow objects. Data leaves phpolars as PHP values, as files, or through PDO.\nFormats left out of a build. Parquet, IPC, JSON, SQL, and table formatting are Cargo features, and an extension built without one raises a ComputeError from that format’s functions. The release binaries include all of them.",
     "crumbs": [
       "Guides",
       "Compatibility and limitations"
@@ -795,8 +795,8 @@
     "objectID": "getting-started.html#a-starter-script",
     "href": "getting-started.html#a-starter-script",
     "title": "Getting started",
-    "section": "A starter script",
-    "text": "A starter script\nphpolars needs no Composer packages. Download the example data, penguins.csv: body measurements of 344 penguins near Palmer Station, Antarctica, from the R palmerpenguins package (penguins). Missing values are written NA.\nmkdir phpolars-start && cd phpolars-start\ncurl -fsSLO https://raw.githubusercontent.com/phpstats/datasets/main/csv/penguins.csv\nRunnable script: starter.php.\nuse function Phpolars\\{col, len, read_csv};\n\n$penguins = read_csv('penguins.csv', nullValues: 'NA');\n\n$bySpecies = $penguins\n    -&gt;filter(col('body_mass_g')-&gt;isNotNull())\n    -&gt;withColumns(\n        col('body_mass_g')-&gt;truediv(1000)-&gt;alias('mass_kg'),\n    )\n    -&gt;groupBy('species', maintainOrder: true)\n    -&gt;agg(\n        ['penguins' =&gt; len()],\n        col('mass_kg')-&gt;mean()-&gt;round(2),\n    )\n    -&gt;sort('mass_kg', descending: true);\n\necho $bySpecies, \"\\n\";\nprint_r($bySpecies-&gt;row(0, named: true));\nshape: (3, 3)\n┌───────────┬──────────┬─────────┐\n│ species   ┆ penguins ┆ mass_kg │\n│ ---       ┆ ---      ┆ ---     │\n│ str       ┆ u32      ┆ f64     │\n╞═══════════╪══════════╪═════════╡\n│ Gentoo    ┆ 123      ┆ 5.08    │\n│ Chinstrap ┆ 68       ┆ 3.73    │\n│ Adelie    ┆ 151      ┆ 3.7     │\n└───────────┴──────────┴─────────┘\nArray\n(\n    [species] =&gt; Gentoo\n    [penguins] =&gt; 123\n    [mass_kg] =&gt; 5.08\n)",
+    "section": "Starter script",
+    "text": "Starter script\nphpolars needs no Composer packages. Download the example data, penguins.csv: body measurements of 344 penguins near Palmer Station, Antarctica, from the R palmerpenguins package (penguins). Missing values are written NA.\nmkdir phpolars-start && cd phpolars-start\ncurl -fsSLO https://raw.githubusercontent.com/phpstats/datasets/main/csv/penguins.csv\nRunnable script: starter.php.\nuse function Phpolars\\{col, len, read_csv};\n\n$penguins = read_csv('penguins.csv', nullValues: 'NA');\n\n$bySpecies = $penguins\n    -&gt;filter(col('body_mass_g')-&gt;isNotNull())\n    -&gt;withColumns(\n        col('body_mass_g')-&gt;truediv(1000)-&gt;alias('mass_kg'),\n    )\n    -&gt;groupBy('species', maintainOrder: true)\n    -&gt;agg(\n        ['penguins' =&gt; len()],\n        col('mass_kg')-&gt;mean()-&gt;round(2),\n    )\n    -&gt;sort('mass_kg', descending: true);\n\necho $bySpecies, \"\\n\";\nprint_r($bySpecies-&gt;row(0, named: true));\nshape: (3, 3)\n┌───────────┬──────────┬─────────┐\n│ species   ┆ penguins ┆ mass_kg │\n│ ---       ┆ ---      ┆ ---     │\n│ str       ┆ u32      ┆ f64     │\n╞═══════════╪══════════╪═════════╡\n│ Gentoo    ┆ 123      ┆ 5.08    │\n│ Chinstrap ┆ 68       ┆ 3.73    │\n│ Adelie    ┆ 151      ┆ 3.7     │\n└───────────┴──────────┴─────────┘\nArray\n(\n    [species] =&gt; Gentoo\n    [penguins] =&gt; 123\n    [mass_kg] =&gt; 5.08\n)",
     "crumbs": [
       "Getting started",
       "Getting started"
@@ -817,8 +817,8 @@
     "objectID": "getting-started.html#a-first-query",
     "href": "getting-started.html#a-first-query",
     "title": "Getting started",
-    "section": "A first query",
-    "text": "A first query\n$penguins = read_csv('penguins.csv', nullValues: 'NA');\n\n$mass = col('body_mass_g');\necho $penguins\n    -&gt;select(\n        'species',\n        'island',\n        col('sex')-&gt;fillNull('unknown'),\n        ['bill_ratio' =&gt; col('bill_length_mm')\n            -&gt;truediv(col('bill_depth_mm'))-&gt;round(2)],\n        when($mass-&gt;ge(4000))-&gt;then(lit('large'))\n            -&gt;when($mass-&gt;lt(4000))-&gt;then(lit('small'))\n            -&gt;alias('size'),\n    )\n    -&gt;head(5);\nshape: (5, 5)\n┌─────────┬───────────┬─────────┬────────────┬───────┐\n│ species ┆ island    ┆ sex     ┆ bill_ratio ┆ size  │\n│ ---     ┆ ---       ┆ ---     ┆ ---        ┆ ---   │\n│ str     ┆ str       ┆ str     ┆ f64        ┆ str   │\n╞═════════╪═══════════╪═════════╪════════════╪═══════╡\n│ Adelie  ┆ Torgersen ┆ male    ┆ 2.09       ┆ small │\n│ Adelie  ┆ Torgersen ┆ female  ┆ 2.27       ┆ small │\n│ Adelie  ┆ Torgersen ┆ female  ┆ 2.24       ┆ small │\n│ Adelie  ┆ Torgersen ┆ unknown ┆ null       ┆ null  │\n│ Adelie  ┆ Torgersen ┆ female  ┆ 1.9        ┆ small │\n└─────────┴───────────┴─────────┴────────────┴───────┘\nStrings passed where py-polars expects an expression input, such as select(), name columns. Use lit() for a string value there. In comparisons and arithmetic, strings are literals: col('island')-&gt;ne('Torgersen'). A when() chain without otherwise() gives null where no condition holds, as for the penguin without a body mass.",
+    "section": "Selecting columns",
+    "text": "Selecting columns\n$penguins = read_csv('penguins.csv', nullValues: 'NA');\n\n$mass = col('body_mass_g');\necho $penguins\n    -&gt;select(\n        'species',\n        'island',\n        col('sex')-&gt;fillNull('unknown'),\n        ['bill_ratio' =&gt; col('bill_length_mm')\n            -&gt;truediv(col('bill_depth_mm'))-&gt;round(2)],\n        when($mass-&gt;ge(4000))-&gt;then(lit('large'))\n            -&gt;when($mass-&gt;lt(4000))-&gt;then(lit('small'))\n            -&gt;alias('size'),\n    )\n    -&gt;head(5);\nshape: (5, 5)\n┌─────────┬───────────┬─────────┬────────────┬───────┐\n│ species ┆ island    ┆ sex     ┆ bill_ratio ┆ size  │\n│ ---     ┆ ---       ┆ ---     ┆ ---        ┆ ---   │\n│ str     ┆ str       ┆ str     ┆ f64        ┆ str   │\n╞═════════╪═══════════╪═════════╪════════════╪═══════╡\n│ Adelie  ┆ Torgersen ┆ male    ┆ 2.09       ┆ small │\n│ Adelie  ┆ Torgersen ┆ female  ┆ 2.27       ┆ small │\n│ Adelie  ┆ Torgersen ┆ female  ┆ 2.24       ┆ small │\n│ Adelie  ┆ Torgersen ┆ unknown ┆ null       ┆ null  │\n│ Adelie  ┆ Torgersen ┆ female  ┆ 1.9        ┆ small │\n└─────────┴───────────┴─────────┴────────────┴───────┘\nStrings passed where py-polars expects an expression input, such as select(), name columns. Use lit() for a string value there. In comparisons and arithmetic, strings are literals: col('island')-&gt;ne('Torgersen'). A when() chain without otherwise() gives null where no condition holds, as for the penguin without a body mass.",
     "crumbs": [
       "Getting started",
       "Getting started"
@@ -982,8 +982,8 @@
     "objectID": "reference/dataframe.html#getting-values-out",
     "href": "reference/dataframe.html#getting-values-out",
     "title": "DataFrame and LazyFrame",
-    "section": "Getting values out",
-    "text": "Getting values out\n\n\n\n\n\n\n\nMethod\nReturns\n\n\n\n\ntoDicts()\nlist of rows, each ['column' =&gt; value]\n\n\nrows()\nlist of rows, each a list of values\n\n\nrow($i, named: true)\none row\n\n\ntoDict()\n['column' =&gt; Series]; toDict(asSeries: false) gives lists\n\n\ngetColumn('a')\na Series\n\n\nitem(), item($row, $column)\none value\n\n\nschema(), dtypes(), columns(), shape()\nstructure",
+    "section": "Conversion to PHP values",
+    "text": "Conversion to PHP values\n\n\n\n\n\n\n\nMethod\nReturns\n\n\n\n\ntoDicts()\nlist of rows, each ['column' =&gt; value]\n\n\nrows()\nlist of rows, each a list of values\n\n\nrow($i, named: true)\none row\n\n\ntoDict()\n['column' =&gt; Series]; toDict(asSeries: false) gives lists\n\n\ngetColumn('a')\na Series\n\n\nitem(), item($row, $column)\none value\n\n\nschema(), dtypes(), columns(), shape()\nstructure",
     "crumbs": [
       "Functions and methods",
       "DataFrame and LazyFrame"

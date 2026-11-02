@@ -280,7 +280,7 @@ ul.task-list li input[type="checkbox"] {
   <ul>
   <li><a href="#php-versions-and-platforms" id="toc-php-versions-and-platforms" class="nav-link active" data-scroll-target="#php-versions-and-platforms">PHP versions and platforms</a></li>
   <li><a href="#agreement-with-py-polars" id="toc-agreement-with-py-polars" class="nav-link" data-scroll-target="#agreement-with-py-polars">Agreement with py-polars</a></li>
-  <li><a href="#not-available" id="toc-not-available" class="nav-link" data-scroll-target="#not-available">Not available</a></li>
+  <li><a href="#not-available" id="toc-not-available" class="nav-link" data-scroll-target="#not-available">Unsupported features</a></li>
   </ul>
 </nav>
     </div>
@@ -328,7 +328,7 @@ ul.task-list li input[type="checkbox"] {
 <p>The <a href="https://phpolars.phpstats.org/verification">verification page</a> lists each case and its result.</p>
 </section>
 <section id="not-available" class="level2">
-<h2 class="anchored" data-anchor-id="not-available">Not available</h2>
+<h2 class="anchored" data-anchor-id="not-available">Unsupported features</h2>
 <ul>
 <li>Python callables. py-polars methods that run a Python function per value or per batch, such as <code>map_elements</code>, <code>map_batches</code>, <code>fold</code>, and <code>map_groups</code>, have no equivalent, because PHP code cannot run on Polars threads. <code>DataFrame::mapRows()</code> runs a PHP callable per row on the PHP thread, after collecting.</li>
 <li>The GPU engine. <code>collect(engine: 'gpu')</code> throws a <code>ValueError</code>.</li>

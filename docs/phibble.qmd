@@ -12,9 +12,9 @@ title: "phibble and phplyr"
 | One pipeline on phibble's in-memory `DataFrame`, a SQL table, and Polars | phplyr or phibble |
 | Polars' `null` semantics | the phpolars API |
 | Lazy scans, the streaming engine, sinks, or SQL over data frames | the phpolars API |
-| PHP closures in many methods | phibble's in-memory `DataFrame`. On a `PolarsTable`, each closure converts the table (see [What runs in Polars](#what-runs-in-polars)). |
+| PHP closures in many methods | phibble's in-memory `DataFrame`. On a `PolarsTable`, each closure converts the table (see [Operations in Polars](#what-runs-in-polars)). |
 
-## A pipeline on a PolarsTable
+## PolarsTable pipeline {#a-pipeline-on-a-polarstable}
 
 ::: {.panel-tabset group="syntax"}
 ## PHP 8.5+
@@ -59,7 +59,7 @@ $out = phplyr($table)
 4 S4        17      8.88
 ```
 
-## Moving data in and out
+## Conversion {#moving-data-in-and-out}
 
 - `PolarsTable::fromPolars($df)` wraps a phpolars `DataFrame` without copying it. A `LazyFrame` is collected first.
 - `PolarsTable::fromTable($table)` copies any phibble table into Polars and keeps types, groups, and factor levels. It throws when a list column would not round-trip exactly, for example when named arrays with different keys would become structs.
@@ -68,7 +68,7 @@ $out = phplyr($table)
 
 Without the adapter, `Phpolars\DataFrame::fromPhibble($table)` reads any phibble table through `toColumns()`, and `$df->toPhibble()` returns a `Phibble\DataFrame`. `toPhibble()` needs phibble v0.2 or later.
 
-## What runs in Polars
+## Operations in Polars {#what-runs-in-polars}
 
 Methods given column names or phibble expressions (`Phibble\Expr`, which phplyr's helpers such as `col()`, `mean()`, and `n()` build) run in Polars with dplyr's semantics:
 

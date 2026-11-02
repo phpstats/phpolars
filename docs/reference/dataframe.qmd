@@ -45,7 +45,7 @@ foreach ($penguins->groupBy('species', maintainOrder: true) as $key => $rows) {
 
 {{< include ../examples/_reshape.md >}}
 
-## Getting values out
+## Conversion to PHP values {#getting-values-out}
 
 | Method | Returns |
 | --- | --- |

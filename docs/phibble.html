@@ -314,9 +314,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
    
   <ul>
   <li><a href="#choosing-an-api" id="toc-choosing-an-api" class="nav-link active" data-scroll-target="#choosing-an-api">Choosing an API</a></li>
-  <li><a href="#a-pipeline-on-a-polarstable" id="toc-a-pipeline-on-a-polarstable" class="nav-link" data-scroll-target="#a-pipeline-on-a-polarstable">A pipeline on a PolarsTable</a></li>
-  <li><a href="#moving-data-in-and-out" id="toc-moving-data-in-and-out" class="nav-link" data-scroll-target="#moving-data-in-and-out">Moving data in and out</a></li>
-  <li><a href="#what-runs-in-polars" id="toc-what-runs-in-polars" class="nav-link" data-scroll-target="#what-runs-in-polars">What runs in Polars</a></li>
+  <li><a href="#a-pipeline-on-a-polarstable" id="toc-a-pipeline-on-a-polarstable" class="nav-link" data-scroll-target="#a-pipeline-on-a-polarstable">PolarsTable pipeline</a></li>
+  <li><a href="#moving-data-in-and-out" id="toc-moving-data-in-and-out" class="nav-link" data-scroll-target="#moving-data-in-and-out">Conversion</a></li>
+  <li><a href="#what-runs-in-polars" id="toc-what-runs-in-polars" class="nav-link" data-scroll-target="#what-runs-in-polars">Operations in Polars</a></li>
   <li><a href="#missing-values" id="toc-missing-values" class="nav-link" data-scroll-target="#missing-values">Missing values</a></li>
   </ul>
 </nav>
@@ -372,13 +372,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </tr>
 <tr class="odd">
 <td>PHP closures in many methods</td>
-<td>phibble’s in-memory <code>DataFrame</code>. On a <code>PolarsTable</code>, each closure converts the table (see <a href="#what-runs-in-polars">What runs in Polars</a>).</td>
+<td>phibble’s in-memory <code>DataFrame</code>. On a <code>PolarsTable</code>, each closure converts the table (see <a href="#what-runs-in-polars">Operations in Polars</a>).</td>
 </tr>
 </tbody>
 </table>
 </section>
 <section id="a-pipeline-on-a-polarstable" class="level2">
-<h2 class="anchored" data-anchor-id="a-pipeline-on-a-polarstable">A pipeline on a PolarsTable</h2>
+<h2 class="anchored" data-anchor-id="a-pipeline-on-a-polarstable">PolarsTable pipeline</h2>
 <div class="tabset-margin-container"></div><div class="panel-tabset" data-group="syntax">
 <ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true" href="">PHP 8.5+</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false" href="">PHP 8.3–8.4</a></li></ul>
 <div class="tab-content" data-group="syntax">
@@ -417,7 +417,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 4 S4        17      8.88</code></pre>
 </section>
 <section id="moving-data-in-and-out" class="level2">
-<h2 class="anchored" data-anchor-id="moving-data-in-and-out">Moving data in and out</h2>
+<h2 class="anchored" data-anchor-id="moving-data-in-and-out">Conversion</h2>
 <ul>
 <li><code>PolarsTable::fromPolars($df)</code> wraps a phpolars <code>DataFrame</code> without copying it. A <code>LazyFrame</code> is collected first.</li>
 <li><code>PolarsTable::fromTable($table)</code> copies any phibble table into Polars and keeps types, groups, and factor levels. It throws when a list column would not round-trip exactly, for example when named arrays with different keys would become structs.</li>
@@ -427,7 +427,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Without the adapter, <code>Phpolars\DataFrame::fromPhibble($table)</code> reads any phibble table through <code>toColumns()</code>, and <code>$df-&gt;toPhibble()</code> returns a <code>Phibble\DataFrame</code>. <code>toPhibble()</code> needs phibble v0.2 or later.</p>
 </section>
 <section id="what-runs-in-polars" class="level2">
-<h2 class="anchored" data-anchor-id="what-runs-in-polars">What runs in Polars</h2>
+<h2 class="anchored" data-anchor-id="what-runs-in-polars">Operations in Polars</h2>
 <p>Methods given column names or phibble expressions (<code>Phibble\Expr</code>, which phplyr’s helpers such as <code>col()</code>, <code>mean()</code>, and <code>n()</code> build) run in Polars with dplyr’s semantics:</p>
 <ul>
 <li><code>NA</code> propagates, and aggregates default to <code>naRm: false</code>.</li>

@@ -14,13 +14,30 @@ $penguins = read_csv(
 $summary = $penguins
     ->filter(col('body_mass_g')->isNotNull())
     ->groupBy(['species', 'island'], maintainOrder: true)
-    ->agg(len()->alias('penguins'), col('body_mass_g')->mean()->round()->alias('mass_g'))
+    ->agg(
+        len()->alias('penguins'),
+        col('body_mass_g')->mean()->round()->alias('mass_g'),
+    )
     ->sort('mass_g', descending: true);
 
 print_r($summary->toDicts());
 ```
 
 phpolars works on its own or through [phibble](https://phibble.phpstats.org) and [phplyr](https://phplyr.phpstats.org). phibble's `Phibble\Polars\PolarsTable` adapter, part of phibble, runs phibble tables and phplyr pipelines on this extension with dplyr's semantics.
+
+## Features
+
+- `DataFrame` and `LazyFrame` with py-polars' methods, including `select`,
+  `withColumns`, `filter`, `sort`, `groupBy`/`agg`, `join`, `pivot`, and
+  `unpivot`.
+- Expressions with arithmetic, three-valued logic, aggregations, window
+  functions, `when`/`then`/`otherwise`, and the `str`, `dt`, `list`, `struct`,
+  `arr`, `cat`, and `name` namespaces.
+- `Series`, with the same expression methods.
+- CSV, Parquet, JSON, NDJSON, and Arrow IPC reading and writing, with lazy
+  scans and streaming sinks, and reading and writing through PDO.
+- SQL queries over data frames.
+- A thread-pool cap for PHP-FPM (`php_polars.max_threads`).
 
 ## Requirements
 
@@ -31,7 +48,7 @@ phpolars works on its own or through [phibble](https://phibble.phpstats.org) and
 
 Prebuilt binaries cover Linux with glibc 2.34 or later on x86_64 and arm64. Other platforms, including macOS, build from source, which needs a stable Rust toolchain and libclang.
 
-## Installing
+## Installation
 
 ```sh
 pie install phpstats/phpolars
@@ -45,7 +62,7 @@ The second command prints the installed version. Restart PHP-FPM and queue worke
 - [Getting started](https://phpolars.phpstats.org/docs/getting-started)
 - [Coming from py-polars](https://phpolars.phpstats.org/docs/coming-from-python)
 - [phibble and phplyr](https://phpolars.phpstats.org/docs/phibble), including how Polars' missing values differ from dplyr's
-- [Reference](https://phpolars.phpstats.org/docs/reference/dataframe)
+- [Functions and methods](https://phpolars.phpstats.org/docs/reference/index)
 - [Compatibility and limitations](https://phpolars.phpstats.org/docs/compatibility)
 - [Performance](https://phpolars.phpstats.org/docs/performance)
 

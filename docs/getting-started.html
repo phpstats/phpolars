@@ -313,11 +313,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#installing" id="toc-installing" class="nav-link active" data-scroll-target="#installing">Installing</a></li>
+  <li><a href="#installing" id="toc-installing" class="nav-link active" data-scroll-target="#installing">Installation</a></li>
   <li><a href="#checking-the-installation" id="toc-checking-the-installation" class="nav-link" data-scroll-target="#checking-the-installation">Checking the installation</a></li>
-  <li><a href="#a-starter-script" id="toc-a-starter-script" class="nav-link" data-scroll-target="#a-starter-script">A starter script</a></li>
+  <li><a href="#a-starter-script" id="toc-a-starter-script" class="nav-link" data-scroll-target="#a-starter-script">Starter script</a></li>
   <li><a href="#imports" id="toc-imports" class="nav-link" data-scroll-target="#imports">Imports</a></li>
-  <li><a href="#a-first-query" id="toc-a-first-query" class="nav-link" data-scroll-target="#a-first-query">A first query</a></li>
+  <li><a href="#a-first-query" id="toc-a-first-query" class="nav-link" data-scroll-target="#a-first-query">Selecting columns</a></li>
   <li><a href="#filtering" id="toc-filtering" class="nav-link" data-scroll-target="#filtering">Filtering</a></li>
   <li><a href="#grouping" id="toc-grouping" class="nav-link" data-scroll-target="#grouping">Grouping</a></li>
   <li><a href="#lazy-queries" id="toc-lazy-queries" class="nav-link" data-scroll-target="#lazy-queries">Lazy queries</a></li>
@@ -348,7 +348,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 <section id="installing" class="level2">
-<h2 class="anchored" data-anchor-id="installing">Installing</h2>
+<h2 class="anchored" data-anchor-id="installing">Installation</h2>
 <p>phpolars runs on PHP 8.3, 8.4, and 8.5, non-thread-safe (NTS) builds, on Linux and macOS. Install it with <a href="https://github.com/php/pie">PIE</a>, PHP’s extension installer:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pie</span> install phpstats/phpolars</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>On Linux on x86_64 and arm64 with glibc 2.34 or later, PIE downloads a prebuilt binary. On other platforms, including macOS, it builds the extension from source, which needs a stable Rust toolchain and libclang and takes several minutes. PIE then enables the extension in php.ini. Under PHP-FPM, restart FPM afterwards so that its workers load the extension. <a href="./deployment.html">Deployment</a> covers servers, Laravel Forge, Laravel Herd, and manual installs.</p>
@@ -359,7 +359,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>The command prints the installed version, such as <code>0.2.2</code>. It checks the CLI. PHP-FPM reads its own php.ini, so check a web request separately, for example with <code>extension_loaded('php_polars')</code> in a page.</p>
 </section>
 <section id="a-starter-script" class="level2">
-<h2 class="anchored" data-anchor-id="a-starter-script">A starter script</h2>
+<h2 class="anchored" data-anchor-id="a-starter-script">Starter script</h2>
 <p>phpolars needs no Composer packages. Download the example data, <code>penguins.csv</code>: body measurements of 344 penguins near Palmer Station, Antarctica, from the R <code>palmerpenguins</code> package (<a href="https://github.com/phpstats/datasets#penguins">penguins</a>). Missing values are written <code>NA</code>.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> phpolars-start <span class="kw">&amp;&amp;</span> <span class="bu">cd</span> phpolars-start</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">-fsSLO</span> https://raw.githubusercontent.com/phpstats/datasets/main/csv/penguins.csv</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -406,7 +406,7 @@ Array
 <p>The examples below read the same <code>penguins.csv</code>, with <code>nullValues: 'NA'</code> so that <code>NA</code> entries become nulls.</p>
 </section>
 <section id="a-first-query" class="level2">
-<h2 class="anchored" data-anchor-id="a-first-query">A first query</h2>
+<h2 class="anchored" data-anchor-id="a-first-query">Selecting columns</h2>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode php code-with-copy"><code class="sourceCode php"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="va">$penguins</span> <span class="op">=</span> read_csv(<span class="st">'penguins.csv'</span><span class="ot">,</span> nullValues<span class="ot">:</span> <span class="st">'NA'</span>)<span class="ot">;</span></span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="va">$mass</span> <span class="op">=</span> col(<span class="st">'body_mass_g'</span>)<span class="ot">;</span></span>

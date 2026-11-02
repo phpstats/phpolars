@@ -13,7 +13,7 @@ The API follows py-polars, Polars' Python package, with camelCase method names a
 
 The example reads `penguins.csv`, body measurements of 344 penguins from the R `palmerpenguins` package ([penguins](https://github.com/phpstats/datasets#penguins)). [Getting started](getting-started.qmd#a-starter-script) has a complete script and the command that downloads the data.
 
-## What it includes
+## Features {#what-it-includes}
 
 - `DataFrame` and `LazyFrame` with py-polars' methods: `select`, `withColumns`, `filter`, `sort`, `groupBy`/`agg`, `join`, `unique`, `pivot`, `unpivot`, `explode`, `describe`, and more.
 - Expressions with arithmetic, three-valued logic, aggregations, window functions (`over`), `when`/`then`/`otherwise`, and the `str`, `dt`, `list`, `struct`, and `name` namespaces.
@@ -24,7 +24,7 @@ The example reads `penguins.csv`, body measurements of 344 penguins from the R `
 
 [Functions and methods](reference/index.qmd) lists every function, selector, and class, with links to the signatures.
 
-## The phpolars API or phibble and phplyr
+## API choice {#the-phpolars-api-or-phibble-and-phplyr}
 
 - The phpolars API (`Phpolars\DataFrame`, `LazyFrame`, `Series`, and expressions) follows Polars' semantics. A missing value is `null`, and aggregates skip it.
 - [phibble](https://phibble.phpstats.org)'s `Phibble\Polars\PolarsTable` runs phibble tables and [phplyr](https://phplyr.phpstats.org) pipelines in Polars with dplyr's semantics, in which `null` is R's `NA`. The adapter belongs to phibble and runs on this extension.

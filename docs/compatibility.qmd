@@ -23,7 +23,7 @@ phpolars uses the Polars 0.55.2 Rust crates. The test suite compares it with py-
 
 The [verification page](https://phpolars.phpstats.org/verification) lists each case and its result.
 
-## Not available
+## Unsupported features {#not-available}
 
 - Python callables. py-polars methods that run a Python function per value or per batch, such as `map_elements`, `map_batches`, `fold`, and `map_groups`, have no equivalent, because PHP code cannot run on Polars threads. `DataFrame::mapRows()` runs a PHP callable per row on the PHP thread, after collecting.
 - The GPU engine. `collect(engine: 'gpu')` throws a `ValueError`.
