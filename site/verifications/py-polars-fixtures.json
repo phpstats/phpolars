@@ -8,7 +8,7 @@
     "versions": {
         "py-polars": "1.43.2",
         "Polars Rust crate": "0.55.2",
-        "PHP": "8.5.10"
+        "PHP": "8.5.12"
     },
     "inputs": "Fixed data frames built identically in scripts/pyfixtures.py and tests/pyfixtures.php: a 6-row data frame of integers, floats, strings, booleans, dates, datetimes, and lists with nulls in every column; lookup tables; a sorted time series; and quotes for as-of joins.",
     "comparison": [
@@ -1980,8 +1980,8 @@
             "quantity": "8 rows × 9 columns",
             "rule": "float",
             "n_compared": 72,
-            "max_abs_error": 2.220446049250313e-16,
-            "max_rel_error": 1.417186067527688e-16,
+            "max_abs_error": 8.881784197001252e-16,
+            "max_rel_error": 2.173389456151773e-16,
             "status": "pass"
         },
         {
@@ -3191,9 +3191,9 @@
     "source": "tests/fixtures/py/expected.json",
     "data": "scripts/pyfixtures.py",
     "environment": {
-        "date": "2026-11-01",
-        "commit": "ae60888",
-        "php": "8.5.10",
-        "os": "macOS 27.0.1 (arm64)"
+        "date": "2026-11-02",
+        "commit": "d7d3aff",
+        "php": "8.5.12",
+        "os": "Linux, Ubuntu 24.04.5 LTS (x86_64)"
     }
 }
