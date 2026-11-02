@@ -1,6 +1,6 @@
 # phpolars
 
-phpolars brings [Polars](https://pola.rs) data frames to PHP as a native extension written in Rust with [ext-php-rs](https://github.com/davidcole1340/ext-php-rs). The API follows py-polars: the same classes and methods, with camelCase method names and snake_case functions.
+phpolars is a PHP extension that wraps [Polars](https://pola.rs), the Rust data frame library. It is written in Rust with [ext-php-rs](https://github.com/davidcole1340/ext-php-rs) and calls the Polars crates directly. The API is modeled on py-polars, Polars' Python package: the same classes and methods, with camelCase method names and snake_case functions.
 
 ```php
 use function Phpolars\{col, len, read_csv};
@@ -86,4 +86,4 @@ All features are on by default. Build a smaller extension with, for example, `ca
 
 ## License
 
-MIT
+phpolars is released under the MIT license; see [LICENSE](LICENSE). Polars and the other Rust libraries compiled into the extension keep their own licenses, which each release archive lists in `THIRD_PARTY_NOTICES.txt`.
